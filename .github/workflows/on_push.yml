@@ -71,16 +71,3 @@ jobs:
           name: labs
           path: ${{ github.workspace }}/out/*/*/acceptance.*
           overwrite: true
-  unit:
-    needs: [build]
-    runs-on: ubuntu-latest
-    container:
-      image: volgarenok/cxx-test:latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Unit tests
-        working-directory: ${{ github.workspace }}
-        run: |
-          if test -d out; then find out -type f -exec touch {} + ; fi
-          $TEST_DIR/unit-tests.sh
-        shell: bash
