@@ -1,6 +1,5 @@
 #include <iostream>
-
 int main()
 {
-  std:: cout << "losev.timofey\n";
+    std:: cout << "losev.timofey\n";
 }
