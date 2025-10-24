@@ -1,6 +1,7 @@
 #include <iostream>
 
-int main() {
+int main() 
+{
     std::cout << "petrenko.esmira" << std::endl;
     return 0;
 }
