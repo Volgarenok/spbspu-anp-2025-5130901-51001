@@ -1,3 +1,5 @@
+#include <iostream>
 int main()
-{}
-q
+{
+  std::cout << "smirnova.marya\n";
+}
