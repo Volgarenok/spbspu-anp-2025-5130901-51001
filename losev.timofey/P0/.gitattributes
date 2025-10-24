@@ -1,7 +1,0 @@
-gitattributes
-# Line endings configuration
-* text=auto
-
-# Source files - CRLF for Windows
-*.cpp text eol=crlf
-*.h text eol=crlf
