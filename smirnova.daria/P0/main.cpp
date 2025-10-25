@@ -1,5 +1,5 @@
-#include <iosrteam>
+#include <iostream>
 int main()
 {
-  std::cout << "smirnova.daria";
+  std::cout << "smirnova.daria\n";
 }
