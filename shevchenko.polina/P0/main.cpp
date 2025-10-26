@@ -2,5 +2,5 @@
 
 int main()
 {
-std::cout << "shevchenko.polina\n";
+ std::cout << "shevchenko.polina\n";
 }
