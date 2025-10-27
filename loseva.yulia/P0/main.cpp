@@ -2,5 +2,5 @@
 
 int main()
 {
-  std::cout<<"loseva.yulia\n"
+  std::cout<<"loseva.yulia\n";
 }
