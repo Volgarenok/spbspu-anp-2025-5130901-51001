@@ -2,7 +2,7 @@
 
 int main()
 {
-  std::cout << "krivoshapov.ivan \n";
+  std::cout << "krivoshapov.ivan\n";
 }
 
 
