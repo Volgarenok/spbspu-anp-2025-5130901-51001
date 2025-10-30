@@ -2,6 +2,6 @@
 
 int main()
 {
-  std::cout<<"volkovich.artem\n";
+  std::cout << "volkovich.artem\n";
   return 0;
 }
