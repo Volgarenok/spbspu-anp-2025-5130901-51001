@@ -1,5 +1,6 @@
 #include <iostream>
 
-int main(){
+int main()
+{
   std::cout << "borisov.ruslan\n";
 }
