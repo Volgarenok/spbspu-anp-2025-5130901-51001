@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <limits>
 
 typedef long long ll_t;
 
@@ -79,6 +80,7 @@ int main(int argc, char** argv) {
       in_file >> matrix[i];
       if (!in_file.good()) {
         in_file.close();
+        delete[] matrix;
         std::cerr << "Error reading matrix\n";
         return 2;
       }
@@ -160,7 +162,6 @@ ll_t stepanov::task2(ll_t* matrix, int n, int m) {
   if (n * m < 2) {
     return 0;
   }
-
   ll_t ans = LLONG_MIN;
 
   for (int i = 1; i < n; ++i) {
