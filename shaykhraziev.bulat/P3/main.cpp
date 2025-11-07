@@ -6,7 +6,7 @@ namespace shaykhraziev {
 void lft_bot_cnt(int** matrix, int rows, int cols) {
     if (rows == 0 || cols == 0) return;
 
-    int minDim = rows < cols ? rows : cols;
+    int minDim = (rows < cols) ? rows : cols;
     int layers = (minDim + 1) / 2;
     int increment = 1;
 
@@ -18,20 +18,20 @@ void lft_bot_cnt(int** matrix, int rows, int cols) {
 
         if (startRow < endRow || startCol > endCol) break;
 
-        for (int i = startRow; i >= endRow && startCol <= endCol; --i) {
-            matrix[i][startCol] += increment++;
+        for (int j = startCol; j <= endCol && startRow >= endRow; ++j) {
+            matrix[startRow][j] += increment++;
         }
 
-        for (int j = startCol + 1; j <= endCol && endRow <= startRow; ++j) {
-            matrix[endRow][j] += increment++;
-        }
-
-        for (int i = endRow + 1; i <= startRow && startCol < endCol; ++i) {
+        for (int i = startRow - 1; i >= endRow && startCol < endCol; --i) {
             matrix[i][endCol] += increment++;
         }
 
-        for (int j = endCol - 1; j > startCol && endRow < startRow; --j) {
-            matrix[startRow][j] += increment++;
+        for (int j = endCol - 1; j >= startCol && startRow > endRow; --j) {
+            matrix[endRow][j] += increment++;
+        }
+
+        for (int i = endRow + 1; i < startRow && startCol < endCol; ++i) {
+            matrix[i][startCol] += increment++;
         }
     }
 }
