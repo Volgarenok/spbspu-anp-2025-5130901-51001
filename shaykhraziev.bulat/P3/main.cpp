@@ -2,8 +2,14 @@
 #include <fstream>
 
 namespace shaykhraziev {
+    void lft_bot_cnt(int** matrix, int rows, int cols);
+    int min_sum_sdg(int** matrix, int rows, int cols);
+    bool readMatrix(const char* filename, int*& data, int& rows, int& cols, bool useDynamic);
+    void writeMatrix(const char* filename, int** matrix, int rows, int cols);
+    void writeResult(const char* filename, int result);
+}
 
-void lft_bot_cnt(int** matrix, int rows, int cols) {
+void shaykhraziev::lft_bot_cnt(int** matrix, int rows, int cols) {
     if (rows == 0 || cols == 0) return;
 
     int minDim = (rows < cols) ? rows : cols;
@@ -36,7 +42,7 @@ void lft_bot_cnt(int** matrix, int rows, int cols) {
     }
 }
 
-int min_sum_sdg(int** matrix, int rows, int cols) {
+int shaykhraziev::min_sum_sdg(int** matrix, int rows, int cols) {
     if (rows == 0 || cols == 0) return 0;
 
     int minSum = 2147483647;
@@ -66,7 +72,7 @@ int min_sum_sdg(int** matrix, int rows, int cols) {
     return minSum;
 }
 
-bool readMatrix(const char* filename, int*& data, int& rows, int& cols, bool useDynamic) {
+bool shaykhraziev::readMatrix(const char* filename, int*& data, int& rows, int& cols, bool useDynamic) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         return false;
@@ -113,7 +119,7 @@ bool readMatrix(const char* filename, int*& data, int& rows, int& cols, bool use
     return true;
 }
 
-void writeMatrix(const char* filename, int** matrix, int rows, int cols) {
+void shaykhraziev::writeMatrix(const char* filename, int** matrix, int rows, int cols) {
     std::ofstream file(filename);
     file << rows << " " << cols;
     for (int i = 0; i < rows; ++i) {
@@ -124,12 +130,10 @@ void writeMatrix(const char* filename, int** matrix, int rows, int cols) {
     file.close();
 }
 
-void writeResult(const char* filename, int result) {
+void shaykhraziev::writeResult(const char* filename, int result) {
     std::ofstream file(filename);
     file << result;
     file.close();
-}
-
 }
 
 int main(int argc, char* argv[]) {
