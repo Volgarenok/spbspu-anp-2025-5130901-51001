@@ -172,13 +172,13 @@ int main(int argc, char* argv[]) {
 
     if (!shaykhraziev::readMatrix(inputFile, data, rows, cols, useDynamic)) {
         std::cerr << "readMatrix failed";
-        if (useDynamic && data != nullptr) delete[] data;
+        if (useDynamic) delete[] data;
         return 2;
     }
 
     if (rows == 0 || cols == 0) {
         shaykhraziev::writeMatrix(outputFile, nullptr, 0, 0);
-        if (useDynamic && data != nullptr) delete[] data;
+        if (useDynamic) delete[] data;
         return 0;
     }
 
