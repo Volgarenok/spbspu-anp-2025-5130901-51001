@@ -168,9 +168,14 @@ int main(int argc, char* argv[]) {
         data = staticData;
     }
 
-    if (!shaykhraziev::readMatrix(inputFile, data, rows, cols, useDynamic)) {
-        std::cerr << "readMatrix failed";
-        if (useDynamic && data != nullptr) delete[] data;
+    try {
+        if (!shaykhraziev::readMatrix(inputFile, data, rows, cols, useDynamic)) {
+            std::cerr << "readMatrix failed";
+            if (useDynamic && data != nullptr) delete[] data;
+            return 2;
+        }
+    } catch (...) {
+        std::cerr << "something wrong";
         return 2;
     }
 
@@ -179,6 +184,7 @@ int main(int argc, char* argv[]) {
         if (useDynamic && data != nullptr) delete[] data;
         return 0;
     }
+
 
     int** matrix = new int*[rows];
     for (int i = 0; i < rows; ++i) {
