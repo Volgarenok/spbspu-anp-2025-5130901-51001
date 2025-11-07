@@ -66,7 +66,7 @@ int min_sum_sdg(int** matrix, int rows, int cols) {
     return minSum;
 }
 
-bool readMatrix(const char* filename, int*& data, int& rows, int& cols, bool useDynamic) {
+bool readMatrix(const char* filename, int* data, int& rows, int& cols, bool useDynamic) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         return false;
@@ -88,9 +88,14 @@ bool readMatrix(const char* filename, int*& data, int& rows, int& cols, bool use
         return false;
     }
 
-    if (useDynamic) {
-        data = new int[totalElements];
+    try {
+        if (useDynamic) {
+            data = new int[totalElements];
+        }
+    } catch (...) {
+        return false;
     }
+
 
     for (int i = 0; i < totalElements; ++i) {
         file >> data[i];
