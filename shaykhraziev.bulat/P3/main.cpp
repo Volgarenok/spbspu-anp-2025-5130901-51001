@@ -6,7 +6,7 @@ namespace shaykhraziev {
 void lft_bot_cnt(int** matrix, int rows, int cols) {
     if (rows == 0 || cols == 0) return;
 
-    int minDim = (rows < cols) ? rows : cols;
+    int minDim = rows < cols ? rows : cols;
     int layers = (minDim + 1) / 2;
     int increment = 1;
 
@@ -39,7 +39,7 @@ void lft_bot_cnt(int** matrix, int rows, int cols) {
 int min_sum_sdg(int** matrix, int rows, int cols) {
     if (rows == 0 || cols == 0) return 0;
 
-    int minSum = std::numeric_limits<int>::max();
+    int minSum = 2147483647;
 
     for (int startCol = 0; startCol < cols; ++startCol) {
         int sum = 0;
