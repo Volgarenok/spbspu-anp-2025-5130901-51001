@@ -107,14 +107,14 @@ void shaykhraziev::readMatrix(std::istream& in, int* data, size_t rows, size_t c
 
   for (size_t k = 0; k < total; ++k) {
     if (!(in >> data[k])) {
-      throw std::runtime_error("readMatrix failed: not enough data");
+      throw std::logic_error("readMatrix failed: not enough data");
     }
   }
 
   std::string extra;
 
   if (in >> extra) {
-    throw std::runtime_error("readMatrix failed: extra data");
+    throw std::logic_error("readMatrix failed: extra data");
   }
 }
 
