@@ -1,245 +1,182 @@
 #include <iostream>
 #include <fstream>
 
-namespace shaykhraziev
-{
-  void lft_bot_cnt(int** matrix, int rows, int cols);
-  int min_sum_sdg(int** matrix, int rows, int cols);
-  bool readMatrix(const char* filename, int*& data, int& rows, int& cols, bool useDynamic);
-  void writeMatrix(const char* filename, int** matrix, int rows, int cols);
-  void writeResult(const char* filename, int result);
+namespace shaykhraziev {
+  void lft_bot_cnt(int* data, size_t rows, size_t cols);
+  int min_sum_sdg(const int* data, size_t rows, size_t cols);
+  void readMatrix(std::istream& in, int* data, size_t rows, size_t cols);
+  void writeMatrix(std::ostream& out, const int* data, size_t rows, size_t cols);
+  void writeResult(std::ostream& out, int result);
 }
 
-void shaykhraziev::lft_bot_cnt(int** matrix, int rows, int cols)
-{
+void shaykhraziev::lft_bot_cnt(int* data, size_t rows, size_t cols) {
   if (rows == 0 || cols == 0) {
     return;
   }
-
-  int minDim = (rows < cols) ? rows : cols;
-  int layers = (minDim + 1) / 2;
-  int increment = 1;
-
-  for (int layer = 0; layer < layers; ++layer) {
-    int startRow = rows - 1 - layer;
-    int endRow = layer;
-    int startCol = layer;
-    int endCol = cols - 1 - layer;
-
+  size_t minDim = rows < cols ? rows : cols;
+  size_t layers = (minDim + 1) / 2;
+  int inc = 1;
+  for (size_t layer = 0; layer < layers; ++layer) {
+    size_t startRow = rows - 1 - layer;
+    size_t endRow = layer;
+    size_t startCol = layer;
+    size_t endCol = cols - 1 - layer;
     if (startRow < endRow || startCol > endCol) {
       break;
     }
-
-    for (int j = startCol; j <= endCol && startRow >= endRow; ++j) {
-      matrix[startRow][j] += increment++;
+    for (size_t j = startCol; j <= endCol && startRow >= endRow; ++j) {
+      data[startRow * cols + j] += inc++;
     }
-
-    for (int i = startRow - 1; i >= endRow && startCol < endCol; --i) {
-      matrix[i][endCol] += increment++;
+    if (startCol < endCol) {
+      for (size_t i = startRow; i > endRow; --i) {
+        data[(i - 1) * cols + endCol] += inc++;
+      }
     }
-
-    for (int j = endCol - 1; j >= startCol && startRow > endRow; --j) {
-      matrix[endRow][j] += increment++;
+    if (startRow > endRow) {
+      for (size_t j = endCol; j > startCol; --j) {
+        data[endRow * cols + (j - 1)] += inc++;
+      }
     }
-
-    for (int i = endRow + 1; i < startRow && startCol < endCol; ++i) {
-      matrix[i][startCol] += increment++;
+    if (startCol < endCol && startRow > endRow + 1) {
+      for (size_t i = endRow + 1; i < startRow; ++i) {
+        data[i * cols + startCol] += inc++;
+      }
     }
   }
 }
 
-int shaykhraziev::min_sum_sdg(int** matrix, int rows, int cols)
-{
+int shaykhraziev::min_sum_sdg(const int* data, size_t rows, size_t cols) {
   if (rows == 0 || cols == 0) {
     return 0;
   }
-
-  int minSum = 2147483647;
-
-  for (int startCol = 0; startCol < cols; ++startCol) {
+  int minSum = data[cols - 1];
+  for (size_t startCol = 0; startCol < cols; ++startCol) {
     int sum = 0;
-    int i = 0;
-    int j = startCol;
-
+    size_t i = 0;
+    size_t j = startCol;
     while (i < rows && j < cols) {
-      sum += matrix[i][j];
+      sum += data[i * cols + j];
       ++i;
       ++j;
     }
-
     if (sum < minSum) {
       minSum = sum;
     }
   }
 
-  for (int startRow = 1; startRow < rows; ++startRow) {
+  for (size_t startRow = 1; startRow < rows; ++startRow) {
     int sum = 0;
-    int i = startRow;
-    int j = 0;
-
+    size_t i = startRow;
+    size_t j = 0;
     while (i < rows && j < cols) {
-      sum += matrix[i][j];
+      sum += data[i * cols + j];
       ++i;
       ++j;
     }
-
     if (sum < minSum) {
       minSum = sum;
     }
   }
-
   return minSum;
 }
 
-bool shaykhraziev::readMatrix(
-  const char* filename, int*& data, int& rows, int& cols, bool useDynamic)
-{
-  std::ifstream file(filename);
-
-  if (!file.is_open()) {
-    return false;
-  }
-
-  file >> rows >> cols;
-
-  if (file.fail() || rows < 0 || cols < 0) {
-    return false;
-  }
-
+void shaykhraziev::readMatrix(std::istream& in, int* data, size_t rows, size_t cols) {
   if (rows == 0 || cols == 0) {
-    return true;
+    return;
   }
-
-  int totalElements = rows * cols;
-
-  if (!useDynamic && totalElements > 10000) {
-    return false;
-  }
-
-  try {
-    if (useDynamic) {
-      data = new int[totalElements];
-    }
-  } catch (...) {
-    return false;
-  }
-
-  for (int i = 0; i < totalElements; ++i) {
-    file >> data[i];
-    if (file.fail()) {
-      if (useDynamic) {
-        delete[] data;
-      }
-      return false;
+  size_t total = rows * cols;
+  for (size_t k = 0; k < total; ++k) {
+    if (!(in >> data[k])) {
+      throw std::runtime_error("readMatrix failed: not enough data");
     }
   }
-
   std::string extra;
-  file >> extra;
-
-  if (!file.eof() && !extra.empty()) {
-    if (useDynamic) {
-      delete[] data;
-    }
-    return false;
+  if (in >> extra) {
+    throw std::runtime_error("readMatrix failed: extra data");
   }
-
-  return true;
 }
 
-void shaykhraziev::writeMatrix(const char* filename, int** matrix, int rows, int cols)
-{
-  std::ofstream file(filename);
-
-  file << rows << " " << cols;
-
-  for (int i = 0; i < rows; ++i) {
-    for (int j = 0; j < cols; ++j) {
-      file << " " << matrix[i][j];
+void shaykhraziev::writeMatrix(std::ostream& out, const int* data, size_t rows, size_t cols) {
+  out << rows << " " << cols;
+  for (size_t r = 0; r < rows; ++r) {
+    for (size_t c = 0; c < cols; ++c) {
+      out << " " << data[r * cols + c];
     }
   }
-
-  file.close();
 }
 
-void shaykhraziev::writeResult(const char* filename, int result)
-{
-  std::ofstream file(filename);
-  file << result;
-  file.close();
+void shaykhraziev::writeResult(std::ostream& out, int result) {
+  out << result;
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
   if (argc < 4) {
     std::cerr << "Not enough arguments";
     return 1;
   }
-
   if (argc > 4) {
     std::cerr << "Too many arguments";
     return 1;
   }
-
   int taskNum;
-
   try {
     taskNum = std::stoi(argv[1]);
   } catch (...) {
     std::cerr << "First parameter is not a number";
     return 1;
   }
-
   if (taskNum != 1 && taskNum != 2) {
     std::cerr << "First parameter is out of range";
     return 1;
   }
-
   const char* inputFile = argv[2];
   const char* outputFile = argv[3];
 
-  int rows;
-  int cols;
-  int* data = nullptr;
-  int staticData[10000];
-  bool useDynamic = (taskNum == 2);
-
-  if (!useDynamic) {
-    data = staticData;
-  }
-
-  if (!shaykhraziev::readMatrix(inputFile, data, rows, cols, useDynamic)) {
+  std::ifstream fin(inputFile);
+  if (!fin.is_open()) {
     std::cerr << "readMatrix failed";
     return 2;
   }
 
-  if (rows == 0 || cols == 0) {
-    shaykhraziev::writeMatrix(outputFile, nullptr, 0, 0);
-    if (useDynamic && data != nullptr) {
-      delete[] data;
-    }
-    return 0;
+  size_t rows = 0, cols = 0;
+  if (!(fin >> rows >> cols)) {
+    std::cerr << "readMatrix failed";
+    return 2;
   }
 
-  int** matrix = new int*[rows];
+  size_t total = rows * cols;
+  int* data = nullptr;
+  if (total > 0) {
+    try {
+      data = new int[total];
+    } catch (...) {
+      std::cerr << "readMatrix failed";
+      return 2;
+    }
+    try {
+      shaykhraziev::readMatrix(fin, data, rows, cols);
+    } catch (const std::exception& e) {
+      std::cerr << e.what();
+      delete[] data;
+      return 2;
+    }
+  }
 
-  for (int i = 0; i < rows; ++i) {
-    matrix[i] = &data[i * cols];
+  std::ofstream fout(outputFile);
+  if (!fout.is_open()) {
+    std::cerr << "readMatrix failed";
+    delete[] data;
+    return 2;
   }
 
   if (taskNum == 1) {
-    shaykhraziev::lft_bot_cnt(matrix, rows, cols);
-    shaykhraziev::writeMatrix(outputFile, matrix, rows, cols);
-  } else if (taskNum == 2) {
-    int result = shaykhraziev::min_sum_sdg(matrix, rows, cols);
-    shaykhraziev::writeResult(outputFile, result);
+    shaykhraziev::lft_bot_cnt(data, rows, cols);
+    shaykhraziev::writeMatrix(fout, data, rows, cols);
+  } else {
+    int result = shaykhraziev::min_sum_sdg(data, rows, cols);
+    shaykhraziev::writeResult(fout, result);
   }
 
-  delete[] matrix;
-
-  if (useDynamic) {
-    delete[] data;
-  }
-
+  delete[] data;
   return 0;
 }
