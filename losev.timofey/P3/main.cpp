@@ -1,17 +1,13 @@
 #include <iostream>
 
 int main(int argc, char **argv) {
-  if (argc > 1){
-    std::cout << "We have " << argc - 1 <<" add param: \n";
-    for(int i = 1; i < argc; i++)
-    {
-      std::cout << *argv[i] << std::endl;
-    }
-     
+  int n = 2, m = 2;
+  if (*argv[1] == '1'){
+    int arrayStatic[10000];
+    std:: cout << "I create static array\n";
   }
-  else{
-    std::cout << "We have not add param \n";
+  else if (*argv[1] == '2'){
+    int *arrayDinamic = new int[n*m];
+    std:: cout << "I create dinamic array\n";
   }
-    
-  return 0;
 }
