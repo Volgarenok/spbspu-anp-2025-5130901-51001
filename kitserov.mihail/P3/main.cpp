@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 int main(int argc, char* argv[])
 {
   if (argc < 4)
@@ -12,7 +13,12 @@ int main(int argc, char* argv[])
     return 1;
   }
   int num = atoi(argv[1]);
-  char* input = argv[2];
+  std::ifstream input(argv[2]);
+  if (!input.is_open())
+  {
+    std::cerr << "Failed open input file\n";
+    return 2;
+  }
   char* output = argv[3];
   if (num != 1 and num != 2)
   {
@@ -20,6 +26,6 @@ int main(int argc, char* argv[])
     return 1;
   }
   std::cout << num << std::endl;
-  std::cout << input << std::endl;
+  //std::cout << input << std::endl;
   std::cout << output << std::endl;
 }
