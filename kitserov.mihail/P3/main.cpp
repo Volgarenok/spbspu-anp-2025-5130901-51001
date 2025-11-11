@@ -13,19 +13,23 @@ int main(int argc, char* argv[])
     return 1;
   }
   int num = atoi(argv[1]);
-  std::ifstream input(argv[2]);
-  if (!input.is_open())
-  {
-    std::cerr << "Failed open input file\n";
-    return 2;
-  }
   char* output = argv[3];
   if (num != 1 and num != 2)
   {
     std::cerr << "First argument incorrect\n";
     return 1;
   }
-  std::cout << num << std::endl;
-  //std::cout << input << std::endl;
-  std::cout << output << std::endl;
+  std::ifstream input(argv[2]);
+  if (!input.is_open())
+  {
+    std::cerr << "Failed open input file\n";
+    return 2;
+  }
+  int rows, cols;
+  input >> rows >> cols;
+  if (input.fail())
+  {
+    std::cerr << "Failed read matrix\n";
+    return 2;
+  }
 }
