@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
         {
             input >> matrix[i];
             if (!input.good()) {
-                std::cout<<"Error reading file";
+                std::cerr<<"Error reading file";
                 return 1;
             }
         }
@@ -130,7 +130,8 @@ int main(int argc, char *argv[])
         {
             input >> matrix[i];
             if (!input.good()) {
-                std::cout<<"Error reading file";
+                std::cerr<<"Error reading file";
+                delete[] matrix;
                 return 1;
             }
         }
