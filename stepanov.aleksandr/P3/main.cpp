@@ -1,17 +1,18 @@
 #include <iostream>
 #include <fstream>
-#include <climits>
+#include <limits>
 
-typedef long long ll_t;
+using ll_t = long long;
 
 namespace stepanov {
   const size_t MAX_MATRIX_SIZE = 10000;
 
-  void task1(ll_t (&matrix)[MAX_MATRIX_SIZE], int n, int m);
-  ll_t task2(ll_t* matrix, int n, int m);
+  void lft_bot_clk(ll_t* matrix, size_t n, size_t m);
+  ll_t max_sum_sdg(const ll_t* matrix, size_t n, size_t m);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
@@ -22,7 +23,7 @@ int main(int argc, char** argv) {
   }
 
   char* end = nullptr;
-  long task_number = std::strtol(argv[1], &end, 10);
+  const long task_number = std::strtol(argv[1], &end, 10);
   if (*end != '\0') {
     std::cerr << "First parameter is not a number\n";
     return 1;
@@ -34,11 +35,11 @@ int main(int argc, char** argv) {
 
   std::ifstream in_file(argv[2]);
   if (!in_file.is_open()) {
-    in_file.close();
     std::cerr << "Error opening input file\n";
     return 2;
   }
-  int rows = 0, cols = 0;
+
+  size_t rows = 0, cols = 0;
   in_file >> rows >> cols;
   if (!in_file.good()) {
     in_file.close();
@@ -46,72 +47,54 @@ int main(int argc, char** argv) {
     return 2;
   }
 
+  ll_t* matrix = nullptr;
   if (task_number == 1) {
-    ll_t matrix[stepanov::MAX_MATRIX_SIZE];
-    for (int i = 0; i < rows * cols; i++) {
-      in_file >> matrix[i];
-      if (!in_file.good()) {
-        in_file.close();
-        std::cerr << "Error reading matrix\n";
-        return 2;
-      }
-    }
-    in_file.close();
+    ll_t static_matrix[stepanov::MAX_MATRIX_SIZE];
+    matrix = static_matrix;
+  } else {
+    matrix = new ll_t[rows * cols];
+  }
 
-    try {
-      stepanov::task1(matrix, rows, cols);
-    } catch (const std::exception& e) {
-      std::cerr << e.what() << '\n';
-      return 2;
-    }
-    std::ofstream out_file(argv[3]);
-    if (!out_file.is_open()) {
-      std::cerr << "Error opening output file\n";
-      return 2;
-    }
-    out_file << rows << ' ' << cols << ' ';
-    for (int i = 0; i < rows * cols; i++) {
-      out_file << matrix[i] << ' ';
-    }
-    out_file.close();
-  } else if (task_number == 2) {
-    ll_t* matrix = new ll_t[rows * cols];
-    for (int i = 0; i < rows * cols; i++) {
-      in_file >> matrix[i];
-      if (!in_file.good()) {
-        in_file.close();
+  for (size_t i = 0; i < rows * cols; i++) {
+    in_file >> matrix[i];
+    if (!in_file.good()) {
+      in_file.close();
+      if (task_number == 2) {
         delete[] matrix;
-        std::cerr << "Error reading matrix\n";
-        return 2;
       }
+      std::cerr << "Error reading matrix\n";
+      return 2;
     }
-    in_file.close();
+  }
+  in_file.close();
 
-    ll_t result = 0;
-    try {
-      result = stepanov::task2(matrix, rows, cols);
-    } catch (const std::exception& e) {
-      std::cerr << e.what() << '\n';
+  ll_t result = 0;
+  try {
+    stepanov::lft_bot_clk(matrix, rows, cols);
+    result = stepanov::max_sum_sdg(matrix, rows, cols);
+  } catch (const std::exception& e) {
+    if (task_number == 2) {
       delete[] matrix;
-      return 2;
     }
-    delete[] matrix;
-    std::ofstream out_file(argv[3]);
-    if (!out_file.is_open()) {
-      std::cerr << "Error opening output file\n";
-      return 2;
-    }
-    out_file << result;
-    out_file.close();
+    std::cerr << e.what() << '\n';
+    return 2;
   }
-  if (in_file.is_open()) {
-    in_file.close();
+  if (task_number == 2) {
+    delete[] matrix;
   }
 
+  std::ofstream out_file(argv[3]);
+  if (!out_file.is_open()) {
+    std::cerr << "Error opening output file\n";
+    return 2;
+  }
+  out_file << result << '\n';
+  out_file.close();
   return 0;
 }
 
-void stepanov::task1(ll_t (&matrix)[MAX_MATRIX_SIZE], int n, int m) {
+void stepanov::lft_bot_clk(ll_t* matrix, size_t n, size_t m)
+{
   int top = 0, bottom = n - 1, left = 0, right = m - 1;
   int i = bottom, j = left;
   int k = 1;
@@ -158,23 +141,24 @@ void stepanov::task1(ll_t (&matrix)[MAX_MATRIX_SIZE], int n, int m) {
   }
 }
 
-ll_t stepanov::task2(ll_t* matrix, int n, int m) {
+ll_t stepanov::max_sum_sdg(const ll_t* matrix, size_t n, size_t m)
+{
   if (n * m < 2) {
     return 0;
   }
-  ll_t ans = LLONG_MIN;
+  ll_t ans = std::numeric_limits<ll_t>::min();
 
-  for (int i = 1; i < n; ++i) {
+  for (size_t i = 1; i < n; ++i) {
     ll_t sum = 0;
-    for (int x = i, y = 0; x < n && y < m; ++x, ++y) {
+    for (size_t x = i, y = 0; x < n && y < m; ++x, ++y) {
       sum += matrix[x * m + y];
     }
     ans = std::max(ans, sum);
   }
 
-  for (int j = 1; j < m; ++j) {
+  for (size_t j = 1; j < m; ++j) {
     ll_t sum = 0;
-    for (int x = 0, y = j; x < n && y < m; ++x, ++y) {
+    for (size_t x = 0, y = j; x < n && y < m; ++x, ++y) {
       sum += matrix[x * m + y];
     }
     ans = std::max(ans, sum);
