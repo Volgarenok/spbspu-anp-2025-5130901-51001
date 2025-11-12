@@ -51,20 +51,18 @@ void volkovich::spiral(int (&matrix)[MAX_MATRIX_SIZE], int rows, int columns)
 
 int volkovich::diagonal(int *matrix, int rows, int columns)
 {
-    if (rows == 0 && columns == 0)
-    {
+    if (rows==0 && columns==0) {
         return 0;
     }
     int res = INT_MAX;
     for (int s = 0; s <= rows + columns - 2; s++)
     {
-        int sum = 0;
+        int sum=0;
         for (int i = 0; i < rows; i++)
         {
             int j = s - i;
-            if (j >= 0 && j < columns)
-            {
-                sum += matrix[i * columns + j];
+            if (j>=0 && j<columns) {
+                sum+=matrix[i*columns+j];
             }
         }
         res = std::min(sum, res);
@@ -97,7 +95,10 @@ int main(int argc, char *argv[])
     }
 
     int rows{}, columns{};
-    input >> rows >> columns;
+
+    if (!(input >> rows >> columns)) {
+        return 1;
+    }
     if (!strcmp(argv[1], "1"))
     {
         int matrix[MAX_MATRIX_SIZE];
