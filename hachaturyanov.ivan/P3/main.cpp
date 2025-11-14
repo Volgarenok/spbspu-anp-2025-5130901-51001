@@ -3,10 +3,11 @@
 #include <cstring>
 
 namespace hachaturyanov {
-  void task5(int* matrix, int n, int m);
+  void lft_top_clk(int* matrix, int n, int m);
+  int min_sum_mdg(int* matrix, int n, int m);
 }
 
-void hachaturyanov::task5(int* matrix, int rows, int cols) {
+void hachaturyanov::lft_top_clk(int* matrix, int rows, int cols) {
   int top = 0, left = 0, bottom = rows - 1, right = cols - 1;
   int d = 1;
   while(top <= bottom && left <= right) {
@@ -37,6 +38,27 @@ void hachaturyanov::task5(int* matrix, int rows, int cols) {
   }
 }
 
+int hachaturyanov::min_sum_mdg(int* matrix, int rows, int cols) {
+  if (rows == 0 && cols == 0) {
+    return 0;
+  }
+  int res = matrix[0];
+  for (int diag = 0; diag <= rows + cols - 2; diag++) {
+    if (diag == 0 || diag == cols - 1) {
+      continue;
+    }
+    int s = 0;
+    for (int i = 0; i < rows; i++) {
+      int j = diag - i;
+      if (j >= 0 && j < cols) {
+        s += matrix[i * cols + j];
+      }
+    }
+    res = std::min(res, s);
+  }
+  return res;
+}
+
 
 int main(int argc, char** argv) {
   if (argc < 4) {
@@ -47,7 +69,7 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  if (!strcmp(argv[1],"1") && !strcmp(argv[1],"2")) {
+  if (strcmp(argv[1],"1") != 0 && strcmp(argv[1],"2") != 0) {
     std::cerr << "Incorrect first parameter\n";
     return 1;
   }
@@ -59,23 +81,29 @@ int main(int argc, char** argv) {
   }
 
   int rows = 0, cols = 0;
-  input >> rows >> cols;
-  if (!input.good()) {
+  if (!(input >> rows >> cols)) {
     std::cerr << "Error while reading the file\n";
     return 2;
   }
 
+  int* matrix = nullptr;
+  int temppointer[rows * cols];
+
   if (!strcmp(argv[1], "1")) {
-    int matrix[rows * cols];
-    for (size_t i = 0; i < rows * cols; i++) {
-      input >> matrix[i];
-      if (!input.good()) {
-        std::cerr << "Error while reading the file\n";
-        return 2;
-      }
+    matrix = temppointer;
+  } else if (!strcmp(argv[1], "2")) {
+    matrix = new int[rows * cols];
+  }
+
+  for (size_t i = 0; i < rows * cols; i++) {
+    input >> matrix[i];
+    if (!input.good()) {
+      std::cerr << "Error while reading the file\n";
+      return 2;
     }
-    input.close();
-    hachaturyanov::task5(matrix, rows, cols);
+  }
+  if (!strcmp(argv[1], "1")) {
+    hachaturyanov::lft_top_clk(matrix, rows, cols);
     std::ofstream output(argv[3]);
     if (!output.is_open()) {
       std::cerr << "Cannot open the output file\n";
@@ -86,7 +114,16 @@ int main(int argc, char** argv) {
       output << ' ' << matrix[i];
     }
     output << "\n";
-    output.close();
+  } else if (!strcmp(argv[1], "2")) {
+    int res = hachaturyanov::min_sum_mdg(matrix, rows, cols);
+    std::ofstream output(argv[3]);
+    if (!output.is_open()) {
+      std::cerr << "Cannot open the output file\n";
+      delete[] matrix;
+      return 2;
+    }
+    output << res << "\n";
+    delete[] matrix;
   }
 
   return 0;
