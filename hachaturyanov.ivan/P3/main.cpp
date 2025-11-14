@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
     matrix = new int[rows * cols];
   }
 
-  for (size_t i = 0; i < rows * cols; i++) {
+  for (int i = 0; i < rows * cols; i++) {
     input >> matrix[i];
     if (!input.good()) {
       std::cerr << "Error while reading the file\n";
@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
       return 2;
     }
     output << rows << ' ' << cols;
-    for (size_t i = 0; i < rows * cols; i++) {
+    for (int i = 0; i < rows * cols; i++) {
       output << ' ' << matrix[i];
     }
     output << "\n";
