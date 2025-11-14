@@ -66,6 +66,7 @@ int main(int argc, char **argv) {
   }
   catch (const std::runtime_error& e) {
     std::cerr << "Error file: " << e.what() << std::endl;
+    delete[] arrayDinamic;
     return 2;
   }
   input.close();
@@ -86,7 +87,7 @@ void losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n) {
       if (temp > std::numeric_limits<int>::max()) {
         throw std::runtime_error("Number is too large for int type");
       }
-      ptrArr[i * n + j] = (int)temp;
+      ptrArr[i * n + j] = static_cast<int>(temp);
     }
   }
 }
