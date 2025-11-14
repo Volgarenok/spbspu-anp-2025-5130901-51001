@@ -1,13 +1,20 @@
 #include <iostream>
 #include <fstream>
-int* create_matrix(size_t size) {
+namespace kitserov
+{
+  int* create_matrix(size_t size);
+  void variant_1(size_t rows, size_t cols, int matrix[10000], const char* output_file);
+  void variant_2(size_t rows, size_t cols, int* matrix, const char* output_file);
+}
+
+int* kitserov::create_matrix(size_t size) {
     if (size == 0) {
         return nullptr;
     }
     return new int[size];
 }
 
-void variant_1(size_t rows, size_t cols, int matrix[10000], const char* output_file)
+void kitserov::variant_1(size_t rows, size_t cols, int matrix[10000], const char* output_file)
 {
 	size_t answer = 0;
 	bool flag;
@@ -31,7 +38,7 @@ void variant_1(size_t rows, size_t cols, int matrix[10000], const char* output_f
 	output << answer;
 }
 
-void variant_2(size_t rows, size_t cols, int* matrix, const char* output_file)
+void kitserov::variant_2(size_t rows, size_t cols, int* matrix, const char* output_file)
 {
 	std::ofstream output(output_file);
 	if (rows != cols or rows == 0 or cols == 0)
@@ -42,7 +49,7 @@ void variant_2(size_t rows, size_t cols, int* matrix, const char* output_file)
 	}
 	bool flag = true;
     for (size_t i = 0; i < rows; i++) {
-        for (size_t j = 0; j < i; j++) {  // только элементы ниже диагонали (j < i)
+        for (size_t j = 0; j < i; j++) { 
             if (matrix[i * cols + j] != 0) {
                 flag = false;
                 break;
@@ -65,6 +72,7 @@ void variant_2(size_t rows, size_t cols, int* matrix, const char* output_file)
 
 int main(int argc, char* argv[])
 {
+  using namespace kitserov;
   if (argc < 4)
   {
     std::cerr << "Not enought arguments\n";
@@ -134,6 +142,5 @@ int main(int argc, char* argv[])
     }
   	variant_2(rows, cols, matrix, argv[3]);
   }
-  std::cout << "Succesful\n";
   return 0;
 }
