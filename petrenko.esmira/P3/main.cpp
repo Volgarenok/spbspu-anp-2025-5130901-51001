@@ -43,8 +43,8 @@ int main(int argc, char ** argv)
     std::cout << "Too many arguments" << std::endl;
     return 1;
   }
-  
-  if (!isdigit(*argv[2])) 
+
+  if (!isdigit(*argv[2]))
   {
     std::cout << "First parameter is not a number" << std::endl;
     return 1;
