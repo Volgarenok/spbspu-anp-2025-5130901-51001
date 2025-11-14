@@ -99,6 +99,9 @@ int main(int argc, char** argv) {
     input >> matrix[i];
     if (!input.good()) {
       std::cerr << "Error while reading the file\n";
+      if (!strcmp(argv[1], "2")) {
+        delete[] matrix;
+      }
       return 2;
     }
   }
