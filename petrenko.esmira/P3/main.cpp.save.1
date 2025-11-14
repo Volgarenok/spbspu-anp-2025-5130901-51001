@@ -1,0 +1,20 @@
+#include <iostream>
+#include <fstream>
+
+//void output(std::ostream & out, const int * a, size_t n, size_t m)
+//{
+  //std::ofstream out(name);
+//}
+
+int main(int argc, char ** argv)
+{
+  //std::cout << 123 << std::endl;
+  //std::ifstream input(argv[2]);
+  //input.close();
+  //std::ofstream output(argv[3]);
+  std::cout << argv[2] << std::endl;
+  for (char ** i = argv + 2; i < argc + argv; ++i) 
+  {
+    std::cout << *i << std::endl;
+  }
+}
