@@ -24,7 +24,7 @@ namespace borisov
                 if (current <= matrix[neighbor_idx]) {
                   is_max = false;
                 }
-              } 
+              }
             }
           }
           if (is_max) {
@@ -68,9 +68,9 @@ namespace borisov
       output << borisov::count_local_maximum(matrix, rows, cols) << "\n";
     } else {
       output << "0\n";
-    } 
+    }
     output << borisov::get_max_sum_antidiagonal(matrix, rows, cols) << "\n";
-  } 
+  }
 }
 
 
@@ -83,7 +83,7 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  
+
   if ((*argv[1] != '1') && (*argv[1] != '2')) {
     std::cerr << "First argument is out of range or not a number\n";
     return 1;
