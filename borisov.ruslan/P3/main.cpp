@@ -38,24 +38,24 @@ namespace borisov
   int get_max_sum_antidiagonal(const int* matrix, int rows, int cols)
   {
     int n;
-    if (rows < cols){
+    if (rows < cols) {
       n = rows;
     } else {
       n = cols;
     }
     int max_diagsum = 0;
-    for (int sum = 0; sum <= 2*(n-1); ++sum){
-      if (sum == n-1){
+    for (int sum = 0; sum <= 2*(n-1); ++sum) {
+      if (sum == n-1) {
         continue;
       }
       int diagsum = 0;
-      for (int i = 0; i < n; ++i){
+      for (int i = 0; i < n; ++i) {
         int j = sum - i;
-        if ((j >= 0) && (j < n)){
+        if ((j >= 0) && (j < n)) {
           diagsum += matrix[i * cols + j];
         }
       }
-      if (diagsum > max_diagsum){
+      if (diagsum > max_diagsum) {
         max_diagsum = diagsum;
       }
     }
@@ -64,7 +64,7 @@ namespace borisov
 
   void process_output(std::ostream& output, int rows, int cols, const int* matrix)
   {
-    if (rows >=3 && cols >= 3){
+    if (rows >=3 && cols >= 3) {
       output << borisov::count_local_maximum(matrix, rows, cols) << "\n";
     } else {
       output << "0\n";
