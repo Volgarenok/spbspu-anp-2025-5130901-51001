@@ -104,7 +104,6 @@ namespace muraviev
     }
 
     if (rows <= 0 || columns <= 0) {
-        std::cerr << "ReadMatrixSizes Error: Sizes must be positive.\n";
         return 0;
     }
 
