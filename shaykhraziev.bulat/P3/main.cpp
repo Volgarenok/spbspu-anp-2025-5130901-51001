@@ -55,7 +55,7 @@ void shaykhraziev::lft_bot_cnt(int* data, size_t rows, size_t cols)
   }
 }
 
-int shaykhraziev::min_sum_sdg(const int* data, size_t sideSize, size_t iCols = 0)
+int shaykhraziev::min_sum_sdg(const int* data, size_t sideSize, size_t iCols)
 {
   if (sideSize == 0) {
     return 0;
@@ -139,13 +139,13 @@ void shaykhraziev::writeResult(std::ostream& out, int result)
   out << result;
 }
 
-size_t shaykhraziev::calcSquareSideSize(size_t rows, size_t cols) {
+size_t shaykhraziev::calcSquareSideSize(size_t rows, size_t cols)
+{
   if (rows >= cols) {
     return cols;
   }
   return rows;
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -194,11 +194,7 @@ int main(int argc, char* argv[])
   size_t total = rows * cols;
   int* data = nullptr;
   int static_data[10000];
-  bool is_dynamic = false;
-
-  if (taskNum == 2) {
-    is_dynamic = true;
-  }
+  bool is_dynamic = (taskNum == 2);
 
   if (total > 0) {
     try {
@@ -245,5 +241,6 @@ int main(int argc, char* argv[])
   if (is_dynamic) {
     delete[] data;
   }
+
   return 0;
 }
