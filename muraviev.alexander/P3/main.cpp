@@ -2,9 +2,9 @@
 #include <fstream>
 #include <cstring>
 
-namespace muraviev 
+namespace muraviev
 {
-  void lft_bot_clk(int* matrix, size_t rows, size_t columns) 
+  void lft_bot_clk(int* matrix, size_t rows, size_t columns)
   {
     if (rows == 0 || columns == 0) {
       return;
@@ -50,7 +50,7 @@ namespace muraviev
     }
   }
 
-  int max_sum_sdg(const int* matrix, size_t rows, size_t columns) 
+  int max_sum_sdg(const int* matrix, size_t rows, size_t columns)
   {
     if (rows == 0 || columns == 0) {
       return 0;
@@ -91,7 +91,7 @@ namespace muraviev
     return maxSum;
   }
 
-  int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns) 
+  int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns)
   {
     if (!fin) {
         std::cerr << "ReadMatrixSizes Error: Reading failed.\n";
@@ -111,7 +111,7 @@ namespace muraviev
     return 1;
   }
 
-  void fillMatrix(std::ifstream& fin, int * matrix, size_t rows, size_t columns) 
+  void fillMatrix(std::ifstream& fin, int * matrix, size_t rows, size_t columns)
   {
     for (int i = 0; i < rows * columns; ++i) {
       if (!(fin >> matrix[i])) {
@@ -120,7 +120,7 @@ namespace muraviev
     }
   }
 
-  void outToAFile(std::ostream& out, const int * matrix, size_t rows, size_t columns) 
+  void outToAFile(std::ostream& out, const int * matrix, size_t rows, size_t columns)
   {
     out << rows << " " << columns;
 
@@ -129,7 +129,7 @@ namespace muraviev
     }
   }
 
-  void outToAFile(std::ostream& out, int maxSum) 
+  void outToAFile(std::ostream& out, int maxSum)
   {
     out << maxSum;
   }
