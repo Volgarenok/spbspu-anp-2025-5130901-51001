@@ -182,6 +182,92 @@ size_t shevchenko::write_smooth_matrix(std::ostream & out, const double * data, 
 }
 
 
-int main()
+int main(int argc, char * argv[])
 {
+  if (argc < 4)
+  {
+    std::cerr << "Not enough arguments";
+    return 1;
+  }
+
+  if (argc > 4)
+  {
+    std::cerr << "Too many arguments";
+    return 1;
+  }
+
+  int num;
+
+  try {
+    num = std::stoi(argv[1]);
+  } catch (...) {
+    std::cerr << "First parameter is not a number";
+    return 1;
+  }
+
+  if (num != 1 && num != 2) {
+    std::cerr << "First parameter is out of range";
+    return 1;
+  }
+
+  const char * inputFile = argv[2];
+  const char * outputFile = argv[3];
+
+  std::ifstream fin(inputFile);
+  if (!fin.is_open())
+  {
+    std::cerr << "read_matrix failed";
+    return 2;
+  }
+
+  int rows = 0;
+  int cols = 0;
+  if (!(fin >> rows >> cols))
+  {
+    std::cerr << "read_matrix failed";
+    return 2;
+  }
+
+  size_t total = rows * cols;
+  int * data = nullptr;
+  if (total > 0)
+  {
+    try {
+      data = new int[total];
+    } catch (...) {
+      std::cerr << "read_matrix failed";
+      return 2;
+    }
+
+    try {
+      shevchenko::read_matrix(fin, data, rows, cols);
+    } catch (const std::exception& e) {
+      std::cerr << e.what();
+      delete[] data;
+      return 2;
+    }
+  }
+
+  std::ofstream fout(outputFile);
+  if (!fout.is_open())
+  {
+    std::cerr << "read_matrix failed";
+    delete[] data;
+    return 2;
+  }
+
+  if (num == 1)
+  {
+    shevchenko::lft_top_cnt(data, rows, cols);
+    shevchenko::write_matrix(fout, data, rows, cols);
+  } else
+  {
+    double * smooth_data = new double[total];
+    shevchenko::bld_smt_mtr(data, smooth_data, rows, cols);
+    shevchenko::write_smooth_matrix(fout, smooth_data, rows, cols);
+    delete[] smooth_data;
+  }
+
+  delete[] data;
+  return 0;
 }
