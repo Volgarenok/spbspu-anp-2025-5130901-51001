@@ -50,7 +50,7 @@ namespace muraviev
     }
   }
 
-  int max_sum_sdg(const int* data, size_t rows, size_t columns) 
+  int max_sum_sdg(const int* matrix, size_t rows, size_t columns) 
   {
     if (rows == 0 || columns == 0) {
       return 0;
@@ -59,10 +59,10 @@ namespace muraviev
     int maxSum = 0;
     
     for(size_t i = 1; i < columns; ++i) {
-      int dgSum = data[i];
+      int dgSum = matrix[i];
 
       for(size_t j = 1; j <= columns - i - 1; ++j) {
-        dgSum += data[j * columns + j + i];
+        dgSum += matrix[j * columns + j + i];
       }
 
       if (maxSum < dgSum) {
@@ -77,7 +77,7 @@ namespace muraviev
       size_t rowIndex = 0;
 
       for(size_t j = 1; j <= rows - count - 1; ++j) {
-        dgSum += data[columns * (j + count) + rowIndex];
+        dgSum += matrix[columns * (j + count) + rowIndex];
         rowIndex++;
       }
 
@@ -89,6 +89,26 @@ namespace muraviev
     }
 
     return maxSum;
+  }
+
+  int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns) 
+  {
+    if (!fin) {
+        std::cerr << "ReadMatrixSizes Error: Reading failed.\n";
+        return 0;
+    }
+
+    if (!(fin >> rows >> columns)) {
+        std::cerr << "ReadMatrixSizes Error: Reading sizes of matrix failed.\n";
+        return 0;
+    }
+
+    if (rows <= 0 || columns <= 0) {
+        std::cerr << "ReadMatrixSizes Error: Sizes must be positive.\n";
+        return 0;
+    }
+
+    return 1;
   }
 }
            
@@ -121,4 +141,18 @@ int main(int argc, char* argv[]) {
     cerr << "First parameter is out of range";
     return 1;
   }
+
+  const char* inputFile = argv[2];
+  const char* outputFile = argv[3];
+  size_t rows = 0;
+  size_t columns = 0;
+  bool is_dynamic = (num == 2);
+
+  std::ifstream fin(inputFile);
+
+  if (!muraviev::readMatrixSizes(fin, rows, columns)) {
+    cerr << "Reading matrix sizes failed.\n";
+    return 2;
+  }
+  fin.close();
 }
