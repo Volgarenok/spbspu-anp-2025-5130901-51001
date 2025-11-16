@@ -93,16 +93,12 @@ namespace muraviev
 
   int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns)
   {
-    if (!fin.is_open()) {
-        return 0;
-    }
-
     if (!(fin >> rows >> columns)) {
-        return 0;
+      return 0;
     }
 
     if (rows <= 0 || columns <= 0) {
-        return 0;
+      return 0;
     }
 
     return 1;
@@ -164,8 +160,12 @@ int main(int argc, char* argv[]) {
   size_t rows = 0;
   size_t columns = 0;
   bool is_dynamic = (num == 2);
-
+  
   std::ifstream fin(inputFile);
+
+  if (!fin.is_open()) {
+    return 2;
+  }
 
   if (!muraviev::readMatrixSizes(fin, rows, columns)) {
     return 2;
