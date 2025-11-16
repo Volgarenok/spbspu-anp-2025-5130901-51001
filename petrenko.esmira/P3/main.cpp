@@ -10,13 +10,13 @@ namespace petrenko
 
     if (!input.is_open())
     {
-      std::cout << "Error open file" << std::endl;
+      std::cerr << "Error open file" << std::endl;
       return 2;
     }
 
     size_t row, col;
     input >> row >> col;
-    std::cout << row << col << std::endl;
+    //std::cout << row << col << std::endl;
     if (num == 1)
     {
       int matrix[row][col];
@@ -47,6 +47,11 @@ namespace petrenko
         for (size_t j = 0; j < col; ++j)
         {
           input >> matrix[i][j];
+          if (input.fail())
+          {
+            std::cerr << "Error no matrix element" << std::endl;
+            return 2;
+          }
         }
       }
       // функция для задачи
@@ -65,29 +70,29 @@ int main(int argc, char ** argv)
 {
   if (argc == 0)
   {
-    std::cout << "Not enough arguments" << std::endl;
+    std::cerr << "Not enough arguments" << std::endl;
     return 1;
   }
   else if (argc < 5)
   {
-    std::cout << "Too few arguments" << std::endl;
+    std::cerr << "Too few arguments" << std::endl;
     return 1;
   }
   else if (argc > 5)
   {
-    std::cout << "Too many arguments" << std::endl;
+    std::cerr << "Too many arguments" << std::endl;
     return 1;
   }
 
   if (!isdigit(*argv[2]))
   {
-    std::cout << "First parameter is not a number" << std::endl;
+    std::cerr << "First parameter is not a number" << std::endl;
     return 1;
   }
   int first_parm = atoi(argv[2]);
   if (first_parm > 2 || first_parm < 1)
   {
-    std::cout << "First parameter is out of range" << std::endl;
+    std::cerr << "First parameter is out of range" << std::endl;
     return 1;
   }
 
