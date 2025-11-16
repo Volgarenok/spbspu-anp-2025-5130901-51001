@@ -11,20 +11,50 @@ namespace petrenko
     if (!input.is_open())
     {
       std::cout << "Error open file" << std::endl;
+      return 2;
     }
 
-    if (num == 2)
+    size_t row, col;
+    input >> row >> col;
+    std::cout << row << col << std::endl;
+    if (num == 1)
     {
-      char el;
-      while (input.get(el))
+      int matrix[row][col];
+      for (size_t i = 0; i < row; ++i)
       {
-	if (!isspace(el))
-	{
-          char * elp = &el;
-	  int elem = atoi(elp);
-	  std::cout << elem << std::endl;
-	}
+        for (size_t j = 0; j < col; ++j)
+        {
+          input >> matrix[i][j];
+          if (input.fail())
+          {
+            std::cerr << "Error no matrix element" << std::endl;
+            return 2;
+          }
+        }
       }
+      //функция для задачи
+    }
+    else if (num == 2)
+    {
+      int **matrix = new int *[row];
+      for (size_t i = 0; i < row; ++i)
+      {
+        matrix[i] = new int[col];
+      }
+
+      for (size_t i = 0; i < row; ++i)
+      {
+        for (size_t j = 0; j < col; ++j)
+        {
+          input >> matrix[i][j];
+        }
+      }
+      // функция для задачи
+      for (size_t i = 0; i < row; ++i)
+      {
+        delete [] matrix[i];
+      }
+      delete [] matrix;
     }
     input.close();
     return num;
@@ -36,6 +66,11 @@ int main(int argc, char ** argv)
   if (argc == 0)
   {
     std::cout << "Not enough arguments" << std::endl;
+    return 1;
+  }
+  else if (argc < 5)
+  {
+    std::cout << "Too few arguments" << std::endl;
     return 1;
   }
   else if (argc > 5)
