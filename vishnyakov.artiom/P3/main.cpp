@@ -40,7 +40,6 @@ size_t is_in(size_t *array,size_t value, size_t size)
   return 0;
 }
 
-// Вариант 4
 void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream & output)
 {
   size_t start = row*column-column, type_of_mooving = 0;
@@ -67,7 +66,6 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
   }
 }
 
-// Вариант 14
 int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
 {
   int sum = 0, max_sum = 0;
