@@ -111,18 +111,31 @@ namespace muraviev
     return 1;
   }
 
-  void fillMatrix(std::ifstream& fin, int * matrix, size_t rows, size_t columns) {
+  void fillMatrix(std::ifstream& fin, int * matrix, size_t rows, size_t columns) 
+  {
     for (int i = 0; i < rows * columns; ++i) {
         if (!(fin >> matrix[i])) {
             throw std::logic_error("func fillMatrix failed with filling elements.");
         }
     }
   }
+
+  void outToAFile(std::ostream& out, const int * matrix, size_t rows, size_t columns) 
+  {
+    out << rows << " " << columns;
+
+    for(size_t i = 0; i < rows * columns; ++i) {
+      out << " " << matrix[i];
+    }
+  }
+
+  void outToAFile(std::ostream& out, int maxSum) 
+  {
+    out << maxSum;
+  }
 }
-           
 
 int main(int argc, char* argv[]) {
-  using std::cout, std::endl;
   using std::cerr;
 
   if (argc < 4) {
@@ -137,16 +150,15 @@ int main(int argc, char* argv[]) {
 
   int num;
 
-  try {
-    int num = std::stoi(argv[1]);
-    cout << num;;
-  } catch (...) {
+  if (strcmp(argv[1], "1") || strcmp(argv[1], "2")) {
+    num = std::stoi(argv[1]);
+  } else {
     cerr << "First parameter is not a number";
     return 1;
   }
 
   if (num != 1 && num != 2) {
-    cerr << "First parameter is out of range";
+    std::cerr << "First parameter is out of range";
     return 1;
   }
 
@@ -176,13 +188,46 @@ int main(int argc, char* argv[]) {
 
     try {
       muraviev::fillMatrix(fin, matrix, rows, columns);
-    } catch (std::exception err) {
-      cerr << "Error: " << err.what() << endl;
+    } catch (const std::exception& err) {
+      cerr << "Error: " << err.what() << std::endl;
 
       if (is_dynamic) {
         delete[] matrix;
       }
+      return 2;
     }
   }
   fin.close();
+
+  std::ofstream fout(outputFile);
+
+  if (!fout) {
+    std::cerr << "Output failed.";
+    if (is_dynamic) {
+      delete[] matrix;
+    }
+    return 2;
+  }
+
+  if (num == 1) {
+    muraviev::lft_bot_clk(matrix, rows, columns);
+    muraviev::outToAFile(fout, matrix, rows, columns);
+
+  } else {
+    if (rows != columns) {
+      size_t minOne = rows > columns ? columns : rows;
+      rows = minOne;
+      columns = minOne;
+    }
+
+    int maxSum = muraviev::max_sum_sdg(matrix, rows, columns);
+    muraviev::outToAFile(fout, maxSum);
+  }
+
+  if (is_dynamic) {
+    delete[] matrix;
+  }
+  fout.close();
+
+  return 0;
 }
