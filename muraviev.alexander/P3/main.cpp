@@ -94,12 +94,10 @@ namespace muraviev
   int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns)
   {
     if (!fin) {
-        std::cerr << "ReadMatrixSizes Error: Reading failed.\n";
         return 0;
     }
 
     if (!(fin >> rows >> columns)) {
-        std::cerr << "ReadMatrixSizes Error: Reading sizes of matrix failed.\n";
         return 0;
     }
 
@@ -170,7 +168,6 @@ int main(int argc, char* argv[]) {
   std::ifstream fin(inputFile);
 
   if (!muraviev::readMatrixSizes(fin, rows, columns)) {
-    cerr << "Reading matrix sizes failed.\n";
     return 2;
   }
 
