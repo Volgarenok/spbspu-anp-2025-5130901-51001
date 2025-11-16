@@ -9,7 +9,7 @@ namespace muraviev
     if (rows == 0 || columns == 0) {
       return;
     }
-      
+
     int left = 0, right = columns - 1;
     int top = 0, bottom = rows - 1;
 
@@ -24,7 +24,7 @@ namespace muraviev
       if (left > right) {
         break;
       }
-      
+
       for(int j = left; j <= right; ++j) {
         matrix[top * columns + j] -= dec++;
       }
@@ -57,7 +57,7 @@ namespace muraviev
     }
 
     int maxSum = 0;
-    
+
     for(size_t i = 1; i < columns; ++i) {
       int dgSum = matrix[i];
 
@@ -69,7 +69,7 @@ namespace muraviev
         maxSum = dgSum;
       }
     }
-    
+
     size_t count = 0;
 
     for(size_t i = columns; i <= rows * columns - columns; i += columns) {
@@ -212,7 +212,6 @@ int main(int argc, char* argv[]) {
   if (num == 1) {
     muraviev::lft_bot_clk(matrix, rows, columns);
     muraviev::outToAFile(fout, matrix, rows, columns);
-
   } else {
     if (rows != columns) {
       size_t minOne = rows > columns ? columns : rows;
