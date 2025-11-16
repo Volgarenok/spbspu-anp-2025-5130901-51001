@@ -19,13 +19,13 @@ int max_of(int n1, int n2)
 
 size_t move(size_t type, size_t row, size_t column, size_t start)
 {
-switch (type%4)
-{
-  case 0: return start-column; break;
-  case 1: return start+1; break;
-  case 2: return start+column; break;
-  case 3: return start-1; break;
-}
+  switch (type%4)
+  {
+    case 0: return start-column; break;
+    case 1: return start+1; break;
+    case 2: return start+column; break;
+    case 3: return start-1; break;
+  }
 }
 
 size_t is_in(size_t *array,size_t value, size_t size)
@@ -75,22 +75,22 @@ int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
   for (size_t i=1; i<column; ++i)
   {
     sum = matrix[i];
-    k=i+column+1;
+    k = i+column+1;
     while (k%column!=0 && k<row*column)
     {
-      sum+=matrix[k];
-      k+=column+1;
+      sum += matrix[k];
+      k += column+1;
     }
     max_sum = max_of(sum,max_sum);
   }
   for (size_t j=column; j<row*column; j+=column)
   {
     sum = matrix[j];
-    k=j+column+1;
+    k = j+column+1;
     while (k%column!=0 && k<row*column)
     {
-      sum+=matrix[k];
-      k+=column+1;
+      sum += matrix[k];
+      k += column+1;
     }
     max_sum = max_of(sum,max_sum);
   }
