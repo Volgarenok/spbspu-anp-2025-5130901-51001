@@ -52,7 +52,12 @@ int main(int argc, char** argv)
     ll_t static_matrix[stepanov::MAX_MATRIX_SIZE];
     matrix = static_matrix;
   } else {
-    matrix = new ll_t[rows * cols];
+    try {
+      matrix = new ll_t[rows * cols];
+    } catch (const std::bad_alloc&) {
+      std::cerr << "Error allocating memory\n";
+      return 2;
+    }
   }
 
   for (size_t i = 0; i < rows * cols; i++) {
