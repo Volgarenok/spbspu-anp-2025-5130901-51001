@@ -93,7 +93,7 @@ namespace muraviev
 
   int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns)
   {
-    if (!fin) {
+    if (!fin.is_open()) {
         return 0;
     }
 
@@ -197,7 +197,7 @@ int main(int argc, char* argv[]) {
 
   std::ofstream fout(outputFile);
 
-  if (!fout) {
+  if (!fout.is_open()) {
     std::cerr << "Output failed.";
     if (is_dynamic) {
       delete[] matrix;
