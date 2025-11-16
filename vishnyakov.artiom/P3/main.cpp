@@ -1,10 +1,9 @@
 #include <iostream>
 #include <fstream>
 
-
 namespace vishnyakov
 {
-  void LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream & output);
+  void LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream &output);
   int MAX_SUM_SDG(const int *matrix, size_t row, size_t column);
 }
 
@@ -40,7 +39,7 @@ size_t is_in(size_t *array,size_t value, size_t size)
   return 0;
 }
 
-void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream & output)
+void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream &output)
 {
   size_t start = row*column-column, type_of_mooving = 0;
   size_t completed_values[column*row];
@@ -59,18 +58,18 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
     type_of_mooving += is_in(completed_values, move(type_of_mooving,row,column,start), row*column);
     start = move(type_of_mooving,row,column,start);
   }
-  output << row << ' ' << column << ' ';
+  output << row << ' ' << column;
   for (int i = 0; i<row*column;++i)
   {
-    output << matrix[i] << ' ';
+    output << ' ' << matrix[i];
   }
 }
 
 int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
 {
   int sum = 0, max_sum = 0;
-  size_t k=0;
-  for (size_t i=1; i<column; ++i)
+  size_t k = 0;
+  for (size_t i = 1; i<column; ++i)
   {
     sum = matrix[i];
     k = i+column+1;
