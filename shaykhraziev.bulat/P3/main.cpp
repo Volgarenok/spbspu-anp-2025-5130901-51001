@@ -6,7 +6,7 @@ namespace shaykhraziev
   void lft_bot_cnt(int* data, size_t rows, size_t cols);
   int min_sum_sdg(const int* data, size_t rows, size_t cols);
   void readMatrix(std::istream& in, int* data, size_t rows, size_t cols);
-  void writeMatrix(std::ostream& out, const int* data, size_t rows, size_t cols);
+  void writeResult(std::ostream& out, const int* data, size_t rows, size_t cols);
   void writeResult(std::ostream& out, int result);
 }
 
@@ -118,7 +118,7 @@ void shaykhraziev::readMatrix(std::istream& in, int* data, size_t rows, size_t c
   }
 }
 
-void shaykhraziev::writeMatrix(std::ostream& out, const int* data, size_t rows, size_t cols)
+void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, size_t cols)
 {
   out << rows << " " << cols;
 
@@ -166,7 +166,7 @@ int main(int argc, char* argv[])
   std::ifstream fin(inputFile);
 
   if (!fin.is_open()) {
-    std::cerr << "readMatrix failed";
+    std::cerr << "open input file failed";
     return 2;
   }
 
@@ -174,18 +174,28 @@ int main(int argc, char* argv[])
   size_t cols = 0;
 
   if (!(fin >> rows >> cols)) {
-    std::cerr << "readMatrix failed";
+    std::cerr << "read matrix failed";
     return 2;
   }
 
   size_t total = rows * cols;
   int* data = nullptr;
+  int static_data[10000];
+  bool is_dynamic = false;
+
+  if (taskNum == 2) {
+    is_dynamic = true;
+  }
 
   if (total > 0) {
     try {
-      data = new int[total];
+      if (is_dynamic) {
+        data = new int[total];
+      } else {
+        data = static_data;
+      }
     } catch (...) {
-      std::cerr << "readMatrix failed";
+      std::cerr << "memory allocation failed";
       return 2;
     }
 
@@ -193,7 +203,9 @@ int main(int argc, char* argv[])
       shaykhraziev::readMatrix(fin, data, rows, cols);
     } catch (const std::exception& e) {
       std::cerr << e.what();
-      delete[] data;
+      if (is_dynamic) {
+        delete[] data;
+      }
       return 2;
     }
   }
@@ -201,19 +213,23 @@ int main(int argc, char* argv[])
   std::ofstream fout(outputFile);
 
   if (!fout.is_open()) {
-    std::cerr << "readMatrix failed";
-    delete[] data;
+    std::cerr << "open output file failed";
+    if (is_dynamic) {
+      delete[] data;
+    }
     return 2;
   }
 
   if (taskNum == 1) {
     shaykhraziev::lft_bot_cnt(data, rows, cols);
-    shaykhraziev::writeMatrix(fout, data, rows, cols);
+    shaykhraziev::writeResult(fout, data, rows, cols);
   } else {
     int result = shaykhraziev::min_sum_sdg(data, rows, cols);
     shaykhraziev::writeResult(fout, result);
   }
 
-  delete[] data;
+  if (is_dynamic) {
+    delete[] data;
+  }
   return 0;
 }
