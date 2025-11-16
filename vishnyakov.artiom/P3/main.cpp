@@ -1,9 +1,11 @@
 #include <iostream>
 #include <fstream>
+
+
 namespace vishnyakov
 {
-    void LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream & output);
-    int MAX_SUM_SDG(const int *matrix, size_t row, size_t column);
+  void LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream & output);
+  int MAX_SUM_SDG(const int *matrix, size_t row, size_t column);
 }
 
 int max_of(int n1, int n2)
@@ -17,13 +19,13 @@ int max_of(int n1, int n2)
 
 size_t move(size_t type, size_t row, size_t column, size_t start)
 {
-  switch (type%4)
-  {
+switch (type%4)
+{
   case 0: return start-column; break;
   case 1: return start+1; break;
   case 2: return start+column; break;
   case 3: return start-1; break;
-  }
+}
 }
 
 size_t is_in(size_t *array,size_t value, size_t size)
@@ -47,7 +49,7 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
   {
     completed_values[i]=column*row;
   }
-  for (size_t i=0; i<row*column; ++i)
+    for (size_t i=0; i<row*column; ++i)
   {
     if (move(type_of_mooving,row,column,start)<0 || move(type_of_mooving,row,column,start)>(row*column))
     {
@@ -63,14 +65,13 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
   {
     output << matrix[i] << ' ';
   }
-  
 }
 
 // Вариант 14
 int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
 {
   int sum = 0, max_sum = 0;
-  size_t k;
+  size_t k=0;
   for (size_t i=1; i<column; ++i)
   {
     sum = matrix[i];
@@ -82,7 +83,6 @@ int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
     }
     max_sum = max_of(sum,max_sum);
   }
-
   for (size_t j=column; j<row*column; j+=column)
   {
     sum = matrix[j];
@@ -103,13 +103,13 @@ int main(int argc, char ** argv)
   {
     std::cerr << "Not enough arguments\n";
     return 1;
-  } 
+  }
   else if (argc > 4)
   {
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  if ((*argv[1] != '1') && (*argv[1] != '2')) 
+  if ((*argv[1] != '1') && (*argv[1] != '2'))
   {
     std::cerr << "First argument is out of range or not a number\n";
     return 1;
@@ -120,9 +120,7 @@ int main(int argc, char ** argv)
     std::cerr << "Read file failed\n";
     return 2;
   }
-
   size_t row = 0, column = 0;
-
   input >> row >> column;
   if (!input.good())
   {
@@ -142,11 +140,11 @@ int main(int argc, char ** argv)
     {
       matrix = new int[row * column];
     }
-      catch (const std::bad_alloc&)
-      {
+    catch (const std::bad_alloc&)
+    {
       std::cerr << "Error allocating memory\n";
       return 2;
-      }
+    }
   }
   for (size_t i = 0; i < row * column; ++i)
   {
@@ -158,12 +156,11 @@ int main(int argc, char ** argv)
     }
   }
   input.close();
-
   std::ofstream output(argv[3]);
   if (!output.is_open())
   {
     std::cerr << "Error opening output file\n";
-    if ((*argv[1] == '2')) 
+    if ((*argv[1] == '2'))
     {
       delete[] matrix;
     }
