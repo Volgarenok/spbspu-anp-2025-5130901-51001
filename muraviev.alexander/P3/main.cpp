@@ -110,6 +110,14 @@ namespace muraviev
 
     return 1;
   }
+
+  void fillMatrix(std::ifstream& fin, int * matrix, size_t rows, size_t columns) {
+    for (int i = 0; i < rows * columns; ++i) {
+        if (!(fin >> matrix[i])) {
+            throw std::logic_error("func fillMatrix failed with filling elements.");
+        }
+    }
+  }
 }
            
 
@@ -153,6 +161,28 @@ int main(int argc, char* argv[]) {
   if (!muraviev::readMatrixSizes(fin, rows, columns)) {
     cerr << "Reading matrix sizes failed.\n";
     return 2;
+  }
+
+  int* matrix = nullptr;
+  int static_matrix[10000];
+  size_t size = rows * columns;
+
+  if (size > 0) {
+    if (is_dynamic) {
+      matrix = new int[size];
+    } else {
+      matrix = static_matrix;
+    }
+
+    try {
+      muraviev::fillMatrix(fin, matrix, rows, columns);
+    } catch (std::exception err) {
+      cerr << "Error: " << err.what() << endl;
+
+      if (is_dynamic) {
+        delete[] matrix;
+      }
+    }
   }
   fin.close();
 }
