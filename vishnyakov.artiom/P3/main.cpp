@@ -19,10 +19,10 @@ size_t move(size_t type, size_t row, size_t column, size_t start)
 {
   switch (type%4)
   {
-  case 0: return start-column; break; //up
-  case 1: return start+1; break; // right
-  case 2: return start+column; break; // down
-  case 3: return start-1; break; // left
+  case 0: return start-column; break;
+  case 1: return start+1; break;
+  case 2: return start+column; break;
+  case 3: return start-1; break;
   }
 }
 
@@ -78,7 +78,7 @@ int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
     while (k%column!=0 && k<row*column)
     {
       sum+=matrix[k];
-      k+=column+1; 
+      k+=column+1;
     }
     max_sum = max_of(sum,max_sum);
   }
@@ -99,12 +99,12 @@ int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
 
 int main(int argc, char ** argv)
 {
-  if (argc < 4) 
+  if (argc < 4)
   {
     std::cerr << "Not enough arguments\n";
     return 1;
   } 
-  else if (argc > 4) 
+  else if (argc > 4)
   {
     std::cerr << "Too many arguments\n";
     return 1;
@@ -115,7 +115,7 @@ int main(int argc, char ** argv)
     return 1;
   }
   std::ifstream input(argv[2]);
-  if (!input.is_open()) 
+  if (!input.is_open())
   {
     std::cerr << "Read file failed\n";
     return 2;
@@ -124,33 +124,33 @@ int main(int argc, char ** argv)
   size_t row = 0, column = 0;
 
   input >> row >> column;
-  if (!input.good()) 
+  if (!input.good())
   {
     input.close();
     std::cerr << "Error reading matrix sizes\n";
     return 2;
   }
   int *matrix = nullptr;
-  if ((*argv[1] == '1')) 
+  if ((*argv[1] == '1'))
   {
     int static_matrix[10000]= {};
     matrix = static_matrix;
   }
-  else 
+  else
   {
-    try 
+    try
     {
       matrix = new int[row * column];
     }
-      catch (const std::bad_alloc&) 
+      catch (const std::bad_alloc&)
       {
       std::cerr << "Error allocating memory\n";
       return 2;
       }
   }
-  for (size_t i = 0; i < row * column; ++i) 
+  for (size_t i = 0; i < row * column; ++i)
   {
-    if (!(input >> matrix[i])) 
+    if (!(input >> matrix[i]))
     {
       input.close();
       std::cerr << "Error reading matrix\n";
@@ -160,7 +160,7 @@ int main(int argc, char ** argv)
   input.close();
 
   std::ofstream output(argv[3]);
-  if (!output.is_open()) 
+  if (!output.is_open())
   {
     std::cerr << "Error opening output file\n";
     if ((*argv[1] == '2')) 
@@ -173,7 +173,7 @@ int main(int argc, char ** argv)
   vishnyakov::LFT_BOT_CLK(matrix,row,column, output);
   output << '\n' << result;
   output.close();
-  if ((*argv[1] == '2')) 
+  if ((*argv[1] == '2'))
   {
     delete[] matrix;
   }
