@@ -51,7 +51,7 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
   }
     for (size_t i=0; i<row*column; ++i)
   {
-    if (move(type_of_mooving,row,column,start)<0 || move(type_of_mooving,row,column,start)>(row*column))
+    if (move(type_of_mooving,row,column,start)<0||move(type_of_mooving,row,column,start)>row*column)
     {
       type_of_mooving+=1;
     }
