@@ -114,9 +114,9 @@ namespace muraviev
   void fillMatrix(std::ifstream& fin, int * matrix, size_t rows, size_t columns) 
   {
     for (int i = 0; i < rows * columns; ++i) {
-        if (!(fin >> matrix[i])) {
-            throw std::logic_error("func fillMatrix failed with filling elements.");
-        }
+      if (!(fin >> matrix[i])) {
+        throw std::logic_error("func fillMatrix failed with filling elements.");
+      }
     }
   }
 
