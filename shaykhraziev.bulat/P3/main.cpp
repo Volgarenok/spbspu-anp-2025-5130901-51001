@@ -71,7 +71,6 @@ int shaykhraziev::min_sum_sdg(const int* data, size_t sideSize, size_t iCols)
     while (i < sideSize && j < sideSize) {
       size_t shift = iCols * i;
       sum += data[i * sideSize + j + shift];
-      std::cout << data[i * sideSize + j + shift] << "\n";
       ++i;
       ++j;
     }
@@ -89,7 +88,6 @@ int shaykhraziev::min_sum_sdg(const int* data, size_t sideSize, size_t iCols)
     while (i < sideSize && j < sideSize) {
       size_t shift = iCols * i;
       sum += data[i * sideSize + j + shift];
-      std::cout << data[i * sideSize + j + shift] << "\n";
       ++i;
       ++j;
     }
