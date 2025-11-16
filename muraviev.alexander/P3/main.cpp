@@ -1,4 +1,6 @@
 #include <iostream>
+#include <fstream>
+#include <cstring>
 
 namespace muraviev 
 {
@@ -48,7 +50,7 @@ namespace muraviev
     }
   }
 
-  int max_sum_sdg(int* data, size_t rows, size_t columns) 
+  int max_sum_sdg(const int* data, size_t rows, size_t columns) 
   {
     if (rows == 0 || columns == 0) {
       return 0;
@@ -66,7 +68,6 @@ namespace muraviev
       if (maxSum < dgSum) {
         maxSum = dgSum;
       }
-    
     }
     
     size_t count = 0;
@@ -90,30 +91,34 @@ namespace muraviev
     return maxSum;
   }
 }
-          
-int main() {
+           
+
+int main(int argc, char* argv[]) {
   using std::cout, std::endl;
+  using std::cerr;
 
-  int rows = 5, cols = 5;
-
-  int n = rows * cols;
-  int matrix[n] = {};
-  int dec = 1;
-
-  for(size_t i = 0; i < n; ++i) {
-    matrix[i] = dec++;
+  if (argc < 4) {
+    cerr << "Not enough arguments";
+    return 1;
   }
 
-  int max = muraviev::max_sum_sdg(matrix, rows, cols);
-
-  for (int i = 0; i < n; ++i) {
-    cout << matrix[i] << " ";
-    if ((i + 1) % cols == 0) {
-      cout << endl;
-    }
+  if (argc > 4) {
+    cerr << "Too many arguments";
+    return 1;
   }
-  
-  cout << max;
 
-  return 0;
+  int num;
+
+  try {
+    int num = std::stoi(argv[1]);
+    cout << num;;
+  } catch (...) {
+    cerr << "First parameter is not a number";
+    return 1;
+  }
+
+  if (num != 1 && num != 2) {
+    cerr << "First parameter is out of range";
+    return 1;
+  }
 }
