@@ -4,12 +4,12 @@
 
 namespace petrenko
 {
-  int variant1(int *matrix, size_t row, size_t col, std::string name_output)
+  void variant1(int *matrix, size_t row, size_t col, std::string name_output)
   {
     if (row == 0 || col == 0)
     {
       std::ofstream(name_output) << "false";
-      return 0;
+      return;
     }
     if (row > col)
     {
@@ -44,19 +44,28 @@ namespace petrenko
     {
       std::ofstream(name_output) << "false";
     }
-    return 0;
+    return;
   }
 
-  int variant2(int **matrix, size_t row, size_t col, std::string name_output)
+  void variant2(int **matrix, size_t row, size_t col, std::string name_output)
   {
-      for (size_t i = 0; i < row; ++i)
+    size_t right_col = col + 0;
+    for (size_t i = 0; i < col; ++i)
+    {
+      int last = matrix[0][i];
+      for (size_t j = 1; j < row; ++j)
       {
-        for (size_t j = 0; j < col; ++j)
+        if (matrix[j][i] == last)
         {
-          std::cout << matrix[i][j] << std::endl;
+          --right_col;
+          last = matrix[j][i];
+          break;
         }
+        last = matrix[j][i];
       }
-    return 0;
+    }
+    std::ofstream(name_output) << right_col;
+    return;
   }
 
   int take_matrix(std::string name, std::string name_output, int num)
@@ -73,7 +82,7 @@ namespace petrenko
     input >> row >> col;
     if (input.fail())
     {
-      std::cerr << "Error no matrix element1" << std::endl;
+      std::cerr << "Error no matrix element" << std::endl;
       return 2;
     }
     if (num == 1)
@@ -85,7 +94,7 @@ namespace petrenko
         {
           if (input.fail())
           {
-            std::cerr << "Error no matrix element2" << std::endl;
+            std::cerr << "Error no matrix element" << std::endl;
             return 2;
           }
           input >> matrix[i][j];
@@ -108,7 +117,7 @@ namespace petrenko
         {
           if (input.fail())
           {
-            std::cerr << "Error no matrix element3" << std::endl;
+            std::cerr << "Error no matrix element" << std::endl;
             return 2;
           }
           input >> matrix[i][j];
