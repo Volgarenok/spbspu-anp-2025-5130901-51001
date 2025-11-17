@@ -142,30 +142,30 @@ int main(int argc, char ** argv)
     std::cerr << "Not enough arguments" << std::endl;
     return 1;
   }
-  else if (argc < 5)
+  else if (argc < 4)
   {
     std::cerr << "Too few arguments" << std::endl;
     return 1;
   }
-  else if (argc > 5)
+  else if (argc > 4)
   {
     std::cerr << "Too many arguments" << std::endl;
     return 1;
   }
 
-  if (!isdigit(*argv[2]))
+  if (!isdigit(*argv[1]))
   {
     std::cerr << "First parameter is not a number" << std::endl;
     return 1;
   }
-  int first_parm = atoi(argv[2]);
+  int first_parm = atoi(argv[1]);
   if (first_parm > 2 || first_parm < 1)
   {
     std::cerr << "First parameter is out of range" << std::endl;
     return 1;
   }
 
-  std::string name_output = argv[4];
-  std::string name_input = argv[3];
+  std::string name_output = argv[3];
+  std::string name_input = argv[2];
   return petrenko::take_matrix(name_input, name_output, first_parm);
 }
