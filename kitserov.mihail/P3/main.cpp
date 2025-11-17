@@ -104,8 +104,7 @@ int main(int argc, char* argv[])
   }
 
   if (rows == 0 || cols == 0) {
-    std::cerr << "Incorrect matrix dimensions\n";
-    return 2;
+    return 0;
   }
 
   if (num == 1) {
