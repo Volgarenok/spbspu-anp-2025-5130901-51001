@@ -21,7 +21,7 @@ void shevchenko::lft_top_cnt(int * data, int rows, int cols)
   int count = 1;
   int top = 0, bottom = rows - 1;
   int left = 0, right = cols - 1;
-    
+
   while (top <= bottom && left <= right)
   {
     for (int i = top; i <= bottom; ++i)
@@ -30,7 +30,7 @@ void shevchenko::lft_top_cnt(int * data, int rows, int cols)
       count++;
     }
     left++;
-    
+
     if (top <= bottom)
     {
       for (int j = left; j <= right; ++j)
@@ -82,43 +82,43 @@ void shevchenko::bld_smt_mtr(const int * data, double * smooth_data, size_t rows
         sum += data[(i - 1) * cols + (j - 1)];
         count++;
       }
-    
+
       if (i > 0)
       {
         sum += data[(i - 1) * cols + j];
         count++;
       }
-      
+
       if (i > 0 && j < cols - 1)
       {
         sum += data[(i - 1) * cols + (j + 1)];
         count++;
       }
-    
+
       if (j > 0)
       {
         sum += data[i * cols + (j - 1)];
         count++;
       }
-      
+
       if (j < cols - 1)
       {
         sum += data[i * cols + (j + 1)];
         count++;
       }
-      
+
       if (i < rows - 1 && j > 0)
       {
         sum += data[(i + 1) * cols + (j - 1)];
         count++;
       }
-      
+
       if (i < rows - 1)
       {
         sum += data[(i + 1) * cols + j];
         count++;
       }
-      
+
       if (i < rows - 1 && j < cols - 1)
       {
         sum += data[(i + 1) * cols + (j + 1)];
