@@ -143,18 +143,23 @@ int main(int argc, char *argv[])
 
   int num;
 
-  if (strcmp(argv[1], "1") || strcmp(argv[1], "2")) {
-    num = std::stoi(argv[1]);
-  } else {
-    cerr << "First parameter is not a number";
-    return 1;
-  }
+  try {
+    size_t pos;
+    num = std::stoi(argv[1], &pos);
 
-  if (num != 1 && num != 2) {
-    std::cerr << "First parameter is out of range";
-    return 1;
-  }
+    if (pos != strlen(argv[1])) {
+      throw std::logic_error("Str in num!");
+    }
 
+    if (num != 1 && num != 2) {
+      std::cerr << "First parameter is out of range";
+      return 1;
+    }
+  } catch (...) {
+      std::cerr << "First parameter is not a number";
+      return 1;
+  }
+  
   const char *inputFile = argv[2];
   const char *outputFile = argv[3];
   const bool is_dynamic = (num == 2);
@@ -162,7 +167,7 @@ int main(int argc, char *argv[])
   size_t columns = 0;
 
   std::ifstream fin(inputFile);
-
+  
   if (!fin.is_open()) {
     return 0;
   }
