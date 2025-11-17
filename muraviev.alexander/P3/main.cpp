@@ -16,7 +16,7 @@ namespace muraviev
     int dec = 1;
 
     while (left <= right && top <= bottom) {
-      for(int i = bottom; i >= top; --i) {
+      for (int i = bottom; i >= top; --i) {
         matrix[i * columns + left] -= dec++;
       }
       left++;
@@ -25,7 +25,7 @@ namespace muraviev
         break;
       }
 
-      for(int j = left; j <= right; ++j) {
+      for (int j = left; j <= right; ++j) {
         matrix[top * columns + j] -= dec++;
       }
       top++;
@@ -34,7 +34,7 @@ namespace muraviev
         break;
       }
 
-      for(int i = top; i <= bottom; ++i) {
+      for (int i = top; i <= bottom; ++i) {
         matrix[i * columns + right] -= dec++;
       }
       right--;
@@ -43,7 +43,7 @@ namespace muraviev
         break;
       }
 
-      for(int j = right; j >= left; --j) {
+      for (int j = right; j >= left; --j) {
         matrix[bottom * columns + j] -= dec++;
       }
       bottom--;
@@ -58,10 +58,10 @@ namespace muraviev
 
     int maxSum = 0;
 
-    for(size_t i = 1; i < columns; ++i) {
+    for (size_t i = 1; i < columns; ++i) {
       int dgSum = matrix[i];
 
-      for(size_t j = 1; j <= columns - i - 1; ++j) {
+      for (size_t j = 1; j <= columns - i - 1; ++j) {
         dgSum += matrix[j * columns + j + i];
       }
 
@@ -69,23 +69,22 @@ namespace muraviev
         maxSum = dgSum;
       }
     }
-
     size_t count = 0;
-
-    for(size_t i = columns; i <= rows * columns - columns; i += columns) {
+    
+    for (size_t i = columns; i <= rows * columns - columns; i += columns) {
       int dgSum = 0;
       size_t rowIndex = 0;
 
-      for(size_t j = 1; j <= rows - count - 1; ++j) {
+      for (size_t j = 1; j <= rows - count - 1; ++j) {
         dgSum += matrix[columns * (j + count) + rowIndex];
         rowIndex++;
       }
 
-      count++;
-
       if (maxSum < dgSum) {
         maxSum = dgSum;
       }
+
+      count++;
     }
 
     return maxSum;
@@ -94,11 +93,11 @@ namespace muraviev
   int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns)
   {
     if (!(fin >> rows >> columns)) {
-      return 0;
+        return 0;
     }
 
     if (rows <= 0 || columns <= 0) {
-      return 0;
+        return 0;
     }
 
     return 1;
@@ -117,7 +116,7 @@ namespace muraviev
   {
     out << rows << " " << columns;
 
-    for(size_t i = 0; i < rows * columns; ++i) {
+    for (size_t i = 0; i < rows * columns; ++i) {
       out << " " << matrix[i];
     }
   }
@@ -157,15 +156,15 @@ int main(int argc, char* argv[]) {
 
   const char* inputFile = argv[2];
   const char* outputFile = argv[3];
+  const bool is_dynamic = (num == 2);
   size_t rows = 0;
   size_t columns = 0;
-  bool is_dynamic = (num == 2);
-  
+
   std::ifstream fin(inputFile);
 
   if (!fin.is_open()) {
-    return 2;
-  }
+        return 0;
+    }
 
   if (!muraviev::readMatrixSizes(fin, rows, columns)) {
     return 2;
@@ -177,7 +176,11 @@ int main(int argc, char* argv[]) {
 
   if (size > 0) {
     if (is_dynamic) {
-      matrix = new int[size];
+      try {
+        matrix = new int[size];
+      } catch (...) {
+        return 2;
+      }
     } else {
       matrix = static_matrix;
     }
@@ -197,7 +200,7 @@ int main(int argc, char* argv[]) {
 
   std::ofstream fout(outputFile);
 
-  if (!fout.is_open()) {
+  if (!fout) {
     std::cerr << "Output failed.";
     if (is_dynamic) {
       delete[] matrix;
