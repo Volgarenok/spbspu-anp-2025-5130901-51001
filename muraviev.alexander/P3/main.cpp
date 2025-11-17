@@ -4,7 +4,7 @@
 
 namespace muraviev
 {
-  void lft_bot_clk(int* matrix, size_t rows, size_t columns)
+  void lft_bot_clk(int *matrix, size_t rows, size_t columns)
   {
     if (rows == 0 || columns == 0) {
       return;
@@ -50,7 +50,7 @@ namespace muraviev
     }
   }
 
-  int max_sum_sdg(const int* matrix, size_t rows, size_t columns)
+  int max_sum_sdg(const int *matrix, size_t rows, size_t columns)
   {
     if (rows == 0 || columns == 0) {
       return 0;
@@ -70,7 +70,7 @@ namespace muraviev
       }
     }
     size_t count = 0;
-    
+
     for (size_t i = columns; i <= rows * columns - columns; i += columns) {
       int dgSum = 0;
       size_t rowIndex = 0;
@@ -90,20 +90,20 @@ namespace muraviev
     return maxSum;
   }
 
-  int readMatrixSizes(std::ifstream& fin, size_t& rows, size_t& columns)
+  int readMatrixSizes(std::ifstream &fin, size_t &rows, size_t &columns)
   {
     if (!(fin >> rows >> columns)) {
-        return 0;
+      return 0;
     }
 
     if (rows <= 0 || columns <= 0) {
-        return 0;
+      return 0;
     }
 
     return 1;
   }
 
-  void fillMatrix(std::ifstream& fin, int * matrix, size_t rows, size_t columns)
+  void fillMatrix(std::ifstream &fin, int *matrix, size_t rows, size_t columns)
   {
     for (size_t i = 0; i < rows * columns; ++i) {
       if (!(fin >> matrix[i])) {
@@ -112,7 +112,7 @@ namespace muraviev
     }
   }
 
-  void outToAFile(std::ostream& out, const int * matrix, size_t rows, size_t columns)
+  void outToAFile(std::ostream &out, const int *matrix, size_t rows, size_t columns)
   {
     out << rows << " " << columns;
 
@@ -121,13 +121,14 @@ namespace muraviev
     }
   }
 
-  void outToAFile(std::ostream& out, int maxSum)
+  void outToAFile(std::ostream &out, int maxSum)
   {
     out << maxSum;
   }
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[])
+{
   using std::cerr;
 
   if (argc < 4) {
@@ -154,8 +155,8 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  const char* inputFile = argv[2];
-  const char* outputFile = argv[3];
+  const char *inputFile = argv[2];
+  const char *outputFile = argv[3];
   const bool is_dynamic = (num == 2);
   size_t rows = 0;
   size_t columns = 0;
@@ -163,14 +164,14 @@ int main(int argc, char* argv[]) {
   std::ifstream fin(inputFile);
 
   if (!fin.is_open()) {
-        return 0;
-    }
+    return 0;
+  }
 
   if (!muraviev::readMatrixSizes(fin, rows, columns)) {
     return 2;
   }
 
-  int* matrix = nullptr;
+  int *matrix = nullptr;
   int static_matrix[10000];
   size_t size = rows * columns;
 
@@ -187,7 +188,7 @@ int main(int argc, char* argv[]) {
 
     try {
       muraviev::fillMatrix(fin, matrix, rows, columns);
-    } catch (const std::exception& err) {
+    } catch (const std::exception &err) {
       cerr << "Error: " << err.what() << std::endl;
 
       if (is_dynamic) {
