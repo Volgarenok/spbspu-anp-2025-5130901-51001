@@ -1,12 +1,10 @@
 #include <iostream>
 #include <fstream>
-
 namespace vishnyakov
 {
   void LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream &output);
   int MAX_SUM_SDG(const int *matrix, size_t row, size_t column);
 }
-
 int max_of(int n1, int n2)
 {
   if (n1>n2)
@@ -15,7 +13,6 @@ int max_of(int n1, int n2)
   }
   return n2;
 }
-
 size_t move(size_t type, size_t row, size_t column, size_t start)
 {
   switch (type%4)
@@ -26,7 +23,6 @@ size_t move(size_t type, size_t row, size_t column, size_t start)
     case 3: return start-1; break;
   }
 }
-
 size_t is_in(size_t *array,size_t value, size_t size)
 {
   for (size_t i=0; i<size; ++i)
@@ -38,7 +34,6 @@ size_t is_in(size_t *array,size_t value, size_t size)
   }
   return 0;
 }
-
 void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream &output)
 {
   size_t start = row*column-column, type_of_mooving = 0;
@@ -47,7 +42,7 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
   {
     completed_values[i]=column*row;
   }
-    for (size_t i=0; i<row*column; ++i)
+    for (size_t i = 0; i<row*column; ++i)
   {
     if (move(type_of_mooving,row,column,start)<0||move(type_of_mooving,row,column,start)>row*column)
     {
@@ -64,7 +59,6 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
     output << ' ' << matrix[i];
   }
 }
-
 int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
 {
   int sum = 0, max_sum = 0;
@@ -93,7 +87,6 @@ int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
   }
   return max_sum;
 }
-
 int main(int argc, char ** argv)
 {
   if (argc < 4)
