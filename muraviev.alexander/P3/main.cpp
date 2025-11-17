@@ -98,11 +98,6 @@ namespace muraviev
     if (!(fin >> rows >> columns)) {
       return 0;
     }
-
-    if (rows == 0 || columns == 0) {
-      return 0;
-    }
-
     return 1;
   }
 
@@ -177,6 +172,7 @@ int main(int argc, char* argv[])
   }
 
   if (!muraviev::readMatrixSizes(fin, rows, columns)) {
+    std::cerr << "Failed to read matrix sizes";
     return 2;
   }
 
@@ -189,6 +185,7 @@ int main(int argc, char* argv[])
       try {
         matrix = new int[size];
       } catch (...) {
+        cerr << "Error: Memory allocation failed.";
         return 2;
       }
     } else {
@@ -203,6 +200,7 @@ int main(int argc, char* argv[])
       if (is_dynamic) {
         delete[] matrix;
       }
+
       return 2;
     }
   }
