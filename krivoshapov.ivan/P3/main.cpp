@@ -1,11 +1,9 @@
 #include <iostream>
 #include <fstream>
 
-namespace krivoshapov
-{
+namespace krivoshapov {
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
   if (argc != 4) {
     std::cerr << "Ошибка: неверное количество аргументов\n";
     return 1;
@@ -173,7 +171,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-} 
+}
 
 int main(int argc, char *argv[])
 {
