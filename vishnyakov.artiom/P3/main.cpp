@@ -13,7 +13,7 @@ int max_of(int n1, int n2)
   }
   return n2;
 }
-size_t move(size_t type, size_t row, size_t column, size_t start)
+size_t move(size_t type, size_t column, size_t start)
 {
   switch (type%4)
   {
@@ -52,17 +52,17 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
   }
     for (size_t i = 0; i<row*column; ++i)
   {
-    if (move(type_of_mooving,row,column,start)<0||move(type_of_mooving,row,column,start)>row*column)
+    if (move(type_of_mooving,column,start)<0 || move(type_of_mooving,column,start)>row*column)
     {
       type_of_mooving+=1;
     }
     matrix[start] -= i+1;
     completed_values[i]=start;
-    type_of_mooving += is_in(completed_values, move(type_of_mooving,row,column,start), row*column);
-    start = move(type_of_mooving,row,column,start);
+    type_of_mooving += is_in(completed_values, move(type_of_mooving,column,start), row*column);
+    start = move(type_of_mooving,column,start);
   }
   output << row << ' ' << column;
-  for (int i = 0; i<row*column;++i)
+  for (size_t i = 0; i<row*column;++i)
   {
     output << ' ' << matrix[i];
   }
