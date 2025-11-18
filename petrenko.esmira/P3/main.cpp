@@ -107,7 +107,7 @@ namespace petrenko
           input >> matrix[i][j];
           if (input.fail())
           {
-            for (size_t e = 0; e < row; ++i1)
+            for (size_t e = 0; e < row; ++e)
             {
               delete [] matrix[e];
             }
