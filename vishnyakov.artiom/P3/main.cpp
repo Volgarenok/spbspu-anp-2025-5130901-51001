@@ -128,14 +128,27 @@ int main(int argc, char ** argv)
     return 2;
   }
   int *matrix = nullptr;
-  int static_matrix[10000];
+  int static_matrix[10000] = {};
   if ((*argv[1] == '1'))
   {
     matrix = static_matrix;
   }
   else
   {
-    matrix = new int[row * column];
+    try
+    {
+      matrix = new int[row * column];
+    }
+    catch (...)
+    {
+      std::cerr << "Error: Memory allocation failed.\n";
+      return 2;
+    }
+    if(matrix==nullptr)
+    {
+      std::cerr << "Error: Memory allocation failed.\n";
+      return 2;
+    }
   }
   input.close();
   std::ofstream output(argv[3]);
