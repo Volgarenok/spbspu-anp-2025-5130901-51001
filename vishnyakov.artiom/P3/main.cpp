@@ -135,24 +135,7 @@ int main(int argc, char ** argv)
   }
   else
   {
-    try
-    {
-      matrix = new int[row * column];
-    }
-    catch (...)
-    {
-      std::cerr << "Error: Memory allocation failed.\n";
-      return 2;
-    }
-  }
-  for (size_t i = 0; i < row * column; ++i)
-  {
-    if (!(input >> matrix[i]))
-    {
-      input.close();
-      std::cerr << "Error reading matrix\n";
-      return 2;
-    }
+    matrix = new int[row * column];
   }
   input.close();
   std::ofstream output(argv[3]);
