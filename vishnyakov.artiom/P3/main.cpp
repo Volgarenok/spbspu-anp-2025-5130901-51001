@@ -139,7 +139,7 @@ int main(int argc, char ** argv)
     {
       matrix = new int[row * column];
     }
-    catch (const std::bad_alloc&)
+    catch (...)
     {
       std::cerr << "Error allocating memory\n";
       return 2;
