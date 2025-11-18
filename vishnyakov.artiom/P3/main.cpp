@@ -141,7 +141,7 @@ int main(int argc, char ** argv)
     }
     catch (...)
     {
-      std::cerr << "Error allocating memory\n";
+      std::cerr << "Error: Memory allocation failed.\n";
       return 2;
     }
   }
