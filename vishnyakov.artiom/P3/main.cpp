@@ -150,7 +150,10 @@ int main(int argc, char ** argv)
     {
       input.close();
       std::cerr << "Error reading matrix\n";
-      delete[] matrix;
+      if ((*argv[1] == '2'))
+      {
+        delete[] matrix;
+      }
       return 2;
     }
   }
