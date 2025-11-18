@@ -27,8 +27,8 @@ size_t move(size_t type, size_t row, size_t column, size_t start)
       return start+column;
       break;
     case 3:
-    return start-1;
-    break;
+      return start-1;
+      break;
   }
 }
 size_t is_in(size_t *array,size_t value, size_t size)
