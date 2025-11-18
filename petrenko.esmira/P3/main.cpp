@@ -107,9 +107,9 @@ namespace petrenko
           input >> matrix[i][j];
           if (input.fail())
           {
-            for (size_t i1 = 0; i1 < i; ++i1)
+            for (size_t e = 0; e < row; ++i1)
             {
-              delete [] matrix[i1];
+              delete [] matrix[e];
             }
             delete [] matrix;
             std::cerr << "Error no matrix element" << '\n';
