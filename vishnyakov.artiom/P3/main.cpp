@@ -5,14 +5,6 @@ namespace vishnyakov
   void LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream &output);
   int MAX_SUM_SDG(const int *matrix, size_t row, size_t column);
 }
-int max_of(int n1, int n2)
-{
-  if (n1>n2)
-  {
-    return n1;
-  }
-  return n2;
-}
 size_t move(size_t type, size_t column, size_t start)
 {
   switch (type%4)
@@ -81,7 +73,10 @@ int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
       sum += matrix[k];
       k += column+1;
     }
-    max_sum = max_of(sum,max_sum);
+    if(sum>max_sum)
+    {
+      max_sum = sum;
+    }
   }
   for (size_t j=column; j<row*column; j+=column)
   {
@@ -92,7 +87,10 @@ int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
       sum += matrix[k];
       k += column+1;
     }
-    max_sum = max_of(sum,max_sum);
+    if(sum>max_sum)
+    {
+      max_sum = sum;
+    }
   }
   return max_sum;
 }
@@ -128,7 +126,7 @@ int main(int argc, char ** argv)
     return 2;
   }
   int *matrix = nullptr;
-  int static_matrix[10000] = {};
+  int static_matrix[10000];
   if ((*argv[1] == '1'))
   {
     matrix = static_matrix;
@@ -144,9 +142,13 @@ int main(int argc, char ** argv)
       std::cerr << "Error: Memory allocation failed.\n";
       return 2;
     }
-    if(matrix==nullptr)
+  }
+  for (size_t i = 0; i < row * column; ++i)
+  {
+    if (!(input >> matrix[i]))
     {
-      std::cerr << "Error: Memory allocation failed.\n";
+      input.close();
+      std::cerr << "Error reading matrix\n";
       return 2;
     }
   }
