@@ -1,7 +1,8 @@
 #include <iostream>
 #include <fstream>
 
-namespace krivoshapov {
+namespace krivoshapov
+{
 
 int main(int argc, char *argv[])
 {
@@ -143,7 +144,6 @@ int main(int argc, char *argv[])
   for (int r = 0; r < rows; r++) {
     for (int c = 0; c < cols; c++) {
       const int val = data[r * cols + c];
-
       if (val == rowMin[r] && val == colMax[c]) {
         saddle++;
       }
@@ -157,7 +157,6 @@ int main(int argc, char *argv[])
     }
     delete[] rowMin;
     delete[] colMax;
-
     std::cerr << "Ошибка: не удалось открыть выходной файл\n";
     return 2;
   }
@@ -174,7 +173,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-}
+} 
 
 int main(int argc, char *argv[])
 {
