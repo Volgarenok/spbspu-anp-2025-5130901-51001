@@ -4,20 +4,12 @@
 
 namespace petrenko
 {
-  void variant1(int *matrix, size_t row, size_t col, std::string name_output)
+  void variant1(int * matrix, size_t row, size_t col, std::string name_output)
   {
     if (row == 0 || col == 0)
     {
       std::ofstream(name_output) << "false";
       return;
-    }
-    if (row > col)
-    {
-      row = col;
-    }
-    if (col > row)
-    {
-      col = row;
     }
     size_t nice_row = 0;
     for (size_t i = 0; i < row; ++i)
@@ -36,20 +28,17 @@ namespace petrenko
         nice_row += 1;
       }
     }
-    if (nice_row == row)
-    {
+    if (nice_row == row) {
       std::ofstream(name_output) << "true";
-    }
-    else
-    {
+    } else {
       std::ofstream(name_output) << "false";
     }
     return;
   }
 
-  void variant2(int **matrix, size_t row, size_t col, std::string name_output)
+  void variant2(int ** matrix, size_t row, size_t col, std::string name_output)
   {
-    size_t right_col = col + 0;
+    size_t right_col = 0;
     for (size_t i = 0; i < col; ++i)
     {
       int last = matrix[0][i];
@@ -57,7 +46,7 @@ namespace petrenko
       {
         if (matrix[j][i] == last)
         {
-          --right_col;
+          ++right_col;
           last = matrix[j][i];
           break;
         }
@@ -74,7 +63,7 @@ namespace petrenko
 
     if (!input.is_open())
     {
-      std::cerr << "Error open file" << std::endl;
+      std::cerr << "Error open file" << '\n';
       return 2;
     }
 
@@ -82,7 +71,7 @@ namespace petrenko
     input >> row >> col;
     if (input.fail())
     {
-      std::cerr << "Error no matrix element" << std::endl;
+      std::cerr << "Error no matrix element" << '\n';
       return 2;
     }
     if (num == 1)
@@ -92,12 +81,12 @@ namespace petrenko
       {
         for (size_t j = 0; j < col; ++j)
         {
+          input >> matrix[i][j];
           if (input.fail())
           {
-            std::cerr << "Error no matrix element" << std::endl;
+            std::cerr << "Error no matrix element" << '\n';
             return 2;
           }
-          input >> matrix[i][j];
         }
       }
       variant1(&matrix[0][0], row, col, name_output);
@@ -110,17 +99,22 @@ namespace petrenko
       {
         matrix[i] = new int[col];
       }
-
-      for (size_t i = 0; i < row; ++i)
+      size_t i = 0;
+      for (; i < row; ++i)
       {
         for (size_t j = 0; j < col; ++j)
         {
+          input >> matrix[i][j];
           if (input.fail())
           {
-            std::cerr << "Error no matrix element" << std::endl;
+            for (size_t i1 = 0; i1 < i; ++i1)
+            {
+              delete [] matrix[i1];
+            }
+            delete [] matrix;
+            std::cerr << "Error no matrix element" << '\n';
             return 2;
           }
-          input >> matrix[i][j];
         }
       }
       variant2(matrix, row, col, name_output);
@@ -139,29 +133,29 @@ int main(int argc, char ** argv)
 {
   if (argc == 0)
   {
-    std::cerr << "Not enough arguments" << std::endl;
+    std::cerr << "Not enough arguments" << '\n';
     return 1;
   }
   else if (argc < 4)
   {
-    std::cerr << "Too few arguments" << std::endl;
+    std::cerr << "Too few arguments" << '\n';
     return 1;
   }
   else if (argc > 4)
   {
-    std::cerr << "Too many arguments" << std::endl;
+    std::cerr << "Too many arguments" << '\n';
     return 1;
   }
 
   if (!isdigit(*argv[1]))
   {
-    std::cerr << "First parameter is not a number" << std::endl;
+    std::cerr << "First parameter is not a number" << '\n';
     return 1;
   }
   int first_parm = atoi(argv[1]);
   if (first_parm > 2 || first_parm < 1)
   {
-    std::cerr << "First parameter is out of range" << std::endl;
+    std::cerr << "First parameter is out of range" << '\n';
     return 1;
   }
 
