@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 
 namespace krivoshapov {
 
@@ -11,12 +10,12 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  std::string modeStr = argv[1];
+  const char *modeStr = argv[1];
   int mode = 0;
 
-  if (modeStr == "1") {
+  if (modeStr[0] == '1' && modeStr[1] == '\0') {
     mode = 1;
-  } else if (modeStr == "2") {
+  } else if (modeStr[0] == '2' && modeStr[1] == '\0') {
     mode = 2;
   } else {
     std::cerr << "Ошибка: параметр должен быть 1 или 2\n";
@@ -175,7 +174,7 @@ int main(int argc, char *argv[])
   return 0;
 }
 
-}  // namespace krivoshapov
+}
 
 int main(int argc, char *argv[])
 {
