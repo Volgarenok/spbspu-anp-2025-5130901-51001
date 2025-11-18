@@ -14,9 +14,9 @@ int main(int argc, char *argv[])
   const char *modeStr = argv[1];
   int mode = 0;
 
-  if (modeStr[0] == '1' && modeStr[1] == '\0') {
+  if (modeStr[0] == '1' && modeStr[1] == 0) {
     mode = 1;
-  } else if (modeStr[0] == '2' && modeStr[1] == '\0') {
+  } else if (modeStr[0] == '2' && modeStr[1] == 0) {
     mode = 2;
   } else {
     std::cerr << "Ошибка: параметр должен быть 1 или 2\n";
