@@ -30,6 +30,7 @@ size_t move(size_t type, size_t column, size_t start)
       return start-1;
       break;
   }
+  return 0;
 }
 size_t is_in(size_t *array,size_t value, size_t size)
 {
@@ -127,9 +128,9 @@ int main(int argc, char ** argv)
     return 2;
   }
   int *matrix = nullptr;
+  int static_matrix[10000];
   if ((*argv[1] == '1'))
   {
-    int static_matrix[10000]= {};
     matrix = static_matrix;
   }
   else
