@@ -131,7 +131,7 @@ int main(int argc, char ** argv)
   {
     matrix = static_matrix;
   }
-  else
+  else if(*argv[1] == '2')
   {
     try
     {
@@ -140,6 +140,7 @@ int main(int argc, char ** argv)
     catch (...)
     {
       std::cerr << "Error: Memory allocation failed.\n";
+      delete[] matrix;
       return 2;
     }
   }
