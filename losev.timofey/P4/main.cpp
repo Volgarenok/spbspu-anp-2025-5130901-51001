@@ -3,9 +3,11 @@
 #include<stdlib.h>
 #include<cctype>
 
+
 namespace losev {
   char * getline(std::istream & in, size_t & size);
   char * lat_rmv(const char * src, char * dest, size_t size);
+  int has_rep(const char * src, size_t size);
 }
 
 
@@ -15,6 +17,7 @@ int main() {
   char * str =  los::getline(std::cin, str_size);
   if (str == nullptr) {
     std::cerr << "Fail memory\n";
+    free(str);
     return 1;
   }
   char * strForFirstEx = reinterpret_cast<char*>(malloc(str_size * sizeof(char)));
@@ -23,8 +26,7 @@ int main() {
     free(strForFirstEx);
     return 1;
   }
-
-  std::cout << los::lat_rmv(str, strForFirstEx, str_size) << "\n";
+  std::cout << los::lat_rmv(str, strForFirstEx, str_size) << "\n" << los::has_rep(str, str_size) << "\n";
 }
 
 
@@ -50,7 +52,6 @@ char * losev::getline(std::istream & in, size_t & size) {
       if (!str_new) {
         std::cerr << "Memory allocation failed\n";
         free(str_new);
-        free(str);
         return nullptr;
       }
       for (size_t j = 0; j < size; j++) {
@@ -60,11 +61,11 @@ char * losev::getline(std::istream & in, size_t & size) {
       str = str_new;
     }
   }
-  char * str_final = reinterpret_cast<char*>(malloc((i + 1) * sizeof(char)));
+  size = i + 1;
+  char * str_final = reinterpret_cast<char*>(malloc((size) * sizeof(char)));
   if (!str_final) {
     std::cerr << "Memory allocation failed\n";
     free(str_final);
-    free(str);
     return nullptr;
   }
   for (size_t j = 0; j < size; j++) {
@@ -89,4 +90,20 @@ char * losev::lat_rmv(const char * src, char * dest, size_t size) {
   }
   dest[j] = 0;
   return dest;
+}
+
+int losev::has_rep(const char * src, size_t size) {
+  if (size < 2) {
+    return 0;
+  }
+  const char * ptr = src + 1;
+  for (size_t i = 0; i < size - 1; i++, src++) {
+    ptr = src + 1;
+    for (size_t j = 0; j < size - 1; j++, ptr++) {
+      if (*ptr == *src) {
+        return 1;
+      }
+    }
+  }
+  return 0;
 }
