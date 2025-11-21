@@ -1,5 +1,3 @@
-// UNI-TWO && HAS-SAM new/delete
-
 #include <iostream>
 #include <istream>
 
