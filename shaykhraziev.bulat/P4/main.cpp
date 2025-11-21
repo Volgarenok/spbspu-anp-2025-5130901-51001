@@ -115,15 +115,45 @@ namespace shaykhraziev {
 
 int main() {
   size_t s1, s2;
-  char * inp1 = shaykhraziev::getline(std::cin, s1);
-  char * inp2 = shaykhraziev::getline(std::cin, s2);
+  char * inp1, * inp2;
+
+  try {
+    inp1 = shaykhraziev::getline(std::cin, s1);
+  } catch (std::bad_alloc &) {
+    std::cerr << "bad alloc" << "\n";
+    return 1;
+  } catch (std::exception &e) {
+    std::cerr << e.what() << "\n";
+    return 1;
+  }
+
+  try {
+    inp2 = shaykhraziev::getline(std::cin, s2);
+  } catch (std::bad_alloc &) {
+    std::cerr << "bad alloc" << "\n";
+    delete [] inp1;
+    return 1;
+  } catch (std::exception &e) {
+    std::cerr << e.what() << "\n";
+    delete [] inp1;
+    return 1;
+  }
 
   //uni-two
   size_t size = s1 + s2;
-  char * unitwo = new char[size];
-  shaykhraziev::uni_two(unitwo, inp1, inp2, s1, s2);
-  std::cout << unitwo << "\n";
-  delete[] unitwo;
+  char * sum;
+  try {
+    sum = new char[size];
+  } catch (std::bad_alloc &) {
+    std::cerr << "bad alloc" << "\n";
+    delete [] inp1;
+    delete [] inp2;
+    return 1;
+  }
+
+  shaykhraziev::uni_two(sum, inp1, inp2, s1, s2);
+  std::cout << sum << "\n";
+  delete[] sum;
 
   //has-sam
   int hasSam = shaykhraziev::has_sam(inp1, inp2, s1, s2);
