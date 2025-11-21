@@ -4,7 +4,7 @@
 
 namespace shevchenko
 {
-  void lft_top_cnt(int* data, int rows, int cols);
+  void lft_top_cnt(int * data, int rows, int cols);
   void bld_smt_mtr(const int * data, double * smooth_data, size_t rows, size_t cols);
   size_t read_matrix(std::istream & in, int * data, size_t rows, size_t cols);
   size_t write_matrix(std::ostream & out, const int * data, size_t rows, size_t cols);
@@ -70,9 +70,9 @@ void shevchenko::bld_smt_mtr(const int * data, double * smooth_data, size_t rows
     return;
   }
 
-  for (int i = 0; i < rows; ++i)
+  for (size_t i = 0; i < rows; ++i)
   {
-    for (int j = 0; j < cols; ++j)
+    for (size_t j = 0; j < cols; ++j)
     {
       double sum = 0.0;
       int count = 0;
