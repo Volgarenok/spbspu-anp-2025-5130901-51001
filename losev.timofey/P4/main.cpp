@@ -75,6 +75,13 @@ char * losev::getline(std::istream & in, size_t & size) {
   }
   free(str);
   str = str_final;
+  if (i == 0) {
+    free(str);
+    if (is_skips) {
+      in >> std::skipws;
+    }
+    return nullptr;
+  }
   str[size - 1] = '\0';
   if (is_skips) {
     in >> std::skipws;
