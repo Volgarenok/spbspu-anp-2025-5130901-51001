@@ -95,6 +95,22 @@ namespace shaykhraziev {
     }
 
   }
+
+  int has_sam(char * a, char * b, size_t as, size_t bs) {
+    size_t freq[256] = {};
+
+    for (size_t i = 0; i < as; i++) {
+      freq[a[i]]++;
+    }
+
+    for (size_t i = 0; i < bs; i++) {
+      if (freq[b[i]] > 0) {
+        return 1;
+      }
+    }
+
+    return 0;
+  }
 }
 
 int main() {
