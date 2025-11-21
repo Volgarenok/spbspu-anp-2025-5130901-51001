@@ -3,13 +3,11 @@
 #include<stdlib.h>
 #include<cctype>
 
-
 namespace losev {
   char * getline(std::istream & in, size_t & size);
   char * lat_rmv(const char * src, char * dest, size_t size);
   int has_rep(const char * src, size_t size);
 }
-
 
 int main() {
   namespace los = losev;
@@ -27,8 +25,10 @@ int main() {
     return 1;
   }
   std::cout << los::lat_rmv(str, strForFirstEx, str_size) << "\n" << los::has_rep(str, str_size) << "\n";
+  free(str);
+  free(strForFirstEx);
+  return 0;
 }
-
 
 char * losev::getline(std::istream & in, size_t & size) {
   char * str = reinterpret_cast<char*>(malloc(size * sizeof(char)));
