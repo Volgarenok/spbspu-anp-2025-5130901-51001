@@ -81,7 +81,7 @@ char * losev::getline(std::istream & in, size_t & size) {
 char * losev::lat_rmv(const char * src, char * dest, size_t size) {
   size_t j = 0;
   for (size_t i = 0; i < size && src[i] != '\0'; i++) {
-    if (!isalpha((unsigned char)src[i])) {
+    if (!isalpha(src[i])) {
       if (j < size - 1) {
         dest[j++] = src[i];
       }
