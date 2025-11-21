@@ -2,34 +2,51 @@
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
+#include <iomanip>
 
 namespace hachaturyanov {
-  char * readline(char * buf, size_t * buf_size);
+  char * readline(std::istream & in, size_t & strl);
   void exc_snd(char * input, char * second, size_t second_len, char * output);
 }
 
-char * hachaturyanov::readline(char * buf, size_t * buf_size) {
+char * hachaturyanov::readline(std::istream & in, size_t & strl) {
+  size_t max_buffer_size = 512;
+  bool is_skipws = in.flags() & std::ios_base::skipws;
+  if (is_skipws) {
+    in >> std::noskipws;
+  }
+
+  char * input = (char*)malloc(max_buffer_size);
+  if (!input) {
+    return nullptr;
+  }
+
   size_t len = 0;
 
   bool done = false;
   while (!done) {
-    std::cin.getline(buf + len, *buf_size - len);
-    len = strlen(buf);
+    for (size_t i = len; i < max_buffer_size - len; i++) {
+      in >> input[i];
+    }
+    len = strlen(input);
 
     if (std::cin.fail() && !std::cin.eof()) {
       std::cin.clear();
-      *buf_size *= 2;
-      char * temp = (char*)realloc(buf, *buf_size);
+      max_buffer_size *= 2;
+      char * temp = (char*)realloc(input, max_buffer_size);
       if (!temp) {
-        free(buf);
+        free(input);
         return nullptr;
       }
-      buf = temp;
+      input = temp;
       continue;
     }
     done = true;
   }
-  return buf;
+  if (is_skipws) {
+    in >> std::skipws;
+  }
+  return input;
 }
 
 void hachaturyanov::exc_snd(char * input, char * second, size_t second_len, char * output) {
@@ -45,23 +62,16 @@ void hachaturyanov::exc_snd(char * input, char * second, size_t second_len, char
 }
 
 int main() {
-  size_t max_buffer_size = 512;
-
   const char exc_snd_second[] = "abc";
   const char dgt_snd_second[] = "g1h2k";
 
   size_t exc_snd_s_len = strlen(exc_snd_second);
   size_t dgt_snd_s_len = strlen(dgt_snd_second);
 
-  char * input = (char*)malloc(max_buffer_size);
+  size_t strl = 0;
+  char * input = hachaturyanov::readline(std::cin, strl);
   if (!input) {
     std::cerr << "Bad allocation\n";
-    return 1;
-  }
-
-  input = hachaturyanov::readline(input, &max_buffer_size);
-  if (!input) {
-    std::cerr << "Too long input\n";
     return 1;
   }
 
