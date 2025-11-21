@@ -56,7 +56,7 @@ namespace shaykhraziev {
 
     char * q;
     try {
-      q = concat(result, batch, size, i);
+       q = concat(result, batch, size, i);
     } catch (...) {
       size = 0;
       delete[] result;
@@ -114,6 +114,23 @@ namespace shaykhraziev {
 }
 
 int main() {
+  size_t s1, s2;
+  char * inp1 = shaykhraziev::getline(std::cin, s1);
+  char * inp2 = shaykhraziev::getline(std::cin, s2);
+
+  //uni-two
+  size_t size = s1 + s2;
+  char * unitwo = new char[size];
+  shaykhraziev::uni_two(unitwo, inp1, inp2, s1, s2);
+  std::cout << unitwo << "\n";
+  delete[] unitwo;
+
+  //has-sam
+  int hasSam = shaykhraziev::has_sam(inp1, inp2, s1, s2);
+  std::cout << hasSam << "\n";
+
+  delete[] inp1;
+  delete[] inp2;
   return 0;
 }
 
