@@ -71,6 +71,30 @@ namespace shaykhraziev {
     delete[] batch;
     return result;
   }
+
+  void uni_two(char * sum, char * a, char * b, size_t as, size_t bs) {
+    size_t cmn, odd;
+    char * t;
+    if (as >= bs) {
+      cmn = bs;
+      odd = as - bs;
+      t = a;
+    } else {
+      cmn = as;
+      odd = bs - as;
+      t = b;
+    }
+
+    for (size_t i = 0; i < cmn; i++) {
+      sum[2*i] = a[i];
+      sum[2*i+1] = b[i];
+    }
+
+    for (size_t i = 0; i < odd; i++) {
+      sum[2*cmn + i] = t[cmn + i];
+    }
+
+  }
 }
 
 int main() {
