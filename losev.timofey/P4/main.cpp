@@ -15,15 +15,16 @@ int main() {
   char * str =  los::getline(std::cin, str_size);
   if (str == nullptr) {
     std::cerr << "Fail memory\n";
-    free(str);
     return 1;
   }
   char * strForFirstEx = reinterpret_cast<char*>(malloc(str_size * sizeof(char)));
   if (!strForFirstEx) {
     std::cerr << "Memory allocation failed\n";
     free(strForFirstEx);
+    free(str);
     return 1;
   }
+  strForFirstEx[0] = '\0';
   std::cout << los::lat_rmv(str, strForFirstEx, str_size) << "\n" << los::has_rep(str, str_size) << "\n";
   free(str);
   free(strForFirstEx);
@@ -34,7 +35,6 @@ char * losev::getline(std::istream & in, size_t & size) {
   char * str = reinterpret_cast<char*>(malloc(size * sizeof(char)));
   if (!str) {
     std::cerr << "Memory allocation failed\n";
-    free(str);
     return nullptr;
   }
   bool is_skips = in.flags() & std::ios_base::skipws;
@@ -47,16 +47,17 @@ char * losev::getline(std::istream & in, size_t & size) {
     if (in.fail()) {
       break;
     }
-    if (i == (size - 1) && str[i] != 0) {
+    if (i == (size - 1) && str[i] != '\0') {
       char * str_new = reinterpret_cast<char*>(malloc((size + 10) * sizeof(char)));
       if (!str_new) {
         std::cerr << "Memory allocation failed\n";
-        free(str_new);
+        free(str);
         return nullptr;
       }
       for (size_t j = 0; j < size; j++) {
         str_new[j] = str[j];
       }
+      free(str);
       size += 10;
       str = str_new;
     }
@@ -65,12 +66,13 @@ char * losev::getline(std::istream & in, size_t & size) {
   char * str_final = reinterpret_cast<char*>(malloc((size) * sizeof(char)));
   if (!str_final) {
     std::cerr << "Memory allocation failed\n";
-    free(str_final);
+    free(str);
     return nullptr;
   }
   for (size_t j = 0; j < size; j++) {
     str_final[j] = str[j];
   }
+  free(str);
   str = str_final;
   if (is_skips) {
     in >> std::skipws;
