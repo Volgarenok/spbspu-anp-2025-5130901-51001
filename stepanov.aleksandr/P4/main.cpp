@@ -13,6 +13,10 @@ int main() {
     std::cerr << "Cannot read input\n";
     return 1;
   }
+  if (str[0] == '\0') {
+    std::cerr << "Input is empty\n";
+    return 1;
+  }
   stepanov::upp_low(str);
   std::cout << str << std::endl;
   stepanov::rmv_vow(str);
