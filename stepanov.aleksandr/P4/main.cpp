@@ -14,6 +14,7 @@ int main() {
     return 1;
   }
   if (str[0] == '\0') {
+    delete[] str;
     std::cerr << "Input is empty\n";
     return 1;
   }
