@@ -6,7 +6,8 @@
 
 namespace hachaturyanov {
   char * readline(std::istream & in, size_t & strl);
-  void exc_snd(char * input, char * second, size_t second_len, char * output);
+  void output(std::ostream & out, char * outline);
+  void exc_snd(char * input, const char * second, const size_t second_len, char * output);
 }
 
 char * hachaturyanov::readline(std::istream & in, size_t & strl) {
@@ -43,13 +44,17 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl) {
     }
     done = true;
   }
+
+  strl = len - 1;
+  input[strl] = 0;
+
   if (is_skipws) {
     in >> std::skipws;
   }
   return input;
 }
 
-void hachaturyanov::exc_snd(char * input, char * second, size_t second_len, char * output) {
+void hachaturyanov::exc_snd(char * input, const char * second, const size_t second_len, char * output) {
   for (size_t i = 0; i < strlen(input); i++) {
     size_t count = 0;
     for (size_t j = 0; j < second_len; j++) {
@@ -65,8 +70,8 @@ int main() {
   const char exc_snd_second[] = "abc";
   const char dgt_snd_second[] = "g1h2k";
 
-  size_t exc_snd_s_len = strlen(exc_snd_second);
-  size_t dgt_snd_s_len = strlen(dgt_snd_second);
+  const size_t exc_snd_s_len = strlen(exc_snd_second);
+  const size_t dgt_snd_s_len = strlen(dgt_snd_second);
 
   size_t strl = 0;
   char * input = hachaturyanov::readline(std::cin, strl);
@@ -75,4 +80,16 @@ int main() {
     return 1;
   }
 
+  char * outline = (char*)malloc(strl);
+  if (!outline) {
+    free(input);
+    std::cerr << "Bad allocation\n";
+    return 1;
+  }
+
+  hachaturyanov::exc_snd(input, exc_snd_second, exc_snd_s_len, outline);
+  std::cout << outline << "\n";
+  free(input);
+  free(outline);
+  return 0;
 }
