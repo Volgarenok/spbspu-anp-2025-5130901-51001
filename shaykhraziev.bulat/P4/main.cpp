@@ -171,14 +171,15 @@ int main()
     return 1;
   }
 
-  if (s1 == 0 || s2 == 0) {
-    delete[] inp1;
-    delete[] inp2;
-    return 0;
-  }
-
   size_t size = s1 + s2;
   char* sum;
+
+  if (size == 0) {
+    std::cerr << "nothing working with\n";
+    delete[] inp1;
+    delete[] inp2;
+    return 1;
+  }
 
   try {
     sum = new char[size];
