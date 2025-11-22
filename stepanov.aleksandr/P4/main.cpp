@@ -17,6 +17,7 @@ int main() {
   std::cout << str << std::endl;
   stepanov::rmv_vow(str);
   std::cout << str << std::endl;
+  delete[] str;
   return 0;
 }
 
