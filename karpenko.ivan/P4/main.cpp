@@ -54,7 +54,6 @@ namespace karpenko
 int main()
 {
   std::string line1;
-  std::cout << "Enter first string: ";
   if (!std::getline(std::cin, line1))
   {
     std::cerr << "Error reading first string" << std::endl;
@@ -62,7 +61,6 @@ int main()
   }
 
   std::string line2;
-  std::cout << "Enter second string: ";
   if (!std::getline(std::cin, line2))
   {
     std::cerr << "Error reading second string" << std::endl;
