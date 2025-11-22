@@ -32,10 +32,14 @@ namespace karpenko
     for (size_t i = 0; input[i] != '\0'; ++i)
     {
       char c = input[i];
-      if (std::isalpha(c))
+      if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
       {
         char lower_c = std::tolower(static_cast<unsigned char>(c));
-        letters[lower_c - 'a'] = true;
+        size_t index = lower_c - 'a';
+        if (index < 26)
+        {
+          letters[index] = true;
+        }
       }
     }
 
@@ -53,43 +57,30 @@ namespace karpenko
 
 int main()
 {
-  std::string line1;
+  std::string line1, line2;
   if (!std::getline(std::cin, line1))
   {
     std::cerr << "Error reading first string" << std::endl;
     return 1;
   }
-
-  std::string line2;
   if (!std::getline(std::cin, line2))
   {
-    std::cerr << "Error reading second string" << std::endl;
-    return 1;
+    line2 = "";
   }
-
-  size_t max_required_size = line1.length() + line2.length() + 1;
-  const size_t MAX_ALLOWED_SIZE = 1000000;
-
-  if (max_required_size > MAX_ALLOWED_SIZE)
-  {
-    std::cerr << "Error: result would be too large for memory" << std::endl;
-    return 1;
-  }
-
   try
   {
-    char *result1 = new char[line1.length() + line2.length() + 1];
-    karpenko::uni_two(line1.c_str(), line2.c_str(), result1,
-                      line1.length() + line2.length() + 1);
-    std::cout << "Combined string: " << result1 << std::endl;
+    size_t result1_size = line1.length() + line2.length() + 1;
+    char *result1 = new char[result1_size];
+    karpenko::uni_two(line1.c_str(), line2.c_str(), result1, result1_size);
+    std::cout << result1 << std::endl;
 
     char *result2 = new char[27];
     karpenko::shr_sym(line1.c_str(), result2, 27);
-    std::cout << "Missing letters in first string: " << result2 << std::endl;
+    std::cout << result2 << std::endl;
 
     char *result3 = new char[27];
     karpenko::shr_sym(line2.c_str(), result3, 27);
-    std::cout << "Missing letters in second string: " << result3 << std::endl;
+    std::cout << result3 << std::endl;
 
     delete[] result1;
     delete[] result2;
@@ -98,6 +89,11 @@ int main()
   catch (const std::bad_alloc &)
   {
     std::cerr << "Error: cannot allocate memory for result" << std::endl;
+    return 1;
+  }
+  catch (const std::exception &e)
+  {
+    std::cerr << "Error: " << e.what() << std::endl;
     return 1;
   }
 
