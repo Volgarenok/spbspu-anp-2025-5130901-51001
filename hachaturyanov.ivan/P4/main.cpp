@@ -17,7 +17,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl) {
     in >> std::noskipws;
   }
 
-  char * input = (char*)malloc(max_buffer_size);
+  char * input = reinterpret_cast<char*>(malloc(max_buffer_size));
   if (!input) {
     return nullptr;
   }
@@ -34,7 +34,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl) {
     if (std::cin.fail() && !std::cin.eof()) {
       std::cin.clear();
       max_buffer_size *= 2;
-      char * temp = (char*)realloc(input, max_buffer_size);
+      char * temp = reinterpret_cast<char*>(realloc(input, max_buffer_size));
       if (!temp) {
         free(input);
         return nullptr;
@@ -73,10 +73,10 @@ void hachaturyanov::exc_snd(char * input, const char * second, const size_t seco
 
 int main() {
   const char exc_snd_second[] = "abc";
-  const char dgt_snd_second[] = "g1h2k";
+  //const char dgt_snd_second[] = "g1h2k";
 
   const size_t exc_snd_s_len = strlen(exc_snd_second);
-  const size_t dgt_snd_s_len = strlen(dgt_snd_second);
+  //const size_t dgt_snd_s_len = strlen(dgt_snd_second);
 
   size_t strl = 0;
   char * input = hachaturyanov::readline(std::cin, strl);
@@ -85,7 +85,7 @@ int main() {
     return 1;
   }
 
-  char * outline = (char*)malloc(strl);
+  char * outline = reinterpret_cast<char*>(malloc(strl));
   if (!outline) {
     free(input);
     std::cerr << "Bad allocation\n";
