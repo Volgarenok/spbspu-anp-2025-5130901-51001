@@ -66,7 +66,8 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
   if (in.fail()) {
     delete[] batch;
     delete[] result;
-    throw std::logic_error("input error");
+    size = 0;
+    return nullptr;
   }
 
   char* q;
