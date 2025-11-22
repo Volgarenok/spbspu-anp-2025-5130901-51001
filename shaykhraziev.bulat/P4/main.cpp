@@ -171,6 +171,12 @@ int main()
     return 1;
   }
 
+  if (s1 == 0 || s2 == 0) {
+    delete[] inp1;
+    delete[] inp2;
+    return 0;
+  }
+
   size_t size = s1 + s2;
   char* sum;
 
