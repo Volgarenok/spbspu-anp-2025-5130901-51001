@@ -55,14 +55,19 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl) {
 }
 
 void hachaturyanov::exc_snd(char * input, const char * second, const size_t second_len, char * output) {
+  size_t out_len = 0;
   for (size_t i = 0; i < strlen(input); i++) {
     size_t count = 0;
     for (size_t j = 0; j < second_len; j++) {
       if (input[i]==second[j]) {
         break;
       }
+      count++;
     }
-    output[i] = input[i];
+    if (count == 3) {
+      output[out_len] = input[i];
+      out_len++;
+    }
   }
 }
 
