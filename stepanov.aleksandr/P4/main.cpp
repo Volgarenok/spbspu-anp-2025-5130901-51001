@@ -45,7 +45,9 @@ char* stepanov::getline(std::istream& in) {
         delete[] mem;
         return nullptr;
       }
-      memcpy(new_mem, mem, len);
+      for (size_t i = 0; i < len; i++) {
+        new_mem[i] = mem[i];
+      }
       delete[] mem;
       mem = new_mem;
     }
@@ -57,7 +59,7 @@ char* stepanov::getline(std::istream& in) {
 }
 
 void stepanov::upp_low(char* str) {
-  for (int i = 0; str[i] != '\0'; i++) {
+  for (size_t i = 0; str[i] != '\0'; i++) {
     if (str[i] >= 'A' && str[i] <= 'Z') {
       str[i] += 32;
     }
@@ -81,7 +83,7 @@ bool stepanov::is_vowel(char c) {
 
 void stepanov::rmv_vow(char* str) {
   int pos = 0;
-  for (int i = 0; str[i] != '\0'; i++) {
+  for (size_t i = 0; str[i] != '\0'; i++) {
     if (stepanov::is_vowel(str[i])) {
       continue;
     }
