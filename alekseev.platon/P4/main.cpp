@@ -107,9 +107,9 @@ int main() {
 
   if (!input1 || size1 == 0) {
     std::cerr << "Error: empty input\n";
-    if (input1) delete[] input1;
-    return 1;
-  }
+      if (input1) delete[] input1;
+        return 1;
+    }
 
   std::cout << "enter second string for var 15: ";
   size_t size2 = 0;
