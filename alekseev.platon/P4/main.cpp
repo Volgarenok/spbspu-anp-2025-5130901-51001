@@ -105,7 +105,9 @@ int main() {
     size_t size1 = 0;
     char* input1 = getline(std::cin, size1);
 
-    if (!input1) {
+    if (!input1 || size1 == 0) {
+        std::cerr << "Error: empty input\n";
+        if (input1) delete[] input1;
         return 1;
     }
 
