@@ -3,13 +3,13 @@
 
 // 8.[FLL-INC-WAV]
 void task1_processMatrix(int **matrix, int rows, int cols) {
-  // Количество слоев — это половина от меньшей
-  // стороны (если нечётно — ещё один слой)
+  // Количество слоев — это половина от меньшей стороны
+  // (если нечётно — ещё один слой)
   int layers = std::min(rows, cols) / 2 + (std::min(rows, cols) % 2);
 
   for (int layer = 0; layer < layers; ++layer) {
     // На каждом слое прибавляем число слоя
-    // (1 на внешнем, 2 на следующем и т.д.)
+    // (1 на внешнем, 2 на следующем ит.д.)
     int increment = layer + 1;
 
     // Границы текущего слоя
@@ -39,8 +39,8 @@ void task1_processMatrix(int **matrix, int rows, int cols) {
 }
 
 // 18.[CNT-NZR-DIG]
-// Считаем, сколько диагоналей
-// содержат только ненулевые элементы.
+// Считаем, сколько диагоналей содержат
+// только ненулевые элементы.
 int task2_countNonZeroDiagonals(int **matrix, int rows, int cols) {
   int count = 0;
 
@@ -99,6 +99,22 @@ void writeMatrix(int **matrix, int rows, int cols, std::ofstream &fout) {
   for (int i = 0; i < rows; ++i)
     for (int j = 0; j < cols; ++j)
       fout << matrix[i][j] << " ";
+}
+
+// Универсальное освобождение матрицы
+void freeMatrix(int **matrix, int rows, int mode) {
+  if (!matrix)
+    return;
+
+  if (mode == 1) {
+    // Статический буфер: освобождаем только массив указателей
+    delete[] matrix;
+  } else if (mode == 2) {
+    // Динамический: освобождаем каждую строку и массив указателей
+    for (int i = 0; i < rows; ++i)
+      delete[] matrix[i];
+    delete[] matrix;
+  }
 }
 
 int main(int argc, char *argv[]) {
@@ -166,6 +182,10 @@ int main(int argc, char *argv[]) {
       matrix[i] = new (std::nothrow) int[cols];
       if (!matrix[i]) {
         std::cerr << "Memory allocation error\n";
+        // Освобождаем уже выделенные строки и массив указателей
+        for (int k = 0; k < i; ++k)
+          delete[] matrix[k];
+        delete[] matrix;
         return 2;
       }
     }
@@ -174,6 +194,8 @@ int main(int argc, char *argv[]) {
   // Читаем матрицу
   if (!readMatrix(matrix, rows, cols, fin)) {
     std::cerr << "Invalid matrix content\n";
+    // Освобождаем память перед выходом
+    freeMatrix(matrix, rows, num);
     return 2;
   }
 
@@ -186,12 +208,8 @@ int main(int argc, char *argv[]) {
     fout << result;
   }
 
-  // Освобождаем память, если выделяли динамически
-  if (num == 2) {
-    for (int i = 0; i < rows; ++i)
-      delete[] matrix[i];
-    delete[] matrix;
-  }
+  // Освобождаем память во всех случаях
+  freeMatrix(matrix, rows, num);
 
   return 0;
 }
