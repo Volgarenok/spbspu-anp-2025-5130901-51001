@@ -137,24 +137,17 @@ namespace karpenko
     return 1;
   }
 
-  int writeDoubleMatrixToFile(const char *filename, double matrix[], std::size_t rows, std::size_t cols)
+  int writeDoubleMatrix(std::ostream &stream, const double matrix[], std::size_t rows, std::size_t cols)
   {
-    std::ofstream file(filename);
-    if (!file)
-    {
-      std::cerr << "Error: Cannot open output file '" << filename << "'" << "\n";
-      return 0;
-    }
-
-    file << std::fixed << std::setprecision(1) << rows << " " << cols;
+    stream << std::fixed << std::setprecision(1) << rows << " " << cols;
     for (std::size_t i = 0; i < rows; i++)
     {
       for (std::size_t j = 0; j < cols; j++)
       {
-        file << " " << matrix[i * cols + j];
+        stream << " " << matrix[i * cols + j];
       }
     }
-    return 1;
+    return stream.good() ? 1 : 0;
   }
 
   int checkIsNumber(const char *str)
@@ -247,7 +240,13 @@ int main(int argc, char *argv[])
     else
     {
       karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
-      if (!karpenko::writeDoubleMatrixToFile(output_file, output_matrix, rows, cols))
+      std::ofstream file(output_file);
+      if (!file)
+      {
+        std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
+        return 2;
+      }
+      if (!karpenko::writeDoubleMatrix(file, output_matrix, rows, cols))
       {
         return 2;
       }
