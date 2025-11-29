@@ -222,31 +222,35 @@ int main(int argc, char *argv[])
     }
 
     if (!karpenko::readIntMatrix(input_file_stream, input_matrix, rows, cols))
-      if (rows == 0 || cols == 0)
+    {
+      return 2;
+    }
+
+    if (rows == 0 || cols == 0)
+    {
+      std::ofstream file(output_file);
+      if (!file)
       {
-        std::ofstream file(output_file);
-        if (!file)
-        {
-          std::cerr << "Error: Cannot open output file '" << output_file << "'" << "\n";
-          return 2;
-        }
-        file << rows << " " << cols;
+        std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
+        return 2;
       }
-      else
+      file << rows << " " << cols;
+    }
+    else
+    {
+      karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
+      std::ofstream output_file_stream(output_file);
+      if (!output_file_stream)
       {
-        karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
-        std::ofstream file(output_file);
-        if (!file)
-        {
-          std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
-          return 2;
-        }
-        if (!karpenko::writeDoubleMatrix(file, output_matrix, rows, cols))
-        {
-          return 2;
-        }
+        std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
+        return 2;
       }
-    std::cout << "Matrix smoothing completed successfully" << "\n";
+      if (!karpenko::writeDoubleMatrix(output_file_stream, output_matrix, rows, cols))
+      {
+        return 2;
+      }
+    }
+    std::cout << "Matrix smoothing completed successfully\n";
   }
 
   return 0;
