@@ -3,30 +3,30 @@
 #include <cstring>
 
 namespace hachaturyanov {
-  void lft_top_clk(int* matrix, int n, int m);
-  int min_sum_mdg(int* matrix, int n, int m);
+  void lft_top_clk(int* matrix, size_t n, size_t m);
+  int min_sum_mdg(int* matrix, size_t n, size_t m);
 }
 
-void hachaturyanov::lft_top_clk(int* matrix, int rows, int cols) {
+void hachaturyanov::lft_top_clk(int* matrix, size_t rows, size_t cols) {
   int top = 0, left = 0, bottom = rows - 1, right = cols - 1;
   int d = 1;
   while(top <= bottom && left <= right) {
-    for (int i = top * cols + left; i <= top * cols + right; i++) {
+    for (size_t i = top * cols + left; i <= top * cols + right; i++) {
       matrix[i] -= d;
       d++;
     }
 
-    for (int i = (top + 1) * cols + right; i <= (bottom + 1) * cols - left; i += cols) {
+    for (size_t i = (top + 1) * cols + right; i <= (bottom + 1) * cols - left; i += cols) {
       matrix[i] -= d;
       d++;
     }
 
-    for (int i = bottom * cols + right - 1; i >= bottom * cols + left; i--) {
+    for (size_t i = bottom * cols + right - 1; i >= bottom * cols + left; i--) {
       matrix[i] -= d;
       d++;
     }
 
-    for (int i = (bottom - 1) * cols + left; i >= (top + 1) * cols + left; i -= cols) {
+    for (size_t i = (bottom - 1) * cols + left; i >= (top + 1) * cols + left; i -= cols) {
       matrix[i] -= d;
       d++;
     }
@@ -38,17 +38,17 @@ void hachaturyanov::lft_top_clk(int* matrix, int rows, int cols) {
   }
 }
 
-int hachaturyanov::min_sum_mdg(int* matrix, int rows, int cols) {
+int hachaturyanov::min_sum_mdg(int* matrix, size_t rows, size_t cols) {
   if (rows == 0 && cols == 0) {
     return 0;
   }
   int res = matrix[0];
-  for (int diag = 0; diag <= rows + cols - 2; diag++) {
+  for (size_t diag = 0; diag <= rows + cols - 2; diag++) {
     if (diag == 0 || diag == cols - 1) {
       continue;
     }
     int s = 0;
-    for (int i = 0; i < rows; i++) {
+    for (size_t i = 0; i < rows; i++) {
       int j = diag - i;
       if (j >= 0 && j < cols) {
         s += matrix[i * cols + j];
@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     return 2;
   }
 
-  int rows = 0, cols = 0;
+  size_t rows = 0, cols = 0;
   if (!(input >> rows >> cols)) {
     std::cerr << "Error while reading the file\n";
     return 2;
@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
     matrix = new int[rows * cols];
   }
 
-  for (int i = 0; i < rows * cols; i++) {
+  for (size_t i = 0; i < rows * cols; i++) {
     input >> matrix[i];
     if (!input.good()) {
       std::cerr << "Error while reading the file\n";
