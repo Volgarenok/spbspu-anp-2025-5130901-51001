@@ -3,8 +3,8 @@
 #include <cstring>
 
 namespace hachaturyanov {
-  void lft_top_clk(int* matrix, size_t n, size_t m);
-  int min_sum_mdg(const int* matrix, size_t n, size_t m);
+  void lft_top_clk(int* matrix, size_t rows, size_t cols);
+  int min_sum_mdg(const int* matrix, size_t rows, size_t cols);
 }
 
 void hachaturyanov::lft_top_clk(int* matrix, size_t rows, size_t cols)
