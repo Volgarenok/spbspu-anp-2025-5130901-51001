@@ -78,7 +78,7 @@ namespace karpenko
     }
   }
 
-  int readIntMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
+  int readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
   {
     std::size_t temp_rows, temp_cols;
     if (!(stream >> temp_rows >> temp_cols))
@@ -110,7 +110,20 @@ namespace karpenko
     return 1;
   }
 
-  int writeDoubleMatrix(std::ostream &stream, const double matrix[], std::size_t rows, std::size_t cols)
+  int writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
+  {
+    stream << rows << " " << cols;
+    for (std::size_t i = 0; i < rows; i++)
+    {
+      for (std::size_t j = 0; j < cols; j++)
+      {
+        stream << " " << matrix[i * cols + j];
+      }
+    }
+    return stream.good() ? 1 : 0;
+  }
+
+  int writeMatrix(std::ostream &stream, const double matrix[], std::size_t rows, std::size_t cols)
   {
     stream << std::fixed << std::setprecision(1) << rows << " " << cols;
     for (std::size_t i = 0; i < rows; i++)
@@ -127,7 +140,7 @@ namespace karpenko
   {
     if (!str || !*str)
     {
-      std::cerr << "Error: First parameter is null or empty" << "\n";
+      std::cerr << "Error: First parameter is null or empty\n";
       return 0;
     }
 
@@ -135,7 +148,7 @@ namespace karpenko
     {
       if (*p < '0' || *p > '9')
       {
-        std::cerr << "Error: First parameter is not a valid number" << "\n";
+        std::cerr << "Error: First parameter is not a valid number\n";
         return 0;
       }
     }
@@ -147,8 +160,8 @@ int main(int argc, char *argv[])
 {
   if (argc != 4)
   {
-    std::cerr << "Usage: " << argv[0] << " num input output" << "\n";
-    std::cerr << "  num: 1 for spiral transformation, 2 for matrix smoothing" << "\n";
+    std::cerr << "Usage: " << argv[0] << " num input output\n";
+    std::cerr << "  num: 1 for spiral transformation, 2 for matrix smoothing\n";
     return 1;
   }
 
@@ -160,98 +173,73 @@ int main(int argc, char *argv[])
   int operation = std::atoi(argv[1]);
   if (operation != 1 && operation != 2)
   {
-    std::cerr << "Error: First parameter must be 1 or 2" << "\n";
+    std::cerr << "Error: First parameter must be 1 or 2\n";
     return 1;
   }
 
   const char *input_file = argv[2];
   const char *output_file = argv[3];
 
+  int input_matrix[karpenko::MAX_SIZE];
+  std::size_t rows, cols;
+
+  std::ifstream input_stream(input_file);
+  if (!input_stream)
+  {
+    std::cerr << "Error: Cannot open input file '" << input_file << "'\n";
+    return 2;
+  }
+
+  if (!karpenko::readMatrix(input_stream, input_matrix, rows, cols))
+  {
+    return 2;
+  }
+
+  std::ofstream output_stream(output_file);
+  if (!output_stream)
+  {
+    std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
+    return 2;
+  }
+
   if (operation == 1)
   {
-    int matrix[karpenko::MAX_SIZE];
-    std::size_t rows, cols;
-
-    std::ifstream input_file_stream(input_file);
-    if (!input_file_stream)
-    {
-      std::cerr << "Error: Cannot open input file '" << input_file << "'\n";
-      return 2;
-    }
-
-    if (!karpenko::readIntMatrix(input_file_stream, matrix, rows, cols))
-    {
-      return 2;
-    }
-
     if (rows > 0 && cols > 0)
     {
-      karpenko::transformMatrixSpiral(rows, cols, matrix);
-    }
-
-    double output_matrix[karpenko::MAX_SIZE];
-    for (std::size_t i = 0; i < rows * cols; i++)
-    {
-      output_matrix[i] = static_cast<double>(matrix[i]);
-    }
-
-    std::ofstream file(output_file);
-    if (!file)
-    {
-      std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
-      return 2;
-    }
-    if (!karpenko::writeDoubleMatrix(file, output_matrix, rows, cols))
-    {
-      return 2;
-    }
-
-    std::cout << "Spiral transformation completed successfully" << "\n";
-  }
-  else
-  {
-    int input_matrix[karpenko::MAX_SIZE];
-    double output_matrix[karpenko::MAX_SIZE];
-    std::size_t rows, cols;
-
-    std::ifstream input_file_stream(input_file);
-    if (!input_file_stream)
-    {
-      std::cerr << "Error: Cannot open input file '" << input_file << "'\n";
-      return 2;
-    }
-
-    if (!karpenko::readIntMatrix(input_file_stream, input_matrix, rows, cols))
-    {
-      return 2;
+      karpenko::transformMatrixSpiral(rows, cols, input_matrix);
     }
 
     if (rows == 0 || cols == 0)
     {
-      std::ofstream file(output_file);
-      if (!file)
-      {
-        std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
-        return 2;
-      }
-      file << rows << " " << cols;
+      output_stream << rows << " " << cols;
     }
     else
     {
-      karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
-      std::ofstream output_file_stream(output_file);
-      if (!output_file_stream)
-      {
-        std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
-        return 2;
-      }
-      if (!karpenko::writeDoubleMatrix(output_file_stream, output_matrix, rows, cols))
+      if (!karpenko::writeMatrix(output_stream, input_matrix, rows, cols))
       {
         return 2;
       }
     }
-    std::cout << "Matrix smoothing completed successfully\n";
   }
+  else
+  {
+    if (rows == 0 || cols == 0)
+    {
+      output_stream << rows << " " << cols;
+    }
+    else
+    {
+      double output_matrix[karpenko::MAX_SIZE];
+      karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
+      if (!karpenko::writeMatrix(output_stream, output_matrix, rows, cols))
+      {
+        return 2;
+      }
+    }
+  }
+
+  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
+            << " completed successfully\n";
 
   return 0;
 }
