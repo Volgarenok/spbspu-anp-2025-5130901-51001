@@ -105,7 +105,7 @@ namespace alekseev {
     if (str == nullptr || *str == '\0') {
       return false;
     }
-    
+
     for (size_t i = 0; str[i] != '\0'; ++i) {
       if (!std::isdigit(str[i])) {
         return false;
@@ -167,7 +167,7 @@ int main(int argc, char* argv[])
 
   if (taskNum == 1) {
     int matrix[alekseev::MAXSIZE];
-    
+
     bool readSuccess = alekseev::readMatrix(input, matrix, rows, cols);
     input.close();
 
@@ -189,7 +189,7 @@ int main(int argc, char* argv[])
     output.close();
   } else {
     int* matrix = new int[rows * cols];
-    
+
     bool readSuccess = alekseev::readMatrix(input, matrix, rows, cols);
     input.close();
 
@@ -211,7 +211,7 @@ int main(int argc, char* argv[])
 
     alekseev::writeResults(output, saddleCount, seriesColumn);
     output.close();
-    
+
     delete[] matrix;
   }
 
