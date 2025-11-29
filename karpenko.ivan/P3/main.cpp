@@ -189,26 +189,22 @@ int main(int argc, char *argv[])
     std::cerr << "Error: Cannot open input file '" << input_file << "'\n";
     return 2;
   }
-
   if (!karpenko::readMatrix(input_stream, input_matrix, rows, cols))
   {
     return 2;
   }
-
   std::ofstream output_stream(output_file);
   if (!output_stream)
   {
     std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
     return 2;
   }
-
   if (operation == 1)
   {
     if (rows > 0 && cols > 0)
     {
       karpenko::transformMatrixSpiral(rows, cols, input_matrix);
     }
-
     if (rows == 0 || cols == 0)
     {
       output_stream << rows << " " << cols;
@@ -238,8 +234,7 @@ int main(int argc, char *argv[])
     }
   }
 
-  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
-            << " completed successfully\n";
+  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
 
   return 0;
 }
