@@ -83,14 +83,14 @@ namespace karpenko
     std::ifstream file(filename);
     if (!file)
     {
-      std::cerr << "Error: Cannot open input file '" << filename << "'" << std::endl;
+      std::cerr << "Error: Cannot open input file '" << filename << "'" << "\n";
       return 0;
     }
 
     size_t temp_rows, temp_cols;
     if (!(file >> temp_rows >> temp_cols))
     {
-      std::cerr << "Error: Invalid matrix dimensions in file '" << filename << "'" << std::endl;
+      std::cerr << "Error: Invalid matrix dimensions in file '" << filename << "'" << "\n";
       return 0;
     }
 
@@ -99,7 +99,7 @@ namespace karpenko
 
     if (rows > MAX_DIMENSION || cols > MAX_DIMENSION)
     {
-      std::cerr << "Error: Matrix dimensions exceed maximum allowed size" << std::endl;
+      std::cerr << "Error: Matrix dimensions exceed maximum allowed size" << "\n";
       return 0;
     }
 
@@ -109,7 +109,7 @@ namespace karpenko
       {
         if (!(file >> matrix[i * cols + j]))
         {
-          std::cerr << "Error: Cannot read element at (" << i << ", " << j << ") from '" << filename << "'" << std::endl;
+          std::cerr << "Error: Cannot read element at (" << i << ", " << j << ") from '" << filename << "'" << "\n";
           return 0;
         }
       }
@@ -122,7 +122,7 @@ namespace karpenko
     std::ofstream file(filename);
     if (!file)
     {
-      std::cerr << "Error: Cannot open output file '" << filename << "'" << std::endl;
+      std::cerr << "Error: Cannot open output file '" << filename << "'" << "\n";
       return 0;
     }
 
@@ -142,7 +142,7 @@ namespace karpenko
     std::ofstream file(filename);
     if (!file)
     {
-      std::cerr << "Error: Cannot open output file '" << filename << "'" << std::endl;
+      std::cerr << "Error: Cannot open output file '" << filename << "'" << "\n";
       return 0;
     }
 
@@ -161,7 +161,7 @@ namespace karpenko
   {
     if (!str || !*str)
     {
-      std::cerr << "Error: First parameter is null or empty" << std::endl;
+      std::cerr << "Error: First parameter is null or empty" << "\n";
       return 0;
     }
 
@@ -169,7 +169,7 @@ namespace karpenko
     {
       if (*p < '0' || *p > '9')
       {
-        std::cerr << "Error: First parameter is not a valid number" << std::endl;
+        std::cerr << "Error: First parameter is not a valid number" << "\n";
         return 0;
       }
     }
@@ -181,8 +181,8 @@ int main(int argc, char *argv[])
 {
   if (argc != 4)
   {
-    std::cerr << "Usage: " << argv[0] << " num input output" << std::endl;
-    std::cerr << "  num: 1 for spiral transformation, 2 for matrix smoothing" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " num input output" << "\n";
+    std::cerr << "  num: 1 for spiral transformation, 2 for matrix smoothing" << "\n";
     return 1;
   }
 
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
   int operation = std::atoi(argv[1]);
   if (operation != 1 && operation != 2)
   {
-    std::cerr << "Error: First parameter must be 1 or 2" << std::endl;
+    std::cerr << "Error: First parameter must be 1 or 2" << "\n";
     return 1;
   }
 
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
       return 2;
     }
 
-    std::cout << "Spiral transformation completed successfully" << std::endl;
+    std::cout << "Spiral transformation completed successfully" << "\n";
   }
   else
   {
@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
       std::ofstream file(output_file);
       if (!file)
       {
-        std::cerr << "Error: Cannot open output file '" << output_file << "'" << std::endl;
+        std::cerr << "Error: Cannot open output file '" << output_file << "'" << "\n";
         return 2;
       }
       file << rows << " " << cols;
@@ -252,7 +252,7 @@ int main(int argc, char *argv[])
         return 2;
       }
     }
-    std::cout << "Matrix smoothing completed successfully" << std::endl;
+    std::cout << "Matrix smoothing completed successfully" << "\n";
   }
 
   return 0;
