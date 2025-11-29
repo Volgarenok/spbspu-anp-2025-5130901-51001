@@ -108,29 +108,21 @@ int main(int argc, char** argv)
       return 2;
     }
   }
-  if (!std::strcmp(argv[1], "1")) {
-    hachaturyanov::lft_top_clk(matrix, rows, cols);
-    std::ofstream output(argv[3]);
-    if (!output.is_open()) {
-      std::cerr << "Cannot open the output file\n";
-      return 2;
-    }
-    output << rows << ' ' << cols;
-    for (int i = 0; i < rows * cols; i++) {
-      output << ' ' << matrix[i];
-    }
-    output << "\n";
-  } else if (!std::strcmp(argv[1], "2")) {
-    int res = hachaturyanov::min_sum_mdg(matrix, rows, cols);
-    std::ofstream output(argv[3]);
-    if (!output.is_open()) {
-      std::cerr << "Cannot open the output file\n";
-      delete[] matrix;
-      return 2;
-    }
-    output << res << "\n";
+
+  int res = hachaturyanov::min_sum_mdg(matrix, rows, cols);
+  hachaturyanov::lft_top_clk(matrix, rows, cols);
+  std::ofstream output(argv[3]);
+  if (!output.is_open()) {
+    std::cerr << "Cannot open the output file\n";
+    return 2;
+  }
+  output << rows << ' ' << cols;
+  for (int i = 0; i < rows * cols; i++) {
+    output << ' ' << matrix[i];
+  }
+  output << '\n' << res << '\n';
+  if (!std::strcmp(argv[1], "2")) {
     delete[] matrix;
   }
-
   return 0;
 }
