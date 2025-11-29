@@ -7,8 +7,8 @@ using ll_t = long long;
 namespace stepanov {
   const size_t MAX_MATRIX_SIZE = 10000;
 
-  void lft_bot_clk(ll_t* matrix, size_t n, size_t m);
-  ll_t max_sum_sdg(const ll_t* matrix, size_t n, size_t m);
+  void spiral_decrement(ll_t* matrix, size_t n, size_t m);
+  ll_t max_sum_diagonal(const ll_t* matrix, size_t n, size_t m);
 }
 
 int main(int argc, char** argv)
@@ -49,8 +49,8 @@ int main(int argc, char** argv)
 
   ll_t* matrix = nullptr;
   if (task_number == 1) {
-    ll_t static_matrix[stepanov::MAX_MATRIX_SIZE];
-    matrix = static_matrix;
+    ll_t fixed_len_matrix[stepanov::MAX_MATRIX_SIZE];
+    matrix = fixed_len_matrix;
   } else {
     try {
       matrix = new ll_t[rows * cols];
@@ -75,8 +75,8 @@ int main(int argc, char** argv)
 
   ll_t result = 0;
   try {
-    stepanov::lft_bot_clk(matrix, rows, cols);
-    result = stepanov::max_sum_sdg(matrix, rows, cols);
+    stepanov::spiral_decrement(matrix, rows, cols);
+    result = stepanov::max_sum_diagonal(matrix, rows, cols);
   } catch (const std::exception& e) {
     if (task_number == 2) {
       delete[] matrix;
@@ -98,7 +98,7 @@ int main(int argc, char** argv)
   return 0;
 }
 
-void stepanov::lft_bot_clk(ll_t* matrix, size_t n, size_t m)
+void stepanov::spiral_decrement(ll_t* matrix, size_t n, size_t m)
 {
   int top = 0, bottom = n - 1, left = 0, right = m - 1;
   int i = bottom, j = left;
@@ -146,7 +146,7 @@ void stepanov::lft_bot_clk(ll_t* matrix, size_t n, size_t m)
   }
 }
 
-ll_t stepanov::max_sum_sdg(const ll_t* matrix, size_t n, size_t m)
+ll_t stepanov::max_sum_diagonal(const ll_t* matrix, size_t n, size_t m)
 {
   if (n * m < 2) {
     return 0;
