@@ -88,7 +88,7 @@ namespace karpenko
     }
 
     size_t temp_rows, temp_cols;
-    if (!(file >> temp_rows >> temp_cols) || temp_rows < 0 || temp_cols < 0)
+    if (!(file >> temp_rows >> temp_cols) || temp_rows < 0)
     {
       std::cerr << "Error: Invalid matrix dimensions in file '" << filename << "'" << std::endl;
       return 0;
