@@ -2,9 +2,9 @@
 
 namespace stepanov {
   char* getline(std::istream& in);
-  void upp_low(char* str);
-  void rmv_vow(char* str);
-  bool is_vowel(char c);
+  void to_lower(char* str);
+  void remove_vowels(char* str);
+  bool is_vowel(const char c);
 }
 
 int main() {
@@ -18,9 +18,9 @@ int main() {
     std::cerr << "Input is empty\n";
     return 1;
   }
-  stepanov::upp_low(str);
+  stepanov::to_lower(str);
   std::cout << str << std::endl;
-  stepanov::rmv_vow(str);
+  stepanov::remove_vowels(str);
   std::cout << str << std::endl;
   delete[] str;
   return 0;
@@ -64,7 +64,7 @@ char* stepanov::getline(std::istream& in) {
   return mem;
 }
 
-void stepanov::upp_low(char* str) {
+void stepanov::to_lower(char* str) {
   for (size_t i = 0; str[i] != '\0'; i++) {
     if (str[i] >= 'A' && str[i] <= 'Z') {
       str[i] += 32;
@@ -87,7 +87,7 @@ bool stepanov::is_vowel(char c) {
   }
 }
 
-void stepanov::rmv_vow(char* str) {
+void stepanov::remove_vowels(char* str) {
   int pos = 0;
   for (size_t i = 0; str[i] != '\0'; i++) {
     if (stepanov::is_vowel(str[i])) {
