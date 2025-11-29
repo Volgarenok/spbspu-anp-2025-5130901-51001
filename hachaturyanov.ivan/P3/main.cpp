@@ -45,7 +45,7 @@ int hachaturyanov::min_sum_mdg(const int* matrix, size_t rows, size_t cols)
     return 0;
   }
   int res = matrix[0];
-  for (size_t diag = 0; diag <= rows + cols - 2; diag++) {
+  for (int diag = 0; diag <= rows + cols - 2; diag++) {
     if (diag == 0 || diag == cols - 1) {
       continue;
     }
