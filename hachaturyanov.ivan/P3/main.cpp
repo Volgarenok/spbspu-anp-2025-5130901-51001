@@ -114,6 +114,9 @@ int main(int argc, char** argv)
   std::ofstream output(argv[3]);
   if (!output.is_open()) {
     std::cerr << "Cannot open the output file\n";
+    if (!std::strcmp(argv[1], "2")) {
+      delete[] matrix;
+    }
     return 2;
   }
   output << rows << ' ' << cols;
