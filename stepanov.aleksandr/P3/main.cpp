@@ -1,14 +1,13 @@
 #include <iostream>
 #include <fstream>
-#include <limits>
 
 using ll_t = long long;
 
 namespace stepanov {
   const size_t MAX_MATRIX_SIZE = 10000;
 
-  void lft_bot_clk(ll_t* matrix, size_t n, size_t m);
-  ll_t max_sum_sdg(const ll_t* matrix, size_t n, size_t m);
+  void decrementSpiral(ll_t* matrix, size_t n, size_t m);
+  ll_t maxSumDiagonal(const ll_t* matrix, size_t n, size_t m);
 }
 
 int main(int argc, char** argv)
@@ -47,26 +46,26 @@ int main(int argc, char** argv)
     return 2;
   }
 
+  ll_t* dynamic_matrix = nullptr;
   ll_t* matrix = nullptr;
   if (task_number == 1) {
-    ll_t static_matrix[stepanov::MAX_MATRIX_SIZE];
-    matrix = static_matrix;
+    ll_t fixed_len_matrix[stepanov::MAX_MATRIX_SIZE];
+    matrix = fixed_len_matrix;
   } else {
     try {
-      matrix = new ll_t[rows * cols];
+      dynamic_matrix = new ll_t[rows * cols];
     } catch (const std::bad_alloc&) {
       std::cerr << "Error allocating memory\n";
       return 2;
     }
+    matrix = dynamic_matrix;
   }
 
   for (size_t i = 0; i < rows * cols; i++) {
     in_file >> matrix[i];
     if (!in_file.good()) {
       in_file.close();
-      if (task_number == 2) {
-        delete[] matrix;
-      }
+      delete[] dynamic_matrix;
       std::cerr << "Error reading matrix\n";
       return 2;
     }
@@ -75,18 +74,14 @@ int main(int argc, char** argv)
 
   ll_t result = 0;
   try {
-    stepanov::lft_bot_clk(matrix, rows, cols);
-    result = stepanov::max_sum_sdg(matrix, rows, cols);
+    stepanov::decrementSpiral(matrix, rows, cols);
+    result = stepanov::maxSumDiagonal(matrix, rows, cols);
   } catch (const std::exception& e) {
-    if (task_number == 2) {
-      delete[] matrix;
-    }
+    delete[] dynamic_matrix;
     std::cerr << e.what() << '\n';
     return 2;
   }
-  if (task_number == 2) {
-    delete[] matrix;
-  }
+  delete[] dynamic_matrix;
 
   std::ofstream out_file(argv[3]);
   if (!out_file.is_open()) {
@@ -98,7 +93,7 @@ int main(int argc, char** argv)
   return 0;
 }
 
-void stepanov::lft_bot_clk(ll_t* matrix, size_t n, size_t m)
+void stepanov::decrementSpiral(ll_t* matrix, size_t n, size_t m)
 {
   int top = 0, bottom = n - 1, left = 0, right = m - 1;
   int i = bottom, j = left;
@@ -146,12 +141,12 @@ void stepanov::lft_bot_clk(ll_t* matrix, size_t n, size_t m)
   }
 }
 
-ll_t stepanov::max_sum_sdg(const ll_t* matrix, size_t n, size_t m)
+ll_t stepanov::maxSumDiagonal(const ll_t* matrix, size_t n, size_t m)
 {
   if (n * m < 2) {
     return 0;
   }
-  ll_t ans = std::numeric_limits<ll_t>::min();
+  ll_t ans = matrix[m - 1];
 
   for (size_t i = 1; i < n; ++i) {
     ll_t sum = 0;
