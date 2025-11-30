@@ -3,22 +3,8 @@
 
 namespace kitserov
 {
-  int* createMatrix(int num, size_t rows, size_t cols);
   size_t countRowsWithoutSame(size_t rows, size_t cols, int* matrix);
   bool isUpTriangleMatrix(size_t rows, size_t cols, int* matrix);
-}
-
-int* kitserov::createMatrix(int num, size_t rows, size_t cols)
-{
-  int* matrix = nullptr;
-  if (num == 1) {
-    int fixedLen[10000];
-    matrix = fixedLen;
-  } else {
-    int* dinamicMatrix = new int[rows * cols];
-    matrix = dinamicMatrix;
-  }
-  return matrix;
 }
 
 size_t kitserov::countRowsWithoutSame(size_t rows, size_t cols, int* matrix)
@@ -102,9 +88,13 @@ int main(int argc, char* argv[])
   if (rows == 0 || cols == 0) {
     return 0;
   }
-
+  int static_matrix[10000];
   int* matrix = nullptr;
-  matrix = createMatrix(num, rows, cols);
+  if (num == 1) {
+    matrix = static_matrix;
+  } else {
+    matrix = new int[rows*cols];
+  }
   if (matrix == nullptr) {
     std::cerr << "Error allocating memory\n";
     return 2;
@@ -131,6 +121,6 @@ int main(int argc, char* argv[])
     output << (result ? "true" : "false");
     delete[] matrix;
   }
-
+  
   return 0;
 }
