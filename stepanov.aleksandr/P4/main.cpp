@@ -1,14 +1,15 @@
 #include <iostream>
 
 namespace stepanov {
-  char* getline(std::istream& in);
-  void to_lower(char* str);
-  void remove_vowels(char* str);
-  bool is_vowel(const char c);
+  char* getLine(std::istream& in);
+  void toLower(char* str);
+  void removeVowels(char* str);
+  bool isVowel(const char c);
 }
 
-int main() {
-  char* str = stepanov::getline(std::cin);
+int main()
+{
+  char* str = stepanov::getLine(std::cin);
   if (str == nullptr) {
     std::cerr << "Cannot read input\n";
     return 1;
@@ -18,15 +19,18 @@ int main() {
     std::cerr << "Input is empty\n";
     return 1;
   }
-  stepanov::to_lower(str);
+
+  stepanov::toLower(str);
   std::cout << str << std::endl;
-  stepanov::remove_vowels(str);
+  stepanov::removeVowels(str);
   std::cout << str << std::endl;
+
   delete[] str;
   return 0;
 }
 
-char* stepanov::getline(std::istream& in) {
+char* stepanov::getLine(std::istream& in)
+{
   const size_t step = 10;
   size_t len = 0;
   size_t mem_len = 10;
@@ -64,7 +68,7 @@ char* stepanov::getline(std::istream& in) {
   return mem;
 }
 
-void stepanov::to_lower(char* str) {
+void stepanov::toLower(char* str) {
   for (size_t i = 0; str[i] != '\0'; i++) {
     if (str[i] >= 'A' && str[i] <= 'Z') {
       str[i] += 32;
@@ -72,9 +76,9 @@ void stepanov::to_lower(char* str) {
   }
 }
 
-bool stepanov::is_vowel(char c) {
-  c = tolower(c);
-  switch (c) {
+bool stepanov::isVowel(char c)
+{
+  switch (tolower(c)) {
     case 'a':
     case 'e':
     case 'i':
@@ -87,10 +91,11 @@ bool stepanov::is_vowel(char c) {
   }
 }
 
-void stepanov::remove_vowels(char* str) {
-  int pos = 0;
+void stepanov::removeVowels(char* str)
+{
+  size_t pos = 0;
   for (size_t i = 0; str[i] != '\0'; i++) {
-    if (stepanov::is_vowel(str[i])) {
+    if (stepanov::isVowel(str[i])) {
       continue;
     }
     str[pos] = str[i];
