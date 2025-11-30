@@ -102,14 +102,14 @@ int main(int argc, char* argv[])
   if (rows == 0 || cols == 0) {
     return 0;
   }
-  
+
   int* matrix = nullptr;
   matrix = createMatrix(num, rows, cols);
   if (matrix == nullptr) {
     std::cerr << "Error allocating memory\n";
     return 2;
   }
-  
+
   for (size_t i = 0; i < rows * cols; i++) {
     input >> matrix[i];
     if (!input.good()) {
@@ -119,10 +119,10 @@ int main(int argc, char* argv[])
       return 2;
     }
   }
-  
+
   input.close();
   std::ofstream output(argv[3]);
-  
+
   if (num == 1) {
     size_t result = countRowsWithoutSame(rows, cols, matrix);
     output << result;
