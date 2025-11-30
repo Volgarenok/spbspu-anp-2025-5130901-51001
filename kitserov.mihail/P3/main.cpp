@@ -3,25 +3,25 @@
 
 namespace kitserov
 {
-  int* create_matrix(int num, size_t rows, size_t cols);
-  size_t count_rows_without_same(size_t rows, size_t cols, int* matrix);
-  bool is_up_triangle_matrix(size_t rows, size_t cols, int* matrix);
+  int* createMatrix(int num, size_t rows, size_t cols);
+  size_t countRowsWithoutSame(size_t rows, size_t cols, int* matrix);
+  bool isUpTriangleMatrix(size_t rows, size_t cols, int* matrix);
 }
 
-int* kitserov::create_matrix(int num, size_t rows, size_t cols)
+int* kitserov::createMatrix(int num, size_t rows, size_t cols)
 {
   int* matrix = nullptr;
   if (num == 1) {
-    int fixed_len[10000];
-    matrix = fixed_len;
+    int fixedLen[10000];
+    matrix = fixedLen;
   } else {
-  	int* dinamic_matrix = new int [rows * cols];
-  	matrix = dinamic_matrix;
+    int* dinamicMatrix = new int[rows * cols];
+    matrix = dinamicMatrix;
   }
   return matrix;
 }
 
-size_t kitserov::count_rows_without_same(size_t rows, size_t cols, int* matrix)
+size_t kitserov::countRowsWithoutSame(size_t rows, size_t cols, int* matrix)
 {
   size_t answer = 0;
   bool flag = false;
@@ -42,7 +42,7 @@ size_t kitserov::count_rows_without_same(size_t rows, size_t cols, int* matrix)
   return answer;
 }
 
-bool kitserov::is_up_triangle_matrix(size_t rows, size_t cols, int* matrix)
+bool kitserov::isUpTriangleMatrix(size_t rows, size_t cols, int* matrix)
 {
   if (rows != cols || rows == 0 || cols == 0) {
     return false;
@@ -103,12 +103,13 @@ int main(int argc, char* argv[])
     return 0;
   }
   
-  int * matrix = nullptr;
-  matrix = create_matrix(num, rows, cols);
+  int* matrix = nullptr;
+  matrix = createMatrix(num, rows, cols);
   if (matrix == nullptr) {
-  	std::cerr <<  "Error allocating memory\n";
+    std::cerr << "Error allocating memory\n";
     return 2;
   }
+  
   for (size_t i = 0; i < rows * cols; i++) {
     input >> matrix[i];
     if (!input.good()) {
@@ -118,12 +119,18 @@ int main(int argc, char* argv[])
       return 2;
     }
   }
+  
   input.close();
   std::ofstream output(argv[3]);
-  count_rows_without_same(rows, cols, matrix);
-  is_up_triangle_matrix(rows, cols, matrix);
-
   
+  if (num == 1) {
+    size_t result = countRowsWithoutSame(rows, cols, matrix);
+    output << result;
+  } else {
+    bool result = isUpTriangleMatrix(rows, cols, matrix);
+    output << (result ? "true" : "false");
+    delete[] matrix;
+  }
 
   return 0;
 }
