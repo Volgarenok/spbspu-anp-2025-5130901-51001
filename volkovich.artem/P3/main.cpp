@@ -14,7 +14,7 @@ namespace volkovich
 void volkovich::decreaseSpiral(int* matrix, size_t rows, size_t columns)
 {
   int top{}, bottom = rows - 1, left{}, right = columns - 1;
-  int i{};
+  size_t i{};
   int minus_value = 1;
   while (top <= bottom)
   {
@@ -56,12 +56,12 @@ int volkovich::minDiagonal(const int *matrix, size_t rows, size_t columns)
     return 0;
   }
   int res = INT_MAX;
-  for (int s = 0; s <= rows + columns - 2; s++)
+  for (size_t s = 0; s <= rows + columns - 2; s++)
   {
     int sum = 0;
     for (int i = 0; i < rows; i++)
     {
-      int j = s - i;
+      size_t j = s - i;
       if (j >= 0 && j < columns)
       {
         sum += matrix[i * columns + j];
