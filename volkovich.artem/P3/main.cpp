@@ -59,7 +59,7 @@ int volkovich::minDiagonal(const int *matrix, size_t rows, size_t columns)
   for (size_t s = 0; s <= rows + columns - 2; s++)
   {
     int sum = 0;
-    for (int i = 0; i < rows; i++)
+    for (size_t i = 0; i < rows; i++)
     {
       int j = static_cast<int>(s) - static_cast<int>(i);
       if (j >= 0 && j < static_cast<int>(columns))
