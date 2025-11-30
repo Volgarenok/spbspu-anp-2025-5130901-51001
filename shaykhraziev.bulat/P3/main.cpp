@@ -3,13 +3,13 @@
 
 namespace shaykhraziev
 {
-  void lft_bot_cnt(int* data, size_t rows, size_t cols);
-  int min_sum_sdg(const int* data, size_t sideSize, size_t iCols);
-  void readMatrix(std::istream& in, int* data, size_t rows, size_t cols);
+  void IncrementCounterclockwise(int* data, size_t rows, size_t cols);
+  int findMinSum(const int* data, size_t sideSize, size_t iCols);
+  size_t readMatrix(std::istream& in, int* data, size_t rows, size_t cols);
   void writeResult(std::ostream& out, const int* data, size_t rows, size_t cols);
 }
 
-void shaykhraziev::lft_bot_cnt(int* data, size_t rows, size_t cols)
+void shaykhraziev::IncrementCounterclockwise(int* data, size_t rows, size_t cols)
 {
   if (rows == 0 || cols == 0) {
     return;
@@ -53,7 +53,7 @@ void shaykhraziev::lft_bot_cnt(int* data, size_t rows, size_t cols)
   }
 }
 
-int shaykhraziev::min_sum_sdg(const int* data, size_t sideSize, size_t iCols)
+int shaykhraziev::findMinSum(const int* data, size_t sideSize, size_t iCols)
 {
   if (sideSize == 0) {
     return 0;
@@ -98,24 +98,16 @@ int shaykhraziev::min_sum_sdg(const int* data, size_t sideSize, size_t iCols)
   return minSum;
 }
 
-void shaykhraziev::readMatrix(std::istream& in, int* data, size_t rows, size_t cols)
+size_t shaykhraziev::readMatrix(std::istream& in, int* data, size_t rows, size_t cols)
 {
-  if (rows == 0 || cols == 0) {
-    return;
-  }
-
   size_t total = rows * cols;
 
   for (size_t k = 0; k < total; ++k) {
     if (!(in >> data[k])) {
-      throw std::logic_error("readMatrix failed: not enough data");
+      return k;
     }
   }
-
-  char v;
-  if (in >> v) {
-    throw std::logic_error("readMatrix failed: extra data");
-  }
+  return total;
 }
 
 void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, size_t cols)
@@ -127,6 +119,7 @@ void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, 
       out << " " << data[r * cols + c];
     }
   }
+  out << "\n";
 }
 
 
@@ -176,54 +169,47 @@ int main(int argc, char* argv[])
 
   size_t total = rows * cols;
   int* data = nullptr;
-  int static_data[10000];
-  bool is_dynamic = (taskNum == 2);
+  int static_data[10000] = {};
 
   if (total > 0) {
     try {
-      if (is_dynamic) {
-        data = new int[total];
-      } else {
-        data = static_data;
-      }
+      data = new int[total];
     } catch (...) {
       std::cerr << "memory allocation failed";
       return 2;
     }
-
-    try {
-      shaykhraziev::readMatrix(fin, data, rows, cols);
-    } catch (const std::exception& e) {
-      std::cerr << e.what();
-      if (is_dynamic) {
-        delete[] data;
-      }
-      return 2;
-    }
   }
+
+  int * d = (taskNum == 1) ? static_data : data;
+   if (shaykhraziev::readMatrix(fin, d, rows, cols) != total) {
+     std::cerr << "read matrix failed";
+     delete [] data;
+     return 2;
+   }
 
   std::ofstream fout(outputFile);
 
   if (!fout.is_open()) {
     std::cerr << "open output file failed";
-    if (is_dynamic) {
-      delete[] data;
-    }
+    delete[] data;
     return 2;
   }
 
   if (taskNum == 1) {
-    shaykhraziev::lft_bot_cnt(data, rows, cols);
-    shaykhraziev::writeResult(fout, data, rows, cols);
-  } else {
+    shaykhraziev::IncrementCounterclockwise(static_data, rows, cols);
+    shaykhraziev::writeResult(fout, static_data, rows, cols);
     size_t sideSize = std::min(rows, cols);
-    int result = shaykhraziev::min_sum_sdg(data, sideSize, cols - sideSize);
+    int result = shaykhraziev::findMinSum(static_data, sideSize, cols - sideSize);
+    fout << result << "\n";
+  } else {
+    shaykhraziev::IncrementCounterclockwise(data, rows, cols);
+    shaykhraziev::writeResult(fout, data, rows, cols);
+    size_t sideSize = std::min(rows, cols);
+    int result = shaykhraziev::findMinSum(data, sideSize, cols - sideSize);
     fout << result << "\n";
   }
 
-  if (is_dynamic) {
-    delete[] data;
-  }
+  delete[] data;
 
   return 0;
 }
