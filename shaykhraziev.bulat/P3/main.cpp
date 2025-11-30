@@ -127,12 +127,12 @@ void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, 
 int main(int argc, char* argv[])
 {
   if (argc < 4) {
-    std::cerr << "Not enough arguments";
+    std::cerr << "Not enough arguments\n";
     return 1;
   }
 
   if (argc > 4) {
-    std::cerr << "Too many arguments";
+    std::cerr << "Too many arguments\n";
     return 1;
   }
 
@@ -141,12 +141,12 @@ int main(int argc, char* argv[])
   try {
     taskNum = std::stoi(argv[1]);
   } catch (...) {
-    std::cerr << "First parameter is not a number";
+    std::cerr << "First parameter is not a number\n";
     return 1;
   }
 
   if (taskNum != 1 && taskNum != 2) {
-    std::cerr << "First parameter is out of range";
+    std::cerr << "First parameter is out of range\n";
     return 1;
   }
 
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
   std::ifstream fin(inputFile);
 
   if (!fin.is_open()) {
-    std::cerr << "open input file failed";
+    std::cerr << "open input file failed\n";
     return 2;
   }
 
@@ -164,7 +164,7 @@ int main(int argc, char* argv[])
   size_t cols = 0;
 
   if (!(fin >> rows >> cols)) {
-    std::cerr << "read matrix failed";
+    std::cerr << "read matrix failed\n";
     return 2;
   }
 
@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
     try {
       data = new int[total];
     } catch (...) {
-      std::cerr << "memory allocation failed";
+      std::cerr << "memory allocation failed\n";
       return 2;
     }
   }
@@ -184,7 +184,7 @@ int main(int argc, char* argv[])
   int* d = (taskNum == 1) ? static_data : data;
 
   if (shaykhraziev::readMatrix(fin, d, rows, cols) != total) {
-    std::cerr << "read matrix failed";
+    std::cerr << "read matrix failed\n";
     delete[] data;
     return 2;
   }
@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
   std::ofstream fout(outputFile);
 
   if (!fout.is_open()) {
-    std::cerr << "open output file failed";
+    std::cerr << "open output file failed\n";
     delete[] data;
     return 2;
   }
