@@ -7,8 +7,6 @@ namespace shaykhraziev
   int min_sum_sdg(const int* data, size_t sideSize, size_t iCols);
   void readMatrix(std::istream& in, int* data, size_t rows, size_t cols);
   void writeResult(std::ostream& out, const int* data, size_t rows, size_t cols);
-  void writeResult(std::ostream& out, int result);
-  size_t calcSquareSideSize(size_t rows, size_t cols);
 }
 
 void shaykhraziev::lft_bot_cnt(int* data, size_t rows, size_t cols)
@@ -114,9 +112,8 @@ void shaykhraziev::readMatrix(std::istream& in, int* data, size_t rows, size_t c
     }
   }
 
-  std::string extra;
-
-  if (in >> extra) {
+  char v;
+  if (in >> v) {
     throw std::logic_error("readMatrix failed: extra data");
   }
 }
@@ -132,18 +129,6 @@ void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, 
   }
 }
 
-void shaykhraziev::writeResult(std::ostream& out, int result)
-{
-  out << result;
-}
-
-size_t shaykhraziev::calcSquareSideSize(size_t rows, size_t cols)
-{
-  if (rows >= cols) {
-    return cols;
-  }
-  return rows;
-}
 
 int main(int argc, char* argv[])
 {
@@ -231,9 +216,9 @@ int main(int argc, char* argv[])
     shaykhraziev::lft_bot_cnt(data, rows, cols);
     shaykhraziev::writeResult(fout, data, rows, cols);
   } else {
-    size_t sideSize = shaykhraziev::calcSquareSideSize(rows, cols);
+    size_t sideSize = std::min(rows, cols);
     int result = shaykhraziev::min_sum_sdg(data, sideSize, cols - sideSize);
-    shaykhraziev::writeResult(fout, result);
+    fout << result << "\n";
   }
 
   if (is_dynamic) {
