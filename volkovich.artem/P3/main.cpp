@@ -7,11 +7,11 @@ const size_t MAX_MATRIX_SIZE = 10000;
 
 namespace volkovich
 {
-  void spiral(int (&matrix)[MAX_MATRIX_SIZE], int rows, int columns);
-  int diagonal(int *matrix, int rows, int columns);
+  void spiral(int* matrix, size_t rows, size_t columns);
+  int diagonal(const int *matrix, size_t rows, size_t columns);
 }
 
-void volkovich::spiral(int (&matrix)[MAX_MATRIX_SIZE], int rows, int columns)
+void volkovich::spiral(int* matrix, size_t rows, size_t columns)
 {
   int top{}, bottom = rows - 1, left{}, right = columns - 1;
   int i{};
@@ -49,7 +49,7 @@ void volkovich::spiral(int (&matrix)[MAX_MATRIX_SIZE], int rows, int columns)
   }
 }
 
-int volkovich::diagonal(int *matrix, int rows, int columns)
+int volkovich::diagonal(const int *matrix, size_t rows, size_t columns)
 {
   if (rows == 0 && columns == 0)
   {
@@ -96,54 +96,54 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  int rows{}, columns{};
+  size_t rows{}, columns{};
 
   if (!(input >> rows >> columns))
   {
     return 1;
   }
-  if (!strcmp(argv[1], "1"))
+  int* matrix = nullptr;
+  int* dyn_mtx = nullptr;
+  if (!std::strcmp(argv[1], "1"))
   {
-    int matrix[MAX_MATRIX_SIZE];
-    for (int i{}; i < rows * columns; i++)
-    {
-      input >> matrix[i];
-      if (!input.good())
-      {
-        std::cerr << "Error reading file";
-        return 1;
-      }
+    int mtx[MAX_MATRIX_SIZE];
+    matrix = mtx;
+  } else {
+    try {
+      dyn_mtx = new int[rows*columns];
+    } catch (const std::bad_alloc&) {
+      std::cerr << "Bad alloc";
+      return 1;
     }
+    matrix=dyn_mtx;
+  }
+  for (size_t i{}; i < rows * columns; i++)
+  {
+    input >> matrix[i];
+    if (!input.good() && !input.eof())
+    {
+      std::cerr << "Error reading file";
+      delete[] dyn_mtx;
+      return 1;
+    }
+  }
+  input.close();
+  std::ofstream output(argv[3]);
+  try {
     volkovich::spiral(matrix, rows, columns);
-    std::ofstream output(argv[3]);
-    output << rows << ' ' << columns;
-    for (int i = 0; i < rows * columns; i++)
+    int res = volkovich::diagonal(matrix, rows, columns);
+    output << res;
+
+    for (size_t i = 0; i < rows * columns; i++)
     {
       output << ' ' << matrix[i];
     }
-    output.close();
+  } catch (...) {
+    delete[] dyn_mtx;
+    return 1;
   }
-
-  else
-  {
-    int *matrix = new int[rows * columns];
-    for (int i{}; i < rows * columns; i++)
-    {
-      input >> matrix[i];
-      if (!input.good())
-      {
-        std::cerr << "Error reading file";
-        delete[] matrix;
-        return 1;
-      }
-    }
-
-    int res = volkovich::diagonal(matrix, rows, columns);
-    std::ofstream output(argv[3]);
-    output << res;
-    output.close();
-    delete[] matrix;
-  }
-  input.close();
+  output.close();
+  delete[] dyn_mtx;
+  std::cout<<"\n";
   return 0;
 }
