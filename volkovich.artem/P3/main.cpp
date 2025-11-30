@@ -7,11 +7,11 @@ const size_t MAX_MATRIX_SIZE = 10000;
 
 namespace volkovich
 {
-  void spiral(int* matrix, size_t rows, size_t columns);
-  int diagonal(const int *matrix, size_t rows, size_t columns);
+  void decreaseSpiral(int* matrix, size_t rows, size_t columns);
+  int minDiagonal(const int *matrix, size_t rows, size_t columns);
 }
 
-void volkovich::spiral(int* matrix, size_t rows, size_t columns)
+void volkovich::decreaseSpiral(int* matrix, size_t rows, size_t columns)
 {
   int top{}, bottom = rows - 1, left{}, right = columns - 1;
   int i{};
@@ -49,7 +49,7 @@ void volkovich::spiral(int* matrix, size_t rows, size_t columns)
   }
 }
 
-int volkovich::diagonal(const int *matrix, size_t rows, size_t columns)
+int volkovich::minDiagonal(const int *matrix, size_t rows, size_t columns)
 {
   if (rows == 0 && columns == 0)
   {
@@ -130,8 +130,8 @@ int main(int argc, char *argv[])
   input.close();
   std::ofstream output(argv[3]);
   try {
-    volkovich::spiral(matrix, rows, columns);
-    int res = volkovich::diagonal(matrix, rows, columns);
+    volkovich::decreaseSpiral(matrix, rows, columns);
+    int res = volkovich::minDiagonal(matrix, rows, columns);
     output << res;
 
     for (size_t i = 0; i < rows * columns; i++)
