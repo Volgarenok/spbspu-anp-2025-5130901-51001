@@ -114,15 +114,13 @@ int main(int argc, char* argv[])
 
   input.close();
   std::ofstream output(argv[3]);
-
+  size_t result1 = countRowsWithoutSame(rows, cols, matrix);
+  bool result2 = isUpTriangleMatrix(rows, cols, matrix);
   if (num == 1) {
-    size_t result = countRowsWithoutSame(rows, cols, matrix);
-    output << result;
+    output << result1;
   } else {
-    bool result = isUpTriangleMatrix(rows, cols, matrix);
-    output << (result ? "true" : "false");
+    output << std::boolalpha << result2;
     delete[] matrix;
   }
-
   return 0;
 }
