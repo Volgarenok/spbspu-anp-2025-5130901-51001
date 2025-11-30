@@ -88,12 +88,12 @@ int main(int argc, char* argv[])
   if (rows == 0 || cols == 0) {
     return 0;
   }
-  int static_matrix[10000];
+  int staticMatrix[10000];
   int* matrix = nullptr;
   if (num == 1) {
-    matrix = static_matrix;
+    matrix = staticMatrix;
   } else {
-    matrix = new int[rows*cols];
+    matrix = new int[rows * cols];
   }
   if (matrix == nullptr) {
     std::cerr << "Error allocating memory\n";
@@ -104,7 +104,9 @@ int main(int argc, char* argv[])
     input >> matrix[i];
     if (!input.good()) {
       input.close();
-      delete[] matrix;
+      if (num == 2) {
+        delete[] matrix;
+      }
       std::cerr << "Error reading matrix\n";
       return 2;
     }
@@ -121,6 +123,6 @@ int main(int argc, char* argv[])
     output << (result ? "true" : "false");
     delete[] matrix;
   }
-  
+
   return 0;
 }
