@@ -107,6 +107,7 @@ size_t shaykhraziev::readMatrix(std::istream& in, int* data, size_t rows, size_t
       return k;
     }
   }
+
   return total;
 }
 
@@ -119,9 +120,9 @@ void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, 
       out << " " << data[r * cols + c];
     }
   }
+
   out << "\n";
 }
-
 
 int main(int argc, char* argv[])
 {
@@ -180,12 +181,13 @@ int main(int argc, char* argv[])
     }
   }
 
-  int * d = (taskNum == 1) ? static_data : data;
-   if (shaykhraziev::readMatrix(fin, d, rows, cols) != total) {
-     std::cerr << "read matrix failed";
-     delete [] data;
-     return 2;
-   }
+  int* d = (taskNum == 1) ? static_data : data;
+
+  if (shaykhraziev::readMatrix(fin, d, rows, cols) != total) {
+    std::cerr << "read matrix failed";
+    delete[] data;
+    return 2;
+  }
 
   std::ofstream fout(outputFile);
 
@@ -198,12 +200,14 @@ int main(int argc, char* argv[])
   if (taskNum == 1) {
     shaykhraziev::IncrementCounterclockwise(static_data, rows, cols);
     shaykhraziev::writeResult(fout, static_data, rows, cols);
+
     size_t sideSize = std::min(rows, cols);
     int result = shaykhraziev::findMinSum(static_data, sideSize, cols - sideSize);
     fout << result << "\n";
   } else {
     shaykhraziev::IncrementCounterclockwise(data, rows, cols);
     shaykhraziev::writeResult(fout, data, rows, cols);
+
     size_t sideSize = std::min(rows, cols);
     int result = shaykhraziev::findMinSum(data, sideSize, cols - sideSize);
     fout << result << "\n";
