@@ -4,21 +4,21 @@
 
 namespace muraviev
 {
-  void lft_bot_clk(int* matrix, size_t rows, size_t columns)
+  void transformMatrixSpiral(int* matrix, size_t rows, size_t columns)
   {
     if (rows == 0 || columns == 0) {
       return;
     }
 
-    int left = 0;
-    int right = columns - 1;
-    int top = 0;
-    int bottom = rows - 1;
+    size_t left = 0;
+    size_t right = columns - 1;
+    size_t top = 0;
+    size_t bottom = rows - 1;
 
     int dec = 1;
 
     while (left <= right && top <= bottom) {
-      for (int i = bottom; i >= top; --i) {
+      for (size_t i = bottom + 1; i-- > top;) {
         matrix[i * columns + left] -= dec++;
       }
       left++;
@@ -27,7 +27,7 @@ namespace muraviev
         break;
       }
 
-      for (int j = left; j <= right; ++j) {
+      for (size_t j = left; j <= right; ++j) {
         matrix[top * columns + j] -= dec++;
       }
       top++;
@@ -36,7 +36,7 @@ namespace muraviev
         break;
       }
 
-      for (int i = top; i <= bottom; ++i) {
+      for (size_t i = top; i <= bottom; ++i) {
         matrix[i * columns + right] -= dec++;
       }
       right--;
@@ -45,14 +45,14 @@ namespace muraviev
         break;
       }
 
-      for (int j = right; j >= left; --j) {
+      for (size_t j = right + 1; j-- > left;) {
         matrix[bottom * columns + j] -= dec++;
       }
       bottom--;
     }
   }
 
-  int max_sum_sdg(const int* matrix, size_t rows, size_t columns)
+  int getMaxSumOfDiagonals(const int* matrix, size_t rows, size_t columns)
   {
     if (rows == 0 || columns == 0) {
       return 0;
@@ -130,12 +130,12 @@ int main(int argc, char* argv[])
   using std::cerr;
 
   if (argc < 4) {
-    cerr << "Not enough arguments";
+    cerr << "Not enough arguments\n";
     return 1;
   }
 
   if (argc > 4) {
-    cerr << "Too many arguments";
+    cerr << "Too many arguments\n";
     return 1;
   }
 
@@ -150,11 +150,11 @@ int main(int argc, char* argv[])
     }
 
     if (num != 1 && num != 2) {
-      std::cerr << "First parameter is out of range";
+      std::cerr << "First parameter is out of range\n";
       return 1;
     }
   } catch (...) {
-    std::cerr << "First parameter is not a number";
+    std::cerr << "First parameter is not a number\n";
     return 1;
   }
 
@@ -172,12 +172,12 @@ int main(int argc, char* argv[])
   }
 
   if (!muraviev::readMatrixSizes(fin, rows, columns)) {
-    std::cerr << "Failed to read matrix sizes";
+    std::cerr << "Failed to read matrix sizes\n";
     return 2;
   }
 
   int* matrix = nullptr;
-  int static_matrix[10000];
+  int fixed_matrix[10000];
   size_t size = rows * columns;
 
   if (size > 0) {
@@ -185,11 +185,11 @@ int main(int argc, char* argv[])
       try {
         matrix = new int[size];
       } catch (...) {
-        cerr << "Error: Memory allocation failed.";
+        cerr << "Error: Memory allocation failed.\n";
         return 2;
       }
     } else {
-      matrix = static_matrix;
+      matrix = fixed_matrix;
     }
 
     try {
@@ -210,7 +210,7 @@ int main(int argc, char* argv[])
   std::ofstream fout(outputFile);
 
   if (!fout) {
-    std::cerr << "Output failed.";
+    std::cerr << "Output failed.\n";
     if (is_dynamic) {
       delete[] matrix;
     }
@@ -218,7 +218,7 @@ int main(int argc, char* argv[])
   }
 
   if (num == 1) {
-    muraviev::lft_bot_clk(matrix, rows, columns);
+    muraviev::transformMatrixSpiral(matrix, rows, columns);
     muraviev::outToAFile(fout, matrix, rows, columns);
   } else {
     if (rows != columns) {
@@ -227,7 +227,7 @@ int main(int argc, char* argv[])
       columns = minOne;
     }
 
-    int maxSum = muraviev::max_sum_sdg(matrix, rows, columns);
+    int maxSum = muraviev::getMaxSumOfDiagonals(matrix, rows, columns);
     muraviev::outToAFile(fout, maxSum);
   }
 
