@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
   for (size_t i{}; i < rows * columns; i++)
   {
     input >> matrix[i];
-    if (!input.good() && !input.eof())
+    if (!input.good())
     {
       std::cerr << "Error reading file";
       delete[] dyn_mtx;
