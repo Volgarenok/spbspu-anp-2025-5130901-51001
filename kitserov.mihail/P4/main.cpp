@@ -6,91 +6,90 @@
 
 namespace kitserov
 {
-  char * getline(std::istream & in, size_t & s);
-  char * miss_letters();
-  void remove_letters(const char * source, char * destination, size_t size);
+  char* getline(std::istream& in, size_t& s);
+  void removeLetters(const char* source, char* destination, size_t size);
 }
 
-void kitserov::remove_letters(const char * source, char * destination, size_t size)
+void kitserov::removeLetters(const char* source, char* destination, size_t size)
 {
-  size_t src_index = 0;
-  size_t dst_index = 0;
-  while (source[src_index] != '\0' && dst_index < size - 1)
-  {
-    unsigned char c = static_cast<unsigned char>(source[src_index]);
-    bool is_letter = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
-    if (!is_letter){
-      destination[dst_index] = source[src_index];
-      dst_index++;
+  size_t srcIndex = 0;
+  size_t dstIndex = 0;
+  while (source[srcIndex] != '\0' && dstIndex < size - 1) {
+    unsigned char c = static_cast<unsigned char>(source[srcIndex]);
+    bool isLetter = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+    if (!isLetter) {
+      destination[dstIndex] = source[srcIndex];
+      dstIndex++;
     }
-    src_index++;
+    srcIndex++;
   }
-  destination[dst_index] = '\0';
+  destination[dstIndex] = '\0';
 }
 
-char * kitserov::getline(std::istream & in, size_t & s)
+char* kitserov::getline(std::istream& in, size_t& s)
 {
-  bool is_skipws = in.flags() & std::ios_base::skipws;
-  if (is_skipws) {
-  	in >> std::noskipws;
+  bool isSkipws = in.flags() & std::ios_base::skipws;
+  if (isSkipws) {
+    in >> std::noskipws;
   }
-  char * data = nullptr;
-  data = (char*) malloc(2);
+  char* data = nullptr;
+  data = static_cast<char*>(malloc(2));
   size_t size = 1;
   char letter;
   size_t i = 0;
   in >> letter;
-  while (!(in.fail()) && letter != '\n')
-  {
-  	if (i == size){
-  	  size *= 2;
-  	  char * temp = (char*) malloc(size + 1);
-  	  for (size_t j = 0; j < size; j++)
-  	  {
-  	  	temp[j] = data[j];
-  	  }
-  	  free(data);
-  	  data = temp;
-  	}
-  	data[i] = letter;
-  	i++;
-  	in >> letter;
+  while (!(in.fail()) && letter != '\n') {
+    if (i == size) {
+      size *= 2;
+      char* temp = static_cast<char*>(malloc(size + 1));
+      for (size_t j = 0; j < size; j++) {
+        temp[j] = data[j];
+      }
+      free(data);
+      data = temp;
+    }
+    data[i] = letter;
+    i++;
+    in >> letter;
   }
-  
+
   s = i;
   data[s] = '\0';
-  if (is_skipws) {
-  	in >> std::skipws;
+  if (isSkipws) {
+    in >> std::skipws;
   }
   return data;
 }
 
 int main()
 {
-  size_t s;
-  char * data = kitserov::getline(std::cin, s);
-  if (!data){
-  	std::cerr << "Failed read line\n";
-  	return 1;
+  size_t s = 0;
+  char* data = kitserov::getline(std::cin, s);
+  if (!data) {
+    std::cerr << "Failed read line\n";
+    return 1;
   }
 
-  char * removed_letters = (char*) malloc(s + 1);
-  if (!removed_letters){
-  	std::cerr << "Failed memory allocation";
-  	return 1;
+  char* removedLetters = static_cast<char*>(malloc(s + 1));
+  if (!removedLetters) {
+    std::cerr << "Failed memory allocation";
+    free(data);
+    return 1;
   }
-  kitserov::remove_letters(data, removed_letters, s + 1);
+  kitserov::removeLetters(data, removedLetters, s + 1);
 
-  char * missed_letters = (char*) malloc(s + 1);
-  if (!missed_letters){
-  	std::cerr << "Failed memory allocation";
-  	return 1;
+  char* missedLetters = static_cast<char*>(malloc(s + 1));
+  if (!missedLetters) {
+    std::cerr << "Failed memory allocation";
+    free(data);
+    free(removedLetters);
+    return 1;
   }
-  //kitserov::miss_letters(data, missed_letters, s + 1);
 
-  std::cout << removed_letters << "\n";
+  std::cout << removedLetters << "\n";
   std::cout << s << "\n";
-  free(removed_letters);
-  free(missed_letters);
+  free(data);
+  free(removedLetters);
+  free(missedLetters);
   return 0;
 }
