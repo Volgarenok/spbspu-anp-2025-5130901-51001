@@ -1,5 +1,5 @@
 //14
-//3
+//LAT_RMV #3
 //malloc free
 #include <iostream>
 #include <iomanip>
@@ -7,6 +7,8 @@
 namespace kitserov
 {
   char * getline(std::istream & in, size_t & s);
+  char * miss_letters();
+  char * remove_letters();
 }
 
 char * kitserov::getline(std::istream & in, size_t & s)
@@ -50,7 +52,28 @@ int main()
 {
   size_t s;
   char * data = kitserov::getline(std::cin, s);
+  if (!data){
+  	std::cerr << "Failed read line\n";
+  	return 1;
+  }
+
+  char * removed_letters = (char*) malloc(s + 1);
+  if (!removed_letters){
+  	std::cerr << "Failed memory allocation";
+  	return 1;
+  }
+  kitserov::remove_letters(data, removed_letters, s + 1);
+
+  char * missed_letters = (char*) malloc(s + 1);
+  if (!missed_letters){
+  	std::cerr << "Failed memory allocation";
+  	return 1;
+  }
+  kitserov::miss_letters(data, missed_letters, s + 1);
+
   std::cout << data << "\n";
   std::cout << s << "\n";
+  free(removed_letters);
+  free(missed_letters);
   return 0;
 }
