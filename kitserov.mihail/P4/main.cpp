@@ -29,6 +29,7 @@ void kitserov::missLetters(const char* source, char* destination, size_t size)
       destination[dstIndex++] = c;
     }
   }
+  destination[dstIndex] = '\0';
 }
 
 void kitserov::removeLetters(const char* source, char* destination, size_t size)
