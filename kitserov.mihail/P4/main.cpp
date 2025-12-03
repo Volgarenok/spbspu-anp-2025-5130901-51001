@@ -88,8 +88,9 @@ char* kitserov::getline(std::istream& in, size_t& s)
 int main()
 {
   size_t s = 0;
+  char* data = nullptr;
   try {
-    char* data = kitserov::getline(std::cin, s);
+    data = kitserov::getline(std::cin, s);
   } catch (...) {
     std::cerr << "Empty line";
     return 1;
