@@ -19,7 +19,7 @@ void kitserov::missLetters(const char* source, char* destination, size_t size)
     unsigned char c = static_cast<unsigned char>(alphavit[j]);
     bool charInData = false;
     for (size_t i = 0; i < size; ++i) {
-      unsigned char cc = static_cast<unsigned char>(source[i]);
+      unsigned char cc = static_cast<unsigned char>(std::tolower(source[i]));
       if (c == cc) {
         charInData = true;
         break;
@@ -61,11 +61,11 @@ char* kitserov::getline(std::istream& in, size_t& s)
   in >> letter;
   while (!(in.fail()) && letter != '\n') {
     if (i == size) {
-      size *= 2;
-      char* temp = static_cast<char*>(malloc(size + 1));
+      char* temp = static_cast<char*>(malloc(size * 2 + 1));
       for (size_t j = 0; j < size; j++) {
         temp[j] = data[j];
       }
+      size *= 2;
       free(data);
       data = temp;
     }
@@ -119,7 +119,6 @@ int main()
 
   std::cout << missedLetters << "\n";
   std::cout << removedLetters << "\n";
-  std::cout << s << "\n";
   free(data);
   free(removedLetters);
   free(missedLetters);
