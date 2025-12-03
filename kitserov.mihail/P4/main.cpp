@@ -8,6 +8,27 @@ namespace kitserov
 {
   char* getline(std::istream& in, size_t& s);
   void removeLetters(const char* source, char* destination, size_t size);
+  void missLetters(const char* source, char* destination, size_t size);
+}
+
+void kitserov::missLetters(const char* source, char* destination, size_t size)
+{
+  size_t dstIndex = 0;
+  char alphavit[27] = "abcdefghijklmnopqrstuvwxyz";
+  for (size_t j = 0; j < 27; ++j){
+    unsigned char c = static_cast<unsigned char>(alphavit[j]);
+    bool charInData = false;
+    for (size_t i = 0; i < size; ++i) {
+      unsigned char cc = static_cast<unsigned char>(source[i]);
+      if (c == cc) {
+        charInData = true;
+        break;
+      }
+    }
+    if (!charInData) {
+      destination[dstIndex++] = c;
+    }
+  }
 }
 
 void kitserov::removeLetters(const char* source, char* destination, size_t size)
@@ -78,14 +99,16 @@ int main()
   }
   kitserov::removeLetters(data, removedLetters, s + 1);
 
-  char* missedLetters = static_cast<char*>(malloc(s + 1));
+  char* missedLetters = static_cast<char*>(malloc(28));
   if (!missedLetters) {
     std::cerr << "Failed memory allocation";
     free(data);
     free(removedLetters);
     return 1;
   }
+  kitserov::missLetters(data, missedLetters, s + 1);
 
+  std::cout << missedLetters << "\n";
   std::cout << removedLetters << "\n";
   std::cout << s << "\n";
   free(data);
