@@ -3,20 +3,11 @@
 
 namespace kitserov
 {
-  int* createMatrix(size_t size);
-  void variant1(size_t rows, size_t cols, int matrix[10000], const char* outputFile);
-  void variant2(size_t rows, size_t cols, int* matrix, const char* outputFile);
+  size_t countRowsWithoutSame(size_t rows, size_t cols, int* matrix);
+  bool isUpTriangleMatrix(size_t rows, size_t cols, int* matrix);
 }
 
-int* kitserov::createMatrix(size_t size)
-{
-  if (size == 0) {
-    return nullptr;
-  }
-  return new int[size];
-}
-
-void kitserov::variant1(size_t rows, size_t cols, int matrix[10000], const char* outputFile)
+size_t kitserov::countRowsWithoutSame(size_t rows, size_t cols, int* matrix)
 {
   size_t answer = 0;
   bool flag = false;
@@ -34,17 +25,13 @@ void kitserov::variant1(size_t rows, size_t cols, int matrix[10000], const char*
     }
   }
 
-  std::ofstream output(outputFile);
-  output << answer;
+  return answer;
 }
 
-void kitserov::variant2(size_t rows, size_t cols, int* matrix, const char* outputFile)
+bool kitserov::isUpTriangleMatrix(size_t rows, size_t cols, int* matrix)
 {
-  std::ofstream output(outputFile);
   if (rows != cols || rows == 0 || cols == 0) {
-    output << "false";
-    delete[] matrix;
-    return;
+    return false;
   }
 
   bool flag = true;
@@ -60,12 +47,7 @@ void kitserov::variant2(size_t rows, size_t cols, int* matrix, const char* outpu
     }
   }
 
-  if (flag) {
-    output << "true";
-  } else {
-    output << "false";
-  }
-  delete[] matrix;
+  return flag;
 }
 
 int main(int argc, char* argv[])
@@ -106,34 +88,39 @@ int main(int argc, char* argv[])
   if (rows == 0 || cols == 0) {
     return 0;
   }
-
+  int staticMatrix[10000];
+  int* matrix = nullptr;
   if (num == 1) {
-    int matrix[10000] = {0};
-    for (size_t i = 0; i < rows * cols; i++) {
-      input >> matrix[i];
-      if (input.fail()) {
-        std::cerr << "Failed to read matrix element\n";
-        return 2;
-      }
-    }
-    variant1(rows, cols, matrix, argv[3]);
+    matrix = staticMatrix;
   } else {
-    int* matrix = createMatrix(rows * cols);
-    if (matrix == nullptr) {
-      std::cerr << "Failed to allocate memory for matrix\n";
-      return 2;
-    }
-
-    for (size_t i = 0; i < rows * cols; i++) {
-      input >> matrix[i];
-      if (input.fail()) {
-        std::cerr << "Failed to read matrix element\n";
-        delete[] matrix;
-        return 2;
-      }
-    }
-    variant2(rows, cols, matrix, argv[3]);
+    matrix = new int[rows * cols];
+  }
+  if (matrix == nullptr) {
+    std::cerr << "Error allocating memory\n";
+    return 2;
   }
 
+  for (size_t i = 0; i < rows * cols; i++) {
+    input >> matrix[i];
+    if (!input.good()) {
+      input.close();
+      if (num == 2) {
+        delete[] matrix;
+      }
+      std::cerr << "Error reading matrix\n";
+      return 2;
+    }
+  }
+
+  input.close();
+  std::ofstream output(argv[3]);
+  size_t result1 = countRowsWithoutSame(rows, cols, matrix);
+  bool result2 = isUpTriangleMatrix(rows, cols, matrix);
+  if (num == 1) {
+    output << result1;
+  } else {
+    output << std::boolalpha << result2;
+    delete[] matrix;
+  }
   return 0;
 }
