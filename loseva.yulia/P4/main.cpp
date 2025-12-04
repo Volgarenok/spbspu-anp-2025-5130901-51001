@@ -4,10 +4,10 @@
 
 namespace loseva
 {
+  char* lat_two(const char* str1, const char* str2, char* result, size_t result>
+  char* lat_rmv(const char* src, char* result, size_t result_size);
   char* mergeStrings(char* a, char* b, size_t as, size_t bs);
   char* readInputLine(std::istream& in, size_t& size);
-  char* lat_two(const char* str1, const char* str2, char* result, size_t result_size);
-  char* lat_rmv(const char* src, char* result, size_t result_size);
 }
 
 char* loseva::mergeStrings(char* a, char* b, size_t as, size_t bs)

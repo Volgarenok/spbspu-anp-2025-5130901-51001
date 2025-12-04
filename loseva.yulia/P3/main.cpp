@@ -3,8 +3,29 @@
 
 namespace loseva
 {
-    void elementsdiag(size_t rows, size_t cols, int matrix[10000], const char* outputFile);
-    void localmax(size_t rows, size_t cols, int* matrix, const char* outputFile);
+  void elementsdiag(size_t rows, size_t cols, int matrix[10000], const char* outputFile);
+  void countLocalMax(size_t rows, size_t cols, int* matrix, const char* outputFile);
+}
+bool isValidPosition(size_t i, size_t j, size_t rows, size_t cols)
+{
+  return i < rows && j < cols;
+}
+
+bool isLocalMaximum(size_t i, size_t j, size_t rows, size_t cols, int* matrix)
+{
+  int current = matrix[i * cols + j];
+  int di[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+  int dj[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+  for (int k = 0; k < 8; ++k)
+  {
+    size_t ni = i + di[k];
+    size_t nj = j + dj[k];
+    if (isValidPosition(ni, nj, rows, cols) && matrix[ni * cols + nj] >= current)
+    {
+      return false;
+    }
+  }
+  return true;
 }
 
 void loseva::elementsdiag(size_t rows, size_t cols, int matrix[10000], const char* outputFile)
@@ -24,30 +45,21 @@ void loseva::elementsdiag(size_t rows, size_t cols, int matrix[10000], const cha
             maxsum = diagsum;
         }
     }
-    std::ofstream(outputFile) << maxsum;
 }
 
-void loseva::localmax(size_t rows, size_t cols, int* matrix, const char* outputFile)
+void loseva::countLocalMax(size_t rows, size_t cols, int** matrix)
 {
-    size_t count = 0;
-    for (size_t i = 1; i < rows - 1; i++) {
-        for (size_t j = 1; j < cols - 1; j++) {
 
-            int val = matrix[i * cols + j];
-            if (matrix[i * cols + j - 1] < val &&
-                matrix[i * cols + j + 1] < val &&
-                matrix[(i - 1) * cols + j] < val &&
-                matrix[(i + 1) * cols + j] < val &&
-                matrix[(i - 1) * cols + j - 1] < val &&
-                matrix[(i + 1) * cols + j + 1] < val &&
-                matrix[(i + 1) * cols + j - 1] < val &&
-                matrix[(i - 1) * cols + j + 1] < val) {
-                count++;
-            }
-        }
+  size_t count = 0;
+  if (rows < 3 || cols < 3) return 0;
+  for (size_t i = 1; i < rows - 1; i++) {
+    for (size_t j = 1; j < cols - 1; j++) {
+      if (isLocalMax(i, j, rows, cols, matrix)){
+        ++count;
+      }
     }
-    std::ofstream(outputFile) << count;
-    delete[] matrix;
+  }
+  return count;
 }
 
 int main(int argc, char* argv[])
