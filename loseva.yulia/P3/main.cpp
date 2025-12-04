@@ -3,8 +3,8 @@
 
 namespace loseva
 {
-  void elementsdiag(size_t rows, size_t cols, int matrix[10000], const char* outputFile);
-  void countLocalMax(size_t rows, size_t cols, int* matrix, const char* outputFile);
+  void maxDiagonalSum(size_t rows, size_t cols, int* matrix);
+  void countLocalMax(size_t rows, size_t cols, int* matrix);
 }
 bool isValidPosition(size_t i, size_t j, size_t rows, size_t cols)
 {
@@ -28,23 +28,30 @@ bool isLocalMaximum(size_t i, size_t j, size_t rows, size_t cols, int* matrix)
   return true;
 }
 
-void loseva::elementsdiag(size_t rows, size_t cols, int matrix[10000], const char* outputFile)
+void loseva::maxDiagonalSum(size_t rows, size_t cols, int* matrix)
 {
-    size_t maxsum = 0;
-    int n = (rows < cols ? rows : cols);
-    for (int sum = 0; sum <= 2 * (n - 1); ++sum) {
-        if (sum == n - 1) continue;
-        size_t diagsum = 0;
-        for (int i = 0; i < n; ++i) {
-            int j = sum - i;
-            if ((j >= 0) && (j < n)) {
-                diagsum += matrix[i * cols + j];
-            }
-        }
-        if (diagsum > maxsum) {
-            maxsum = diagsum;
-        }
+  if (rows == 0 || cols == 0) return 0; 
+
+  size_t maxsum = 0;
+  size_t n  = std::min(rows, cols);
+  for (int sum = 0; sum <= 2 * (n - 1); ++sum)
+ {
+    if (sum == n - 1) continue;
+    size_t diagsum = 0;
+    for (size_t i = 0; i < n; ++i)
+    {
+      int j = sum - i;
+      if ((j >= 0) && (j < n))
+      {
+        diagsum += matrix[i * cols + j];
+      }
     }
+    if (diagsum > maxsum)
+    {
+      maxsum = diagsum;
+    }
+  }
+  return maxsum;
 }
 
 void loseva::countLocalMax(size_t rows, size_t cols, int** matrix)
