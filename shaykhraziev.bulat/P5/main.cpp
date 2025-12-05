@@ -5,6 +5,9 @@ namespace draw {
     double x, y;
   };
 
+  bool operator==(const point_t& lhs, const point_t& rhs);
+  bool operator!=(const point_t& lhs, const point_t& rhs);
+
   struct rectangle_t {
     double width, height;
     point_t pos;
