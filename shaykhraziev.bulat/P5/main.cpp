@@ -26,11 +26,13 @@ namespace draw {
     void move(point_t to) override;
     void move(double dx, double dy) override;
     void scale(double coef) override;
-    Rectangle(point_t a, point_t b) : a(a), b(b) {}
-    Rectangle(rectangle_t r) {
-      a = {r.pos.x-r.width/2, r.pos.y-r.height/2};
-      b = {r.pos.x+r.width/2, r.pos.y+r.height/2};
-    }
+    explicit Rectangle(point_t a, point_t b);
+    explicit Rectangle(rectangle_t r);
   };
 
 }
+
+// explicit Rectangle(rectangle_t r) {
+//   a = {r.pos.x-r.width/2, r.pos.y-r.height/2};
+//   b = {r.pos.x+r.width/2, r.pos.y+r.height/2};
+// }
