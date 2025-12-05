@@ -13,6 +13,9 @@ namespace draw {
     point_t pos;
   };
 
+  bool operator==(const rectangle_t& lhs, const rectangle_t& rhs);
+  bool operator!=(const rectangle_t& lhs, const rectangle_t& rhs);
+
   struct Shape {
     virtual double getArea() const = 0;
     virtual rectangle_t getFrameRect() const = 0;
