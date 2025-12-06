@@ -1,7 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
-#include <string>
 namespace vishnyakov
 {
   void spiral_reduction(int *matrix, size_t row, size_t column, std::ostream &output);
