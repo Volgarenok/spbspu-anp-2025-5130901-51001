@@ -3,7 +3,7 @@
 
 namespace borisov
 {
-  size_t count_local_maximum(const int* matrix, size_t rows, size_t cols)
+  size_t countLocalMaximum(const int* matrix, size_t rows, size_t cols)
   {
     size_t count = 0;
     for (size_t i = 1; i < rows - 1; i++) {
@@ -32,7 +32,7 @@ namespace borisov
     return count;
   }
 
-  int get_max_sum_antidiagonal(const int* matrix, size_t rows, size_t cols)
+  int getMaxSumAntidiagonal(const int* matrix, size_t rows, size_t cols)
   {
     size_t n;
     if (rows < cols) {
@@ -60,14 +60,14 @@ namespace borisov
     return max_diagsum;
   }
 
-  void process_output(std::ofstream& output, size_t rows, size_t cols, const int* matrix)
+  void processOutput(std::ostream& output, size_t rows, size_t cols, const int* matrix)
   {
     if (rows >= 3 && cols >= 3) {
-      output << borisov::count_local_maximum(matrix, rows, cols) << "\n";
+      output << borisov::countLocalMaximum(matrix, rows, cols) << "\n";
     } else {
       output << "0\n";
     }
-    output << borisov::get_max_sum_antidiagonal(matrix, rows, cols) << "\n";
+    output << borisov::getMaxSumAntidiagonal(matrix, rows, cols) << "\n";
   }
 }
 
@@ -91,7 +91,7 @@ int main(int argc, char ** argv)
     std::cerr << "Read matrix failed";
     return 2;
   }
-
+  
   int rows_input = 0, cols_input = 0;
 
   if (!(input >> rows_input >> cols_input) || rows_input < 0 || cols_input < 0 || rows_input * cols_input > 10000) {
@@ -118,7 +118,7 @@ int main(int argc, char ** argv)
     }
     input.close();
     std::ofstream output(argv[3]);
-    borisov::process_output(output, rows, cols, matrix);
+    borisov::processOutput(output, rows, cols, matrix);
     output.close();
   } else if ((*argv[1] == '2')) {
     int* matrix = new int[rows * cols];
@@ -131,7 +131,7 @@ int main(int argc, char ** argv)
     }
     input.close();
     std::ofstream output(argv[3]);
-    borisov::process_output(output, rows, cols, matrix);
+    borisov::processOutput(output, rows, cols, matrix);
     output.close();
     delete[] matrix;
   }
