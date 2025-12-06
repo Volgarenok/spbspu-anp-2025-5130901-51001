@@ -40,7 +40,7 @@ size_t vishnyakov::is_in(size_t *array, size_t value, size_t size)
 void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column, std::ostream &output)
 {
   size_t start = row*column-column, type_of_mooving = 0;
-  size_t completed_values[column*row];
+  size_t *completed_values = new size_t[column*row];
   for (size_t i = 0; i<column*row; ++i)
   {
     completed_values[i]=column*row;
@@ -61,6 +61,7 @@ void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column, std::o
   {
     output << ' ' << matrix[i];
   }
+  delete[] completed_values;
 }
 int vishnyakov::biggiest_diagonal(const int *matrix, size_t row, size_t column)
 {
