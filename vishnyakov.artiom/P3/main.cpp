@@ -170,7 +170,7 @@ int main(int argc, char ** argv)
     return 2;
   }
   int result = vishnyakov::biggiest_diagonal(matrix, row, column);
-  vishnyakov::spiral_reduction(matrix,row,column, output);
+  vishnyakov::spiral_reduction(matrix, row, column, output);
   output << '\n' << result;
   output.close();
   delete[] dynamic_matrix;
