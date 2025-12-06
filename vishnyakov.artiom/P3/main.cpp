@@ -126,6 +126,13 @@ int main(int argc, char ** argv)
   if (!input.good())
   {
     input.close();
+    if (row==0 || column==0)
+    {
+      std::ofstream output(argv[3]);
+      output << "0 0\n" << '0';
+      output.close();
+      return 0;
+    }
     std::cerr << "Error reading matrix sizes\n";
     return 2;
   }
