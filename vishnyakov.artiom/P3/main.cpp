@@ -1,30 +1,34 @@
 #include <iostream>
 #include <fstream>
+#include <cstring>
+#include <string>
 namespace vishnyakov
 {
-  void LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream &output);
-  int MAX_SUM_SDG(const int *matrix, size_t row, size_t column);
+  void spiral_reduction(int *matrix, size_t row, size_t column, std::ostream &output);
+  int biggiest_diagonal(const int *matrix, size_t row, size_t column);
+  size_t move(size_t type, size_t column, size_t start);
+  size_t is_in(size_t *array, size_t value, size_t size);
 }
-size_t move(size_t type, size_t column, size_t start)
+size_t vishnyakov::move(size_t type, size_t column, size_t start)
 {
   switch (type%4)
   {
-    case 0:
-      return start-column;
-      break;
-    case 1:
-      return start+1;
-      break;
-    case 2:
-      return start+column;
-      break;
-    case 3:
-      return start-1;
-      break;
+  case 0:
+    return start-column;
+    break;
+  case 1:
+    return start+1;
+    break;
+  case 2:
+    return start+column;
+    break;
+  case 3:
+    return start-1;
+    break;
   }
-  return 0;
+  return start;
 }
-size_t is_in(size_t *array,size_t value, size_t size)
+size_t vishnyakov::is_in(size_t *array, size_t value, size_t size)
 {
   for (size_t i=0; i<size; ++i)
   {
@@ -35,7 +39,7 @@ size_t is_in(size_t *array,size_t value, size_t size)
   }
   return 0;
 }
-void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostream &output)
+void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column, std::ostream &output)
 {
   size_t start = row*column-column, type_of_mooving = 0;
   size_t completed_values[column*row];
@@ -45,14 +49,14 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
   }
   for (size_t i = 0; i<row*column; ++i)
   {
-    if (move(type_of_mooving,column,start)>row*column)
+    if (vishnyakov::move(type_of_mooving,column,start)>row*column)
     {
       type_of_mooving+=1;
     }
     matrix[start] -= i+1;
     completed_values[i]=start;
-    type_of_mooving += is_in(completed_values, move(type_of_mooving,column,start), row*column);
-    start = move(type_of_mooving,column,start);
+    type_of_mooving += vishnyakov::is_in(completed_values, vishnyakov::move(type_of_mooving,column,start), row*column);
+    start = vishnyakov::move(type_of_mooving,column,start);
   }
   output << row << ' ' << column;
   for (size_t i = 0; i<row*column;++i)
@@ -60,11 +64,11 @@ void vishnyakov::LFT_BOT_CLK(int *matrix, size_t row, size_t column, std::ostrea
     output << ' ' << matrix[i];
   }
 }
-int vishnyakov::MAX_SUM_SDG(const int *matrix, size_t row, size_t column)
+int vishnyakov::biggiest_diagonal(const int *matrix, size_t row, size_t column)
 {
-  int sum = 0, max_sum = 0;
+  int sum = 0, max_sum = matrix[column-1];
   size_t k = 0;
-  for (size_t i = 1; i<column; ++i)
+  for (size_t i = 1; i<column-1; ++i)
   {
     sum = matrix[i];
     k = i+column+1;
@@ -106,7 +110,8 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  if ((*argv[1] != '1') && (*argv[1] != '2'))
+  int num = std::atoi(argv[1]);
+  if (num != 1 && num != 2)
   {
     std::cerr << "First argument is out of range or not a number\n";
     return 1;
@@ -126,23 +131,24 @@ int main(int argc, char ** argv)
     return 2;
   }
   int *matrix = nullptr;
-  int static_matrix[10000];
-  if ((*argv[1] == '1'))
+  int *dynamic_matrix = nullptr;
+  if (num == 1)
   {
-    matrix = static_matrix;
+    int fixed_len_matrix[10000];
+    matrix = fixed_len_matrix;
   }
-  else if(*argv[1] == '2')
+  else if (num == 2)
   {
     try
     {
-      matrix = new int[row * column];
+      dynamic_matrix = new int[row * column];
     }
     catch (...)
     {
       std::cerr << "Error: Memory allocation failed.\n";
-      delete[] matrix;
       return 2;
     }
+    matrix = dynamic_matrix;
   }
   for (size_t i = 0; i < row * column; ++i)
   {
@@ -150,10 +156,7 @@ int main(int argc, char ** argv)
     {
       input.close();
       std::cerr << "Error reading matrix\n";
-      if ((*argv[1] == '2'))
-      {
-        delete[] matrix;
-      }
+      delete[] dynamic_matrix;
       return 2;
     }
   }
@@ -162,20 +165,15 @@ int main(int argc, char ** argv)
   if (!output.is_open())
   {
     std::cerr << "Error opening output file\n";
-    if ((*argv[1] == '2'))
-    {
-      delete[] matrix;
-    }
+    if (num == 2)
+    delete[] dynamic_matrix;
     return 2;
   }
-  int result = vishnyakov::MAX_SUM_SDG(matrix, row, column);
-  vishnyakov::LFT_BOT_CLK(matrix,row,column, output);
+  int result = vishnyakov::biggiest_diagonal(matrix, row, column);
+  vishnyakov::spiral_reduction(matrix,row,column, output);
   output << '\n' << result;
   output.close();
-  if ((*argv[1] == '2'))
-  {
-    delete[] matrix;
-  }
+  delete[] dynamic_matrix;
   return 0;
 }
 
