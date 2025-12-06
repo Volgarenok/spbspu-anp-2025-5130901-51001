@@ -65,6 +65,10 @@ void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column, std::o
 }
 int vishnyakov::biggiest_diagonal(const int *matrix, size_t row, size_t column)
 {
+  if (row == 0 || column == 0)
+  {
+    return 0;
+  }
   int sum = 0, max_sum = matrix[column-1];
   size_t k = 0;
   for (size_t i = 1; i<column-1; ++i)
@@ -122,17 +126,9 @@ int main(int argc, char ** argv)
     return 2;
   }
   size_t row = 0, column = 0;
-  input >> row >> column;
-  if (!input.good())
+  if (!(input >> row >> column))
   {
     input.close();
-    if (row==0 || column==0)
-    {
-      std::ofstream output(argv[3]);
-      output << "0 0\n" << '0';
-      output.close();
-      return 0;
-    }
     std::cerr << "Error reading matrix sizes\n";
     return 2;
   }
