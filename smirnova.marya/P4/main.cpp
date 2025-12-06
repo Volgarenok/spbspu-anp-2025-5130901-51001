@@ -64,9 +64,9 @@ int main()
   size_t n = l1.length();
   size_t m = l2.length();
 
-  try 
+  try
   {
-    size_t length = l1.length() + l2.length() + 1; 
+    size_t length = l1.length() + l2.length() + 1;
     int result1 = 0;
     char *result2 = new char[length];
 
@@ -78,7 +78,7 @@ int main()
 
     delete[] result2;
   }
-  catch(const std::exception &e) {
+  catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << "\n";
     return 1;
   }
