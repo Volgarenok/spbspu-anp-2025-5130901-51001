@@ -9,6 +9,10 @@ namespace vishnyakov
 }
 size_t vishnyakov::move(size_t type, size_t column, size_t start)
 {
+  if(start == 0)
+  {
+    return 1;
+  }
   switch (type%4)
   {
   case 0:
@@ -139,7 +143,7 @@ int main(int argc, char ** argv)
     int fixed_len_matrix[10000];
     matrix = fixed_len_matrix;
   }
-  else if (num == 2)
+  else
   {
     try
     {
@@ -167,7 +171,6 @@ int main(int argc, char ** argv)
   if (!output.is_open())
   {
     std::cerr << "Error opening output file\n";
-    if (num == 2)
     delete[] dynamic_matrix;
     return 2;
   }
