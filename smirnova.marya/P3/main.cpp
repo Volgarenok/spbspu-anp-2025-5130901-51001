@@ -38,19 +38,11 @@ int smirnova::localmaximum(size_t rows, size_t cols, int *matrix)
 }
 int smirnova::elementsdiagonal(size_t rows, size_t cols, int *matrix)
 {
-  size_t n;
-  if (rows < cols)
-  {
-    n = rows;
-  }
-  else
-  {
-    n = cols;
-  }
+  size_t n = rows < cols ? rows : cols;
   int maxsum = 0;
-  for (size_t sum = 0; sum <= 2*(n-1); ++sum)
+  for (size_t sum = 0; sum <= 2 * (n - 1); ++sum)
   {
-    if (sum == n-1)
+    if (sum == n - 1)
     {
       continue;
     }
@@ -119,7 +111,7 @@ int main(int argc, char** argv)
   size_t cols1 = static_cast<size_t>(cols);
   if (m == '1')
   {
-    int matrix[rows1 * cols1];
+    int matrix[10000] = {};
     for (size_t i = 0; i < rows1 * cols1; ++i)
     {
       if (!(input >> matrix[i]) || std::abs(matrix[i]) > 1000000)
