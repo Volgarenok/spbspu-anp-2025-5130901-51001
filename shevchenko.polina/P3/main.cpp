@@ -19,14 +19,14 @@ void shevchenko::spiralAdd(int * data, size_t rows, size_t cols)
   }
 
   int count = 1;
-  int top = 0;
+  size_t top = 0;
   size_t bottom = rows - 1;
-  int left = 0;
+  size_t left = 0;
   size_t right = cols - 1;
 
   while (top <= bottom && left <= right)
   {
-    for (int i = top; i <= bottom; ++i)
+    for (size_t i = top; i <= bottom; ++i)
     {
       data[i * cols + left] += count;
       count++;
@@ -35,7 +35,7 @@ void shevchenko::spiralAdd(int * data, size_t rows, size_t cols)
 
     if (top <= bottom)
     {
-      for (int j = left; j <= right; ++j)
+      for (size_t j = left; j <= right; ++j)
       {
         data[bottom * cols + j] += count;
         count++;
