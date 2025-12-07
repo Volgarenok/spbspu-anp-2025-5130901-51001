@@ -23,7 +23,7 @@ void shevchenko::spiralAdd(int * data, size_t rows, size_t cols)
   size_t bottom = rows - 1;
   int left = 0;
   size_t right = cols - 1;
-    
+
   while (top <= bottom && left <= right)
   {
     for (int i = top; i <= bottom; ++i)
@@ -32,7 +32,7 @@ void shevchenko::spiralAdd(int * data, size_t rows, size_t cols)
       count++;
     }
     left++;
-    
+
     if (top <= bottom)
     {
       for (int j = left; j <= right; ++j)
@@ -92,43 +92,43 @@ void shevchenko::averageNeighbors(const int * data, double * smooth_data, size_t
         sum += data[(i - 1) * cols + (j - 1)];
         count++;
       }
-    
+
       if (i > 0)
       {
         sum += data[(i - 1) * cols + j];
         count++;
       }
-      
+
       if (i > 0 && j < cols - 1)
       {
         sum += data[(i - 1) * cols + (j + 1)];
         count++;
       }
-    
+
       if (j > 0)
       {
         sum += data[i * cols + (j - 1)];
         count++;
       }
-      
+
       if (j < cols - 1)
       {
         sum += data[i * cols + (j + 1)];
         count++;
       }
-      
+
       if (i < rows - 1 && j > 0)
       {
         sum += data[(i + 1) * cols + (j - 1)];
         count++;
       }
-      
+
       if (i < rows - 1)
       {
         sum += data[(i + 1) * cols + j];
         count++;
       }
-      
+
       if (i < rows - 1 && j < cols - 1)
       {
         sum += data[(i + 1) * cols + (j + 1)];
@@ -153,7 +153,7 @@ size_t shevchenko::readMatrix(std::istream & in, int * data, size_t rows, size_t
     {
         return 0;
     }
-    
+
     size_t total = rows * cols;
     size_t read_cnt = 0;
     for (size_t k = 0; k < total; ++k)
@@ -200,15 +200,15 @@ int main(int argc, char * argv[])
         std::cerr << "Not enough arguments";
         return 1;
     }
-    
+
     if (argc > 4)
     {
         std::cerr << "Too many arguments";
         return 1;
     }
-    
+
     int num = 0;
-    
+
     try {
         num = std::stoi(argv[1]);
     }
@@ -217,30 +217,30 @@ int main(int argc, char * argv[])
         std::cerr << "First parameter is not a number";
         return 1;
     }
-    
+
     if (num != 1 && num != 2)
     {
         std::cerr << "First parameter is out of range";
         return 1;
     }
-    
+
     const char * inputFile = argv[2];
     const char * outputFile = argv[3];
-    
+
     std::ifstream fin(inputFile);
     if (!fin.is_open())
     {
         std::cerr << "readMatrix failed";
         return 2;
     }
-    
+
     std::ofstream fout(outputFile);
     if (!fout.is_open())
     {
       std::cerr << "Cannot open output file";
       return 2;
     }
-    
+
     size_t rows = 0;
     size_t cols = 0;
     if (!(fin >> rows >> cols))
@@ -266,29 +266,29 @@ int main(int argc, char * argv[])
         std::cerr << "Matrix size exceeds";
         return 2;
     }
-    
+
     if (num == 1)
     {
       const size_t max_size = 10000;
       int staticData[max_size];
       int staticDataCopy[max_size];
-        
+
       size_t read_cnt = shevchenko::readMatrix(fin, staticData, rows, cols);
       if (read_cnt != total)
       {
         std::cerr << "Not enough data";
         return 2;
       }
-            
+
       for (size_t i = 0; i < total; ++i)
       {
         staticDataCopy[i] = staticData[i];
       }
-            
+
       shevchenko::spiralAdd(staticData, rows, cols);
       shevchenko::writeMatrix(fout, staticData, rows, cols);
       fout << "\n";
-      
+
       double staticSmoothData[max_size];
       shevchenko::averageNeighbors(staticDataCopy, staticSmoothData, rows, cols);
       shevchenko::writeSmoothMatrix(fout, staticSmoothData, rows, cols);
@@ -297,7 +297,7 @@ int main(int argc, char * argv[])
     {
       int * dynamicData = nullptr;
       int * dynamicDataCopy = nullptr;
-            
+
       try {
         dynamicData = new int[total];
         dynamicDataCopy = new int[total];
@@ -309,7 +309,7 @@ int main(int argc, char * argv[])
         if (dynamicDataCopy) delete[] dynamicDataCopy;
         return 2;
       }
-            
+
       size_t read_cnt = shevchenko::readMatrix(fin, dynamicData, rows, cols);
       if (read_cnt != total)
       {
@@ -330,7 +330,7 @@ int main(int argc, char * argv[])
       double * dynamicSmoothData = new double[total];
       shevchenko::averageNeighbors(dynamicDataCopy, dynamicSmoothData, rows, cols);
       shevchenko::writeSmoothMatrix(fout, dynamicSmoothData, rows, cols);
-            
+
       delete[] dynamicData;
       delete[] dynamicDataCopy;
       delete[] dynamicSmoothData;
