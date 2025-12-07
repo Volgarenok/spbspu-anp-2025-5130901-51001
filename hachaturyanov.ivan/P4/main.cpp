@@ -56,29 +56,15 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
   return input;
 }
 
-char * hachaturyanov::digits(const char * input, size_t & res)
+size_t hachaturyanov::digits(const char * input)
 {
-  char * output = reinterpret_cast< char* >(malloc(std::strlen(input)));
-  if (!output) {
-    return nullptr;
-  }
-
   size_t count = 0;
   for (size_t i = 0; i < std::strlen(input); i++) {
     if (std::isdigit(input[i])) {
-      output[count] = input[i];
       count++;
     }
   }
-
-  char * temp = reinterpret_cast< char* >(realloc(output, count));
-  if (!temp) {
-    free(output);
-    return nullptr;
-  }
-  output = temp;
-  res = count;
-  return output;
+  return count;
 }
 
 void hachaturyanov::exc_snd(const char * input, const char * second, const size_t second_len, char * output)
@@ -130,8 +116,7 @@ int main() {
     return 1;
   }
 
-  size_t s_digits = 0;
-  char * digits = hachaturyanov::digits(dgt_snd_second, s_digits);
+  size_t s_digits = hachaturyanov::digits(dgt_snd_second);
   char * outline2 = reinterpret_cast< char* >(malloc(std::strlen(input) + s_digits));
   if (!outline2) {
     free(input);
