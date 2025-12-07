@@ -134,8 +134,11 @@ int main()
   }
 
   hachaturyanov::exc_snd(input, exc_snd_second, exc_snd_s_len, outline1);
+  hachaturyanov::dgt_snd(input, dgt_snd_second, dgt_snd_s_len, outline2);
   std::cout << outline1 << "\n";
+  std::cout << outline2 << "\n";
   free(input);
   free(outline1);
+  free(outline2);
   return 0;
 }
