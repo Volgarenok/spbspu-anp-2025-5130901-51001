@@ -4,8 +4,8 @@
 
 namespace losev {
   void readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n);
-  int numRowLSR(int * ptrArr, int m, int n);
-  int countLocMin(int * ptrArr, size_t m, size_t n);
+  size_t findNumRowMaxRepl(const int * ptrArr, size_t m, size_t n);
+  size_t countLocMin(const int * ptrArr, size_t m, size_t n);
 }
 
 int main(int argc, char **argv) {
@@ -13,8 +13,7 @@ int main(int argc, char **argv) {
   if (argc > 4) {
     std::cerr << "Too many arguments\n";
     return 1;
-  }
-  else if (argc < 4) {
+  } else if (argc < 4) {
     std::cerr << "Too few arguments\n";
     return 1;
   }
@@ -22,8 +21,7 @@ int main(int argc, char **argv) {
   if (!output.is_open()) {
     std::cerr <<"I can not open output file\n";
     return 1;
-  }
-  else {
+  } else {
     output.clear();
   }
   std::ifstream input(argv[2]);
@@ -37,13 +35,11 @@ int main(int argc, char **argv) {
     if (m < 0 || n < 0) {
       std::cerr << "I can not create an array from this\n";
       return 2;
-    }
-    else if (m == 0 && n == 0) {
-      output << 0 << std::endl << 0 << " " << 0 << std::endl;
+    } else if (m == 0 && n == 0) {
+      output << 0 << "\n" << 0 << " " << 0 << "\n";
       return 0;
     }
-  }
-  else {
+  } else {
     std::cerr <<"I can not open input file\n";
     return 1;
   }
@@ -52,12 +48,10 @@ int main(int argc, char **argv) {
   int *array = nullptr;
   if (*argv[1] == '1') {
     array = arrayStack;
-  }
-  else if (*argv[1] == '2') {
+  } else if (*argv[1] == '2') {
     arrayDinamic = new int[n * m];
     array = arrayDinamic;
-  }
-  else {
+  } else {
     std::cerr << "Error wrong num\n";
     return 1;
   }
@@ -65,13 +59,13 @@ int main(int argc, char **argv) {
     los::readFile(input, array, m, n);
   }
   catch (const std::runtime_error& e) {
-    std::cerr << "Error file: " << e.what() << std::endl;
+    std::cerr << "Error file: " << e.what() << "\n";
     delete[] arrayDinamic;
     return 2;
   }
   input.close();
-  output << los::countLocMin(array, m, n) << std::endl;
-  output << los::numRowLSR(array, m, n) << std::endl;
+  output << los::countLocMin(array, m, n) << "\n";
+  output << los::findNumRowMaxRepl(array, m, n) << "\n";
   delete[] arrayDinamic;
   return 0;
 }
@@ -92,19 +86,19 @@ void losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n) {
   }
 }
 
-int losev::countLocMin(int * ptrArr, size_t m, size_t n) {
-  int count = 0;
+size_t losev::countLocMin(const int * ptrArr, size_t m, size_t n) {
+  size_t count = 0;
   bool isLocMin;
   for (size_t i = 1; i < m - 1; i++) {
     for (size_t j = 1; j < n - 1; j++) {
-      isLocMin = ptrArr[i * n + j] < ptrArr[i * n + (j + 1)] &&
-                  ptrArr[i * n + j] < ptrArr[(i + 1) * n + (j + 1)] &&
-                  ptrArr[i * n + j] < ptrArr[(i + 1) * n + j] &&
-                  ptrArr[i * n + j] < ptrArr[(i + 1) * n + (j - 1)] &&
-                  ptrArr[i * n + j] < ptrArr[i * n + (j - 1)] &&
-                  ptrArr[i * n + j] < ptrArr[(i - 1) * n + (j - 1)] &&
-                  ptrArr[i * n + j] < ptrArr[(i - 1) * n + j] &&
-                  ptrArr[i * n + j] < ptrArr[(i - 1) * n + (j + 1)];
+      isLocMin = ptrArr[i * n + j] < ptrArr[i * n + (j + 1)];
+      isLocMin = isLocMin && ptrArr[i * n + j] < ptrArr[(i + 1) * n + (j + 1)];
+      isLocMin = isLocMin && ptrArr[i * n + j] < ptrArr[(i + 1) * n + j];
+      isLocMin = isLocMin && ptrArr[i * n + j] < ptrArr[(i + 1) * n + (j - 1)];
+      isLocMin = isLocMin && ptrArr[i * n + j] < ptrArr[i * n + (j - 1)];
+      isLocMin = isLocMin && ptrArr[i * n + j] < ptrArr[(i - 1) * n + (j - 1)];
+      isLocMin = isLocMin && ptrArr[i * n + j] < ptrArr[(i - 1) * n + j];
+      isLocMin = isLocMin && ptrArr[i * n + j] < ptrArr[(i - 1) * n + (j + 1)];
       if (isLocMin) {
         count++;
       }
@@ -113,20 +107,19 @@ int losev::countLocMin(int * ptrArr, size_t m, size_t n) {
   return count;
 }
 
-int losev::numRowLSR(int * ptrArr, int m, int n) {
-  int numRowMaxsLenRep = 0;
-  int maxLenRep = 0;
-  for (int i = 0; i < m; i++) {
-    int locMaxLenRep = 0;
-    int lenRep = 0;
-    for (int j = 0; j < n - 1; j++) {
+size_t losev::findNumRowMaxRepl(const int * ptrArr, size_t m, size_t n) {
+  size_t numRowMaxsLenRep = 0;readFile
+  size_t maxLenRep = 0;
+  for (size_t i = 0; i < m; i++) {
+    size_t locMaxLenRep = 0;
+    size_t lenRep = 0;
+    for (size_t j = 0; j < n - 1; j++) {
       if (ptrArr[i * n + j] == ptrArr[i * n + j + 1]) {
         lenRep++;
         if (lenRep > locMaxLenRep) {
           locMaxLenRep = lenRep;
         }
-      }
-      else {
+      } else {
         lenRep = 0;
       }
       if (locMaxLenRep > maxLenRep) {
