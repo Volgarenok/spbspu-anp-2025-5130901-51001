@@ -6,9 +6,9 @@
 
 namespace hachaturyanov {
   char * readline(std::istream & in, size_t & strl);
-  char * digits(const char * input, size_t & res);
+  size_t digits(const char * input);
   void exc_snd(const char * input, const char * second, const size_t second_len, char * output);
-  void dgt_snd(const char * input, const char * second, const size_t second_len, char * output);
+  void dgt_snd(const char * input, const char * second, const size_t second_len, const size_t s_digits, char * output);
 }
 
 char * hachaturyanov::readline(std::istream & in, size_t & strl)
@@ -85,17 +85,18 @@ void hachaturyanov::exc_snd(const char * input, const char * second, const size_
   }
 }
 
-void hachaturyanov::dgt_snd(const char * input, const char * second, const size_t second_len, char * output)
+void hachaturyanov::dgt_snd(const char * inp, const char * sec, const size_t sec_l, const size_t s_dgs, char * output)
 {
   size_t out_len = 0;
-  for (size_t i = 0; i < std::strlen(input); i++) {
+  for (size_t i = 0; i < std::strlen(inp); i++) {
     size_t count = 0;
 
   }
 }
 
 
-int main() {
+int main()
+{
   const char exc_snd_second[] = "abc";
   const char dgt_snd_second[] = "g1h2k";
 
