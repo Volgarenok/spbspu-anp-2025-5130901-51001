@@ -6,19 +6,20 @@
 
 namespace hachaturyanov {
   char * readline(std::istream & in, size_t & strl);
-  void output(std::ostream & out, char * outline);
+  char * digits(const char * input, size_t & res);
   void exc_snd(const char * input, const char * second, const size_t second_len, char * output);
   void dgt_snd(const char * input, const char * second, const size_t second_len, char * output);
 }
 
-char * hachaturyanov::readline(std::istream & in, size_t & strl) {
+char * hachaturyanov::readline(std::istream & in, size_t & strl)
+{
   size_t max_buffer_size = 512;
   bool is_skipws = in.flags() & std::ios_base::skipws;
   if (is_skipws) {
     in >> std::noskipws;
   }
 
-  char * input = reinterpret_cast<char*>(malloc(max_buffer_size));
+  char * input = reinterpret_cast< char* >(malloc(max_buffer_size));
   if (!input) {
     return nullptr;
   }
@@ -35,7 +36,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl) {
     if (std::cin.fail() && !std::cin.eof()) {
       std::cin.clear();
       max_buffer_size *= 2;
-      char * temp = reinterpret_cast<char*>(realloc(input, max_buffer_size));
+      char * temp = reinterpret_cast< char* >(realloc(input, max_buffer_size));
       if (!temp) {
         free(input);
         return nullptr;
@@ -55,7 +56,33 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl) {
   return input;
 }
 
-void hachaturyanov::exc_snd(const char * input, const char * second, const size_t second_len, char * output) {
+char * hachaturyanov::digits(const char * input, size_t & res)
+{
+  char * output = reinterpret_cast< char* >(malloc(std::strlen(input)));
+  if (!output) {
+    return nullptr;
+  }
+
+  size_t count = 0;
+  for (size_t i = 0; i < std::strlen(input); i++) {
+    if (std::isdigit(input[i])) {
+      output[count] = input[i];
+      count++;
+    }
+  }
+
+  char * temp = reinterpret_cast< char* >(realloc(output, count));
+  if (!temp) {
+    free(output);
+    return nullptr;
+  }
+  output = temp;
+  res = count;
+  return output;
+}
+
+void hachaturyanov::exc_snd(const char * input, const char * second, const size_t second_len, char * output)
+{
   size_t out_len = 0;
   for (size_t i = 0; i < std::strlen(input); i++) {
     size_t count = 0;
@@ -72,7 +99,8 @@ void hachaturyanov::exc_snd(const char * input, const char * second, const size_
   }
 }
 
-void hachaturyanov::dgt_snd(const char * input, const char * second, const size_t second_len, char * output) {
+void hachaturyanov::dgt_snd(const char * input, const char * second, const size_t second_len, char * output)
+{
   size_t out_len = 0;
   for (size_t i = 0; i < std::strlen(input); i++) {
     size_t count = 0;
@@ -83,10 +111,10 @@ void hachaturyanov::dgt_snd(const char * input, const char * second, const size_
 
 int main() {
   const char exc_snd_second[] = "abc";
-  //const char dgt_snd_second[] = "g1h2k";
+  const char dgt_snd_second[] = "g1h2k";
 
   const size_t exc_snd_s_len = std::strlen(exc_snd_second);
-  //const size_t dgt_snd_s_len = strlen(dgt_snd_second);
+  const size_t dgt_snd_s_len = std::strlen(dgt_snd_second);
 
   size_t strl = 0;
   char * input = hachaturyanov::readline(std::cin, strl);
@@ -95,9 +123,19 @@ int main() {
     return 1;
   }
 
-  char * outline1 = reinterpret_cast<char*>(malloc(strl));
+  char * outline1 = reinterpret_cast< char* >(malloc(strl));
   if (!outline1) {
     free(input);
+    std::cerr << "Bad allocation\n";
+    return 1;
+  }
+
+  size_t s_digits = 0;
+  char * digits = hachaturyanov::digits(dgt_snd_second, s_digits);
+  char * outline2 = reinterpret_cast< char* >(malloc(std::strlen(input) + s_digits));
+  if (!outline2) {
+    free(input);
+    free(outline1);
     std::cerr << "Bad allocation\n";
     return 1;
   }
