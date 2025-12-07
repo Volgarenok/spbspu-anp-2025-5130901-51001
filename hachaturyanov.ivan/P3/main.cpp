@@ -92,7 +92,7 @@ int main(int argc, char** argv)
   }
 
   int* matrix = nullptr;
-  int temppointer[rows * cols];
+  int temppointer[10000];
 
   if (!std::strcmp(argv[1], "1")) {
     matrix = temppointer;
