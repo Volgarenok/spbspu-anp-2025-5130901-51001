@@ -108,7 +108,7 @@ size_t losev::countLocMin(const int * ptrArr, size_t m, size_t n) {
 }
 
 size_t losev::findNumRowMaxRepl(const int * ptrArr, size_t m, size_t n) {
-  size_t numRowMaxsLenRep = 0;readFile
+  size_t numRowMaxsLenRep = 0;
   size_t maxLenRep = 0;
   for (size_t i = 0; i < m; i++) {
     size_t locMaxLenRep = 0;
