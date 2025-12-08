@@ -78,8 +78,8 @@ size_t volkovich::getAddMissingSize(char *original)
 int main()
 {
   size_t length = 0;
-  char *input{};
-  char *tmp{};
+  char *input = nullptr;
+  char *tmp= nullptr;
   try
   {
     input = new char[length + 1];
@@ -116,7 +116,7 @@ int main()
     return 1;
   }
   size_t buffer_size = volkovich::getAddMissingSize(input);
-  char *missingAsciiString{};
+  char *missingAsciiString = nullptr;
   try
   {
     missingAsciiString = new char[buffer_size];
