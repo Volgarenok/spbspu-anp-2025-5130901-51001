@@ -118,7 +118,7 @@ int main()
   if (!input) {
     std::cerr << "Bad allocation\n";
     return 1;
-  } else if (input[0] == '\0') {
+  } else if (!std::strcmp(input, '\0')) {
     free(input);
     std::cerr << "Empty string\n";
     return 1;
