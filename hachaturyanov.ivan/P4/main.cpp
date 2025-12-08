@@ -83,7 +83,7 @@ size_t hachaturyanov::digits(const char * input)
 {
   size_t count = 0;
   for (size_t i = 0; i < std::strlen(input); i++) {
-    if (std::isdigit((unsigned char)input[i])) {
+    if (std::isdigit(static_cast< unsigned char >(input[i]))) {
       count++;
     }
   }
@@ -118,7 +118,7 @@ void hachaturyanov::dgt_snd(const char * input, const char * second, const size_
 
   size_t count = std::strlen(input);
   for (size_t i = 0; i < second_len; i++) {
-    if (std::isdigit((unsigned char)second[i])) {
+    if (std::isdigit(static_cast< unsigned char >(second[i]))) {
       output[count] = second[i];
       count++;
     }
