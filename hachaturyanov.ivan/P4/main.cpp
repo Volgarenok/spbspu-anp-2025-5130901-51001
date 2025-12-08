@@ -31,7 +31,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
     for (size_t i = len; i < max_buffer_size - len; i++) {
       in >> input[i];
     }
-    if (input[0] == '\0') {
+    if (!std::strlen(input)) {
       return input;
     }
     len = std::strlen(input);
