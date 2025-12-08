@@ -26,6 +26,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
 
   size_t len = 0;
   char c = in.get();
+  input[0] = c;
 
   bool done = false;
   while (!done) {
@@ -70,7 +71,7 @@ size_t hachaturyanov::digits(const char * input)
 void hachaturyanov::exc_snd(const char * input, const char * second, const size_t second_len, char * output)
 {
   size_t out_len = 0;
-  for (size_t i = 0; i < std::strlen(input); i++) {
+  for (size_t i = 0; input[i] != '\0'; i++) {
     size_t count = 0;
     for (size_t j = 0; j < second_len; j++) {
       if (input[i]==second[j]) {
@@ -83,12 +84,13 @@ void hachaturyanov::exc_snd(const char * input, const char * second, const size_
       out_len++;
     }
   }
+  output[out_len] = '\0';
 }
 
 void hachaturyanov::dgt_snd(const char * input, const char * second, const size_t second_len, char * output)
 {
 
-  for (size_t i = 0; i < std::strlen(input); i++) {
+  for (size_t i = 0; input[i] != '\0'; i++) {
     output[i] = input[i];
   }
 
@@ -99,6 +101,7 @@ void hachaturyanov::dgt_snd(const char * input, const char * second, const size_
       count++;
     }
   }
+  output[count] = '\0';
 }
 
 
