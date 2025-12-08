@@ -60,7 +60,7 @@ int main()
   std::string line1, line2;
   if (!std::getline(std::cin, line1))
   {
-    std::cerr << "Error reading first string" << std::endl;
+    std::cerr << "Error reading first string" << "\n";
     return 1;
   }
   if (!std::getline(std::cin, line2))
@@ -72,15 +72,15 @@ int main()
     size_t result1_size = line1.length() + line2.length() + 1;
     char *result1 = new char[result1_size];
     karpenko::uni_two(line1.c_str(), line2.c_str(), result1, result1_size);
-    std::cout << result1 << std::endl;
+    std::cout << result1 << "\n";
 
     char *result2 = new char[27];
     karpenko::shr_sym(line1.c_str(), result2, 27);
-    std::cout << result2 << std::endl;
+    std::cout << result2 << "\n";
 
     char *result3 = new char[27];
     karpenko::shr_sym(line2.c_str(), result3, 27);
-    std::cout << result3 << std::endl;
+    std::cout << result3 << "\n";
 
     delete[] result1;
     delete[] result2;
@@ -88,12 +88,12 @@ int main()
   }
   catch (const std::bad_alloc &)
   {
-    std::cerr << "Error: cannot allocate memory for result" << std::endl;
+    std::cerr << "Error: cannot allocate memory for result" << "\n";
     return 1;
   }
   catch (const std::exception &e)
   {
-    std::cerr << "Error: " << e.what() << std::endl;
+    std::cerr << "Error: " << e.what() << "\n";
     return 1;
   }
 
