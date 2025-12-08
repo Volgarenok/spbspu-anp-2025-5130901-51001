@@ -19,7 +19,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
     in >> std::noskipws;
   }
 
-  char * input = reinterpret_cast< char* >(malloc(max_buffer_size));
+  char * input = reinterpret_cast< char* >(malloc(sizeof(char) * max_buffer_size));
   if (!input) {
     return nullptr;
   }
@@ -36,7 +36,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
     if (std::cin.fail() && !std::cin.eof()) {
       std::cin.clear();
       max_buffer_size *= 2;
-      char * temp = reinterpret_cast< char* >(realloc(input, max_buffer_size));
+      char * temp = reinterpret_cast< char* >(realloc(input, sizeof(char) * max_buffer_size));
       if (!temp) {
         free(input);
         return nullptr;
@@ -117,7 +117,7 @@ int main()
     return 1;
   }
 
-  char * outline1 = reinterpret_cast< char* >(malloc(strl));
+  char * outline1 = reinterpret_cast< char* >(malloc(sizeof(char) * strl));
   if (!outline1) {
     free(input);
     std::cerr << "Bad allocation\n";
