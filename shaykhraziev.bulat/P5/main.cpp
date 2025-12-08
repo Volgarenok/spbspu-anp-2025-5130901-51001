@@ -39,6 +39,8 @@ namespace draw {
 
   void scaleRelative(Shape& shp, point_t pt, double coef);
   rectangle_t getAllShapesFrameRect(Shape** shps, size_t size);
+  void removeArray(Shape**shps, size_t size);
+  void printParams(Shape** shps, size_t size);
 }
 
 bool draw::operator==(const point_t lhs, const point_t rhs) {
@@ -119,15 +121,13 @@ draw::rectangle_t draw::getAllShapesFrameRect(Shape **shps, size_t size) {
   return {width, height, c};
 }
 
-template<typename T> //насколько это харам? todo убрать нахуй
-void rm(T**things, size_t size, bool rmArray) {
+void draw::removeArray(Shape**shps, size_t size) {
   for (size_t i = 0; i < size; i++) {
-    delete things[i];
+    delete shps[i];
   }
-  if (rmArray) delete[] things;
 }
 
-void printParams(draw::Shape** shps, size_t size) {
+void draw::printParams(Shape** shps, size_t size) {
   for (size_t i = 0; i < size; i++) {
 
   }
@@ -146,7 +146,7 @@ int main() {
     std::cerr << "memalloc error" << "\n";
     err = 1;
   }
-  rm(shps, shp_cnt, false);
+  removeArray(shps, shp_cnt);
 
 
   return err;
