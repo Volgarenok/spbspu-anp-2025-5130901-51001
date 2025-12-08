@@ -31,7 +31,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
     for (size_t i = len; i < max_buffer_size - len; i++) {
       in >> input[i];
     }
-    if (!input) {
+    if (input == "") {
       free(input);
       return nullptr;
     }
@@ -51,7 +51,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
     done = true;
   }
 
-  strl = len - 1;
+  strl = len;
   input[strl] = 0;
 
   if (is_skipws) {
@@ -117,7 +117,7 @@ int main()
   size_t strl = 0;
   char * input = hachaturyanov::readline(std::cin, strl);
   if (!input) {
-    std::cerr << "Bad allocation\n";
+    std::cerr << "Bad allocation or empty string\n";
     return 1;
   }
 
