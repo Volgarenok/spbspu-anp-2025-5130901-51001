@@ -27,6 +27,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
   size_t len = 0;
   char c = in.get();
   input[0] = c;
+  len++;
 
   bool done = false;
   while (!done) {
