@@ -101,7 +101,7 @@ int main()
       delete[] input;
       return 1;
     }
-    for (int i = 0; i < length + 1; i++)
+    for (size_t i = 0; i < length + 1; i++)
     {
       tmp[i] = input[i];
     }
