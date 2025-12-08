@@ -78,7 +78,7 @@ void losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n) {
       if (file.fail()) {
         throw std::runtime_error("I can not read matrix");
       }
-      if (temp > std::numeric_limits<int>::max()) {
+      if (temp > std::numeric_limits< int >::max()) {
         throw std::runtime_error("Number is too large for int type");
       }
       ptrArr[i * n + j] = static_cast<int>(temp);
