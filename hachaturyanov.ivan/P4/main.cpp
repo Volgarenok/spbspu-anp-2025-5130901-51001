@@ -25,19 +25,16 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
   }
 
   size_t len = 0;
+  char c = in.get();
 
   bool done = false;
   while (!done) {
-    for (size_t i = len; i < max_buffer_size - len; i++) {
-      in >> input[i];
+    char c = in.get();
+    if (c == EOF || c == '\n') {
+      break;
     }
-    if (!std::strlen(input)) {
-      return input;
-    }
-    len = std::strlen(input);
 
-    if (std::cin.fail() && !std::cin.eof()) {
-      std::cin.clear();
+    if (len + 1 >= max_buffer_size) {
       max_buffer_size *= 2;
       char * temp = reinterpret_cast< char* >(realloc(input, sizeof(char) * max_buffer_size));
       if (!temp) {
@@ -45,13 +42,13 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
         return nullptr;
       }
       input = temp;
-      continue;
     }
-    done = true;
+    input[len] = c;
+    len++;
   }
 
   strl = len;
-  input[strl] = 0;
+  input[strl] = '\0';
 
   if (is_skipws) {
     in >> std::skipws;
