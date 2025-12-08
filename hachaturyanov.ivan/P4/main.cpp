@@ -21,13 +21,31 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
 
   char * input = reinterpret_cast< char* >(malloc(sizeof(char) * max_buffer_size));
   if (!input) {
+    if (is_skipws) {
+      in >> std::skipws;
+    }
     return nullptr;
   }
 
   size_t len = 0;
   char c = in.get();
-  input[0] = c;
-  len++;
+  if (c == EOF || c == '\n') {
+    char * temp = reinterpret_cast< char* >(realloc(input, sizeof(char)));
+    if (!temp) {
+      free(input);
+      if (is_skipws) {
+        in >> std::skipws;
+      }
+      return nullptr;
+    }
+    input = temp;
+    input[0] = '\0';
+    strl = 0;
+    if (is_skipws) {
+      in >> std::skipws;
+    }
+    return input;
+  }
 
   bool done = false;
   while (!done) {
@@ -41,6 +59,9 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
       char * temp = reinterpret_cast< char* >(realloc(input, sizeof(char) * max_buffer_size));
       if (!temp) {
         free(input);
+        if (is_skipws) {
+          in >> std::skipws;
+        }
         return nullptr;
       }
       input = temp;
@@ -62,7 +83,7 @@ size_t hachaturyanov::digits(const char * input)
 {
   size_t count = 0;
   for (size_t i = 0; i < std::strlen(input); i++) {
-    if (std::isdigit(input[i])) {
+    if (std::isdigit((unsigned char)input[i])) {
       count++;
     }
   }
@@ -97,7 +118,7 @@ void hachaturyanov::dgt_snd(const char * input, const char * second, const size_
 
   size_t count = std::strlen(input);
   for (size_t i = 0; i < second_len; i++) {
-    if (std::isdigit(second[i])) {
+    if (std::isdigit((unsigned char)second[i])) {
       output[count] = second[i];
       count++;
     }
@@ -125,7 +146,7 @@ int main()
     return 1;
   }
 
-  char * outline1 = reinterpret_cast< char* >(malloc(sizeof(char) * strl));
+  char * outline1 = reinterpret_cast< char* >(malloc(sizeof(char) * (strl+ 1)));
   if (!outline1) {
     free(input);
     std::cerr << "Bad allocation\n";
@@ -133,7 +154,7 @@ int main()
   }
 
   size_t s_digits = hachaturyanov::digits(dgt_snd_second);
-  char * outline2 = reinterpret_cast< char* >(malloc(std::strlen(input) + s_digits));
+  char * outline2 = reinterpret_cast< char* >(malloc(sizeof(char) * (std::strlen(input) + s_digits + 1)));
   if (!outline2) {
     free(input);
     free(outline1);
