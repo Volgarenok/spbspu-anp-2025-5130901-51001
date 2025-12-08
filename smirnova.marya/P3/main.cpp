@@ -15,13 +15,13 @@ size_t smirnova::findLocalMaximum(size_t rows, size_t cols, const int *matrix)
   {
     for (size_t j = 1; j < cols - 1; ++j)
     {
-      int val = matrix[i*cols + j];
+      int val = matrix[i * cols + j];
       bool flag = true;
       for (int k = 0; k < 8 && flag; ++k)
       {
         int ni = i + d[k][0];
         int nj = j + d[k][1];
-        if (matrix[ni*cols + nj] >= val)
+        if (matrix[ni * cols + nj] >= val)
         {
           flag = false;
         }
