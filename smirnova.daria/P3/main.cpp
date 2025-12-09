@@ -32,3 +32,11 @@ size_t countLocalMin(size_t rows, size_t cols, int* matrix)
   }
   return count;
 }
+
+void smirnova::task1(size_t rows, size_t cols, int* matrix, const char* outputFile)
+{
+  size_t result = countLocalMin(rows, cols, matrix);
+  std::ofstream out(outputFile);
+  out << result;
+}
+
