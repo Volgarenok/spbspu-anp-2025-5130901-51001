@@ -13,8 +13,8 @@ namespace volkovich
 
 void volkovich::decreaseSpiral(int* matrix, size_t rows, size_t columns)
 {
-  int top{}, bottom = rows - 1, left{}, right = columns - 1;
-  size_t i{};
+  int top = 0, bottom = rows - 1, left = 0, right = columns - 1;
+  size_t i = 0;
   int minus_value = 1;
   while (top <= bottom)
   {
@@ -61,8 +61,8 @@ int volkovich::minDiagonal(const int *matrix, size_t rows, size_t columns)
     int sum = 0;
     for (size_t i = 0; i < rows; i++)
     {
-      int j = static_cast<int>(s) - static_cast<int>(i);
-      if (j >= 0 && j < static_cast<int>(columns))
+      int j = static_cast<int> (s) - static_cast<int> (i);
+      if (j >= 0 && j < static_cast<int> (columns))
       {
         sum += matrix[i * columns + j];
       }
@@ -76,27 +76,27 @@ int main(int argc, char *argv[])
 {
   if (argc < 4)
   {
-    std::cerr << "Not enough arguments";
+    std::cerr << "Not enough arguments" << "\n";
     return 1;
   }
   if (argc > 4)
   {
-    std::cerr << "Too many arguments";
+    std::cerr << "Too many arguments" << "\n";
     return 1;
   }
-  if ((strcmp(argv[1], "1") && strcmp(argv[1], "2")))
+  if ((std::strcmp(argv[1], "1") && std::strcmp(argv[1], "2")))
   {
-    std::cerr << "First argument out of range";
+    std::cerr << "First argument out of range" << "\n";
     return 1;
   }
   std::ifstream input(argv[2]);
-  if (!input.is_open())
+  if (!input)
   {
-    std::cerr << "Cannot open file";
+    std::cerr << "Cannot open file" << "\n";
     return 1;
   }
 
-  size_t rows{}, columns{};
+  size_t rows = 0, columns = 0;
 
   if (!(input >> rows >> columns))
   {
@@ -112,37 +112,35 @@ int main(int argc, char *argv[])
     try {
       dyn_mtx = new int[rows*columns];
     } catch (const std::bad_alloc&) {
-      std::cerr << "Bad alloc";
+      std::cerr << "Bad alloc" << "\n";
       return 1;
     }
-    matrix=dyn_mtx;
+    matrix = dyn_mtx;
   }
-  for (size_t i{}; i < rows * columns; i++)
+  for (size_t i = 0; i < rows * columns; i++)
   {
     input >> matrix[i];
     if (!input.good())
     {
-      std::cerr << "Error reading file";
+      std::cerr << "Error reading file" << "\n";
       delete[] dyn_mtx;
       return 1;
     }
   }
-  input.close();
   std::ofstream output(argv[3]);
-  try {
-    volkovich::decreaseSpiral(matrix, rows, columns);
-    int res = volkovich::minDiagonal(matrix, rows, columns);
-    output << res;
-
-    for (size_t i = 0; i < rows * columns; i++)
-    {
-      output << ' ' << matrix[i];
-    }
-  } catch (...) {
-    delete[] dyn_mtx;
+  if (!output) {
+    std::cerr << "Bad file" << "\n";
     return 1;
   }
-  output.close();
+  volkovich::decreaseSpiral(matrix, rows, columns);
+  int res = volkovich::minDiagonal(matrix, rows, columns);
+  std::cout << res;
+
+  output << rows << ' ' << columns;
+  for (size_t i = 0; i < rows * columns; i++)
+  {
+    output << ' ' << matrix[i];
+  }
   delete[] dyn_mtx;
   std::cout<<"\n";
   return 0;
