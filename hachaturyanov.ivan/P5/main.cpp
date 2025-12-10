@@ -20,7 +20,7 @@ namespace hachaturyanov {
   };
 
   struct Rectangle: Shape {
-    explicit Rectangle(double width, double height, point_t pos);
+    explicit Rectangle(double w, double h, point_t p);
     double getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(point_t pnt) override;
@@ -36,3 +36,9 @@ int main()
 {
 
 }
+
+hachaturyanov::Rectangle::Rectangle(double w, double h, point_t p):
+ width(w),
+ height(h),
+ pos(p)
+{}
