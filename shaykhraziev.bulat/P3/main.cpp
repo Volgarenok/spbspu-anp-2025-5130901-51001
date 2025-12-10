@@ -175,7 +175,7 @@ int main(int argc, char* argv[])
     try {
       data = new int[total];
     } catch (const std::bad_alloc& e) {
-      std::cerr << "memory allocation failed: " << e.what() << " \n";
+      std::cerr << "memory allocation failed: " << e.what() << "\n";
       return 2;
     }
   }
