@@ -15,7 +15,7 @@ void shaykhraziev::IncrementCounterclockwise(int* data, size_t rows, size_t cols
     return;
   }
 
-  size_t minDim = std::min(rows,cols);
+  size_t minDim = std::min(rows, cols);
   size_t layers = (minDim + 1) / 2;
   int inc = 1;
 
@@ -167,6 +167,7 @@ int main(int argc, char* argv[])
   }
 
   size_t total = rows * cols;
+
   int* data = nullptr;
   int fixed_size_arr_d[10000] = {};
 
@@ -200,8 +201,8 @@ int main(int argc, char* argv[])
 
   size_t sideSize = std::min(rows, cols);
   int result = shaykhraziev::findMinSum(d, sideSize, cols - sideSize);
-  fout << result << "\n";
 
+  fout << result << "\n";
 
   delete[] data;
 
