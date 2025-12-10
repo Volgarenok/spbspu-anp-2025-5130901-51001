@@ -3,163 +3,184 @@
 
 namespace krivoshapov {
 
-int findColLongestSeries(const int* mat, size_t rows, size_t cols) {
-  int best = 1;
-  size_t maxLen = 0;
+int findColumnWithLongestSeries(const int* matrix, size_t rows, size_t columns) {
+  int best_column = 1;
+  size_t max_length = 0;
 
-  for (size_t c = 0; c < cols; c++) {
-    size_t curRun = 1;
-    size_t bestRun = 1;
+  for (size_t column = 0; column < columns; ++column) {
+    size_t current_run = 1;
+    size_t best_run = 1;
 
-    for (size_t r = 1; r < rows; r++) {
-      if (mat[r * cols + c] == mat[(r - 1) * cols + c]) {
-        curRun++;
+    for (size_t row = 1; row < rows; ++row) {
+      if (matrix[row * columns + column] == matrix[(row - 1) * columns + column]) {
+        ++current_run;
       } else {
-        if (curRun > bestRun) bestRun = curRun;
-        curRun = 1;
+        if (current_run > best_run) {
+          best_run = current_run;
+        }
+        current_run = 1;
       }
     }
-    
-    if (curRun > bestRun) bestRun = curRun;
-    
-    if (bestRun > maxLen) {
-      maxLen = bestRun;
-      best = static_cast<int>(c) + 1;
+
+    if (current_run > best_run) {
+      best_run = current_run;
+    }
+
+    if (best_run > max_length) {
+      max_length = best_run;
+      best_column = static_cast<int>(column) + 1;
     }
   }
 
-  return best;
+  return best_column;
 }
 
-int countSaddle(const int* mat, size_t rows, size_t cols) {
-  int* rowMin = new(std::nothrow) int[rows];
-  int* colMax = new(std::nothrow) int[cols];
+int countSaddlePoints(const int* matrix, size_t rows, size_t columns) {
+  int* row_minimums = new(std::nothrow) int[rows];
+  int* column_maximums = new(std::nothrow) int[columns];
 
-  if (!rowMin || !colMax) {
-    delete[] rowMin;
-    delete[] colMax;
+  if (row_minimums == nullptr || column_maximums == nullptr) {
+    delete[] row_minimums;
+    delete[] column_maximums;
     return -1;
   }
 
-  for (size_t r = 0; r < rows; r++) {
-    rowMin[r] = mat[r * cols];
+  for (size_t row = 0; row < rows; ++row) {
+    row_minimums[row] = matrix[row * columns];
   }
 
-  for (size_t c = 0; c < cols; c++) {
-    colMax[c] = mat[c];
+  for (size_t column = 0; column < columns; ++column) {
+    column_maximums[column] = matrix[column];
   }
 
-  for (size_t r = 0; r < rows; r++) {
-    for (size_t c = 0; c < cols; c++) {
-      int val = mat[r * cols + c];
-      if (val < rowMin[r]) rowMin[r] = val;
-      if (val > colMax[c]) colMax[c] = val;
+  for (size_t row = 0; row < rows; ++row) {
+    for (size_t column = 0; column < columns; ++column) {
+      int value = matrix[row * columns + column];
+      if (value < row_minimums[row]) {
+        row_minimums[row] = value;
+      }
+      if (value > column_maximums[column]) {
+        column_maximums[column] = value;
+      }
     }
   }
 
   int count = 0;
-  for (size_t r = 0; r < rows; r++) {
-    for (size_t c = 0; c < cols; c++) {
-      int val = mat[r * cols + c];
-      if (val == rowMin[r] && val == colMax[c]) count++;
+  for (size_t row = 0; row < rows; ++row) {
+    for (size_t column = 0; column < columns; ++column) {
+      int value = matrix[row * columns + column];
+      if (value == row_minimums[row] && value == column_maximums[column]) {
+        ++count;
+      }
     }
   }
 
-  delete[] rowMin;
-  delete[] colMax;
+  delete[] row_minimums;
+  delete[] column_maximums;
   return count;
 }
 
-int run(int argc, char *argv[]) {
+int run(int argc, char* argv[]) {
   if (argc != 4) {
     std::cerr << "Ошибка: неверное количество аргументов\n";
     return 1;
   }
 
-  const char *modeStr = argv[1];
+  const char* mode_string = argv[1];
   int mode = 0;
 
-  if (modeStr[0] == '1' && modeStr[1] == 0) mode = 1;
-  else if (modeStr[0] == '2' && modeStr[1] == 0) mode = 2;
-  else {
+  if (mode_string[0] == '1' && mode_string[1] == 0) {
+    mode = 1;
+  } else if (mode_string[0] == '2' && mode_string[1] == 0) {
+    mode = 2;
+  } else {
     std::cerr << "Ошибка: параметр должен быть 1 или 2\n";
     return 1;
   }
 
-  const char *input = argv[2];
-  const char *output = argv[3];
+  const char* input_file_name = argv[2];
+  const char* output_file_name = argv[3];
 
-  std::ifstream inFile(input);
-  if (!inFile) {
+  std::ifstream input_file(input_file_name);
+  if (!input_file) {
     std::cerr << "Ошибка: не удалось открыть исходный файл\n";
     return 2;
   }
 
-  size_t rows = 0, cols = 0;
-  if (!(inFile >> rows >> cols)) {
+  size_t rows = 0;
+  size_t columns = 0;
+  if (!(input_file >> rows >> columns)) {
     std::cerr << "Ошибка: не удалось прочитать размер матрицы\n";
     return 2;
   }
 
-  if (rows == 0 && cols == 0) {
-    std::ofstream outFile(output);
-    if (!outFile) {
+  if (rows == 0 && columns == 0) {
+    std::ofstream output_file(output_file_name);
+    if (!output_file) {
       std::cerr << "Ошибка: не удалось открыть выходной файл\n";
       return 2;
     }
-    outFile << 0 << '\n' << 0 << '\n';
+    output_file << 0 << '\n' << 0 << '\n';
     return 0;
   }
 
-  const size_t maxTotal = 10000;
-  const size_t total = rows * cols;
+  const size_t max_total_elements = 10000;
+  const size_t total_elements = rows * columns;
 
-  if (mode == 1 && total > maxTotal) {
+  if (mode == 1 && total_elements > max_total_elements) {
     std::cerr << "Ошибка: слишком большой массив\n";
     return 2;
   }
 
-  int *mat = nullptr;
-  int fixed[maxTotal];
+  int* matrix = nullptr;
+  int fixed_size_matrix[max_total_elements];
 
   if (mode == 1) {
-    mat = fixed;
+    matrix = fixed_size_matrix;
   } else {
-    mat = new int[total];
+    matrix = new int[total_elements];
   }
 
-  for (size_t i = 0; i < total; i++) {
-    if (!(inFile >> mat[i])) {
-      if (mode == 2) delete[] mat;
+  for (size_t index = 0; index < total_elements; ++index) {
+    if (!(input_file >> matrix[index])) {
+      if (mode == 2) {
+        delete[] matrix;
+      }
       std::cerr << "Ошибка: файл не содержит достаточного количества чисел\n";
       return 2;
     }
   }
 
-  int best = findColLongestSeries(mat, rows, cols);
-  int saddle = countSaddle(mat, rows, cols);
+  int best_column = findColumnWithLongestSeries(matrix, rows, columns);
+  int saddle_points_count = countSaddlePoints(matrix, rows, columns);
 
-  if (saddle < 0) {
-    if (mode == 2) delete[] mat;
+  if (saddle_points_count < 0) {
+    if (mode == 2) {
+      delete[] matrix;
+    }
     std::cerr << "Ошибка: не удалось выделить память\n";
     return 2;
   }
 
-  std::ofstream outFile(output);
-  if (!outFile) {
-    if (mode == 2) delete[] mat;
+  std::ofstream output_file(output_file_name);
+  if (!output_file) {
+    if (mode == 2) {
+      delete[] matrix;
+    }
     std::cerr << "Ошибка: не удалось открыть выходной файл\n";
     return 2;
   }
 
-  outFile << best << '\n' << saddle << '\n';
+  output_file << best_column << '\n' << saddle_points_count << '\n';
 
-  if (mode == 2) delete[] mat;
+  if (mode == 2) {
+    delete[] matrix;
+  }
   return 0;
 }
 
-} 
+}
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   return krivoshapov::run(argc, argv);
 }
