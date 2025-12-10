@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 namespace hachaturyanov {
   struct point_t {
@@ -79,6 +80,14 @@ double hachaturyanov::Complexquad::getArea() const {
   double area1 = hachaturyanov::triangleArea(pos, vertices[1], vertices[2]);
   double area2 = hachaturyanov::triangleArea(pos, vertices[0], vertices[3]);
   return area1 + area2;
+}
+
+hachaturyanov::rectangle_t hachaturyanov::Complexquad::getFrameRect() const {
+  double minx = std::min({vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x});
+  double maxx = std::max({vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x});
+  double miny = std::min({vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y});
+  double maxy = std::max({vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y});
+  return rectangle_t{maxx - minx, maxy - miny, point_t{(minx + maxx) / 2, (miny + maxy) / 2}};
 }
 
 hachaturyanov::Rectangle::Rectangle(double w, double h, point_t p):
