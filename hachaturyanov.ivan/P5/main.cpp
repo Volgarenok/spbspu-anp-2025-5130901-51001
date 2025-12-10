@@ -38,7 +38,30 @@ int main()
 }
 
 hachaturyanov::Rectangle::Rectangle(double w, double h, point_t p):
+ Shape(),
  width(w),
  height(h),
  pos(p)
 {}
+
+double hachaturyanov::Rectangle::getArea() const {
+  return width * height;
+}
+
+hachaturyanov::rectangle_t hachaturyanov::Rectangle::getFrameRect() const {
+  return rectangle_t{width, height, pos};
+}
+
+void hachaturyanov::Rectangle::move(point_t pnt) {
+  pos = pnt;
+}
+
+void hachaturyanov::Rectangle::move(double xsh, double ysh) {
+  pos.x += xsh;
+  pos.y += ysh;
+}
+
+void hachaturyanov::Rectangle::scale(double k) {
+  width *= k;
+  height *= k;
+}
