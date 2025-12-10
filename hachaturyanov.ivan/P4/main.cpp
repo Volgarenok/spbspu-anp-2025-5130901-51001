@@ -7,8 +7,8 @@
 namespace hachaturyanov {
   char * readline(std::istream & in, size_t & strl);
   size_t digits(const char * input);
-  void exc_snd(const char * input, const char * second, const size_t second_len, char * output);
-  void dgt_snd(const char * input, const char * second, const size_t second_len, char * output);
+  void excludeSymbols(const char * input, const char * second, const size_t second_len, char * output);
+  void addDigits(const char * input, const char * second, const size_t second_len, char * output);
 }
 
 char * hachaturyanov::readline(std::istream & in, size_t & strl)
@@ -90,7 +90,7 @@ size_t hachaturyanov::digits(const char * input)
   return count;
 }
 
-void hachaturyanov::exc_snd(const char * input, const char * second, const size_t second_len, char * output)
+void hachaturyanov::excludeSymbols(const char * input, const char * second, const size_t second_len, char * output)
 {
   size_t out_len = 0;
   for (size_t i = 0; input[i] != '\0'; i++) {
@@ -109,7 +109,7 @@ void hachaturyanov::exc_snd(const char * input, const char * second, const size_
   output[out_len] = '\0';
 }
 
-void hachaturyanov::dgt_snd(const char * input, const char * second, const size_t second_len, char * output)
+void hachaturyanov::addDigits(const char * input, const char * second, const size_t second_len, char * output)
 {
 
   for (size_t i = 0; input[i] != '\0'; i++) {
@@ -162,8 +162,8 @@ int main()
     return 1;
   }
 
-  hachaturyanov::exc_snd(input, exc_snd_second, exc_snd_s_len, outline1);
-  hachaturyanov::dgt_snd(input, dgt_snd_second, dgt_snd_s_len, outline2);
+  hachaturyanov::excludeSymbols(input, exc_snd_second, exc_snd_s_len, outline1);
+  hachaturyanov::addDigits(input, dgt_snd_second, dgt_snd_s_len, outline2);
   std::cout << outline1 << "\n";
   std::cout << outline2 << "\n";
   free(input);
