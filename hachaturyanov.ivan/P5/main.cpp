@@ -9,8 +9,10 @@ namespace hachaturyanov {
 
   bool operator==(point_t a, point_t b);
   bool operator!=(point_t a, point_t b);
-  point_t operator*(const point_t &pnt, const double &k);
-  point_t operator+(const point_t &pnt, const double &k);
+  point_t& operator*=(point_t &pnt, const double &k);
+  point_t operator*(point_t pnt, const double &k);
+  point_t& operator+=(point_t &pnt, const double &k);
+  point_t& operator+=(point_t &left, const point_t &right);
 
   struct rectangle_t {
     double width, height;
@@ -92,33 +94,30 @@ hachaturyanov::rectangle_t hachaturyanov::Complexquad::getFrameRect() const {
   double maxx = std::max({vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x});
   double miny = std::min({vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y});
   double maxy = std::max({vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y});
-  return rectangle_t{maxx - minx, maxy - miny, point_t{(minx + maxx) / 2, (miny + maxy) / 2}};
+  return rectangle_t{maxx - minx, maxy - miny, point_t{(minx + maxx), (miny + maxy)} * 0.5};
 }
 
 void hachaturyanov::Complexquad::move(point_t pnt) {
-  double xsh = pnt.x - pos.x;
-  double ysh = pnt.y - pos.y;
+  point_t shift = {pnt.x - pos.x, pnt.y - pos.y};
   for (size_t i = 0; i < 4; i++) {
-    vertices[i].x += xsh;
-    vertices[i].y += ysh;
+    vertices[i] += shift;
   }
   pos = pnt;
 }
 
 void hachaturyanov::Complexquad::move(double xsh, double ysh) {
+  point_t shift = {xsh, ysh};
   for (size_t i = 0; i < 4; i++) {
-    vertices[i].x += xsh;
-    vertices[i].y += ysh;
+    vertices[i] += shift;
   }
-  pos.x += xsh;
-  pos.y += ysh;
+  pos += shift;
 }
 
 void hachaturyanov::Complexquad::scale(double k) {
   diag1 *= k;
   diag2 *= k;
   for (size_t i = 0; i < 4; i++) {
-    vertices[i]
+    vertices[i] *= k;
   }
 }
 
@@ -167,10 +166,24 @@ bool hachaturyanov::operator!=(point_t a, point_t b) {
   return !(a==b);
 }
 
-hachaturyanov::point_t hachaturyanov::operator*(const point_t &pnt, const double &k) {
-  return point_t{pnt.x * k, pnt.y * k};
+hachaturyanov::point_t& hachaturyanov::operator*=(point_t &pnt, const double &k) {
+  pnt.x *= k;
+  pnt.y *= k;
+  return pnt;
 }
 
-hachaturyanov::point_t hachaturyanov::operator+(const point_t &pnt, const double &k) {
-  return point_t{pnt.x + k, pnt.y + k};
+hachaturyanov::point_t hachaturyanov::operator*(point_t pnt, const double &k) {
+  return pnt *= k;
+}
+
+hachaturyanov::point_t& hachaturyanov::operator+=(point_t &pnt, const double &k) {
+  pnt.x += k;
+  pnt.y += k;
+  return pnt;
+}
+
+hachaturyanov::point_t& hachaturyanov::operator+=(point_t &left, const point_t &right) {
+  left.x += right.x;
+  left.y += right.y;
+  return left;
 }
