@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
   if (rows > 0 && cols > 0)
   {
     std::size_t expected_elements = rows * cols;
-    if (elements_read != expected_elements)
+    if (elements_read != static_cast<int>(expected_elements))
     {
       std::cerr << "Error: Expected " << expected_elements << " elements, but read " << elements_read << "\n";
       return 2;
