@@ -120,6 +120,7 @@ void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, 
       out << " " << data[r * cols + c];
     }
   }
+  out << "\n";
 }
 
 int main(int argc, char* argv[])
