@@ -15,7 +15,7 @@ void shaykhraziev::IncrementCounterclockwise(int* data, size_t rows, size_t cols
     return;
   }
 
-  size_t minDim = (rows < cols) ? rows : cols;
+  size_t minDim = std::min(rows,cols);
   size_t layers = (minDim + 1) / 2;
   int inc = 1;
 
@@ -120,8 +120,6 @@ void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, 
       out << " " << data[r * cols + c];
     }
   }
-
-  out << "\n";
 }
 
 int main(int argc, char* argv[])
@@ -170,18 +168,18 @@ int main(int argc, char* argv[])
 
   size_t total = rows * cols;
   int* data = nullptr;
-  int static_data[10000] = {};
+  int fixed_size_arr_d[10000] = {};
 
-  if (total > 0) {
+  if (total > 0 && taskNum == 1) {
     try {
       data = new int[total];
-    } catch (...) {
+    } catch (std::bad_alloc&) {
       std::cerr << "memory allocation failed\n";
       return 2;
     }
   }
 
-  int* d = (taskNum == 1) ? static_data : data;
+  int* d = (taskNum == 1) ? fixed_size_arr_d : data;
 
   if (shaykhraziev::readMatrix(fin, d, rows, cols) != total) {
     std::cerr << "read matrix failed\n";
@@ -197,21 +195,13 @@ int main(int argc, char* argv[])
     return 2;
   }
 
-  if (taskNum == 1) {
-    shaykhraziev::IncrementCounterclockwise(static_data, rows, cols);
-    shaykhraziev::writeResult(fout, static_data, rows, cols);
+  shaykhraziev::IncrementCounterclockwise(d, rows, cols);
+  shaykhraziev::writeResult(fout, d, rows, cols);
 
-    size_t sideSize = std::min(rows, cols);
-    int result = shaykhraziev::findMinSum(static_data, sideSize, cols - sideSize);
-    fout << result << "\n";
-  } else {
-    shaykhraziev::IncrementCounterclockwise(data, rows, cols);
-    shaykhraziev::writeResult(fout, data, rows, cols);
+  size_t sideSize = std::min(rows, cols);
+  int result = shaykhraziev::findMinSum(d, sideSize, cols - sideSize);
+  fout << result << "\n";
 
-    size_t sideSize = std::min(rows, cols);
-    int result = shaykhraziev::findMinSum(data, sideSize, cols - sideSize);
-    fout << result << "\n";
-  }
 
   delete[] data;
 
