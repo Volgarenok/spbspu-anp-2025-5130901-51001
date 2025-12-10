@@ -3,13 +3,13 @@
 
 namespace shaykhraziev
 {
-  void IncrementCounterclockwise(int* data, size_t rows, size_t cols);
+  void incrementCounterclockwise(int* data, size_t rows, size_t cols);
   int findMinSum(const int* data, size_t sideSize, size_t iCols);
   size_t readMatrix(std::istream& in, int* data, size_t rows, size_t cols);
   void writeResult(std::ostream& out, const int* data, size_t rows, size_t cols);
 }
 
-void shaykhraziev::IncrementCounterclockwise(int* data, size_t rows, size_t cols)
+void shaykhraziev::incrementCounterclockwise(int* data, size_t rows, size_t cols)
 {
   if (rows == 0 || cols == 0) {
     return;
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  int taskNum;
+  int taskNum = 0;
 
   try {
     taskNum = std::stoi(argv[1]);
@@ -174,8 +174,8 @@ int main(int argc, char* argv[])
   if (total > 0 && taskNum == 2) {
     try {
       data = new int[total];
-    } catch (std::bad_alloc&) {
-      std::cerr << "memory allocation failed\n";
+    } catch (const std::bad_alloc& e) {
+      std::cerr << "memory allocation failed: " << e.what() << " \n";
       return 2;
     }
   }
@@ -196,7 +196,7 @@ int main(int argc, char* argv[])
     return 2;
   }
 
-  shaykhraziev::IncrementCounterclockwise(d, rows, cols);
+  shaykhraziev::incrementCounterclockwise(d, rows, cols);
   shaykhraziev::writeResult(fout, d, rows, cols);
 
   size_t sideSize = std::min(rows, cols);
