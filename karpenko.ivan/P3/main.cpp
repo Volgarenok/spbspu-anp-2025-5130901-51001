@@ -144,13 +144,13 @@ namespace karpenko
       return 0;
     }
 
-    for (const char *p = str; *p; p++)
+    char *endptr = nullptr;
+    std::strtol(str, &endptr, 10);
+
+    if (*endptr != '\0')
     {
-      if (*p < '0' || *p > '9')
-      {
-        std::cerr << "Error: First parameter is not a valid number\n";
-        return 0;
-      }
+      std::cerr << "Error: First parameter is not a valid number\n";
+      return 0;
     }
     return 1;
   }
