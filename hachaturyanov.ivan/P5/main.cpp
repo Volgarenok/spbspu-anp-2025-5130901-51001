@@ -42,7 +42,11 @@ hachaturyanov::Rectangle::Rectangle(double w, double h, point_t p):
  width(w),
  height(h),
  pos(p)
-{}
+{
+  if (width <= 0 || height <= 0) {
+    throw std::logic_error("width and height must be positive");
+  }
+}
 
 double hachaturyanov::Rectangle::getArea() const {
   return width * height;
@@ -62,6 +66,10 @@ void hachaturyanov::Rectangle::move(double xsh, double ysh) {
 }
 
 void hachaturyanov::Rectangle::scale(double k) {
-  width *= k;
-  height *= k;
+  if (k > 0) {
+    width *= k;
+    height *= k;
+  } else {
+    throw std::logic_error("coefficient must be positive");
+  }
 }
