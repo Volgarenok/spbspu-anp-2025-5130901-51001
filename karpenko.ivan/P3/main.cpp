@@ -92,7 +92,12 @@ namespace karpenko
       return 0;
     }
 
-    std::size_t elements_count = 0;
+    if (rows == 0 || cols == 0)
+    {
+      return 0;
+    }
+
+    int elements_read = 0;
     for (std::size_t i = 0; i < rows; i++)
     {
       for (std::size_t j = 0; j < cols; j++)
@@ -100,22 +105,23 @@ namespace karpenko
         if (!(stream >> matrix[i * cols + j]))
         {
           std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
-          return elements_count;
+          return elements_read;
         }
-        elements_count++;
+        elements_read++;
       }
     }
-    return elements_count;
+    return elements_read;
   }
 
   int writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
   {
     stream << rows << " " << cols;
-    for (std::size_t i = 0; i < rows; i++)
+    if (rows > 0 && cols > 0)
     {
-      for (std::size_t j = 0; j < cols; j++)
+      std::size_t elements = rows * cols;
+      for (std::size_t i = 0; i < elements; i++)
       {
-        stream << " " << matrix[i * cols + j];
+        stream << " " << matrix[i];
       }
     }
     return stream.good() ? 1 : 0;
@@ -124,11 +130,12 @@ namespace karpenko
   int writeMatrix(std::ostream &stream, const double matrix[], std::size_t rows, std::size_t cols)
   {
     stream << std::fixed << std::setprecision(1) << rows << " " << cols;
-    for (std::size_t i = 0; i < rows; i++)
+    if (rows > 0 && cols > 0)
     {
-      for (std::size_t j = 0; j < cols; j++)
+      std::size_t elements = rows * cols;
+      for (std::size_t i = 0; i < elements; i++)
       {
-        stream << " " << matrix[i * cols + j];
+        stream << " " << matrix[i];
       }
     }
     return stream.good() ? 1 : 0;
@@ -189,10 +196,22 @@ int main(int argc, char *argv[])
   }
 
   int elements_read = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
-  if (elements_read != static_cast<int>(rows * cols))
+  if (rows > 0 && cols > 0)
   {
-    std::cerr << "Error: Expected " << rows * cols << " elements, but read only " << elements_read << "\n";
-    return 2;
+    std::size_t expected_elements = rows * cols;
+    if (elements_read != expected_elements)
+    {
+      std::cerr << "Error: Expected " << expected_elements << " elements, but read " << elements_read << "\n";
+      return 2;
+    }
+  }
+  else
+  {
+    if (elements_read != 0)
+    {
+      std::cerr << "Error: Matrix dimensions indicate empty matrix, but read " << elements_read << " elements\n";
+      return 2;
+    }
   }
 
   std::ofstream output_stream(output_file);
@@ -201,38 +220,24 @@ int main(int argc, char *argv[])
     std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
     return 2;
   }
+
   if (operation == 1)
   {
-    if (rows > 0 && cols > 0)
+    karpenko::transformMatrixSpiral(rows, cols, input_matrix);
+    if (!karpenko::writeMatrix(output_stream, input_matrix, rows, cols))
     {
-      karpenko::transformMatrixSpiral(rows, cols, input_matrix);
-    }
-    if (rows == 0 || cols == 0)
-    {
-      output_stream << rows << " " << cols;
-    }
-    else
-    {
-      if (!karpenko::writeMatrix(output_stream, input_matrix, rows, cols))
-      {
-        return 2;
-      }
+      std::cerr << "Error: Failed to write matrix to output file\n";
+      return 2;
     }
   }
   else
   {
-    if (rows == 0 || cols == 0)
+    double output_matrix[karpenko::MAX_SIZE];
+    karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
+    if (!karpenko::writeMatrix(output_stream, output_matrix, rows, cols))
     {
-      output_stream << rows << " " << cols;
-    }
-    else
-    {
-      double output_matrix[karpenko::MAX_SIZE];
-      karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
-      if (!karpenko::writeMatrix(output_stream, output_matrix, rows, cols))
-      {
-        return 2;
-      }
+      std::cerr << "Error: Failed to write matrix to output file\n";
+      return 2;
     }
   }
 
