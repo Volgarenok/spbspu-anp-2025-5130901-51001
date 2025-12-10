@@ -91,10 +91,20 @@ hachaturyanov::rectangle_t hachaturyanov::Complexquad::getFrameRect() const {
 }
 
 void hachaturyanov::Complexquad::move(point_t pnt) {
+  double xsh = pnt.x - pos.x;
+  double ysh = pnt.y - pos.y;
+  for (size_t i = 0; i < 4; i++) {
+    vertices[i].x += xsh;
+    vertices[i].y += ysh;
+  }
   pos = pnt;
 }
 
 void hachaturyanov::Complexquad::move(double xsh, double ysh) {
+  for (size_t i = 0; i < 4; i++) {
+    vertices[i].x += xsh;
+    vertices[i].y += ysh;
+  }
   pos.x += xsh;
   pos.y += ysh;
 }
