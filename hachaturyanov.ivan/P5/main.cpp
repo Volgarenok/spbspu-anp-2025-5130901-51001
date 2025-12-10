@@ -9,10 +9,11 @@ namespace hachaturyanov {
 
   bool operator==(point_t a, point_t b);
   bool operator!=(point_t a, point_t b);
-  point_t& operator*=(point_t &pnt, const double &k);
-  point_t operator*(point_t pnt, const double &k);
-  point_t& operator+=(point_t &pnt, const double &k);
+  point_t& operator*=(point_t &pnt, double k);
+  point_t operator*(point_t pnt, double k);
+  point_t& operator+=(point_t &pnt, double k);
   point_t& operator+=(point_t &left, const point_t &right);
+  point_t operator+(point_t left, const point_t &right);
 
   struct rectangle_t {
     double width, height;
@@ -114,10 +115,15 @@ void hachaturyanov::Complexquad::move(double xsh, double ysh) {
 }
 
 void hachaturyanov::Complexquad::scale(double k) {
-  diag1 *= k;
-  diag2 *= k;
-  for (size_t i = 0; i < 4; i++) {
-    vertices[i] *= k;
+  if (k > 0) {
+    diag1 *= k;
+    diag2 *= k;
+    for (size_t i = 0; i < 4; i++) {
+      point_t rel = vertices[i] + (pos * -1.0);
+      vertices[i] += (pos + rel * k);
+    }
+  } else {
+    throw std::logic_error("coefficient must be positive");
   }
 }
 
@@ -166,17 +172,17 @@ bool hachaturyanov::operator!=(point_t a, point_t b) {
   return !(a==b);
 }
 
-hachaturyanov::point_t& hachaturyanov::operator*=(point_t &pnt, const double &k) {
+hachaturyanov::point_t& hachaturyanov::operator*=(point_t &pnt, double k) {
   pnt.x *= k;
   pnt.y *= k;
   return pnt;
 }
 
-hachaturyanov::point_t hachaturyanov::operator*(point_t pnt, const double &k) {
+hachaturyanov::point_t hachaturyanov::operator*(point_t pnt, double k) {
   return pnt *= k;
 }
 
-hachaturyanov::point_t& hachaturyanov::operator+=(point_t &pnt, const double &k) {
+hachaturyanov::point_t& hachaturyanov::operator+=(point_t &pnt, double k) {
   pnt.x += k;
   pnt.y += k;
   return pnt;
@@ -186,4 +192,8 @@ hachaturyanov::point_t& hachaturyanov::operator+=(point_t &left, const point_t &
   left.x += right.x;
   left.y += right.y;
   return left;
+}
+
+hachaturyanov::point_t hachaturyanov::operator+(point_t left, const point_t &right) {
+  return left += right;
 }
