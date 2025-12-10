@@ -120,7 +120,7 @@ void hachaturyanov::Complexquad::scale(double k) {
     diag2 *= k;
     for (size_t i = 0; i < 4; i++) {
       point_t rel = vertices[i] + (pos * -1.0);
-      vertices[i] += (pos + rel * k);
+      vertices[i] = (pos + rel * k);
     }
   } else {
     throw std::logic_error("coefficient must be positive");
