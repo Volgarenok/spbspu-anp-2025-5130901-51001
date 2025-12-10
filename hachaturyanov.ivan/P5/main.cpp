@@ -7,6 +7,11 @@ namespace hachaturyanov {
     double x, y;
   };
 
+  bool operator==(point_t a, point_t b);
+  bool operator!=(point_t a, point_t b);
+  point_t operator*(const point_t &pnt, const double &k);
+  point_t operator+(const point_t &pnt, const double &k);
+
   struct rectangle_t {
     double width, height;
     point_t pos;
@@ -109,6 +114,14 @@ void hachaturyanov::Complexquad::move(double xsh, double ysh) {
   pos.y += ysh;
 }
 
+void hachaturyanov::Complexquad::scale(double k) {
+  diag1 *= k;
+  diag2 *= k;
+  for (size_t i = 0; i < 4; i++) {
+    vertices[i]
+  }
+}
+
 hachaturyanov::Rectangle::Rectangle(double w, double h, point_t p):
  Shape(),
  width(w),
@@ -144,4 +157,20 @@ void hachaturyanov::Rectangle::scale(double k) {
   } else {
     throw std::logic_error("coefficient must be positive");
   }
+}
+
+bool hachaturyanov::operator==(point_t a, point_t b) {
+  return a.x == b.x && a.y == b.y;
+}
+
+bool hachaturyanov::operator!=(point_t a, point_t b) {
+  return !(a==b);
+}
+
+hachaturyanov::point_t hachaturyanov::operator*(const point_t &pnt, const double &k) {
+  return point_t{pnt.x * k, pnt.y * k};
+}
+
+hachaturyanov::point_t hachaturyanov::operator+(const point_t &pnt, const double &k) {
+  return point_t{pnt.x + k, pnt.y + k};
 }
