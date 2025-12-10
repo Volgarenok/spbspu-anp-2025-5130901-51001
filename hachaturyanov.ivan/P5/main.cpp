@@ -90,6 +90,15 @@ hachaturyanov::rectangle_t hachaturyanov::Complexquad::getFrameRect() const {
   return rectangle_t{maxx - minx, maxy - miny, point_t{(minx + maxx) / 2, (miny + maxy) / 2}};
 }
 
+void hachaturyanov::Complexquad::move(point_t pnt) {
+  pos = pnt;
+}
+
+void hachaturyanov::Complexquad::move(double xsh, double ysh) {
+  pos.x += xsh;
+  pos.y += ysh;
+}
+
 hachaturyanov::Rectangle::Rectangle(double w, double h, point_t p):
  Shape(),
  width(w),
