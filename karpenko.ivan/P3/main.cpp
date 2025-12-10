@@ -79,7 +79,7 @@ namespace karpenko
       std::cerr << "Error: Matrix dimensions exceed maximum allowed size\n";
       return 0;
     }
-    std::size_t expected_count = rows * cols;
+
     std::size_t read_count = 0;
     for (std::size_t i = 0; i < rows; i++)
     {
@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
     return 2;
   }
   std::size_t expected_count = rows * cols;
-  if (read_count != expected_count)
+  if (static_cast<std::size_t>(read_count) != expected_count)
   {
     std::cerr << "Error: Expected " << expected_count << " elements, but read " << read_count << "\n";
     return 2;
