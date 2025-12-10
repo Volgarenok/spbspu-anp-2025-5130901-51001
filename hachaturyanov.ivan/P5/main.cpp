@@ -53,7 +53,8 @@ int main()
 
 }
 
-double hachaturyanov::triangleArea(const point_t v1, const point_t v2, const point_t v3) {
+double hachaturyanov::triangleArea(const point_t v1, const point_t v2, const point_t v3)
+{
   return 0.5 * std::abs(v1.x * (v2.y - v3.y) + v2.x * (v3.y - v1.y) + v3.x * (v1.y - v2.y));
 }
 
