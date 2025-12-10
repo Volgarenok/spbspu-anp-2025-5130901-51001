@@ -172,7 +172,7 @@ int main(int argc, char *argv[])
   int read_count = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
   if (read_count == 0)
   {
-    return 2;
+    return 1;
   }
   std::size_t expected_count = rows * cols;
   if (static_cast<std::size_t>(read_count) != expected_count)
