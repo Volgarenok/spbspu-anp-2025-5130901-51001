@@ -98,16 +98,17 @@ namespace karpenko
     }
 
     std::size_t count = 0;
-    std::size_t total_elements = rows * cols;
-
-    for (std::size_t i = 0; i < total_elements; i++)
+    for (std::size_t i = 0; i < rows; i++)
     {
-      if (!(stream >> matrix[i]))
+      for (std::size_t j = 0; j < cols; j++)
       {
-        std::cerr << "Error: Cannot read element " << i << "\n";
-        return count;
+        if (!(stream >> matrix[i * cols + j]))
+        {
+          std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
+          return count;
+        }
+        count++;
       }
-      count++;
     }
     return count;
   }
