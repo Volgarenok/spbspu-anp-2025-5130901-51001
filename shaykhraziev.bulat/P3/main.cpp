@@ -120,7 +120,6 @@ void shaykhraziev::writeResult(std::ostream& out, const int* data, size_t rows, 
       out << " " << data[r * cols + c];
     }
   }
-  out << "\n";
 }
 
 int main(int argc, char* argv[])
@@ -172,7 +171,7 @@ int main(int argc, char* argv[])
   int* data = nullptr;
   int fixed_size_arr_d[10000] = {};
 
-  if (total > 0 && taskNum == 1) {
+  if (total > 0 && taskNum == 2) {
     try {
       data = new int[total];
     } catch (std::bad_alloc&) {
