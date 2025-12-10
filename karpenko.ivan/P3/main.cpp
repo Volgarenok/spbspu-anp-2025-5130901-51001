@@ -80,15 +80,11 @@ namespace karpenko
 
   int readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
   {
-    std::size_t temp_rows, temp_cols;
-    if (!(stream >> temp_rows >> temp_cols))
+    if (!(stream >> rows >> cols))
     {
       std::cerr << "Error: Invalid matrix dimensions\n";
       return 0;
     }
-
-    rows = temp_rows;
-    cols = temp_cols;
 
     if (rows > MAX_DIMENSION || cols > MAX_DIMENSION)
     {
@@ -96,6 +92,7 @@ namespace karpenko
       return 0;
     }
 
+    std::size_t elements_count = 0;
     for (std::size_t i = 0; i < rows; i++)
     {
       for (std::size_t j = 0; j < cols; j++)
@@ -103,11 +100,12 @@ namespace karpenko
         if (!(stream >> matrix[i * cols + j]))
         {
           std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
-          return 0;
+          return elements_count;
         }
+        elements_count++;
       }
     }
-    return 1;
+    return elements_count;
   }
 
   int writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
@@ -189,10 +187,14 @@ int main(int argc, char *argv[])
     std::cerr << "Error: Cannot open input file '" << input_file << "'\n";
     return 2;
   }
-  if (!karpenko::readMatrix(input_stream, input_matrix, rows, cols))
+
+  int elements_read = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
+  if (elements_read != static_cast<int>(rows * cols))
   {
+    std::cerr << "Error: Expected " << rows * cols << " elements, but read only " << elements_read << "\n";
     return 2;
   }
+
   std::ofstream output_stream(output_file);
   if (!output_stream)
   {
