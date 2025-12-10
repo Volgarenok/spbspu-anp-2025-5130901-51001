@@ -78,7 +78,7 @@ namespace karpenko
     }
   }
 
-  int readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
+  std::size_t readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
   {
     if (!(stream >> rows >> cols))
     {
@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  int count = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
+  std::size_t count = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
 
   std::size_t total_elements = rows * cols;
   if (count != total_elements)
