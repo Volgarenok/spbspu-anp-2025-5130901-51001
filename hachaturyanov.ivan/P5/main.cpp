@@ -30,6 +30,18 @@ namespace hachaturyanov {
     double width, height;
     point_t pos;
   };
+
+  struct Complexquad: Shape {
+    explicit Complexquad(double sa, double sb, point_t p);
+    double getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(point_t pnt) override;
+    void move(double xsh, double ysh) override;
+    void scale(double k) override;
+   private:
+    double sidea, sideb;
+    point_t pos;
+  };
 }
 
 int main()
