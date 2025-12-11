@@ -115,7 +115,7 @@ void shaykhraziev::combineStrings(char* sum, char* a, char* b, size_t as, size_t
   }
 }
 
-int shaykhraziev::has_sam(char* a, char* b, size_t as, size_t bs)
+int shaykhraziev::hasSame(char* a, char* b, size_t as, size_t bs)
 {
   size_t freq[256] = {};
 
@@ -194,7 +194,7 @@ int main()
   shaykhraziev::printArray(sum, size);
   delete[] sum;
 
-  int hasSam = shaykhraziev::has_sam(inp1, inp2, s1, s2);
+  int hasSam = shaykhraziev::hasSame(inp1, inp2, s1, s2);
   std::cout << hasSam << "\n";
 
   delete[] inp1;
