@@ -6,7 +6,7 @@ namespace shaykhraziev
 {
   char* concat(const char* a, const char* b, size_t as, size_t bs);
   char* getline(std::istream& in, size_t& size);
-  void combineStrings(char* sum, const char* a, const char* b);
+  void combineStrings(char* sum, const char* a, const char* b, size_t as, size_t bs);
   int hasSame(const char* a, const char* b);
 }
 
@@ -85,41 +85,30 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
   return temp;
 }
 
-void shaykhraziev::combineStrings(char* sum, const char* a, const char* b)
+void shaykhraziev::combineStrings(char* sum, const char* a, const char* b, size_t as, size_t bs)
 {
-  bool flag1 = true, flag2 = true;
-  size_t i = 0;
-  while (flag1 && flag2) {
-    if (i % 2 == 0) {
-      char c = a[i/2];
-      if (c == '\0') {
-        flag1 = false;
-        continue;
-      }
-      sum[i] = c;
-    }
-    if (i % 2 != 0) {
-      char c = b[i/2];
-      if (c == '\0') {
-        flag2 = false;
-        continue;
-      }
-      sum[i] = c;
-    }
-    i++;
+  size_t cmn = 0, odd = 0;
+  const char* t = nullptr;
+
+  if (as >= bs) {
+    cmn = bs;
+    odd = as - bs;
+    t = a;
+  } else {
+    cmn = as;
+    odd = bs - as;
+    t = b;
   }
 
-  const size_t j = i/2;
-  size_t cnt = 0;
-  while (flag1 && a[j+cnt+1] != '\0') {
-    sum[i+cnt] = a[j+cnt+1];
-    cnt++;
+  for (size_t i = 0; i < cmn; i++) {
+    sum[2 * i] = a[i];
+    sum[2 * i + 1] = b[i];
   }
 
-  while (flag2 && b[j+cnt] != '\0') {
-    sum[i+cnt] = b[j+cnt];
-    cnt++;
+  for (size_t i = 0; i < odd; i++) {
+    sum[2 * cmn + i] = t[cmn + i];
   }
+
 }
 
 int shaykhraziev::hasSame(const char* a, const char* b)
@@ -173,7 +162,7 @@ int main() {
     return 1;
   }
 
-  shaykhraziev::combineStrings(sum, inp1, inp2);
+  shaykhraziev::combineStrings(sum, inp1, inp2, inp1len, inp2len);
   std::cout << sum << "\n";
   delete[] sum;
 
