@@ -94,10 +94,20 @@ int main(){
     inBuf[strLen] = '\0';
 
     try {
-        resBuf = new char[bufSz];
+        resbuf = new char[bufSz];
     } catch (std::bad_alloc&) {
         delete [] inBuf;
         std::cerr << "Memory allocation failed" << std::endl;
         return 1;
     }
+
+    krivoshapov::rmVow(inBuf, resbuf, bufSz);
+    std::cout << resbuf << std::endl;
+
+    int seqRes = krivoshapov::seqSym(inBuf);
+    std::cout << seqRes << std::endl;
+
+    delete[] inBuf;
+    delete[] resbuf;
+    return 0;
 }
