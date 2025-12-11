@@ -144,10 +144,10 @@ void shaykhraziev::printArray(char* a, size_t s)
 int main()
 {
   size_t s1;
-  size_t s2;
-
   char* inp1;
-  char* inp2;
+
+  char* inp2 = "secondcharstar";
+  size_t s2 = 14;
 
   try {
     inp1 = shaykhraziev::getline(std::cin, s1);
@@ -156,18 +156,6 @@ int main()
     return 1;
   } catch (std::exception& e) {
     std::cerr << e.what() << "\n";
-    return 1;
-  }
-
-  try {
-    inp2 = shaykhraziev::getline(std::cin, s2);
-  } catch (std::bad_alloc&) {
-    std::cerr << "bad alloc\n";
-    delete[] inp1;
-    return 1;
-  } catch (std::exception& e) {
-    std::cerr << e.what() << "\n";
-    delete[] inp1;
     return 1;
   }
 
@@ -198,7 +186,6 @@ int main()
   std::cout << hasSam << "\n";
 
   delete[] inp1;
-  delete[] inp2;
 
   return 0;
 }
