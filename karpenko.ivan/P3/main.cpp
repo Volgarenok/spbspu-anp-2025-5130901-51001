@@ -80,7 +80,7 @@ namespace karpenko
       return 0;
     }
 
-    int read_count = 0;
+    int read_count = 0; // Изменено на int
     for (std::size_t i = 0; i < rows; i++)
     {
       for (std::size_t j = 0; j < cols; j++)
@@ -142,6 +142,12 @@ namespace karpenko
 
 int main(int argc, char *argv[])
 {
+  if (argc == 1)
+  {
+    std::cerr << "  " << argv[0] << " num input output\n";
+    std::cerr << "    num: 1 for spiral transformation, 2 for matrix smoothing\n";
+    return 1;
+  }
   if (argc != 4)
   {
     std::cerr << "Usage: " << argv[0] << " num input output\n";
@@ -170,17 +176,20 @@ int main(int argc, char *argv[])
   }
 
   int read_count = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
-  std::size_t expected_count = rows * cols;
 
-  if (read_count == 0 && expected_count > 0)
+  if (rows > 0 && cols > 0)
   {
-    std::cerr << "Error: Failed to read matrix\n";
-    return 2;
+    std::size_t expected_count = rows * cols;
+    if (static_cast<std::size_t>(read_count) != expected_count)
+    {
+      std::cerr << "Error: Expected " << expected_count << " elements, but read " << read_count << "\n";
+      return 2;
+    }
   }
 
-  if (read_count > 0 && static_cast<std::size_t>(read_count) != expected_count)
+  else if (read_count != 0)
   {
-    std::cerr << "Error: Expected " << expected_count << " elements, but read " << read_count << "\n";
+    std::cerr << "Error: Empty matrix but read " << read_count << " elements\n";
     return 2;
   }
 
