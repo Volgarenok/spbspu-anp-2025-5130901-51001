@@ -124,11 +124,11 @@ int shaykhraziev::hasSame(const char* a, const char* b)
   size_t freq[256] = {};
 
   for (size_t i = 0; a[i] != '\0'; i++) {
-    freq[static_cast<unsigned char>(a[i])] += 1;
+    freq[static_cast< unsigned char >(a[i])] += 1;
   }
 
   for (size_t i = 0; b[i] != '\0'; i++) {
-    if (freq[static_cast<unsigned char>(b[i])] > 0) {
+    if (freq[static_cast< unsigned char >(b[i])] > 0) {
       return 1;
     }
   }
@@ -139,7 +139,7 @@ int shaykhraziev::hasSame(const char* a, const char* b)
 int main()
 {
   char* input1 = nullptr;
-  const char* input2 = "\0";
+  const char* input2 = "QWERTYUIOP\0";
   size_t input1_length = 0;
 
   try {
