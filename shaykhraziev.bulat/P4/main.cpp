@@ -110,8 +110,8 @@ void shaykhraziev::combineStrings(char* sum, const char* a, const char* b)
 
   const size_t j = i/2;
   size_t cnt = 0;
-  while (flag1 && a[j+cnt] != '\0') {
-    sum[i+cnt] = a[j+cnt];
+  while (flag1 && a[j+cnt+1] != '\0') {
+    sum[i+cnt] = a[j+cnt+1];
     cnt++;
   }
 
@@ -120,7 +120,7 @@ void shaykhraziev::combineStrings(char* sum, const char* a, const char* b)
     cnt++;
   }
 
-  // sum[i+cnt] = '\0';
+  sum[i+cnt] = '\0';
 }
 
 int shaykhraziev::hasSame(const char* a, const char* b)
@@ -157,7 +157,7 @@ int main() {
   size_t inp1len = strlen(inp1), inp2len = strlen(inp2);
 
   size_t size = inp1len + inp2len;
-  char* sum;
+  char* sum = nullptr;
 
   if (size == 0) {
     std::cerr << "nothing working with\n";
@@ -166,7 +166,7 @@ int main() {
   }
 
   try {
-    sum = new char[size];
+    sum = new char[size+1];
   } catch (const std::bad_alloc& e) {
     std::cerr << "bad alloc " << e.what() <<"\n";
     delete[] inp1;
