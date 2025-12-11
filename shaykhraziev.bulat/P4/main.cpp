@@ -156,11 +156,6 @@ int main() {
 
   size_t inp1len = strlen(inp1), inp2len = strlen(inp2);
 
-  if (!inp1len || !inp2len) {
-    delete[] inp1;
-    return 0;
-  }
-
   size_t size = inp1len + inp2len;
   char* sum;
 
