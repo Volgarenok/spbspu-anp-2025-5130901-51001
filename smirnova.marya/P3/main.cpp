@@ -5,7 +5,7 @@
 namespace smirnova
 {
   size_t findLocalMaximum(size_t rows, size_t cols, const int *matrix);
-  int findElementsDiagonal(int rows, int cols, const int *matrix);
+  int findElementsDiagonal(size_t rows, size_t cols, const int *matrix);
 }
 size_t smirnova::findLocalMaximum(size_t rows, size_t cols, const int *matrix)
 {
@@ -19,8 +19,8 @@ size_t smirnova::findLocalMaximum(size_t rows, size_t cols, const int *matrix)
       bool flag = true;
       for (int k = 0; k < 8 && flag; ++k)
       {
-        int ni = i + d[k][0];
-        int nj = j + d[k][1];
+        size_t ni = i + d[k][0];
+        size_t nj = j + d[k][1];
         if (matrix[ni * cols + nj] >= val)
         {
           flag = false;
@@ -34,28 +34,33 @@ size_t smirnova::findLocalMaximum(size_t rows, size_t cols, const int *matrix)
   }
   return count;
 }
-int smirnova::findElementsDiagonal(int rows, int cols, const int *matrix)
+int smirnova::findElementsDiagonal(size_t rows, size_t cols, const int *matrix)
 {
-  int n = rows < cols ? rows : cols;
-  int maxsum = INT_MIN;
-  for (int sum = 0; sum <= 2 * (n - 1); ++sum)
+  size_t n = rows < cols ? rows : cols;
+  if (n == 0)
   {
-    if (sum == n - 1)
+    return 0;
+  }
+  int maxsum = matrix[0];
+  for (size_t i = 0; i < n; ++i)
+  {
+    for (size_t j = 0; j < n; ++j)
     {
-      continue;
-    }
-    int diagsum = 0;
-    for (int i = 0; i < n; ++i)
-    {
-      int j = sum - i;
-      if (j >= 0 && j < n)
-      {
-        diagsum += matrix[i * cols + j];
+      if (i == 0 && j == 0) {
+        continue;
       }
-    }
-    if (diagsum > maxsum)
-    {
-      maxsum = diagsum;
+      size_t x = i, y = j;
+      int diagsum = 0;
+      while (x < n && y < n)
+      {
+        diagsum += matrix[x * cols + y];
+        ++x;
+        ++y;
+      }
+      if (diagsum > maxsum)
+      {
+        maxsum = diagsum;
+      }
     }
   }
   return maxsum;
@@ -79,8 +84,9 @@ int main(int argc, char** argv)
     std::cerr << "Cannot open input file\n";
     return 1;
   }
+  const size_t BUF = 10000;
   size_t rows = 0, cols = 0;
-  if (!(input >> rows >> cols) || rows * cols > 1000)
+  if (!(input >> rows >> cols) || rows * cols > BUF)
   {
     std::cerr << "Error: invalid matrix size\n";
     return 2;
@@ -92,18 +98,18 @@ int main(int argc, char** argv)
     return 0;
   }
   int *matrix = nullptr;
-  int staticMatrix[1000] = {};
+  int fixedMatrix[10000] = {};
   if (arg[0] == '2')
   {
     matrix = new int[rows * cols];
   }
   else
   {
-    matrix = staticMatrix;
+    matrix = fixedMatrix;
   }
   for (size_t i = 0; i < rows * cols; ++i)
   {
-    if (!(input >> matrix[i]) || std::abs(matrix[i]) > 1000000)
+    if (!(input >> matrix[i]))
     {
       std::cerr << "Error: invalid element or out of range\n";
       if (arg[0] == '2')
@@ -113,7 +119,7 @@ int main(int argc, char** argv)
       return 2;
     }
   }
-  char extra;
+  char extra = '\0';
   if (input >> extra)
   {
     std::cerr << "Error: extra data in input file (e.g., letter '" << extra << "')\n";
@@ -123,7 +129,6 @@ int main(int argc, char** argv)
   std::ofstream output(argv[3]);
   output << smirnova::findLocalMaximum(rows, cols, matrix) << "\n";
   output << smirnova::findElementsDiagonal(rows, cols, matrix) << "\n";
-  output.close();
   if (arg[0] == '2')
   {
     delete[] matrix;
