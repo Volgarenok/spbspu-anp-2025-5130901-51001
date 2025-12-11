@@ -22,7 +22,16 @@ namespace krivoshapov {
                 }
 
             }
+            if (!isVowel){
+                if (writeIdx + 1 >= dstSz){
+                    break;
+                }
+                dst[writeIdx] = src[readIdx];
+                ++writeIdx;
+            }
         }
+        dst[writeIdx] = "\0";
+        return writeIdx;
     }
 
 }
