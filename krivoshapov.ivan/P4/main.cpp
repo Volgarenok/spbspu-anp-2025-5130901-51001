@@ -1,62 +1,68 @@
 #include <iostream>
-#include <fstream>
+#include <istream>
 #include <cstring>
 
-namespace krivoshapov {
-    size_t rmVow (const char* src, char* dst, size_t dstSz){
-        if (src == nullptr || dst == nullptr || dstSz == 0){
+namespace Krivoshapov {
+    size_t rmvVow(const char* src, char* dst, size_t dstSz)
+    {
+        if (src == nullptr || dst == nullptr || dstSz == 0) {
             return 0;
         }
 
-        const char vowels [] = "eiouyAEIOUY";
-        const size_t vowelCnt = 12;
+        const char vowels[] = "aeiouyAEIOUY";
         size_t writeIdx = 0;
         size_t srcLen = std::strlen(src);
 
-        for (size_t readIdx = 0; readIdx < srcLen; ++readIdx){
+        for (size_t readIdx = 0; readIdx < srcLen; ++readIdx) {
             int isVowel = 0;
-            for (size_t i = 0; i < vowelCnt; ++i){
-                if (src[readIdx] == vowels[i]){
+            char currentChar = src[readIdx];
+            
+            for (size_t i = 0; vowels[i] != '\0'; ++i) {
+                if (currentChar == vowels[i]) {
                     isVowel = 1;
                     break;
                 }
-
             }
-            if (!isVowel){
-                if (writeIdx + 1 >= dstSz){
+
+            if (!isVowel) {
+                if (writeIdx + 1 >= dstSz) {
                     break;
                 }
-                dst[writeIdx] = src[readIdx];
+                dst[writeIdx] = currentChar;
                 ++writeIdx;
             }
         }
+
         dst[writeIdx] = '\0';
         return writeIdx;
     }
 
-    int seqSym(const char* str){
-        if(str == nullptr){
+    int seqSym(const char* str)
+    {
+        if (str == nullptr) {
             return 0;
         }
 
         size_t len = std::strlen(str);
-        if (len < 2){
+        if (len < 2) {
             return 0;
         }
 
-        for (size_t i = 0; i < len - 1; ++i){
-            if(str[i] == str[i + 1]){
+        for (size_t i = 0; i < len - 1; ++i) {
+            if (str[i] == str[i + 1]) {
                 return 1;
             }
         }
+
         return 0;
     }
 }
 
-int main(){
+int main() 
+{
     const size_t initSz = 128;
     char* inBuf = nullptr;
-    char* resbuf = nullptr;
+    char* resBuf = nullptr;
 
     try {
         inBuf = new char[initSz];
@@ -70,13 +76,13 @@ int main(){
     char ch;
 
     while (std::cin.get(ch) && ch != '\n') {
-        if(strLen + 1 >= bufSz){
+        if (strLen + 1 >= bufSz) {
             size_t newSz = bufSz * 2;
             char* newBuf = nullptr;
-
+            
             try {
                 newBuf = new char[newSz];
-            } catch (std::bad_alloc&){
+            } catch (std::bad_alloc&) {
                 delete[] inBuf;
                 std::cerr << "Memory allocation failed" << std::endl;
                 return 1;
@@ -91,23 +97,24 @@ int main(){
         inBuf[strLen] = ch;
         ++strLen;
     }
+
     inBuf[strLen] = '\0';
 
     try {
-        resbuf = new char[bufSz];
+        resBuf = new char[bufSz];
     } catch (std::bad_alloc&) {
-        delete [] inBuf;
+        delete[] inBuf;
         std::cerr << "Memory allocation failed" << std::endl;
         return 1;
     }
 
-    krivoshapov::rmVow(inBuf, resbuf, bufSz);
-    std::cout << resbuf << std::endl;
+    Krivoshapov::rmvVow(inBuf, resBuf, bufSz);
+    std::cout << resBuf << std::endl;
 
-    int seqRes = krivoshapov::seqSym(inBuf);
+    int seqRes = Krivoshapov::seqSym(inBuf);
     std::cout << seqRes << std::endl;
 
     delete[] inBuf;
-    delete[] resbuf;
+    delete[] resBuf;
     return 0;
 }
