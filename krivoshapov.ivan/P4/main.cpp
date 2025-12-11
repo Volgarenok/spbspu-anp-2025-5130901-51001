@@ -30,10 +30,27 @@ namespace krivoshapov {
                 ++writeIdx;
             }
         }
-        dst[writeIdx] = "\0";
+        dst[writeIdx] = '\0';
         return writeIdx;
     }
 
+    int seqSym(const char* str){
+        if(str == nullptr){
+            return 0;
+        }
+
+        size_t len = std::strlen(str);
+        if (len < 2){
+            return 0;
+        }
+
+        for (size_t i = 0; i < len - 1; ++i){
+            if(str[i] == str[i + 1]){
+                return 1;
+            }
+        }
+        return 0;
+    }
 }
 
 int main(){
