@@ -2,7 +2,8 @@
 #include <istream>
 #include <cstring>
 
-namespace Krivoshapov {
+namespace Krivoshapov
+{
     size_t rmvVow(const char* src, char* dst, size_t dstSz)
     {
         if (src == nullptr || dst == nullptr || dstSz == 0) {
@@ -16,7 +17,7 @@ namespace Krivoshapov {
         for (size_t readIdx = 0; readIdx < srcLen; ++readIdx) {
             int isVowel = 0;
             char currentChar = src[readIdx];
-            
+
             for (size_t i = 0; vowels[i] != '\0'; ++i) {
                 if (currentChar == vowels[i]) {
                     isVowel = 1;
@@ -58,7 +59,7 @@ namespace Krivoshapov {
     }
 }
 
-int main() 
+int main()
 {
     const size_t initSz = 128;
     char* inBuf = nullptr;
@@ -79,7 +80,7 @@ int main()
         if (strLen + 1 >= bufSz) {
             size_t newSz = bufSz * 2;
             char* newBuf = nullptr;
-            
+
             try {
                 newBuf = new char[newSz];
             } catch (std::bad_alloc&) {
