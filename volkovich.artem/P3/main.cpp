@@ -113,9 +113,10 @@ int main(int argc, char *argv[])
   }
   int *matrix = nullptr;
   int *dyn_mtx = nullptr;
+
+  int mtx[volkovich::MAX_MATRIX_SIZE];
   if (!std::strcmp(argv[1], "1"))
   {
-    int mtx[volkovich::MAX_MATRIX_SIZE];
     matrix = mtx;
   }
   else
