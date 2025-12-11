@@ -5,9 +5,9 @@ namespace shaykhraziev
 {
   char* concat(char* a, char* b, size_t as, size_t bs);
   char* getline(std::istream& in, size_t& size);
-  void uni_two(char* sum, char* a, char* b, size_t as, size_t bs);
-  int has_sam(char* a, char* b, size_t as, size_t bs);
-  void printarray(char* a, size_t s);
+  void combineStrings(char* sum, char* a, char* b, size_t as, size_t bs);
+  int hasSame(char* a, char* b, size_t as, size_t bs);
+  void printArray(char* a, size_t s);
 }
 
 char* shaykhraziev::concat(char* a, char* b, size_t as, size_t bs)
@@ -89,7 +89,7 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
   return result;
 }
 
-void shaykhraziev::uni_two(char* sum, char* a, char* b, size_t as, size_t bs)
+void shaykhraziev::combineStrings(char* sum, char* a, char* b, size_t as, size_t bs)
 {
   size_t cmn;
   size_t odd;
@@ -132,7 +132,7 @@ int shaykhraziev::has_sam(char* a, char* b, size_t as, size_t bs)
   return 0;
 }
 
-void shaykhraziev::printarray(char* a, size_t s)
+void shaykhraziev::printArray(char* a, size_t s)
 {
   for (size_t i = 0; i < s; i++) {
     std::cout << a[i];
@@ -190,8 +190,8 @@ int main()
     return 1;
   }
 
-  shaykhraziev::uni_two(sum, inp1, inp2, s1, s2);
-  shaykhraziev::printarray(sum, size);
+  shaykhraziev::combineStrings(sum, inp1, inp2, s1, s2);
+  shaykhraziev::printArray(sum, size);
   delete[] sum;
 
   int hasSam = shaykhraziev::has_sam(inp1, inp2, s1, s2);
