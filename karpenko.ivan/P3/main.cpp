@@ -80,15 +80,11 @@ namespace karpenko
 
   int readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
   {
-    std::size_t temp_rows, temp_cols;
-    if (!(stream >> temp_rows >> temp_cols))
+    if (!(stream >> rows >> cols))
     {
       std::cerr << "Error: Invalid matrix dimensions\n";
       return 0;
     }
-
-    rows = temp_rows;
-    cols = temp_cols;
 
     if (rows > MAX_DIMENSION || cols > MAX_DIMENSION)
     {
