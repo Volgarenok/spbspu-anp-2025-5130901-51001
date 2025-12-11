@@ -42,7 +42,7 @@ namespace krivoshapov {
     try {
       row_minimums = new int[rows];
       column_maximums = new int[columns];
-    } catch (...) {
+    } catch (const std::bad_alloc&) {
       delete[] row_minimums;
       delete[] column_maximums;
       throw;
