@@ -74,6 +74,13 @@ bool myGetline(char * buffer, size_t bufferSize)
     {
       buffer[i++] = c;
     }
+    else
+    {
+      while (std::cin.get(c) && c != '\n')
+      {
+      }
+      return false;
+    }
   }
 
   buffer[i] = '\0';
@@ -85,33 +92,50 @@ int main()
 {
   const size_t MAX_LINE_SIZE = 1000;
   char line1[MAX_LINE_SIZE] = {'\0'};
-  char line2[MAX_LINE_SIZE] = {'\0'};
 
   if (!myGetline(line1, MAX_LINE_SIZE))
   {
-    std::cerr << "Error reading first string\n";
+    std::cerr << "Error reading string\n";
     return 1;
   }
 
-  if (!myGetline(line2, MAX_LINE_SIZE))
-  {
-    line2[0] = '\0';
-  }
+  const char line2[] = "def_";
 
   try
   {
     const size_t result1Size = std::strlen(line1) + std::strlen(line2) + 1;
-    char * result1 = new char[result1Size];
+    char * result1 = new char[result1Size]();
+
+    if (result1 == nullptr)
+    {
+      std::cerr << "Error: cannot allocate memory for result\n";
+      return 1;
+    }
+
     karpenko::uniTwo(line1, line2, result1, result1Size);
     std::cout << result1 << '\n';
     delete[] result1;
 
-    char * result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
+    char * result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
+
+    if (result2 == nullptr)
+    {
+      std::cerr << "Error: cannot allocate memory for result\n";
+      return 1;
+    }
+
     karpenko::shrSym(line1, result2, karpenko::ALPHABET_RESULT_SIZE);
     std::cout << result2 << '\n';
     delete[] result2;
 
-    char * result3 = new char[karpenko::ALPHABET_RESULT_SIZE];
+    char * result3 = new char[karpenko::ALPHABET_RESULT_SIZE]();
+
+    if (result3 == nullptr)
+    {
+      std::cerr << "Error: cannot allocate memory for result\n";
+      return 1;
+    }
+
     karpenko::shrSym(line2, result3, karpenko::ALPHABET_RESULT_SIZE);
     std::cout << result3 << '\n';
     delete[] result3;
@@ -119,12 +143,12 @@ int main()
   catch (const std::bad_alloc &)
   {
     std::cerr << "Error: cannot allocate memory for result\n";
-    return 2;
+    return 1;
   }
   catch (const std::exception & e)
   {
     std::cerr << "Error: " << e.what() << '\n';
-    return 2;
+    return 1;
   }
 
   return 0;
