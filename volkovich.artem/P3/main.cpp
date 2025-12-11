@@ -3,15 +3,14 @@
 #include <cstring>
 #include <climits>
 
-const size_t MAX_MATRIX_SIZE = 10000;
-
 namespace volkovich
 {
-  void decreaseSpiral(int* matrix, size_t rows, size_t columns);
+  void decreaseSpiral(int *matrix, size_t rows, size_t columns);
   int minDiagonal(const int *matrix, size_t rows, size_t columns);
+  const size_t MAX_MATRIX_SIZE = 10000;
 }
 
-void volkovich::decreaseSpiral(int* matrix, size_t rows, size_t columns)
+void volkovich::decreaseSpiral(int *matrix, size_t rows, size_t columns)
 {
   int top = 0, bottom = rows - 1, left = 0, right = columns - 1;
   size_t i = 0;
@@ -55,14 +54,24 @@ int volkovich::minDiagonal(const int *matrix, size_t rows, size_t columns)
   {
     return 0;
   }
-  int res = INT_MAX;
-  for (size_t s = 0; s <= rows + columns - 2; s++)
+  size_t s = 0;
+  int sum = 0;
+  for (size_t i = 0; i < rows; i++)
+  {
+    int j = static_cast<int>(s) - static_cast<int>(i);
+    if (j >= 0 && j < static_cast<int>(columns))
+    {
+      sum += matrix[i * columns + j];
+    }
+  }
+  int res = sum;
+  for (s = 1; s <= rows + columns - 2; s++)
   {
     int sum = 0;
     for (size_t i = 0; i < rows; i++)
     {
-      int j = static_cast<int> (s) - static_cast<int> (i);
-      if (j >= 0 && j < static_cast<int> (columns))
+      int j = static_cast<int>(s) - static_cast<int>(i);
+      if (j >= 0 && j < static_cast<int>(columns))
       {
         sum += matrix[i * columns + j];
       }
@@ -102,16 +111,21 @@ int main(int argc, char *argv[])
   {
     return 1;
   }
-  int* matrix = nullptr;
-  int* dyn_mtx = nullptr;
+  int *matrix = nullptr;
+  int *dyn_mtx = nullptr;
   if (!std::strcmp(argv[1], "1"))
   {
-    int mtx[MAX_MATRIX_SIZE];
+    int mtx[volkovich::MAX_MATRIX_SIZE];
     matrix = mtx;
-  } else {
-    try {
-      dyn_mtx = new int[rows*columns];
-    } catch (const std::bad_alloc&) {
+  }
+  else
+  {
+    try
+    {
+      dyn_mtx = new int[rows * columns];
+    }
+    catch (const std::bad_alloc &)
+    {
       std::cerr << "Bad alloc" << "\n";
       return 1;
     }
@@ -128,7 +142,8 @@ int main(int argc, char *argv[])
     }
   }
   std::ofstream output(argv[3]);
-  if (!output) {
+  if (!output)
+  {
     std::cerr << "Bad file" << "\n";
     return 1;
   }
@@ -142,6 +157,6 @@ int main(int argc, char *argv[])
     output << ' ' << matrix[i];
   }
   delete[] dyn_mtx;
-  std::cout<<"\n";
+  std::cout << "\n";
   return 0;
 }
