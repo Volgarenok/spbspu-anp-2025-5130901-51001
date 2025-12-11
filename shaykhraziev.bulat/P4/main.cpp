@@ -160,7 +160,6 @@ int main() {
   if (size == 0) {
     std::cerr << "nothing working with\n";
     delete[] inp1;
-    delete[] inp2;
     return 1;
   }
 
@@ -169,7 +168,6 @@ int main() {
   } catch (const std::bad_alloc& e) {
     std::cerr << "bad alloc " << e.what() <<"\n";
     delete[] inp1;
-    delete[] inp2;
     return 1;
   }
 
