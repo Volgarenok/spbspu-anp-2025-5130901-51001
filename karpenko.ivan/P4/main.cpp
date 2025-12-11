@@ -101,10 +101,13 @@ int main()
 
   const char line2[] = "def_";
 
+  char * result1 = nullptr;
+  char * result2 = nullptr;
+
   try
   {
     const size_t result1Size = std::strlen(line1) + std::strlen(line2) + 1;
-    char * result1 = new char[result1Size]();
+    result1 = new char[result1Size]();
 
     if (result1 == nullptr)
     {
@@ -114,39 +117,45 @@ int main()
 
     karpenko::uniTwo(line1, line2, result1, result1Size);
     std::cout << result1 << '\n';
-    delete[] result1;
 
-    char * result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
+    result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
 
     if (result2 == nullptr)
     {
+      delete[] result1;
       std::cerr << "Error: cannot allocate memory for result\n";
       return 1;
     }
 
     karpenko::shrSym(line1, result2, karpenko::ALPHABET_RESULT_SIZE);
     std::cout << result2 << '\n';
+
+    delete[] result1;
     delete[] result2;
-
-    char * result3 = new char[karpenko::ALPHABET_RESULT_SIZE]();
-
-    if (result3 == nullptr)
-    {
-      std::cerr << "Error: cannot allocate memory for result\n";
-      return 1;
-    }
-
-    karpenko::shrSym(line2, result3, karpenko::ALPHABET_RESULT_SIZE);
-    std::cout << result3 << '\n';
-    delete[] result3;
   }
   catch (const std::bad_alloc &)
   {
+    if (result1 != nullptr)
+    {
+      delete[] result1;
+    }
+    if (result2 != nullptr)
+    {
+      delete[] result2;
+    }
     std::cerr << "Error: cannot allocate memory for result\n";
     return 1;
   }
   catch (const std::exception & e)
   {
+    if (result1 != nullptr)
+    {
+      delete[] result1;
+    }
+    if (result2 != nullptr)
+    {
+      delete[] result2;
+    }
     std::cerr << "Error: " << e.what() << '\n';
     return 1;
   }
