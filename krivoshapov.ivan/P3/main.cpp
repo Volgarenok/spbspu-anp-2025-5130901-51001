@@ -3,7 +3,8 @@
 
 namespace krivoshapov {
 
-  int findColumnWithLongestSeries(const int* matrix, size_t rows, size_t columns) {
+  int findColumnWithLongestSeries(const int* matrix, size_t rows, size_t columns)
+  {
     int best_column = 1;
     size_t max_length = 0;
 
@@ -35,7 +36,8 @@ namespace krivoshapov {
     return best_column;
   }
 
-  size_t countSaddlePoints(const int* matrix, size_t rows, size_t columns) {
+  size_t countSaddlePoints(const int* matrix, size_t rows, size_t columns)
+   {
     int* row_minimums = nullptr;
     int* column_maximums = nullptr;
 
@@ -85,7 +87,8 @@ namespace krivoshapov {
 
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
   if (argc != 4) {
     std::cerr << "Ошибка: неверное количество аргументов\n";
     return 1;
