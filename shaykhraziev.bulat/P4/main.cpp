@@ -1,11 +1,12 @@
 #include <iostream>
 #include <istream>
+#include <cstring>
 
 namespace shaykhraziev
 {
   char* concat(const char* a, const char* b, size_t as, size_t bs);
   char* getline(std::istream& in);
-  void combineStrings(char* sum, char* a, char* b);
+  void combineStrings(char* sum, const char* a, const char* b);
   int hasSame(const char* a, const char* b);
 }
 
@@ -83,7 +84,7 @@ char* shaykhraziev::getline(std::istream& in)
   return temp;
 }
 
-void shaykhraziev::combineStrings(char* sum, char* a, char* b)
+void shaykhraziev::combineStrings(char* sum, const char* a, const char* b)
 {
   bool flag1 = true, flag2 = true;
   size_t i = 0;
@@ -141,7 +142,7 @@ int shaykhraziev::hasSame(const char* a, const char* b)
 
 int main() {
   char* inp1;
-  char* inp2 = "secondcharstar\0";
+  const char* inp2 = "secondcharstar\0";
 
   try {
     inp1 = shaykhraziev::getline(std::cin);
