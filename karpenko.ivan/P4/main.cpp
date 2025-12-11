@@ -31,10 +31,10 @@ namespace karpenko
 
     for (size_t i = 0; input[i] != '\0'; ++i)
     {
-      char c = input[i];
-      if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+      unsigned char uc = static_cast<unsigned char>(input[i]);
+      if (std::isalpha(uc))
       {
-        char lower_c = std::tolower(static_cast< unsigned char >(c));
+        char lower_c = std::tolower(uc);
         size_t index = lower_c - 'a';
         if (index < 26)
         {
