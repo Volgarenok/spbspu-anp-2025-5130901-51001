@@ -98,7 +98,7 @@ int main(int argc, char** argv)
     return 0;
   }
   int *matrix = nullptr;
-  int fixedMatrix[10000] = {};
+  int fixedMatrix[BUF] = {};
   if (arg[0] == '2')
   {
     matrix = new int[rows * cols];
