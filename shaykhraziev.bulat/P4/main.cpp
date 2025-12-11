@@ -5,7 +5,7 @@
 namespace shaykhraziev
 {
   char* concat(const char* a, const char* b, size_t as, size_t bs);
-  char* getline(std::istream& in);
+  char* getline(std::istream& in, size_t& size);
   void combineStrings(char* sum, const char* a, const char* b);
   int hasSame(const char* a, const char* b);
 }
@@ -26,11 +26,11 @@ char* shaykhraziev::concat(const char* a, const char* b, const size_t as, const 
   return result;
 }
 
-char* shaykhraziev::getline(std::istream& in)
+char* shaykhraziev::getline(std::istream& in, size_t& size)
 {
   size_t batchsize = 10;
   char* result = nullptr;
-  size_t size = 0;
+  size = 0;
 
   char* batch = new char[batchsize + 1];
 
@@ -80,6 +80,7 @@ char* shaykhraziev::getline(std::istream& in)
   }
 
   delete[] result;
+  size += i;
   delete[] batch;
   return temp;
 }
@@ -119,8 +120,6 @@ void shaykhraziev::combineStrings(char* sum, const char* a, const char* b)
     sum[i+cnt] = b[j+cnt];
     cnt++;
   }
-
-  sum[i+cnt] = '\0';
 }
 
 int shaykhraziev::hasSame(const char* a, const char* b)
@@ -143,9 +142,10 @@ int shaykhraziev::hasSame(const char* a, const char* b)
 int main() {
   char* inp1 = nullptr;
   const char* inp2 = "\0";
+  size_t inp1len = 0;
 
   try {
-    inp1 = shaykhraziev::getline(std::cin);
+    inp1 = shaykhraziev::getline(std::cin, inp1len);
   } catch (const std::bad_alloc& e) {
     std::cerr << "bad alloc " << e.what() <<"\n";
     return 1;
@@ -154,8 +154,7 @@ int main() {
     return 1;
   }
 
-  size_t inp1len = strlen(inp1), inp2len = strlen(inp2);
-
+  size_t inp2len = strlen(inp2);
   size_t size = inp1len + inp2len;
   char* sum = nullptr;
 
@@ -167,6 +166,7 @@ int main() {
 
   try {
     sum = new char[size+1];
+    sum[size] = '\0';
   } catch (const std::bad_alloc& e) {
     std::cerr << "bad alloc " << e.what() <<"\n";
     delete[] inp1;
