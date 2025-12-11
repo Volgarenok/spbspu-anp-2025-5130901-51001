@@ -12,6 +12,17 @@ namespace krivoshapov {
         const size_t vowelCnt = 12;
         size_t writeIdx = 0;
         size_t srcLen = std::strlen(src);
+
+        for (size_t readIdx = 0; readIdx < srcLen; ++readIdx){
+            int isVowel = 0;
+            for (size_t i = 0; i < vowelCnt; ++i){
+                if (src[readIdx] == vowels[i]){
+                    isVowel = 1;
+                    break;
+                }
+
+            }
+        }
     }
 
 }
