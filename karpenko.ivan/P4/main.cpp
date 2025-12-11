@@ -4,7 +4,7 @@
 
 namespace karpenko
 {
-  void uni_two(const char *str1, const char *str2, char *result, size_t result_size)
+  void uniTwo(const char *str1, const char *str2, char *result, size_t result_size)
   {
     size_t len1 = std::strlen(str1);
     size_t len2 = std::strlen(str2);
@@ -25,7 +25,7 @@ namespace karpenko
     result[result_index] = '\0';
   }
 
-  void shr_sym(const char *input, char *result, size_t result_size)
+  void shrSym(const char *input, char *result, size_t result_size)
   {
     bool letters[26] = {false};
 
@@ -71,15 +71,15 @@ int main()
   {
     size_t result1_size = line1.length() + line2.length() + 1;
     char *result1 = new char[result1_size];
-    karpenko::uni_two(line1.c_str(), line2.c_str(), result1, result1_size);
+    karpenko::uniTwo(line1.c_str(), line2.c_str(), result1, result1_size);
     std::cout << result1 << "\n";
 
     char *result2 = new char[27];
-    karpenko::shr_sym(line1.c_str(), result2, 27);
+    karpenko::shrSym(line1.c_str(), result2, 27);
     std::cout << result2 << "\n";
 
     char *result3 = new char[27];
-    karpenko::shr_sym(line2.c_str(), result3, 27);
+    karpenko::shrSym(line2.c_str(), result3, 27);
     std::cout << result3 << "\n";
 
     delete[] result1;
