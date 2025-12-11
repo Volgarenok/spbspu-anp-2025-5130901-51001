@@ -14,13 +14,13 @@ namespace karpenko
     const size_t maxLen = (len1 > len2) ? len1 : len2;
 
     size_t resultIndex = 0;
-    for (size_t i = 0; i < maxLen && resultIndex < resultSize - 1; ++i)
+    for (size_t i = 0; i < maxLen; ++i)
     {
-      if (i < len1 && resultIndex < resultSize - 1)
+      if (i < len1)
       {
         result[resultIndex++] = str1[i];
       }
-      if (i < len2 && resultIndex < resultSize - 1)
+      if (i < len2)
       {
         result[resultIndex++] = str2[i];
       }
@@ -106,8 +106,8 @@ int main()
 
   try
   {
-    const size_t result1Size = std::strlen(line1) + std::strlen(line2) + 1;
-    result1 = new char[result1Size]();
+    const size_t result1Size = std::strlen(line1) + std::strlen(line2);
+    result1 = new char[result1Size + 1]();
 
     if (result1 == nullptr)
     {
@@ -115,7 +115,7 @@ int main()
       return 1;
     }
 
-    karpenko::uniTwo(line1, line2, result1, result1Size);
+    karpenko::uniTwo(line1, line2, result1, result1Size + 1);
     std::cout << result1 << '\n';
 
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
