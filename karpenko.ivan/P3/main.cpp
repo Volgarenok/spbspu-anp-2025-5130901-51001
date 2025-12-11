@@ -10,9 +10,9 @@ namespace karpenko
   const std::size_t kMaxSize = kMaxDimension * kMaxDimension;
 
   void transformMatrixSpiral(
-    std::size_t rows,
-    std::size_t cols,
-    int matrix[])
+      std::size_t rows,
+      std::size_t cols,
+      int matrix[])
   {
     if (rows == 0 || cols == 0)
     {
@@ -60,10 +60,10 @@ namespace karpenko
   }
 
   void createSmoothedMatrix(
-    std::size_t rows,
-    std::size_t cols,
-    const int matrix[],
-    double smoothed[])
+      std::size_t rows,
+      std::size_t cols,
+      const int matrix[],
+      double smoothed[])
   {
     if (rows == 0 || cols == 0)
     {
@@ -106,10 +106,10 @@ namespace karpenko
   }
 
   int readMatrix(
-    std::istream& stream,
-    int matrix[],
-    std::size_t& rows,
-    std::size_t& cols)
+      std::istream &stream,
+      int matrix[],
+      std::size_t &rows,
+      std::size_t &cols)
   {
     if (!(stream >> rows >> cols))
     {
@@ -148,10 +148,10 @@ namespace karpenko
   }
 
   int writeMatrix(
-    std::ostream& stream,
-    const int matrix[],
-    std::size_t rows,
-    std::size_t cols)
+      std::ostream &stream,
+      const int matrix[],
+      std::size_t rows,
+      std::size_t cols)
   {
     stream << rows << " " << cols;
     for (std::size_t i = 0; i < rows; ++i)
@@ -165,10 +165,10 @@ namespace karpenko
   }
 
   int writeMatrix(
-    std::ostream& stream,
-    const double matrix[],
-    std::size_t rows,
-    std::size_t cols)
+      std::ostream &stream,
+      const double matrix[],
+      std::size_t rows,
+      std::size_t cols)
   {
     stream << std::fixed << std::setprecision(1) << rows << " " << cols;
     for (std::size_t i = 0; i < rows; ++i)
@@ -181,7 +181,7 @@ namespace karpenko
     return stream.good() ? 1 : 0;
   }
 
-  int checkIsNumber(const char* str)
+  int checkIsNumber(const char *str)
   {
     if (!str || !*str)
     {
@@ -189,7 +189,7 @@ namespace karpenko
       return 0;
     }
 
-    char* endptr = nullptr;
+    char *endptr = nullptr;
     std::strtol(str, &endptr, 10);
 
     if (*endptr != '\0')
@@ -201,7 +201,7 @@ namespace karpenko
   }
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
   if (argc != 4)
   {
@@ -222,8 +222,8 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  const char* inputFile = argv[2];
-  const char* outputFile = argv[3];
+  const char *inputFile = argv[2];
+  const char *outputFile = argv[3];
 
   std::size_t rows = 0;
   std::size_t cols = 0;
@@ -264,8 +264,8 @@ int main(int argc, char* argv[])
     }
     else
     {
-      int* dynamicMatrix = new int[matrixSize];
-      
+      int *dynamicMatrix = new int[matrixSize];
+
       for (std::size_t i = 0; i < rows; ++i)
       {
         for (std::size_t j = 0; j < cols; ++j)
@@ -278,7 +278,7 @@ int main(int argc, char* argv[])
           }
         }
       }
-      
+
       karpenko::transformMatrixSpiral(rows, cols, dynamicMatrix);
       if (!karpenko::writeMatrix(outputStream, dynamicMatrix, rows, cols))
       {
@@ -286,7 +286,7 @@ int main(int argc, char* argv[])
         delete[] dynamicMatrix;
         return 2;
       }
-      
+
       delete[] dynamicMatrix;
     }
   }
@@ -300,7 +300,7 @@ int main(int argc, char* argv[])
     {
       int staticMatrix[karpenko::kMaxSize];
       double outputMatrix[karpenko::kMaxSize];
-      
+
       for (std::size_t i = 0; i < rows; ++i)
       {
         for (std::size_t j = 0; j < cols; ++j)
@@ -312,7 +312,7 @@ int main(int argc, char* argv[])
           }
         }
       }
-      
+
       karpenko::createSmoothedMatrix(rows, cols, staticMatrix, outputMatrix);
       if (!karpenko::writeMatrix(outputStream, outputMatrix, rows, cols))
       {
