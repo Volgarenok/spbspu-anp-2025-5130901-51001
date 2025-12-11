@@ -1,6 +1,7 @@
 #include <iostream>
 #include <istream>
 #include <cstring>
+#include <stdexcept>
 
 namespace shaykhraziev
 {
@@ -12,7 +13,7 @@ namespace shaykhraziev
 
 char* shaykhraziev::concat(const char* a, const char* b, const size_t as, const size_t bs)
 {
-  size_t len = as + bs;
+  const size_t len = as + bs;
   char* result = new char[len];
 
   for (size_t i = 0; i < as; i++) {
@@ -28,28 +29,28 @@ char* shaykhraziev::concat(const char* a, const char* b, const size_t as, const 
 
 char* shaykhraziev::getline(std::istream& in, size_t& size)
 {
-  size_t batchsize = 10;
+  const size_t batch_size = 10;
   char* result = nullptr;
   size = 0;
 
-  char* batch = new char[batchsize + 1];
+  char* batch = new char[batch_size + 1];
 
   if (in.flags() & std::ios_base::skipws) {
     in >> std::noskipws;
   }
 
-  char val = ' ';
+  char ch = ' ';
   size_t i = 0;
 
-  while (!(in >> val).fail() && val != '\n') {
-    batch[i] = val;
+  while (!(in >> ch).fail() && ch != '\n') {
+    batch[i] = ch;
 
-    if (++i == batchsize) {
+    if (++i == batch_size) {
       i = 0;
       char* temp = nullptr;
 
       try {
-        temp = concat(result, batch, size, batchsize);
+        temp = concat(result, batch, size, batch_size);
       } catch (const std::bad_alloc& e) {
         delete[] result;
         delete[] batch;
@@ -57,7 +58,7 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
       }
 
       delete[] result;
-      size += batchsize;
+      size += batch_size;
       result = temp;
     }
   }
@@ -72,7 +73,7 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
   batch[i] = '\0';
 
   try {
-    temp = concat(result, batch, size, i+1);
+    temp = concat(result, batch, size, i + 1);
   } catch (const std::bad_alloc& e) {
     delete[] result;
     delete[] batch;
@@ -82,33 +83,40 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
   delete[] result;
   size += i;
   delete[] batch;
+
   return temp;
 }
 
-void shaykhraziev::combineStrings(char* sum, const char* a, const char* b, size_t as, size_t bs)
+void shaykhraziev::combineStrings(
+  char* sum,
+  const char* a,
+  const char* b,
+  const size_t as,
+  const size_t bs
+)
 {
-  size_t cmn = 0, odd = 0;
-  const char* t = nullptr;
+  size_t common_length = 0;
+  size_t diff_length = 0;
+  const char* tail = nullptr;
 
   if (as >= bs) {
-    cmn = bs;
-    odd = as - bs;
-    t = a;
+    common_length = bs;
+    diff_length = as - bs;
+    tail = a;
   } else {
-    cmn = as;
-    odd = bs - as;
-    t = b;
+    common_length = as;
+    diff_length = bs - as;
+    tail = b;
   }
 
-  for (size_t i = 0; i < cmn; i++) {
+  for (size_t i = 0; i < common_length; i++) {
     sum[2 * i] = a[i];
     sum[2 * i + 1] = b[i];
   }
 
-  for (size_t i = 0; i < odd; i++) {
-    sum[2 * cmn + i] = t[cmn + i];
+  for (size_t i = 0; i < diff_length; i++) {
+    sum[2 * common_length + i] = tail[common_length + i];
   }
-
 }
 
 int shaykhraziev::hasSame(const char* a, const char* b)
@@ -116,11 +124,11 @@ int shaykhraziev::hasSame(const char* a, const char* b)
   size_t freq[256] = {};
 
   for (size_t i = 0; a[i] != '\0'; i++) {
-    freq[static_cast<unsigned char> (a[i])]++;
+    freq[static_cast<unsigned char>(a[i])] += 1;
   }
 
   for (size_t i = 0; b[i] != '\0'; i++) {
-    if (freq[static_cast<unsigned char> (b[i])] > 0) {
+    if (freq[static_cast<unsigned char>(b[i])] > 0) {
       return 1;
     }
   }
@@ -128,48 +136,49 @@ int shaykhraziev::hasSame(const char* a, const char* b)
   return 0;
 }
 
-int main() {
-  char* inp1 = nullptr;
-  const char* inp2 = "\0";
-  size_t inp1len = 0;
+int main()
+{
+  char* input1 = nullptr;
+  const char* input2 = "\0";
+  size_t input1_length = 0;
 
   try {
-    inp1 = shaykhraziev::getline(std::cin, inp1len);
+    input1 = shaykhraziev::getline(std::cin, input1_length);
   } catch (const std::bad_alloc& e) {
-    std::cerr << "bad alloc " << e.what() <<"\n";
+    std::cerr << "bad alloc " << e.what() << "\n";
     return 1;
   } catch (const std::logic_error& e) {
-    std::cerr << e.what() <<"\n";
+    std::cerr << e.what() << "\n";
     return 1;
   }
 
-  size_t inp2len = strlen(inp2);
-  size_t size = inp1len + inp2len;
+  const size_t input2_length = std::strlen(input2);
+  const size_t total_size = input1_length + input2_length;
   char* sum = nullptr;
 
-  if (size == 0) {
+  if (total_size == 0) {
     std::cerr << "nothing working with\n";
-    delete[] inp1;
+    delete[] input1;
     return 1;
   }
 
   try {
-    sum = new char[size+1];
-    sum[size] = '\0';
+    sum = new char[total_size + 1];
+    sum[total_size] = '\0';
   } catch (const std::bad_alloc& e) {
-    std::cerr << "bad alloc " << e.what() <<"\n";
-    delete[] inp1;
+    std::cerr << "bad alloc " << e.what() << "\n";
+    delete[] input1;
     return 1;
   }
 
-  shaykhraziev::combineStrings(sum, inp1, inp2, inp1len, inp2len);
+  shaykhraziev::combineStrings(sum, input1, input2, input1_length, input2_length);
   std::cout << sum << "\n";
+
+  int has_same = shaykhraziev::hasSame(input1, input2);
+  std::cout << has_same << "\n";
+
   delete[] sum;
-
-  int hasSam = shaykhraziev::hasSame(inp1, inp2);
-  std::cout << hasSam << "\n";
-
-  delete[] inp1;
+  delete[] input1;
 
   return 0;
 }
