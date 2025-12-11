@@ -187,12 +187,6 @@ int main(int argc, char *argv[])
     }
   }
 
-  else if (read_count != 0)
-  {
-    std::cerr << "Error: Empty matrix but read " << read_count << " elements\n";
-    return 2;
-  }
-
   std::ofstream output_stream(output_file);
   if (!output_stream)
   {
