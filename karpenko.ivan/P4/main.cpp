@@ -4,97 +4,127 @@
 
 namespace karpenko
 {
-  void uniTwo(const char *str1, const char *str2, char *result, size_t result_size)
-  {
-    size_t len1 = std::strlen(str1);
-    size_t len2 = std::strlen(str2);
-    size_t max_len = (len1 > len2) ? len1 : len2;
+  const size_t ALPHABET_SIZE = 26;
+  const size_t ALPHABET_RESULT_SIZE = 27;
 
-    size_t result_index = 0;
-    for (size_t i = 0; i < max_len && result_index < result_size - 1; ++i)
+  void uniTwo(const char * str1, const char * str2, char * result, size_t resultSize)
+  {
+    const size_t len1 = std::strlen(str1);
+    const size_t len2 = std::strlen(str2);
+    const size_t maxLen = (len1 > len2) ? len1 : len2;
+
+    size_t resultIndex = 0;
+    for (size_t i = 0; i < maxLen && resultIndex < resultSize - 1; ++i)
     {
-      if (i < len1 && result_index < result_size - 1)
+      if (i < len1 && resultIndex < resultSize - 1)
       {
-        result[result_index++] = str1[i];
+        result[resultIndex++] = str1[i];
       }
-      if (i < len2 && result_index < result_size - 1)
+      if (i < len2 && resultIndex < resultSize - 1)
       {
-        result[result_index++] = str2[i];
+        result[resultIndex++] = str2[i];
       }
     }
-    result[result_index] = '\0';
+    result[resultIndex] = '\0';
   }
 
-  void shrSym(const char *input, char *result, size_t result_size)
+  void shrSym(const char * input, char * result, size_t resultSize)
   {
-    bool letters[26] = {false};
+    bool letters[ALPHABET_SIZE] = {false};
 
     for (size_t i = 0; input[i] != '\0'; ++i)
     {
-      unsigned char uc = static_cast<unsigned char>(input[i]);
+      const unsigned char uc = static_cast<unsigned char>(input[i]);
       if (std::isalpha(uc))
       {
-        char lower_c = std::tolower(uc);
-        size_t index = lower_c - 'a';
-        if (index < 26)
+        const char lowerC = std::tolower(uc);
+        const size_t index = lowerC - 'a';
+        if (index < ALPHABET_SIZE)
         {
           letters[index] = true;
         }
       }
     }
 
-    size_t result_index = 0;
-    for (int i = 0; i < 26 && result_index < result_size - 1; ++i)
+    size_t resultIndex = 0;
+    for (size_t i = 0; i < ALPHABET_SIZE && resultIndex < resultSize - 1; ++i)
     {
       if (!letters[i])
       {
-        result[result_index++] = 'a' + i;
+        result[resultIndex++] = 'a' + i;
       }
     }
-    result[result_index] = '\0';
+    result[resultIndex] = '\0';
   }
+}
+
+bool myGetline(char * buffer, size_t bufferSize)
+{
+  if (bufferSize == 0)
+  {
+    return false;
+  }
+
+  size_t i = 0;
+  char c;
+
+  while (std::cin.get(c) && c != '\n')
+  {
+    if (i < bufferSize - 1)
+    {
+      buffer[i++] = c;
+    }
+  }
+
+  buffer[i] = '\0';
+
+  return !(std::cin.eof() && i == 0);
 }
 
 int main()
 {
-  std::string line1, line2;
-  if (!std::getline(std::cin, line1))
+  const size_t MAX_LINE_SIZE = 1000;
+  char line1[MAX_LINE_SIZE] = {'\0'};
+  char line2[MAX_LINE_SIZE] = {'\0'};
+
+  if (!myGetline(line1, MAX_LINE_SIZE))
   {
-    std::cerr << "Error reading first string" << "\n";
+    std::cerr << "Error reading first string\n";
     return 1;
   }
-  if (!std::getline(std::cin, line2))
+
+  if (!myGetline(line2, MAX_LINE_SIZE))
   {
-    line2 = "";
+    line2[0] = '\0';
   }
+
   try
   {
-    size_t result1_size = line1.length() + line2.length() + 1;
-    char *result1 = new char[result1_size];
-    karpenko::uniTwo(line1.c_str(), line2.c_str(), result1, result1_size);
-    std::cout << result1 << "\n";
-
-    char *result2 = new char[27];
-    karpenko::shrSym(line1.c_str(), result2, 27);
-    std::cout << result2 << "\n";
-
-    char *result3 = new char[27];
-    karpenko::shrSym(line2.c_str(), result3, 27);
-    std::cout << result3 << "\n";
-
+    const size_t result1Size = std::strlen(line1) + std::strlen(line2) + 1;
+    char * result1 = new char[result1Size];
+    karpenko::uniTwo(line1, line2, result1, result1Size);
+    std::cout << result1 << '\n';
     delete[] result1;
+
+    char * result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
+    karpenko::shrSym(line1, result2, karpenko::ALPHABET_RESULT_SIZE);
+    std::cout << result2 << '\n';
     delete[] result2;
+
+    char * result3 = new char[karpenko::ALPHABET_RESULT_SIZE];
+    karpenko::shrSym(line2, result3, karpenko::ALPHABET_RESULT_SIZE);
+    std::cout << result3 << '\n';
     delete[] result3;
   }
   catch (const std::bad_alloc &)
   {
-    std::cerr << "Error: cannot allocate memory for result" << "\n";
-    return 1;
+    std::cerr << "Error: cannot allocate memory for result\n";
+    return 2;
   }
-  catch (const std::exception &e)
+  catch (const std::exception & e)
   {
-    std::cerr << "Error: " << e.what() << "\n";
-    return 1;
+    std::cerr << "Error: " << e.what() << '\n';
+    return 2;
   }
 
   return 0;
