@@ -170,20 +170,17 @@ int main(int argc, char *argv[])
   }
 
   int read_count = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
+  std::size_t expected_count = rows * cols;
 
-  if (rows > 0 && cols > 0)
+  if (read_count == 0 && expected_count > 0)
   {
-    std::size_t expected_count = rows * cols;
-    if (static_cast<std::size_t>(read_count) != expected_count)
-    {
-      std::cerr << "Error: Expected " << expected_count << " elements, but read " << read_count << "\n";
-      return 2;
-    }
+    std::cerr << "Error: Failed to read matrix\n";
+    return 2;
   }
 
-  else if (read_count != 0)
+  if (read_count > 0 && static_cast<std::size_t>(read_count) != expected_count)
   {
-    std::cerr << "Error: Empty matrix but read " << read_count << " elements\n";
+    std::cerr << "Error: Expected " << expected_count << " elements, but read " << read_count << "\n";
     return 2;
   }
 
