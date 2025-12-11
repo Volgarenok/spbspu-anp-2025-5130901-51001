@@ -92,6 +92,9 @@ namespace karpenko
       return 0;
     }
 
+    std::size_t expected_elements = rows * cols;
+    std::size_t count = 0;
+    
     for (std::size_t i = 0; i < rows; i++)
     {
       for (std::size_t j = 0; j < cols; j++)
@@ -101,9 +104,16 @@ namespace karpenko
           std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
           return 0;
         }
+        count++;
       }
     }
-    return 1;
+    
+    if (rows == 0 && cols == 0)
+    {
+      return 1;
+    }
+
+    return (count == expected_elements) ? 1 : 0;
   }
 
   int writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
@@ -177,7 +187,7 @@ int main(int argc, char *argv[])
   const char *output_file = argv[3];
 
   int input_matrix[karpenko::MAX_SIZE];
-  std::size_t rows, cols;
+  std::size_t rows = 0, cols = 0;
 
   std::ifstream input_stream(input_file);
   if (!input_stream)
@@ -185,30 +195,32 @@ int main(int argc, char *argv[])
     std::cerr << "Error: Cannot open input file '" << input_file << "'\n";
     return 2;
   }
+  
   if (!karpenko::readMatrix(input_stream, input_matrix, rows, cols))
   {
+    std::cerr << "Error: Failed to read matrix from input file\n";
     return 2;
   }
+  
   std::ofstream output_stream(output_file);
   if (!output_stream)
   {
     std::cerr << "Error: Cannot open output file '" << output_file << "'\n";
     return 2;
   }
+  
   if (operation == 1)
   {
-    if (rows > 0 && cols > 0)
-    {
-      karpenko::transformMatrixSpiral(rows, cols, input_matrix);
-    }
     if (rows == 0 || cols == 0)
     {
       output_stream << rows << " " << cols;
     }
     else
     {
+      karpenko::transformMatrixSpiral(rows, cols, input_matrix);
       if (!karpenko::writeMatrix(output_stream, input_matrix, rows, cols))
       {
+        std::cerr << "Error: Failed to write matrix to output file\n";
         return 2;
       }
     }
@@ -225,12 +237,12 @@ int main(int argc, char *argv[])
       karpenko::createSmoothedMatrix(rows, cols, input_matrix, output_matrix);
       if (!karpenko::writeMatrix(output_stream, output_matrix, rows, cols))
       {
+        std::cerr << "Error: Failed to write matrix to output file\n";
         return 2;
       }
     }
   }
 
   std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
-
   return 0;
 }
