@@ -54,5 +54,14 @@ namespace krivoshapov {
 }
 
 int main(){
-    
+    const size_t initSz = 128;
+    char* inBuf = nullptr;
+    char* resbuf = nullptr;
+
+    try {
+        inBuf = new char[initSz];
+    } catch (std::bad_alloc&) {
+        std::cerr << "Memory allocation failed" << std::endl;
+        return 1;
+    }
 }
