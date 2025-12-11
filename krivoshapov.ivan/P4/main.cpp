@@ -4,9 +4,10 @@
 
 namespace Krivoshapov
 {
-    size_t rmvVow(const char* src, char* dst, size_t dstSz)
+    size_t rmvVow(const char *src, char *dst, size_t dstSz)
     {
-        if (src == nullptr || dst == nullptr || dstSz == 0) {
+        if (src == nullptr || dst == nullptr || dstSz == 0)
+        {
             return 0;
         }
 
@@ -14,19 +15,24 @@ namespace Krivoshapov
         size_t writeIdx = 0;
         size_t srcLen = std::strlen(src);
 
-        for (size_t readIdx = 0; readIdx < srcLen; ++readIdx) {
+        for (size_t readIdx = 0; readIdx < srcLen; ++readIdx)
+        {
             int isVowel = 0;
             char currentChar = src[readIdx];
 
-            for (size_t i = 0; vowels[i] != '\0'; ++i) {
-                if (currentChar == vowels[i]) {
+            for (size_t i = 0; vowels[i] != '\0'; ++i)
+            {
+                if (currentChar == vowels[i])
+                {
                     isVowel = 1;
                     break;
                 }
             }
 
-            if (!isVowel) {
-                if (writeIdx + 1 >= dstSz) {
+            if (!isVowel)
+            {
+                if (writeIdx + 1 >= dstSz)
+                {
                     break;
                 }
                 dst[writeIdx] = currentChar;
@@ -38,19 +44,23 @@ namespace Krivoshapov
         return writeIdx;
     }
 
-    int seqSym(const char* str)
+    int seqSym(const char *str)
     {
-        if (str == nullptr) {
+        if (str == nullptr)
+        {
             return 0;
         }
 
         size_t len = std::strlen(str);
-        if (len < 2) {
+        if (len < 2)
+        {
             return 0;
         }
 
-        for (size_t i = 0; i < len - 1; ++i) {
-            if (str[i] == str[i + 1]) {
+        for (size_t i = 0; i < len - 1; ++i)
+        {
+            if (str[i] == str[i + 1])
+            {
                 return 1;
             }
         }
@@ -62,12 +72,15 @@ namespace Krivoshapov
 int main()
 {
     const size_t initSz = 128;
-    char* inBuf = nullptr;
-    char* resBuf = nullptr;
+    char *inBuf = nullptr;
+    char *resBuf = nullptr;
 
-    try {
+    try
+    {
         inBuf = new char[initSz];
-    } catch (std::bad_alloc&) {
+    }
+    catch (std::bad_alloc &)
+    {
         std::cerr << "Memory allocation failed" << std::endl;
         return 1;
     }
@@ -76,14 +89,19 @@ int main()
     size_t strLen = 0;
     char ch;
 
-    while (std::cin.get(ch) && ch != '\n') {
-        if (strLen + 1 >= bufSz) {
+    while (std::cin.get(ch) && ch != '\n')
+    {
+        if (strLen + 1 >= bufSz)
+        {
             size_t newSz = bufSz * 2;
-            char* newBuf = nullptr;
+            char *newBuf = nullptr;
 
-            try {
+            try
+            {
                 newBuf = new char[newSz];
-            } catch (std::bad_alloc&) {
+            }
+            catch (std::bad_alloc &)
+            {
                 delete[] inBuf;
                 std::cerr << "Memory allocation failed" << std::endl;
                 return 1;
@@ -101,9 +119,12 @@ int main()
 
     inBuf[strLen] = '\0';
 
-    try {
+    try
+    {
         resBuf = new char[bufSz];
-    } catch (std::bad_alloc&) {
+    }
+    catch (std::bad_alloc &)
+    {
         delete[] inBuf;
         std::cerr << "Memory allocation failed" << std::endl;
         return 1;
