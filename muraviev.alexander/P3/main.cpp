@@ -67,9 +67,7 @@ namespace muraviev
         dgSum += matrix[j * side + j + i];
       }
 
-      if (maxSum < dgSum) {
-        maxSum = dgSum;
-      }
+      maxSum = std::max(maxSum, dgSum);
     }
 
     size_t count = 0;
@@ -83,17 +81,14 @@ namespace muraviev
         rowIndex++;
       }
 
-      if (maxSum < dgSum) {
-        maxSum = dgSum;
-      }
-
+      maxSum = std::max(maxSum, dgSum);
       count++;
     }
 
     return maxSum;
   }
 
-  void fillMatrix(std::ifstream& fin, int* matrix, size_t rows, size_t columns, size_t& countOfEls)
+  size_t fillMatrix(std::ifstream& fin, int* matrix, size_t rows, size_t columns)
   {
     size_t i = 0;
     for (; i < rows * columns; ++i) {
@@ -101,7 +96,7 @@ namespace muraviev
         break;
       }
     }
-    countOfEls = i;
+    return i;
   }
 
   void outToAFile(std::ostream& out, const int* matrix, size_t rows, size_t columns)
@@ -110,7 +105,6 @@ namespace muraviev
     for (size_t i = 0; i < rows * columns; ++i) {
       out << " " << matrix[i];
     }
-    out << "\n";
   }
 }
 
@@ -128,7 +122,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  char* endptr;
+  char* endptr = nullptr;
   const long num = std::strtol(argv[1], &endptr, 10);
 
   if (*endptr != '\0') {
@@ -180,8 +174,7 @@ int main(int argc, char* argv[])
       matrix = fixed_matrix;
     }
 
-    size_t countOfEls = 0;
-    muraviev::fillMatrix(fin, matrix, rows, columns, countOfEls);
+    size_t countOfEls = muraviev::fillMatrix(fin, matrix, rows, columns);
 
     if (countOfEls != size) {
       cerr << "Error: Not all elements of the matrix are filled in.\n";
