@@ -11,7 +11,7 @@ void hachaturyanov::lowerClock(int* matrix, size_t rows, size_t cols)
 {
   int top = 0, left = 0, bottom = rows - 1, right = cols - 1;
   int d = 1;
-  while(top <= bottom && left <= right) {
+  while (top <= bottom && left <= right) {
     for (size_t i = top * cols + left; i <= top * cols + right; i++) {
       matrix[i] -= d;
       d++;
