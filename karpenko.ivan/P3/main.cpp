@@ -80,7 +80,7 @@ namespace karpenko
       return 0;
     }
 
-    std::size_t read_count = 0;
+    int read_count = 0;
     for (std::size_t i = 0; i < rows; i++)
     {
       for (std::size_t j = 0; j < cols; j++)
@@ -170,16 +170,23 @@ int main(int argc, char *argv[])
   }
 
   int read_count = karpenko::readMatrix(input_stream, input_matrix, rows, cols);
-  if (read_count == 0)
+
+  if (rows > 0 && cols > 0)
   {
-    return 1;
+    std::size_t expected_count = rows * cols;
+    if (static_cast<std::size_t>(read_count) != expected_count)
+    {
+      std::cerr << "Error: Expected " << expected_count << " elements, but read " << read_count << "\n";
+      return 2;
+    }
   }
-  std::size_t expected_count = rows * cols;
-  if (static_cast<std::size_t>(read_count) != expected_count)
+
+  else if (read_count != 0)
   {
-    std::cerr << "Error: Expected " << expected_count << " elements, but read " << read_count << "\n";
+    std::cerr << "Error: Empty matrix but read " << read_count << " elements\n";
     return 2;
   }
+
   std::ofstream output_stream(output_file);
   if (!output_stream)
   {
