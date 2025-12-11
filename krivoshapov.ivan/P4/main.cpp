@@ -64,4 +64,32 @@ int main(){
         std::cerr << "Memory allocation failed" << std::endl;
         return 1;
     }
+
+    size_t bufSz = initSz;
+    size_t strLen = 0;
+    char ch;
+
+    while (std::cin.get(ch) && ch != '\n') {
+        if(strLen + 1 >= bufSz){
+            size_t newSz = bufSz * 2;
+            char* newBuf = nullptr;
+
+            try {
+                newBuf = new char[newSz];
+            } catch (std::bad_alloc&){
+                delete[] inBuf;
+                std::cerr << "Memory allocation failed" << std::endl;
+                return 1;
+            }
+
+            std::memcpy(newBuf, inBuf, strLen);
+            delete[] inBuf;
+            inBuf = newBuf;
+            bufSz = newSz;
+        }
+
+        inBuf[strLen] = ch;
+        ++strLen;
+    }
+    inBuf[strLen] = '\0';
 }
