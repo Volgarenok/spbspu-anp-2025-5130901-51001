@@ -120,7 +120,7 @@ void shaykhraziev::combineStrings(char* sum, const char* a, const char* b)
     cnt++;
   }
 
-  sum[i+cnt] = '\0';
+  // sum[i+cnt] = '\0';
 }
 
 int shaykhraziev::hasSame(const char* a, const char* b)
@@ -166,7 +166,7 @@ int main() {
   }
 
   try {
-    sum = new char[size+1];
+    sum = new char[size];
   } catch (const std::bad_alloc& e) {
     std::cerr << "bad alloc " << e.what() <<"\n";
     delete[] inp1;
