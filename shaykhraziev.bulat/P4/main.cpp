@@ -141,8 +141,8 @@ int shaykhraziev::hasSame(const char* a, const char* b)
 }
 
 int main() {
-  char* inp1;
-  const char* inp2 = "secondcharstar\0";
+  char* inp1 = nullptr;
+  const char* inp2 = "\0";
 
   try {
     inp1 = shaykhraziev::getline(std::cin);
@@ -154,7 +154,14 @@ int main() {
     return 1;
   }
 
-  size_t size = strlen(inp1) + strlen(inp2);
+  size_t inp1len = strlen(inp1), inp2len = strlen(inp2);
+
+  if (!inp1len || !inp2len) {
+    delete[] inp1;
+    return 0;
+  }
+
+  size_t size = inp1len + inp2len;
   char* sum;
 
   if (size == 0) {
