@@ -29,6 +29,7 @@ int main()
   char *withoutVowels = new char[size];
   stepanov::removeVowels(str, withoutVowels);
   std::cout << withoutVowels << '\n';
+  delete[] withoutVowels;
 
   delete[] str;
   return 0;
