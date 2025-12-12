@@ -1,6 +1,3 @@
-//14
-//LAT_RMV #3
-//malloc free
 #include <iostream>
 #include <iomanip>
 
