@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <climits>
 namespace smirnova
 {
   size_t findLocalMaximum(size_t rows, size_t cols, const int *matrix);
@@ -17,7 +16,7 @@ size_t smirnova::findLocalMaximum(size_t rows, size_t cols, const int *matrix)
     {
       int val = matrix[i * cols + j];
       bool flag = true;
-      for (int k = 0; k < 8 && flag; ++k)
+      for (size_t k = 0; k < 8 && flag; ++k)
       {
         size_t ni = i + d[k][0];
         size_t nj = j + d[k][1];
@@ -36,7 +35,7 @@ size_t smirnova::findLocalMaximum(size_t rows, size_t cols, const int *matrix)
 }
 int smirnova::findElementsDiagonal(size_t rows, size_t cols, const int *matrix)
 {
-  size_t n = rows < cols ? rows : cols;
+  size_t n = std::min(rows, cols);
   if (n == 0)
   {
     return 0;
@@ -57,10 +56,7 @@ int smirnova::findElementsDiagonal(size_t rows, size_t cols, const int *matrix)
         ++x;
         ++y;
       }
-      if (diagsum > maxsum)
-      {
-        maxsum = diagsum;
-      }
+      maxsum = std::max(diagsum,maxsum);
     }
   }
   return maxsum;
