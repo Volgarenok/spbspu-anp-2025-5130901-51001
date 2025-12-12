@@ -5,6 +5,7 @@ namespace kitserov
 {
   size_t countRowsWithoutSame(size_t rows, size_t cols, int* matrix);
   bool isUpTriangleMatrix(size_t rows, size_t cols, int* matrix);
+  bool isNumber(const char * str);
 }
 
 size_t kitserov::countRowsWithoutSame(size_t rows, size_t cols, int* matrix)
@@ -26,6 +27,18 @@ size_t kitserov::countRowsWithoutSame(size_t rows, size_t cols, int* matrix)
   }
 
   return answer;
+}
+
+bool kitserov::isNumber(const char* str) {
+  if (str == nullptr || *str == '\0') {
+    return false;
+  }
+  for (int i = 0; str[i] != '\0'; i++) {
+    if (!std::isdigit(static_cast<unsigned char>(str[i]))) {
+      return false;
+    }
+  }
+    return true;
 }
 
 bool kitserov::isUpTriangleMatrix(size_t rows, size_t cols, int* matrix)
@@ -64,9 +77,13 @@ int main(int argc, char* argv[])
     return 1;
   }
 
+  if (!isNumber(argv[1])) {
+    std::cerr << "First argument is not a number\n";
+    return 1;
+  }
   int num = std::atoi(argv[1]);
   if (num != 1 && num != 2) {
-    std::cerr << "First argument incorrect\n";
+    std::cerr << "First argument must be 1 or 2\n";
     return 1;
   }
 
@@ -88,10 +105,10 @@ int main(int argc, char* argv[])
   if (rows == 0 || cols == 0) {
     return 0;
   }
-  int staticMatrix[10000];
+  int fixedSizeMatrix[10000];
   int* matrix = nullptr;
   if (num == 1) {
-    matrix = staticMatrix;
+    matrix = fixedSizeMatrix;
   } else {
     matrix = new int[rows * cols];
   }
@@ -103,7 +120,6 @@ int main(int argc, char* argv[])
   for (size_t i = 0; i < rows * cols; i++) {
     input >> matrix[i];
     if (!input.good()) {
-      input.close();
       if (num == 2) {
         delete[] matrix;
       }
@@ -116,10 +132,9 @@ int main(int argc, char* argv[])
   std::ofstream output(argv[3]);
   size_t result1 = countRowsWithoutSame(rows, cols, matrix);
   bool result2 = isUpTriangleMatrix(rows, cols, matrix);
-  if (num == 1) {
-    output << result1;
-  } else {
-    output << std::boolalpha << result2;
+  output << result1 << '\n';
+  output << std::boolalpha << result2;
+  if (num == 2){
     delete[] matrix;
   }
   return 0;
