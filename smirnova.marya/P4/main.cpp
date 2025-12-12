@@ -85,6 +85,19 @@ char* smirnova::getStr(std::istream &in, bool &flag, size_t &length)
   char* line = nullptr;
   length = getLine(in, line);
 
+  while (line != nullptr && length == 0) {
+    free(line);
+    length = getLine(in, line);
+
+    if (in.eof()) {
+      if (line != nullptr) {
+        free(line);
+      }
+      line = nullptr;
+      break;
+    }
+  }
+
   if (line != nullptr && length > 0) {
     flag = true;
     return line;
@@ -93,7 +106,6 @@ char* smirnova::getStr(std::istream &in, bool &flag, size_t &length)
   if (line != nullptr) {
     free(line);
   }
-
   flag = false;
   return nullptr;
 }
