@@ -150,14 +150,13 @@ int main(int argc, char *argv[])
   }
   volkovich::decreaseSpiral(matrix, rows, columns);
   int res = volkovich::minDiagonal(matrix, rows, columns);
-  std::cout << res;
-
+  output << res << ' ';
   output << rows << ' ' << columns;
   for (size_t i = 0; i < rows * columns; i++)
   {
     output << ' ' << matrix[i];
   }
   delete[] dyn_mtx;
-  std::cout << "\n";
+  output << "\n";
   return 0;
 }
