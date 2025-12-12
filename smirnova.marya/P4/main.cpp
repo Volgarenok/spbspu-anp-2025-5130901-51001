@@ -148,44 +148,33 @@ int main()
   size_t lengths[2] = {0, 0};
 
   try {
-    int countLines = 0;
     bool flag = false;
+    char* line = smirnova::getStr(std::cin, flag, lengths[0]);
 
-    while (countLines < 2)
+    if (!flag)
     {
-      char* line = smirnova::getStr(std::cin, flag, lengths[countLines]);
-
-      if (!flag)
-      {
-        std::cerr << "Memory allocation failed\n";
-        if (lines[0]) {
-          free(lines[0]);
-        }
-        return 1;
-      }
-
-      if (!line) {
-        if (countLines == 0) {
-          std::cerr << "No input provided.\n";
-          return 1;
-        }
-        break;
-      }
-
-      lines[countLines++] = line;
-    }
-
-    if (countLines == 1) {
-      lines[1] = static_cast<char*>(malloc(8));
-      if (!lines[1]) {
-        std::cerr << "Memory allocation failed\n";
+      std::cerr << "Memory allocation failed\n";
+      if (lines[0]) {
         free(lines[0]);
-        return 1;
       }
-      std::strcpy(lines[1], "default");
-      lengths[1] = 7;
-      countLines++;
+      return 1;
     }
+
+    if (!line) {
+      std::cerr << "No input provided.\n";
+      return 1;
+    }
+
+    lines[0] = line;
+
+    lines[1] = static_cast<char*>(malloc(8));
+    if (!lines[1]) {
+      std::cerr << "Memory allocation failed\n";
+      free(lines[0]);
+      return 1;
+    }
+    std::strcpy(lines[1], "default");
+    lengths[1] = 7;
 
     int result1 = 0;
     smirnova::compareStrings(lines[0], lines[1], &result1);
