@@ -13,11 +13,11 @@ void kitserov::missLetters(const char* source, char* destination, size_t size)
   size_t dstIndex = 0;
   size_t alphavitSize = 27;
   char alphavit[alphavitSize] = "abcdefghijklmnopqrstuvwxyz";
-  for (size_t j = 0; j < 27; ++j){
-    unsigned char c = static_cast<unsigned char>(alphavit[j]);
+  for (size_t j = 0; j < 27; ++j) {
+    unsigned char c = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
     for (size_t i = 0; i < size; ++i) {
-      unsigned char cc = static_cast<unsigned char>(std::tolower(source[i]));
+      unsigned char cc = static_cast< unsigned char >(std::tolower(source[i]));
       if (c == cc) {
         charInData = true;
         break;
