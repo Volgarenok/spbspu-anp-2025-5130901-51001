@@ -9,10 +9,7 @@ namespace karpenko
   const std::size_t kMaxDimension = 100;
   const std::size_t kMaxSize = kMaxDimension * kMaxDimension;
 
-  void transformMatrixSpiral(
-      std::size_t rows,
-      std::size_t cols,
-      int matrix[])
+  void transformMatrixSpiral(std::size_t rows, std::size_t cols, int matrix[])
   {
     if (rows == 0 || cols == 0)
     {
@@ -59,11 +56,7 @@ namespace karpenko
     }
   }
 
-  void createSmoothedMatrix(
-      std::size_t rows,
-      std::size_t cols,
-      const int matrix[],
-      double smoothed[])
+  void createSmoothedMatrix(std::size_t rows, std::size_t cols, const int matrix[], double smoothed[])
   {
     if (rows == 0 || cols == 0)
     {
@@ -105,11 +98,7 @@ namespace karpenko
     }
   }
 
-  int readMatrix(
-      std::istream &stream,
-      int matrix[],
-      std::size_t &rows,
-      std::size_t &cols)
+  int readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
   {
     if (!(stream >> rows >> cols))
     {
@@ -147,11 +136,7 @@ namespace karpenko
     return (count == expectedElements) ? 1 : 0;
   }
 
-  int writeMatrix(
-      std::ostream &stream,
-      const int matrix[],
-      std::size_t rows,
-      std::size_t cols)
+  int writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
   {
     stream << rows << " " << cols;
     for (std::size_t i = 0; i < rows; ++i)
@@ -164,11 +149,7 @@ namespace karpenko
     return stream.good() ? 1 : 0;
   }
 
-  int writeMatrix(
-      std::ostream &stream,
-      const double matrix[],
-      std::size_t rows,
-      std::size_t cols)
+  int writeMatrix(std::ostream &stream, const double matrix[], std::size_t rows, std::size_t cols)
   {
     stream << std::fixed << std::setprecision(1) << rows << " " << cols;
     for (std::size_t i = 0; i < rows; ++i)
