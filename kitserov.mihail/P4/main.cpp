@@ -5,26 +5,27 @@ namespace kitserov
 {
   char* getline(std::istream& in, size_t& s);
   void removeLetters(const char* source, char* destination, size_t size);
-  void missLetters(const char* source, char* destination, size_t size);
+  void missLetters(const char* source, char* destination);
 }
 
-void kitserov::missLetters(const char* source, char* destination, size_t size)
+void kitserov::missLetters(const char* source, char* destination)
 {
   size_t dstIndex = 0;
   size_t alphavitSize = 27;
   char alphavit[alphavitSize] = "abcdefghijklmnopqrstuvwxyz";
   for (size_t j = 0; j < 27; ++j) {
-    unsigned char c = static_cast< unsigned char >(alphavit[j]);
+    unsigned char alphavit_char = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
-    for (size_t i = 0; i < size; ++i) {
-      unsigned char cc = static_cast< unsigned char >(std::tolower(source[i]));
-      if (c == cc) {
+    size_t i = 0;
+    while (static_cast< unsigned char >(source[i]) != '\0') {
+      unsigned char source_char = static_cast< unsigned char >(std::tolower(source[i++]));
+      if (alphavit_char == source_char) {
         charInData = true;
         break;
       }
     }
     if (!charInData) {
-      destination[dstIndex++] = c;
+      destination[dstIndex++] = alphavit_char;
     }
   }
   destination[dstIndex] = '\0';
@@ -35,8 +36,8 @@ void kitserov::removeLetters(const char* source, char* destination, size_t size)
   size_t srcIndex = 0;
   size_t dstIndex = 0;
   while (source[srcIndex] != '\0' && dstIndex < size - 1) {
-    unsigned char c = static_cast<unsigned char>(source[srcIndex]);
-    bool isLetter = (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z');
+    unsigned char c = static_cast< unsigned char >(source[srcIndex]);
+    bool isLetter = std::isalpha(c) != 0;
     if (!isLetter) {
       destination[dstIndex] = source[srcIndex];
       dstIndex++;
@@ -60,7 +61,7 @@ char* kitserov::getline(std::istream& in, size_t& s)
   in >> letter;
   while (!(in.fail()) && letter != '\n') {
     if (i == size) {
-      char* temp = static_cast<char*>(malloc(size * 2 + 1));
+      char* temp = static_cast< char* >(malloc(size * 2 + 1));
       for (size_t j = 0; j < size; j++) {
         temp[j] = data[j];
       }
@@ -114,7 +115,7 @@ int main()
     free(removedLetters);
     return 1;
   }
-  kitserov::missLetters(data, missedLetters, s + 1);
+  kitserov::missLetters(data, missedLetters);
 
   std::cout << missedLetters << "\n";
   std::cout << removedLetters << "\n";
