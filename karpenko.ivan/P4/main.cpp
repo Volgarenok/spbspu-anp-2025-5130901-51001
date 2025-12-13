@@ -51,7 +51,7 @@ namespace karpenko
 
     for (size_t i = 0; input[i] != '\0'; ++i)
     {
-      const unsigned char uc = static_cast<unsigned char>(input[i]);
+      const unsigned char uc = static_cast< unsigned char >(input[i]);
       if (std::isalpha(uc))
       {
         const char lowerC = std::tolower(uc);
@@ -73,11 +73,18 @@ namespace karpenko
     }
     result[resultIndex] = '\0';
   }
-  bool myGetline(char *buffer, size_t bufferSize)
+
+  char *myGetline()
   {
-    if (bufferSize == 0)
+    const size_t INITIAL_BUFFER_SIZE = 16;
+    const size_t GROW_FACTOR = 2;
+
+    size_t bufferSize = INITIAL_BUFFER_SIZE;
+    char *buffer = new char[bufferSize];
+
+    if (!buffer)
     {
-      return false;
+      return nullptr;
     }
 
     size_t i = 0;
@@ -85,31 +92,43 @@ namespace karpenko
 
     while (std::cin.get(c) && c != '\n')
     {
-      if (i < bufferSize - 1)
+      if (i >= bufferSize - 1)
       {
-        buffer[i++] = c;
-      }
-      else
-      {
-        while (std::cin.get(c) && c != '\n')
+        size_t newSize = bufferSize * GROW_FACTOR;
+        char *newBuffer = new char[newSize];
+
+        if (!newBuffer)
         {
+          delete[] buffer;
+          return nullptr;
         }
-        return false;
+
+        std::memcpy(newBuffer, buffer, i);
+        delete[] buffer;
+        buffer = newBuffer;
+        bufferSize = newSize;
       }
+
+      buffer[i++] = c;
     }
 
     buffer[i] = '\0';
 
-    return !(std::cin.eof() && i == 0);
+    if (std::cin.eof() && i == 0)
+    {
+      delete[] buffer;
+      return nullptr;
+    }
+
+    return buffer;
   }
 }
 
 int main()
 {
-  const size_t MAX_LINE_SIZE = 1000;
-  char line1[MAX_LINE_SIZE] = {'\0'};
+  char *line1 = karpenko::myGetline();
 
-  if (!myGetline(line1, MAX_LINE_SIZE))
+  if (!line1)
   {
     std::cerr << "Error reading string\n";
     return 1;
@@ -127,6 +146,7 @@ int main()
 
     if (result1 == nullptr)
     {
+      delete[] line1;
       std::cerr << "Error: cannot allocate memory for result\n";
       return 1;
     }
@@ -138,6 +158,7 @@ int main()
 
     if (result2 == nullptr)
     {
+      delete[] line1;
       delete[] result1;
       std::cerr << "Error: cannot allocate memory for result\n";
       return 1;
@@ -146,11 +167,13 @@ int main()
     karpenko::shrSym(line1, result2, karpenko::ALPHABET_RESULT_SIZE);
     std::cout << result2 << '\n';
 
+    delete[] line1;
     delete[] result1;
     delete[] result2;
   }
   catch (const std::bad_alloc &)
   {
+    delete[] line1;
     if (result1 != nullptr)
     {
       delete[] result1;
@@ -164,6 +187,7 @@ int main()
   }
   catch (const std::exception &e)
   {
+    delete[] line1;
     if (result1 != nullptr)
     {
       delete[] result1;
