@@ -36,8 +36,8 @@ void kitserov::removeLetters(const char* source, char* destination, size_t size)
   size_t srcIndex = 0;
   size_t dstIndex = 0;
   while (source[srcIndex] != '\0' && dstIndex < size - 1) {
-    unsigned char c = static_cast< unsigned char >(source[srcIndex]);
-    bool isLetter = std::isalpha(c) != 0;
+    unsigned char source_char = static_cast< unsigned char >(source[srcIndex]);
+    bool isLetter = std::isalpha(source_char) != 0;
     if (!isLetter) {
       destination[dstIndex] = source[srcIndex];
       dstIndex++;
@@ -54,14 +54,14 @@ char* kitserov::getline(std::istream& in, size_t& s)
     in >> std::noskipws;
   }
   char* data = nullptr;
-  data = static_cast<char*>(malloc(2));
+  data = reinterpret_cast< char* >(malloc(2));
   size_t size = 1;
   char letter;
   size_t i = 0;
   in >> letter;
   while (!(in.fail()) && letter != '\n') {
     if (i == size) {
-      char* temp = static_cast< char* >(malloc(size * 2 + 1));
+      char* temp = reinterpret_cast< char* >(malloc(size * 2 + 1));
       for (size_t j = 0; j < size; j++) {
         temp[j] = data[j];
       }
@@ -100,7 +100,7 @@ int main()
     return 1;
   }
 
-  char* removedLetters = static_cast<char*>(malloc(s + 1));
+  char* removedLetters = reinterpret_cast< char* >(malloc(s + 1));
   if (!removedLetters) {
     std::cerr << "Failed memory allocation";
     free(data);
@@ -108,7 +108,7 @@ int main()
   }
   kitserov::removeLetters(data, removedLetters, s + 1);
 
-  char* missedLetters = static_cast<char*>(malloc(28));
+  char* missedLetters = reinterpret_cast< char* >(malloc(28));
   if (!missedLetters) {
     std::cerr << "Failed memory allocation";
     free(data);
