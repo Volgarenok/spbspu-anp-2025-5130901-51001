@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 {
   if (argc != 4)
   {
-    std::cerr << "Usage: " << argv[0] << " num input output\n";
+    std::cerr << "Usage: " << (argc > 0 ? argv[0] : "program") << " num input output\n";
     std::cerr << "  num: 1 for spiral transformation, 2 for matrix smoothing\n";
     return 1;
   }
