@@ -51,7 +51,7 @@ namespace karpenko
 
     for (size_t i = 0; input[i] != '\0'; ++i)
     {
-      const unsigned char uc = static_cast< unsigned char >(input[i]);
+      const unsigned char uc = static_cast<unsigned char>(input[i]);
       if (std::isalpha(uc))
       {
         const char lowerC = std::tolower(uc);
@@ -82,11 +82,6 @@ namespace karpenko
     size_t bufferSize = INITIAL_BUFFER_SIZE;
     char *buffer = new char[bufferSize];
 
-    if (!buffer)
-    {
-      return nullptr;
-    }
-
     size_t i = 0;
     char c;
 
@@ -96,12 +91,6 @@ namespace karpenko
       {
         size_t newSize = bufferSize * GROW_FACTOR;
         char *newBuffer = new char[newSize];
-
-        if (!newBuffer)
-        {
-          delete[] buffer;
-          return nullptr;
-        }
 
         std::memcpy(newBuffer, buffer, i);
         delete[] buffer;
@@ -143,27 +132,10 @@ int main()
   {
     const size_t result1Size = std::strlen(line1) + std::strlen(line2);
     result1 = new char[result1Size + 1]();
-
-    if (result1 == nullptr)
-    {
-      delete[] line1;
-      std::cerr << "Error: cannot allocate memory for result\n";
-      return 1;
-    }
-
     karpenko::uniTwo(line1, line2, result1, result1Size + 1);
     std::cout << result1 << '\n';
 
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
-
-    if (result2 == nullptr)
-    {
-      delete[] line1;
-      delete[] result1;
-      std::cerr << "Error: cannot allocate memory for result\n";
-      return 1;
-    }
-
     karpenko::shrSym(line1, result2, karpenko::ALPHABET_RESULT_SIZE);
     std::cout << result2 << '\n';
 
