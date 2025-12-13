@@ -2,8 +2,7 @@
 #include <istream>
 #include <cstring>
 
-namespace Krivoshapov
-{
+namespace Krivoshapov {
     size_t rmvVow(const char *src, char *dst, size_t dstSz)
     {
         if (src == nullptr || dst == nullptr || dstSz == 0)
