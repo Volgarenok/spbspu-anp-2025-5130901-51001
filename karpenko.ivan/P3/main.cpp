@@ -103,13 +103,11 @@ namespace karpenko
   {
     if (!(stream >> rows >> cols))
     {
-      std::cerr << "Error: Invalid matrix dimensions\n";
       return 0;
     }
 
     if (rows > kMaxDimension || cols > kMaxDimension)
     {
-      std::cerr << "Error: Matrix dimensions exceed maximum allowed size\n";
       return 0;
     }
 
@@ -122,7 +120,6 @@ namespace karpenko
       {
         if (!(stream >> matrix[i * cols + j]))
         {
-          std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
           return 0;
         }
         ++count;
