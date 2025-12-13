@@ -217,10 +217,13 @@ int main(int argc, char *argv[])
 
     std::size_t readCount = karpenko::readMatrix(inputStream, inputMatrix, rows, cols);
 
-    if (readCount == 0 && (rows != 0 || cols != 0))
+    if (readCount == 0)
     {
-      std::cerr << "Error: Invalid matrix dimensions\n";
-      return 2;
+      if (!inputStream && !(rows == 0 && cols == 0))
+      {
+        std::cerr << "Error: Invalid matrix dimensions or file format\n";
+        return 2;
+      }
     }
 
     if (rows > karpenko::kMaxDimension || cols > karpenko::kMaxDimension)
@@ -230,7 +233,7 @@ int main(int argc, char *argv[])
     }
 
     std::size_t expectedElements = rows * cols;
-    if (readCount != expectedElements && (rows != 0 || cols != 0))
+    if (readCount != expectedElements)
     {
       std::cerr << "Error: Cannot read all matrix elements\n";
       return 2;
@@ -279,7 +282,9 @@ int main(int argc, char *argv[])
   if (rows == 0 || cols == 0)
   {
     outputStream << rows << " " << cols;
-    std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully (empty matrix)\n";
+    std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
+              << " completed successfully (empty matrix)\n";
+
     if (operation == 2)
     {
       delete[] inputMatrix;
@@ -318,6 +323,7 @@ int main(int argc, char *argv[])
     delete[] inputMatrix;
   }
 
-  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
+  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
+            << " completed successfully\n";
   return 0;
 }
