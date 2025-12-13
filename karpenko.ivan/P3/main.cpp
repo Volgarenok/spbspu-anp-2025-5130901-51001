@@ -217,6 +217,13 @@ int main(int argc, char *argv[])
     return 2;
   }
 
+  std::ofstream outputStream(outputFile);
+  if (!outputStream)
+  {
+    std::cerr << "Error: Cannot open output file '" << outputFile << "'\n";
+    return 2;
+  }
+
   if (!(inputStream >> rows >> cols))
   {
     std::cerr << "Error: Invalid matrix dimensions\n";
@@ -229,86 +236,69 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  std::size_t matrixSize = rows * cols;
-
-  std::ofstream outputStream(outputFile);
-  if (!outputStream)
+  if (rows == 0 || cols == 0)
   {
-    std::cerr << "Error: Cannot open output file '" << outputFile << "'\n";
-    return 2;
+    outputStream << rows << " " << cols;
+    std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully (empty matrix)\n";
+    return 0;
   }
 
   if (operation == 1)
   {
-    if (rows == 0 || cols == 0)
-    {
-      outputStream << rows << " " << cols;
-    }
-    else
-    {
-      int *dynamicMatrix = new int[matrixSize];
+    int *dynamicMatrix = new int[rows * cols];
 
-      for (std::size_t i = 0; i < rows; ++i)
+    for (std::size_t i = 0; i < rows; ++i)
+    {
+      for (std::size_t j = 0; j < cols; ++j)
       {
-        for (std::size_t j = 0; j < cols; ++j)
+        if (!(inputStream >> dynamicMatrix[i * cols + j]))
         {
-          if (!(inputStream >> dynamicMatrix[i * cols + j]))
-          {
-            std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
-            delete[] dynamicMatrix;
-            return 2;
-          }
+          std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
+          delete[] dynamicMatrix;
+          return 2;
         }
       }
-
-      karpenko::transformMatrixSpiral(rows, cols, dynamicMatrix);
-      karpenko::writeMatrix(outputStream, dynamicMatrix, rows, cols);
-
-      if (!outputStream)
-      {
-        std::cerr << "Error: Failed to write matrix to output file\n";
-        delete[] dynamicMatrix;
-        return 2;
-      }
-
-      delete[] dynamicMatrix;
     }
+
+    karpenko::transformMatrixSpiral(rows, cols, dynamicMatrix);
+    karpenko::writeMatrix(outputStream, dynamicMatrix, rows, cols);
+
+    if (!outputStream)
+    {
+      std::cerr << "Error: Failed to write matrix to output file\n";
+      delete[] dynamicMatrix;
+      return 2;
+    }
+
+    delete[] dynamicMatrix;
   }
   else
   {
-    if (rows == 0 || cols == 0)
-    {
-      outputStream << rows << " " << cols;
-    }
-    else
-    {
-      int staticMatrix[karpenko::kMaxSize];
-      double outputMatrix[karpenko::kMaxSize];
+    int staticMatrix[karpenko::kMaxSize];
+    double outputMatrix[karpenko::kMaxSize];
 
-      for (std::size_t i = 0; i < rows; ++i)
+    for (std::size_t i = 0; i < rows; ++i)
+    {
+      for (std::size_t j = 0; j < cols; ++j)
       {
-        for (std::size_t j = 0; j < cols; ++j)
+        if (!(inputStream >> staticMatrix[i * cols + j]))
         {
-          if (!(inputStream >> staticMatrix[i * cols + j]))
-          {
-            std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
-            return 2;
-          }
+          std::cerr << "Error: Cannot read element at (" << i << ", " << j << ")\n";
+          return 2;
         }
       }
+    }
 
-      karpenko::createSmoothedMatrix(rows, cols, staticMatrix, outputMatrix);
-      karpenko::writeMatrix(outputStream, outputMatrix, rows, cols);
+    karpenko::createSmoothedMatrix(rows, cols, staticMatrix, outputMatrix);
+    karpenko::writeMatrix(outputStream, outputMatrix, rows, cols);
 
-      if (!outputStream)
-      {
-        std::cerr << "Error: Failed to write matrix to output file\n";
-        return 2;
-      }
+    if (!outputStream)
+    {
+      std::cerr << "Error: Failed to write matrix to output file\n";
+      return 2;
     }
   }
 
-  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
-            << " completed successfully\n";
+  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
   return 0;
 }
