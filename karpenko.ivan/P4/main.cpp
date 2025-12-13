@@ -152,14 +152,6 @@ int main()
     std::cerr << "Error: cannot allocate memory for result\n";
     return 1;
   }
-  catch (const std::exception &e)
-  {
-    delete[] line1;
-    delete[] result1;
-    delete[] result2;
-    std::cerr << "Error: " << e.what() << '\n';
-    return 1;
-  }
 
   return 0;
 }
