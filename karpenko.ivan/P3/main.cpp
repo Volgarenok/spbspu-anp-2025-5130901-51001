@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <cstddef>
+#include <memory>
 
 namespace karpenko
 {
@@ -171,7 +172,7 @@ namespace karpenko
     }
 
     char *endptr = nullptr;
-    std::strtol(str, &endptr, 10);
+    std::strtol(str, std::addressof(endptr), 10);
 
     if (*endptr != '\0')
     {
