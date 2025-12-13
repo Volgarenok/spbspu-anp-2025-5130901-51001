@@ -2,7 +2,7 @@
 #include <istream>
 #include <cstring>
 
-namespace Krivoshapov {
+namespace krivoshapov {
     size_t rmvVow(const char *src, char *dst, size_t dstSz)
     {
         if (src == nullptr || dst == nullptr || dstSz == 0)
@@ -129,10 +129,10 @@ int main()
         return 1;
     }
 
-    Krivoshapov::rmvVow(inBuf, resBuf, bufSz);
+    krivoshapov::rmvVow(inBuf, resBuf, bufSz);
     std::cout << resBuf << std::endl;
 
-    int seqRes = Krivoshapov::seqSym(inBuf);
+    int seqRes = krivoshapov::seqSym(inBuf);
     std::cout << seqRes << std::endl;
 
     delete[] inBuf;
