@@ -26,7 +26,8 @@ int main()
   stepanov::toLower(str);
   std::cout << str << '\n';
 
-  char *withoutVowels = new char[size];
+  char* withoutVowels = new char[size + 1];
+  withoutVowels[size] = '\0';
   stepanov::removeVowels(str, withoutVowels);
   std::cout << withoutVowels << '\n';
   delete[] withoutVowels;
@@ -43,14 +44,13 @@ char* stepanov::getLine(std::istream& in, size_t& size)
 
   char c = in.get();
   while (!in.eof() && c != '\n') {
-    c = in.get();
     if (size + 1 >= capacity) {
       char* new_mem = nullptr;
       try {
         new_mem = new char[capacity + step];
-      } catch (std::bad_alloc& e) {
+      } catch (const std::bad_alloc& e) {
         delete[] mem;
-        throw e;
+        throw;
       }
       capacity += step;
       for (size_t i = 0; i < size; i++) {
@@ -61,6 +61,7 @@ char* stepanov::getLine(std::istream& in, size_t& size)
     }
     mem[size] = c;
     size++;
+    c = in.get();
   }
   mem[size] = '\0';
   return mem;
