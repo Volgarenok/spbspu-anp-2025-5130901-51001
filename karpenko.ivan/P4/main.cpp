@@ -51,7 +51,7 @@ namespace karpenko
 
     for (size_t i = 0; input[i] != '\0'; ++i)
     {
-      const unsigned char uc = static_cast<unsigned char>(input[i]);
+      const unsigned char uc = static_cast< unsigned char >(input[i]);
       if (std::isalpha(uc))
       {
         const char lowerC = std::tolower(uc);
@@ -146,28 +146,16 @@ int main()
   catch (const std::bad_alloc &)
   {
     delete[] line1;
-    if (result1 != nullptr)
-    {
-      delete[] result1;
-    }
-    if (result2 != nullptr)
-    {
-      delete[] result2;
-    }
+    delete[] result1;
+    delete[] result2;
     std::cerr << "Error: cannot allocate memory for result\n";
     return 1;
   }
   catch (const std::exception &e)
   {
     delete[] line1;
-    if (result1 != nullptr)
-    {
-      delete[] result1;
-    }
-    if (result2 != nullptr)
-    {
-      delete[] result2;
-    }
+    delete[] result1;
+    delete[] result2;
     std::cerr << "Error: " << e.what() << '\n';
     return 1;
   }
