@@ -43,7 +43,7 @@ namespace karpenko
     result[resultIndex] = '\0';
   }
 
-  void shrSym(const char *input, char *result, size_t resultSize)
+  void shrSym(const char *input, char *result)
   {
     bool letters[ALPHABET_SIZE] = {false};
 
@@ -62,7 +62,7 @@ namespace karpenko
     }
 
     size_t resultIndex = 0;
-    for (size_t i = 0; i < ALPHABET_SIZE && resultIndex < resultSize - 1; ++i)
+    for (size_t i = 0; i < ALPHABET_SIZE; ++i)
     {
       if (!letters[i])
       {
@@ -137,7 +137,7 @@ int main()
     std::cout << result1 << '\n';
 
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
-    karpenko::shrSym(line1, result2, karpenko::ALPHABET_RESULT_SIZE);
+    karpenko::shrSym(line1, result2);
     std::cout << result2 << '\n';
 
     delete[] line1;
