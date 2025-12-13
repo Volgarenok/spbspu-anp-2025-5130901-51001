@@ -145,6 +145,7 @@ int main(int argc, char *argv[])
   std::ofstream output(argv[3]);
   if (!output)
   {
+    delete[] dyn_mtx;
     std::cerr << "Bad file" << "\n";
     return 1;
   }
