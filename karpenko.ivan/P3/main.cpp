@@ -315,7 +315,6 @@ int main(int argc, char *argv[])
     delete[] inputMatrix;
   }
 
-  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
-            << " completed successfully\n";
+  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
   return 0;
 }
