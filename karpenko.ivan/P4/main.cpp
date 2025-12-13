@@ -7,10 +7,8 @@ namespace karpenko
   const size_t ALPHABET_SIZE = 26;
   const size_t ALPHABET_RESULT_SIZE = 27;
 
-  void uniTwo(const char *str1, const char *str2, char *result, size_t resultSize)
+  void uniTwo(const char *str1, size_t len1, const char *str2, size_t len2, char *result, size_t resultSize)
   {
-    const size_t len1 = std::strlen(str1);
-    const size_t len2 = std::strlen(str2);
     const size_t maxLen = (len1 > len2) ? len1 : len2;
 
     size_t resultIndex = 0;
@@ -74,7 +72,7 @@ namespace karpenko
     result[resultIndex] = '\0';
   }
 
-  char *myGetline()
+  char *myGetline(size_t &length)
   {
     const size_t INITIAL_BUFFER_SIZE = 16;
     const size_t GROW_FACTOR = 2;
@@ -102,6 +100,7 @@ namespace karpenko
     }
 
     buffer[i] = '\0';
+    length = i;
 
     if (std::cin.eof() && i == 0)
     {
@@ -115,7 +114,8 @@ namespace karpenko
 
 int main()
 {
-  char *line1 = karpenko::myGetline();
+  size_t line1Length = 0;
+  char *line1 = karpenko::myGetline(line1Length);
 
   if (!line1)
   {
@@ -124,15 +124,16 @@ int main()
   }
 
   const char line2[] = "def_";
+  const size_t line2Length = sizeof(line2) - 1;
 
   char *result1 = nullptr;
   char *result2 = nullptr;
 
   try
   {
-    const size_t result1Size = std::strlen(line1) + std::strlen(line2);
+    const size_t result1Size = line1Length + line2Length;
     result1 = new char[result1Size + 1]();
-    karpenko::uniTwo(line1, line2, result1, result1Size + 1);
+    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1, result1Size + 1);
     std::cout << result1 << '\n';
 
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
