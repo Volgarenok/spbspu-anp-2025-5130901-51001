@@ -22,7 +22,7 @@ char* muraviev::getline(std::istream& in, size_t& size)
   bool is_skips = in.flags() & std::ios_base::skipws;
   size_t buffer = 16;
   size_t len = 0;
-  char* line = (char*)malloc(sizeof(char) * buffer);
+  char* line = static_cast<char*>(malloc(sizeof(char) * buffer));
 
   if (!line) {
     size = 0;
@@ -41,7 +41,7 @@ char* muraviev::getline(std::istream& in, size_t& size)
 
     if (len + 1 >= buffer) {
       size_t new_buffer = buffer * 2;
-      char* tmp_line = (char*)malloc(sizeof(char) * new_buffer);
+      char* tmp_line = static_cast<char*>(malloc(sizeof(char) * new_buffer));
 
       if (!tmp_line) {
         free(line);
@@ -135,7 +135,7 @@ int main()
 
   const char* line2 = "def ";
   size_t size_2 = std::strlen(line2);
-  char* inter_tmp = (char*)malloc(sizeof(char) * (size_1 + size_2 + 1));
+  char* inter_tmp = static_cast<char*>(malloc(sizeof(char) * (size_1 + size_2 + 1)));
 
   if (!inter_tmp) {
     std::cerr << "Allocation error\n";
@@ -156,7 +156,7 @@ int main()
     }
   }
 
-  char* withDigs_tmp = (char*)malloc(sizeof(char) * (size_1 + digsFound + 1));
+  char* withDigs_tmp = static_cast<char*>(malloc(sizeof(char) * (size_1 + digsFound + 1)));
 
   if (!withDigs_tmp) {
     std::cerr << "Allocation error\n";
