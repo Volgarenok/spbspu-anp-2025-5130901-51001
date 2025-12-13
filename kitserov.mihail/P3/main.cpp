@@ -107,11 +107,12 @@ int main(int argc, char* argv[])
   if (num == 1) {
     matrix = fixedSizeMatrix;
   } else {
-    matrix = new int[rows * cols];
-  }
-  if (matrix == nullptr) {
-    std::cerr << "Error allocating memory\n";
-    return 2;
+    try {
+      matrix = new int[rows * cols];
+    } catch (...) {
+      std::cerr << "Error allocating memory\n";
+      return 2;
+    }
   }
 
   for (size_t i = 0; i < rows * cols; i++) {
@@ -130,8 +131,8 @@ int main(int argc, char* argv[])
   size_t result1 = countRowsWithoutSame(rows, cols, matrix);
   bool result2 = isUpTriangleMatrix(rows, cols, matrix);
   output << result1 << '\n';
-  output << std::boolalpha << result2;
-  if (num == 2){
+  output << std::boolalpha << result2 << '\0';
+  if (num == 2) {
     delete[] matrix;
   }
   return 0;
