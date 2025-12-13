@@ -219,9 +219,9 @@ int main(int argc, char *argv[])
 
     if (readCount == 0)
     {
-      if (!inputStream && !(rows == 0 && cols == 0))
+      if (inputStream.fail() && !inputStream.eof())
       {
-        std::cerr << "Error: Invalid matrix dimensions or file format\n";
+        std::cerr << "Error: Invalid matrix dimensions\n";
         return 2;
       }
     }
@@ -282,8 +282,7 @@ int main(int argc, char *argv[])
   if (rows == 0 || cols == 0)
   {
     outputStream << rows << " " << cols;
-    std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
-              << " completed successfully (empty matrix)\n";
+    std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully (empty matrix)\n";
 
     if (operation == 2)
     {
@@ -323,7 +322,6 @@ int main(int argc, char *argv[])
     delete[] inputMatrix;
   }
 
-  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing")
-            << " completed successfully\n";
+  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
   return 0;
 }
