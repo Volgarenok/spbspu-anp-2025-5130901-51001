@@ -51,7 +51,7 @@ namespace karpenko
 
     for (size_t i = 0; input[i] != '\0'; ++i)
     {
-      const unsigned char uc = static_cast<unsigned char>(input[i]);
+      const unsigned char uc = static_cast< unsigned char >(input[i]);
       if (std::isalpha(uc))
       {
         const char lowerC = std::tolower(uc);
