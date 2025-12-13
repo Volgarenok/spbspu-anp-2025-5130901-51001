@@ -12,9 +12,8 @@ namespace krivoshapov {
 
         const char vowels[] = "aeiouyAEIOUY";
         size_t writeIdx = 0;
-        size_t srcLen = std::strlen(src);
 
-        for (size_t readIdx = 0; readIdx < srcLen; ++readIdx)
+        for (size_t readIdx = 0; src[readIdx] != '\0'; ++readIdx)
         {
             int isVowel = 0;
             char currentChar = src[readIdx];
@@ -43,15 +42,9 @@ namespace krivoshapov {
         return writeIdx;
     }
 
-    int seqSym(const char *str)
+    int seqSym(const char *str, size_t len)
     {
-        if (str == nullptr)
-        {
-            return 0;
-        }
-
-        size_t len = std::strlen(str);
-        if (len < 2)
+        if (str == nullptr || len < 2)
         {
             return 0;
         }
@@ -68,72 +61,84 @@ namespace krivoshapov {
     }
 }
 
-int main()
+char* readString (size_t& size, size_t& capacity)
 {
-    const size_t initSz = 128;
-    char *inBuf = nullptr;
-    char *resBuf = nullptr;
+    const size_t INIT_CAPACITY = 128;
+    char* buffer = nullptr;
 
     try
     {
-        inBuf = new char[initSz];
+        buffer = new char[INIT_CAPACITY];
     }
-    catch (std::bad_alloc &)
+    catch (const std::bad_alloc&)
     {
-        std::cerr << "Memory allocation failed" << std::endl;
-        return 1;
+        std::cerr << "Memory allocation failde\n";
+        return nullptr;
     }
 
-    size_t bufSz = initSz;
-    size_t strLen = 0;
+    capacity = INIT_CAPACITY;
+    size = 0;
     char ch;
 
     while (std::cin.get(ch) && ch != '\n')
     {
-        if (strLen + 1 >= bufSz)
+        if (size + 1 >= capacity)
         {
-            size_t newSz = bufSz * 2;
-            char *newBuf = nullptr;
+            size_t newCapacity = capacity * 2;
+            char* newBuf = nullptr;
 
             try
             {
-                newBuf = new char[newSz];
+                newBuf = new char[newCapacity];
             }
-            catch (std::bad_alloc &)
+            catch (const std::bad_alloc&)
             {
-                delete[] inBuf;
-                std::cerr << "Memory allocation failed" << std::endl;
-                return 1;
+                delete[] buffer;
+                std::cerr << "Memory allocation failde\n";
+                return nullptr;
             }
-
-            std::memcpy(newBuf, inBuf, strLen);
-            delete[] inBuf;
-            inBuf = newBuf;
-            bufSz = newSz;
+            std::memcpy(newBuf, buffer, size);
+            delete[] buffer;
+            buffer = newBuf;
+            capacity = newCapacity;
         }
 
-        inBuf[strLen] = ch;
-        ++strLen;
+        buffer[size] = ch;
+        ++size;
     }
 
-    inBuf[strLen] = '\0';
+    buffer[size] = '\0';
+    return buffer;
+}
 
-    try
+int main()
+{
+    size_t size = 0;
+    size_t capacity = 0;
+
+    char *inBuf = readString(size, capacity);
+    if(inBuf == nullptr)
     {
-        resBuf = new char[bufSz];
-    }
-    catch (std::bad_alloc &)
-    {
-        delete[] inBuf;
-        std::cerr << "Memory allocation failed" << std::endl;
         return 1;
     }
 
-    krivoshapov::rmvVow(inBuf, resBuf, bufSz);
-    std::cout << resBuf << std::endl;
+    char *resBuf = nullptr;
+    try
+    {
+        resBuf = new char[capacity];
+    }
+    catch(const std::bad_alloc&)
+    {
+        delete[] inBuf;
+        std::cerr << "Memory allocation failed\n";
+        return 1;
+    }
 
-    int seqRes = krivoshapov::seqSym(inBuf);
-    std::cout << seqRes << std::endl;
+    krivoshapov::rmvVow(inBuf, resBuf, capacity);
+    std::cout << resBuf << "\n";
+
+    int seqRes = krivoshapov::seqSym(inBuf, size);
+    std::cout << seqRes << "\n";
 
     delete[] inBuf;
     delete[] resBuf;
