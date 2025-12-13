@@ -1,11 +1,15 @@
 #include <iostream>
 #include <iomanip>
+#include <cctype>
+#include <cstring>
 
-namespace muraviev
-{
+namespace muraviev {
   void copyEls(char* copy_to, const char* copy_from, size_t len);
-  char * getline(std::istream & in, size_t & size);
-  char * intertwineStrings(const char* first, const char* second, size_t firstSize, size_t secondSize);
+  char* getline(std::istream& in, size_t& size);
+  char* intertwinedLine(char* tmp, const char* line1, const char* line2, 
+  size_t size_1, size_t size_2);
+  char* digitsAddedLine(char* tmp, const char* add_to, const char* take_from, 
+  size_t size_1, size_t size_2);
 }
 
 void muraviev::copyEls(char* copy_to, const char* copy_from, size_t len)
@@ -15,7 +19,7 @@ void muraviev::copyEls(char* copy_to, const char* copy_from, size_t len)
   }
 }
 
-char * muraviev::getline(std::istream & in, size_t & size)
+char* muraviev::getline(std::istream& in, size_t& size)
 {
   bool is_skips = in.flags() & std::ios_base::skipws;
 
@@ -78,49 +82,57 @@ char * muraviev::getline(std::istream & in, size_t & size)
   return line;
 }
 
-char * muraviev::intertwineStrings(const char * first, const char * second, size_t firstSize, size_t secondSize)
+char* muraviev::intertwinedLine(char* tmp, const char* line1, const char* line2, 
+  size_t size_1, size_t size_2)
 {
-  size_t bigSize = firstSize + secondSize;
-  char * intertwined = (char*)malloc(sizeof(char) * (bigSize) + 1);
-
-  if (!intertwined) {
-    throw std::bad_alloc();
-  }
-
+  size_t bigSize = size_1 + size_2;
   size_t left = 0, right = 0;
   
   for (size_t i = 0; i < bigSize; ++i) {
     bool takeLeft = true;
 
-    if (left >= firstSize) {
+    if (left >= size_1) {
       takeLeft = false;
-    } else if (right >= secondSize) {
+    } else if (right >= size_2) {
       takeLeft = true;
     } else {
       takeLeft = (i % 2 == 0);
     }
 
     if (takeLeft) {
-      intertwined[i] = first[left++];
+      tmp[i] = line1[left++];
     } else {
-      intertwined[i] = second[right++];
+      tmp[i] = line2[right++];
     }
   }
 
-  intertwined[bigSize] = 0;
-  return intertwined;
+  tmp[bigSize] = 0;
+  return tmp;
 }
 
+char* muraviev::digitsAddedLine(char* tmp, const char* add_to, const char* take_from, 
+  size_t size_1, size_t size_2)
+{
+  copyEls(tmp, add_to, size_1);
+
+  size_t resIndex = size_1;
+  for (size_t i = 0; i < size_2; ++i) {
+    if (std::isdigit(take_from[i])) {
+      tmp[resIndex++] = take_from[i];
+    }
+  }
+
+  tmp[resIndex] = 0;
+  return tmp;
+}
 
 int main()
 {
-  size_t lineSize = 0, lineSize2 = 0;
-  char * line = nullptr;
-  char * line2 = nullptr;
+  size_t size_1 = 0;
+  char* line1 = nullptr;
 
   try {
-    line = muraviev::getline(std::cin, lineSize);
-    line2 = muraviev::getline(std::cin, lineSize2);
+    line1 = muraviev::getline(std::cin, size_1);
   } catch (const std::bad_alloc& e) {
     std::cerr << "Allocation error: " << e.what() << '\n';
     return 1;
@@ -129,10 +141,46 @@ int main()
     return 1;
   }
 
-  free(line);
-  free(line2);
+  const char* line2 = "def ";
+  size_t size_2 = std::strlen(line2);
 
-  line = muraviev::intertwineStrings(line, line2, lineSize, lineSize2);
+  char* inter_tmp = (char*)malloc(sizeof(char) * (size_1 + size_2 + 1));
+
+  if (!inter_tmp) {
+    std::cerr << "Allocation error\n";
+    free(line1);
+    return 1;
+  }
+
+  char* intertwined = muraviev::intertwinedLine(inter_tmp, line1, line2, size_1, size_2);
   
-  std::cout << "Result: " << line << "\n";
+  std::cout << intertwined << "\n";
+
+  const char* line3 = "g1h2k";
+  size_t size_3 = std::strlen(line3);
+
+  size_t digsFound = 0;
+  for (size_t i = 0; i < size_3; ++i) {
+    if (std::isdigit(line3[i])) {
+      digsFound++;
+    }
+  }
+
+  char* withDigs_tmp = (char*)malloc(sizeof(char) * (size_1 + digsFound + 1));
+
+  if (!withDigs_tmp) {
+    std::cerr << "Allocation error\n";
+    free(line1);
+    free(intertwined);
+    return 1;
+  }
+
+  char* lineWithDigs = muraviev::digitsAddedLine(withDigs_tmp, line1, line3, size_1, size_3);
+
+  std::cout << lineWithDigs << "\n";
+  
+  free(line1);
+  free(intertwined);
+  free(lineWithDigs);
+  return 0;
 }
