@@ -136,7 +136,7 @@ namespace karpenko
     return (count == expectedElements) ? 1 : 0;
   }
 
-  int writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
+  std::ostream &writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
   {
     stream << rows << " " << cols;
     for (std::size_t i = 0; i < rows; ++i)
@@ -146,10 +146,10 @@ namespace karpenko
         stream << " " << matrix[i * cols + j];
       }
     }
-    return stream.good() ? 1 : 0;
+    return stream;
   }
 
-  int writeMatrix(std::ostream &stream, const double matrix[], std::size_t rows, std::size_t cols)
+  std::ostream &writeMatrix(std::ostream &stream, const double matrix[], std::size_t rows, std::size_t cols)
   {
     stream << std::fixed << std::setprecision(1) << rows << " " << cols;
     for (std::size_t i = 0; i < rows; ++i)
@@ -159,7 +159,7 @@ namespace karpenko
         stream << " " << matrix[i * cols + j];
       }
     }
-    return stream.good() ? 1 : 0;
+    return stream;
   }
 
   int checkIsNumber(const char *str)
@@ -261,7 +261,9 @@ int main(int argc, char *argv[])
       }
 
       karpenko::transformMatrixSpiral(rows, cols, dynamicMatrix);
-      if (!karpenko::writeMatrix(outputStream, dynamicMatrix, rows, cols))
+      karpenko::writeMatrix(outputStream, dynamicMatrix, rows, cols);
+      
+      if (!outputStream)
       {
         std::cerr << "Error: Failed to write matrix to output file\n";
         delete[] dynamicMatrix;
@@ -295,7 +297,9 @@ int main(int argc, char *argv[])
       }
 
       karpenko::createSmoothedMatrix(rows, cols, staticMatrix, outputMatrix);
-      if (!karpenko::writeMatrix(outputStream, outputMatrix, rows, cols))
+      karpenko::writeMatrix(outputStream, outputMatrix, rows, cols);
+      
+      if (!outputStream)
       {
         std::cerr << "Error: Failed to write matrix to output file\n";
         return 2;
