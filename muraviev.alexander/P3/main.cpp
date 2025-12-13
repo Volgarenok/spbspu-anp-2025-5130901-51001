@@ -2,8 +2,7 @@
 #include <fstream>
 #include <cstring>
 
-namespace muraviev
-{
+namespace muraviev {
   void transformMatrixSpiral(int* matrix, size_t rows, size_t columns)
   {
     if (rows == 0 || columns == 0) {
@@ -88,7 +87,7 @@ namespace muraviev
     return maxSum;
   }
 
-  size_t fillMatrix(std::ifstream& fin, int* matrix, size_t rows, size_t columns)
+  size_t fillMatrix(std::istream& fin, int* matrix, size_t rows, size_t columns)
   {
     size_t i = 0;
     for (; i < rows * columns; ++i) {
