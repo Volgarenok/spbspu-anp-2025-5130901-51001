@@ -99,39 +99,26 @@ namespace karpenko
     }
   }
 
-  int readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
+  std::size_t readMatrix(std::istream &stream, int matrix[], std::size_t &rows, std::size_t &cols)
   {
     if (!(stream >> rows >> cols))
     {
       return 0;
     }
 
-    if (rows > kMaxDimension || cols > kMaxDimension)
-    {
-      return 0;
-    }
-
-    std::size_t expectedElements = rows * cols;
     std::size_t count = 0;
-
     for (std::size_t i = 0; i < rows; ++i)
     {
       for (std::size_t j = 0; j < cols; ++j)
       {
         if (!(stream >> matrix[i * cols + j]))
         {
-          return 0;
+          return count;
         }
         ++count;
       }
     }
-
-    if (rows == 0 && cols == 0)
-    {
-      return 1;
-    }
-
-    return (count == expectedElements) ? 1 : 0;
+    return count;
   }
 
   std::ostream &writeMatrix(std::ostream &stream, const int matrix[], std::size_t rows, std::size_t cols)
@@ -228,8 +215,24 @@ int main(int argc, char *argv[])
     static int fixedMatrix[karpenko::kMaxSize];
     inputMatrix = fixedMatrix;
 
-    if (!karpenko::readMatrix(inputStream, inputMatrix, rows, cols))
+    std::size_t readCount = karpenko::readMatrix(inputStream, inputMatrix, rows, cols);
+
+    if (readCount == 0 && (rows != 0 || cols != 0))
     {
+      std::cerr << "Error: Invalid matrix dimensions\n";
+      return 2;
+    }
+
+    if (rows > karpenko::kMaxDimension || cols > karpenko::kMaxDimension)
+    {
+      std::cerr << "Error: Matrix dimensions exceed maximum allowed size\n";
+      return 2;
+    }
+
+    std::size_t expectedElements = rows * cols;
+    if (readCount != expectedElements && (rows != 0 || cols != 0))
+    {
+      std::cerr << "Error: Cannot read all matrix elements\n";
       return 2;
     }
   }
@@ -257,6 +260,7 @@ int main(int argc, char *argv[])
     std::size_t matrixSize = rows * cols;
     inputMatrix = new int[matrixSize];
 
+    std::size_t readCount = 0;
     for (std::size_t i = 0; i < rows; ++i)
     {
       for (std::size_t j = 0; j < cols; ++j)
@@ -267,6 +271,7 @@ int main(int argc, char *argv[])
           delete[] inputMatrix;
           return 2;
         }
+        ++readCount;
       }
     }
   }
@@ -281,6 +286,7 @@ int main(int argc, char *argv[])
     }
     return 0;
   }
+
   if (operation == 1)
   {
     karpenko::transformMatrixSpiral(rows, cols, inputMatrix);
