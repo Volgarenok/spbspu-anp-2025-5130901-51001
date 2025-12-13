@@ -6,8 +6,10 @@
 namespace muraviev {
   void copyEls(char* copy_to, const char* copy_from, size_t len);
   char* getline(std::istream& in, size_t& size);
-  char* intertwinedLine(char* tmp, const char* line1, const char* line2, size_t size_1, size_t size_2);
-  char* digitsAddedLine(char* tmp, const char* add_to, const char* take_from, size_t size_1, size_t size_2);
+  char* intertwinedLine(char* tmp, const char* line1, const char* line2,
+    size_t size_1, size_t size_2);
+  char* digitsAddedLine(char* tmp, const char* add_to, const char* take_from,
+    size_t size_1, size_t size_2);
 }
 
 void muraviev::copyEls(char* copy_to, const char* copy_from, size_t len)
@@ -76,7 +78,8 @@ char* muraviev::getline(std::istream& in, size_t& size)
   return line;
 }
 
-char* muraviev::intertwinedLine(char* tmp, const char* line1, const char* line2, size_t size_1, size_t size_2)
+char* muraviev::intertwinedLine(char* tmp, const char* line1, const char* line2,
+  size_t size_1, size_t size_2)
 {
   size_t bigSize = size_1 + size_2;
   size_t left = 0;
@@ -103,7 +106,8 @@ char* muraviev::intertwinedLine(char* tmp, const char* line1, const char* line2,
   return tmp;
 }
 
-char* muraviev::digitsAddedLine(char* tmp, const char* add_to, const char* take_from, size_t size_1, size_t size_2)
+char* muraviev::digitsAddedLine(char* tmp, const char* add_to, const char* take_from,
+  size_t size_1, size_t size_2)
 {
   copyEls(tmp, add_to, size_1);
   size_t resIndex = size_1;
