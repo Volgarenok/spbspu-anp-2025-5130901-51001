@@ -87,13 +87,7 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
   return temp;
 }
 
-void shaykhraziev::combineStrings(
-  char* sum,
-  const char* a,
-  const char* b,
-  const size_t as,
-  const size_t bs
-)
+void shaykhraziev::combineStrings(char* sum, const char* a, const char* b, size_t as, size_t bs)
 {
   size_t common_length = 0;
   size_t diff_length = 0;
