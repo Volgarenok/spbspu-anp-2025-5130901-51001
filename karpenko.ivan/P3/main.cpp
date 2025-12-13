@@ -262,7 +262,7 @@ int main(int argc, char *argv[])
 
       karpenko::transformMatrixSpiral(rows, cols, dynamicMatrix);
       karpenko::writeMatrix(outputStream, dynamicMatrix, rows, cols);
-      
+
       if (!outputStream)
       {
         std::cerr << "Error: Failed to write matrix to output file\n";
@@ -298,7 +298,7 @@ int main(int argc, char *argv[])
 
       karpenko::createSmoothedMatrix(rows, cols, staticMatrix, outputMatrix);
       karpenko::writeMatrix(outputStream, outputMatrix, rows, cols);
-      
+
       if (!outputStream)
       {
         std::cerr << "Error: Failed to write matrix to output file\n";
