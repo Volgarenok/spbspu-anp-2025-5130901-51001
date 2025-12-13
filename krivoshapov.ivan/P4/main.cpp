@@ -3,11 +3,15 @@
 #include <cstring>
 
 namespace krivoshapov {
-    size_t rmvVow(const char *src, char *dst, size_t dstSz)
+    char* rmvVow(const char *src, char *dst, size_t dstSz)
     {
         if (src == nullptr || dst == nullptr || dstSz == 0)
         {
-            return 0;
+            if (dst != nullptr && dstSz > 0)
+            {
+                dst[0] ='\0';
+            }
+            return dst;
         }
 
         const char vowels[] = "aeiouyAEIOUY";
@@ -39,7 +43,7 @@ namespace krivoshapov {
         }
 
         dst[writeIdx] = '\0';
-        return writeIdx;
+        return dst;
     }
 
     int seqSym(const char *str, size_t len)
