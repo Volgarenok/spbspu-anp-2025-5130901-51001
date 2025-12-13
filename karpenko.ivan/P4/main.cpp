@@ -72,7 +72,7 @@ namespace karpenko
     result[resultIndex] = '\0';
   }
 
-  char *myGetline(size_t &length)
+  char *myGetline(std::istream &in, size_t &length)
   {
     const size_t INITIAL_BUFFER_SIZE = 16;
     const size_t GROW_FACTOR = 2;
@@ -83,7 +83,7 @@ namespace karpenko
     size_t i = 0;
     char c;
 
-    while (std::cin.get(c) && c != '\n')
+    while (in.get(c) && c != '\n')
     {
       if (i >= bufferSize - 1)
       {
@@ -102,7 +102,7 @@ namespace karpenko
     buffer[i] = '\0';
     length = i;
 
-    if (std::cin.eof() && i == 0)
+    if (in.eof() && i == 0)
     {
       delete[] buffer;
       return nullptr;
@@ -115,7 +115,7 @@ namespace karpenko
 int main()
 {
   size_t line1Length = 0;
-  char *line1 = karpenko::myGetline(line1Length);
+  char *line1 = karpenko::myGetline(std::cin, line1Length);
 
   if (!line1)
   {
