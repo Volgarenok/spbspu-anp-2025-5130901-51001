@@ -96,9 +96,9 @@ int main()
     return 1;
   }
   if (s == 0) {
-    std::cout << "Empty input\n";
+    std::cerr << "Empty input\n";
     free(data);
-    return 0;
+    return 1;
   }
 
   char* removedLetters = reinterpret_cast< char* >(malloc(s));
