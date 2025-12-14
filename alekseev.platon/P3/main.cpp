@@ -137,12 +137,12 @@ int main(int argc, char* argv[])
   const char* inputFile = argv[2];
   const char* outputFile = argv[3];
 
-  if (!alekseev::isValidNumber(numStr)) {
+  int taskNum = 0;
+  if (!alekseev::parseTaskNum(numStr, taskNum)) {
     std::cerr << "First parameter is not a number\n";
     return 1;
   }
 
-  int taskNum = std::atoi(numStr);
   if (taskNum != 1 && taskNum != 2) {
     std::cerr << "First parameter is out of range\n";
     return 1;
