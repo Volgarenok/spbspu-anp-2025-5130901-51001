@@ -1,19 +1,23 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <cctype>
+#include <cerrno>
+#include <limits>
+#include <memory>
 
 namespace alekseev {
   const size_t MAXSIZE = 10000;
 
-  bool readMatrix(std::ifstream& input, int* matrix, size_t rows, size_t cols)
+  size_t readMatrix(std::istream& input, int* matrix, size_t rows, size_t cols)
   {
-    for (size_t i = 0; i < rows * cols; ++i) {
-      if (!(input >> matrix[i])) {
-        return false;
+    const size_t need = rows * cols;
+    size_t read = 0;
+    for (; read < need; ++read) {
+      if (!(input >> matrix[read])) {
+        break;
       }
     }
-    return true;
+    return read;
   }
 
   size_t countSaddlePoints(const int* matrix, size_t rows, size_t cols)
@@ -99,18 +103,25 @@ namespace alekseev {
     output << saddleCount << "\n";
     output << seriesColumn << "\n";
   }
-
-  bool isValidNumber(const char* str)
+  bool parseTaskNum(const char* s, int& outNum)
   {
-    if (str == nullptr || *str == '\0') {
+    if (!s || *s == '\0') {
       return false;
     }
 
-    for (size_t i = 0; str[i] != '\0'; ++i) {
-      if (!std::isdigit(str[i])) {
-        return false;
-      }
+    errno = 0;
+    char* end = nullptr;
+    long val = std::strtol(s, &end, 10);
+
+    if (errno != 0 || end == s || *end != '\0') {
+      return false;
     }
+
+    if (val < std::numeric_limits<int>::min() || val > std::numeric_limits<int>::max()) {
+      return false;
+    }
+
+    outNum = static_cast<int>(val);
     return true;
   }
 }
@@ -160,60 +171,44 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  if (rows * cols > alekseev::MAXSIZE && taskNum == 1) {
+  if (rows == 0 || cols == 0) {
+    std::cerr << "Cannot interpret file content as a matrix\n";
+    return 2;
+  }
+
+  const size_t total = rows * cols;
+
+  if (taskNum == 1 && total > alekseev::MAXSIZE) {
     std::cerr << "Matrix size exceeds fixed array capacity\n";
     return 2;
   }
 
+  int* data = nullptr;
+  int fixed[alekseev::MAXSIZE];
+  std::unique_ptr<int[]> dyn;
+
   if (taskNum == 1) {
-    int matrix[alekseev::MAXSIZE];
-
-    bool readSuccess = alekseev::readMatrix(input, matrix, rows, cols);
-    input.close();
-
-    if (!readSuccess) {
-      std::cerr << "Cannot read matrix elements\n";
-      return 2;
-    }
-
-    size_t saddleCount = alekseev::countSaddlePoints(matrix, rows, cols);
-    size_t seriesColumn = alekseev::findLongestSeriesColumn(matrix, rows, cols);
-
-    std::ofstream output(outputFile);
-    if (!output.is_open()) {
-      std::cerr << "Cannot open output file\n";
-      return 2;
-    }
-
-    alekseev::writeResults(output, saddleCount, seriesColumn);
-    output.close();
+    data = fixed;
   } else {
-    int* matrix = new int[rows * cols];
-
-    bool readSuccess = alekseev::readMatrix(input, matrix, rows, cols);
-    input.close();
-
-    if (!readSuccess) {
-      std::cerr << "Cannot read matrix elements\n";
-      delete[] matrix;
-      return 2;
-    }
-
-    size_t saddleCount = alekseev::countSaddlePoints(matrix, rows, cols);
-    size_t seriesColumn = alekseev::findLongestSeriesColumn(matrix, rows, cols);
-
-    std::ofstream output(outputFile);
-    if (!output.is_open()) {
-      std::cerr << "Cannot open output file\n";
-      delete[] matrix;
-      return 2;
-    }
-
-    alekseev::writeResults(output, saddleCount, seriesColumn);
-    output.close();
-
-    delete[] matrix;
+    dyn = std::make_unique<int[]>(total);
+    data = dyn.get();
   }
 
+  const size_t read = alekseev::readMatrix(input, data, rows, cols);
+  if (read != total) {
+    std::cerr << "Cannot read matrix elements\n";
+    return 2;
+  }
+
+  const size_t saddleCount = alekseev::countSaddlePoints(data, rows, cols);
+  const size_t seriesColumn = alekseev::findLongestSeriesColumn(data, rows, cols);
+
+  std::ofstream output(outputFile);
+  if (!output.is_open()) {
+    std::cerr << "Cannot open output file\n";
+    return 2;
+  }
+
+  alekseev::writeResults(output, saddleCount, seriesColumn);
   return 0;
 }
