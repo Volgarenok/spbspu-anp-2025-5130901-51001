@@ -4,7 +4,7 @@
 namespace kitserov
 {
   char* getline(std::istream& in, size_t& s);
-  void removeLetters(const char* source, char* destination, size_t size);
+  void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
 }
 
@@ -13,11 +13,11 @@ void kitserov::missLetters(const char* source, char* destination)
   size_t dstIndex = 0;
   size_t alphavitSize = 27;
   char alphavit[alphavitSize] = "abcdefghijklmnopqrstuvwxyz";
-  for (size_t j = 0; j < 27; ++j) {
+  for (size_t j = 0; j < alphavitSize; ++j) {
     unsigned char alphavit_char = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
     size_t i = 0;
-    while (static_cast< unsigned char >(source[i]) != '\0') {
+    while (source[i] != '\0') {
       unsigned char source_char = static_cast< unsigned char >(std::tolower(source[i++]));
       if (alphavit_char == source_char) {
         charInData = true;
@@ -31,11 +31,11 @@ void kitserov::missLetters(const char* source, char* destination)
   destination[dstIndex] = '\0';
 }
 
-void kitserov::removeLetters(const char* source, char* destination, size_t size)
+void kitserov::removeLetters(const char* source, char* destination)
 {
   size_t srcIndex = 0;
   size_t dstIndex = 0;
-  while (source[srcIndex] != '\0' && dstIndex < size - 1) {
+  while (source[srcIndex] != '\0') {
     unsigned char source_char = static_cast< unsigned char >(source[srcIndex]);
     bool isLetter = std::isalpha(source_char) != 0;
     if (!isLetter) {
@@ -101,15 +101,15 @@ int main()
     return 0;
   }
 
-  char* removedLetters = reinterpret_cast< char* >(malloc(s + 1));
+  char* removedLetters = reinterpret_cast< char* >(malloc(s));
   if (!removedLetters) {
     std::cerr << "Failed memory allocation\n";
     free(data);
     return 1;
   }
-  kitserov::removeLetters(data, removedLetters, s + 1);
+  kitserov::removeLetters(data, removedLetters);
 
-  char* missedLetters = reinterpret_cast< char* >(malloc(28));
+  char* missedLetters = reinterpret_cast< char* >(malloc(27));
   if (!missedLetters) {
     std::cerr << "Failed memory allocation\n";
     free(data);
