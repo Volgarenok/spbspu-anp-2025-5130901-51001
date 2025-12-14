@@ -65,10 +65,15 @@ namespace krivoshapov {
     }
 }
 
-char* readString (size_t& size, size_t& capacity)
+char* readString(size_t& size, size_t& capacity)
 {
     const size_t INIT_CAPACITY = 128;
     char* buffer = nullptr;
+
+    if (!std::cin.good() || std::cin.eof()) {
+        std::cerr << "Error: No input provided\n";
+        return nullptr;
+    }
 
     try
     {
@@ -76,13 +81,19 @@ char* readString (size_t& size, size_t& capacity)
     }
     catch (const std::bad_alloc&)
     {
-        std::cerr << "Memory allocation failde\n";
+        std::cerr << "Memory allocation failed\n";
         return nullptr;
     }
 
     capacity = INIT_CAPACITY;
     size = 0;
     char ch;
+
+    if (std::cin.peek() == EOF) {
+        delete[] buffer;
+        std::cerr << "Error: Empty input\n";
+        return nullptr;
+    }
 
     while (std::cin.get(ch) && ch != '\n')
     {
@@ -98,7 +109,7 @@ char* readString (size_t& size, size_t& capacity)
             catch (const std::bad_alloc&)
             {
                 delete[] buffer;
-                std::cerr << "Memory allocation failde\n";
+                std::cerr << "Memory allocation failed\n";
                 return nullptr;
             }
             std::memcpy(newBuf, buffer, size);
@@ -109,6 +120,12 @@ char* readString (size_t& size, size_t& capacity)
 
         buffer[size] = ch;
         ++size;
+    }
+
+    if (size == 0) {
+        delete[] buffer;
+        std::cerr << "Error: Empty line\n";
+        return nullptr;
     }
 
     buffer[size] = '\0';
@@ -123,7 +140,7 @@ int main()
     char *inBuf = readString(size, capacity);
     if(inBuf == nullptr)
     {
-        return 1;
+        return 1; // Ненулевой код возврата при ошибке
     }
 
     char *resBuf = nullptr;
