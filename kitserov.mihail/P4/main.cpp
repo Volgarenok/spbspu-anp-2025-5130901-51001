@@ -11,8 +11,8 @@ namespace kitserov
 void kitserov::missLetters(const char* source, char* destination)
 {
   size_t dstIndex = 0;
-  size_t alphavitSize = 27;
-  char alphavit[alphavitSize] = "abcdefghijklmnopqrstuvwxyz";
+  const char* alphavit = "abcdefghijklmnopqrstuvwxyz";
+  const size_t alphavitSize = 26;
   for (size_t j = 0; j < alphavitSize; ++j) {
     unsigned char alphavit_char = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
