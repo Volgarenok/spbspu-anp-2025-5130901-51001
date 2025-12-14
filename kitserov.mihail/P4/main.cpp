@@ -47,40 +47,41 @@ void kitserov::removeLetters(const char* source, char* destination, size_t size)
   destination[dstIndex] = '\0';
 }
 
-char* kitserov::getline(std::istream& in, size_t& s)
+char* kitserov::getline(std::istream& in, size_t& size)
 {
   bool isSkipws = in.flags() & std::ios_base::skipws;
   if (isSkipws) {
     in >> std::noskipws;
   }
-  char* data = nullptr;
-  data = reinterpret_cast< char* >(malloc(2));
-  size_t size = 1;
+  char* data = reinterpret_cast< char* >(malloc(2));
+  if (!data) {
+    return nullptr;
+  }
+  size_t capacity = 1;
   char letter;
-  size_t i = 0;
+  size = 0;
   in >> letter;
   while (!(in.fail()) && letter != '\n') {
-    if (i == size) {
-      char* temp = reinterpret_cast< char* >(malloc(size * 2 + 1));
-      for (size_t j = 0; j < size; j++) {
+    if (size == capacity) {
+      char* temp = reinterpret_cast< char* >(malloc(capacity * 2 + 1));
+      if (!temp) {
+        return nullptr;
+      }
+      for (size_t j = 0; j < capacity; j++) {
         temp[j] = data[j];
       }
-      size *= 2;
+      capacity *= 2;
       free(data);
       data = temp;
     }
-    data[i] = letter;
-    i++;
+    data[size] = letter;
+    size++;
     in >> letter;
   }
 
-  s = i;
-  data[s] = '\0';
+  data[size] = '\0';
   if (isSkipws) {
     in >> std::skipws;
-  }
-  if (s == 0) {
-    throw;
   }
   return data;
 }
@@ -89,20 +90,20 @@ int main()
 {
   size_t s = 0;
   char* data = nullptr;
-  try {
-    data = kitserov::getline(std::cin, s);
-  } catch (...) {
-    std::cerr << "Empty line";
+  data = kitserov::getline(std::cin, s);
+  if (!data) {
+    std::cerr << "Failed read line or memory allocation error\n";
     return 1;
   }
-  if (!data) {
-    std::cerr << "Failed read line\n";
-    return 1;
+  if (s == 0) {
+    std::cout << "Empty input\n";
+    free(data);
+    return 0;
   }
 
   char* removedLetters = reinterpret_cast< char* >(malloc(s + 1));
   if (!removedLetters) {
-    std::cerr << "Failed memory allocation";
+    std::cerr << "Failed memory allocation\n";
     free(data);
     return 1;
   }
@@ -110,7 +111,7 @@ int main()
 
   char* missedLetters = reinterpret_cast< char* >(malloc(28));
   if (!missedLetters) {
-    std::cerr << "Failed memory allocation";
+    std::cerr << "Failed memory allocation\n";
     free(data);
     free(removedLetters);
     return 1;
