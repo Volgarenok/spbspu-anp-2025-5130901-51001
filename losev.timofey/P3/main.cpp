@@ -3,7 +3,7 @@
 #include <limits>
 
 namespace losev {
-  void readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n);
+  size_t readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n);
   size_t findNumRowMaxRepl(const int * ptrArr, size_t m, size_t n);
   size_t countLocMin(const int * ptrArr, size_t m, size_t n);
 }
@@ -17,6 +17,10 @@ int main(int argc, char **argv) {
     std::cerr << "Too few arguments\n";
     return 1;
   }
+  if ((argv[1][0] != '1' && argv[1][0] != '2') || argv[1][1] != '\0') {
+    std::cerr << "Error: first parameter must be exactly '1' or '2'\n";
+    return 1;
+  }
   std::ofstream output(argv[3]);
   if (!output.is_open()) {
     std::cerr <<"I can not open output file\n";
@@ -25,17 +29,14 @@ int main(int argc, char **argv) {
     output.clear();
   }
   std::ifstream input(argv[2]);
-  int m = -1, n = -1;
+  size_t m = 0, n = 0;
   if (input.is_open()) {
     input >> m >> n;
     if (input.fail()) {
         std::cerr << "I can not read matrix size\n";
         return 2;
     }
-    if (m < 0 || n < 0) {
-      std::cerr << "I can not create an array from this\n";
-      return 2;
-    } else if (m == 0 && n == 0) {
+    if (m == 0 && n == 0) {
       output << 0 << "\n" << 0 << " " << 0 << "\n";
       return 0;
     }
@@ -55,11 +56,9 @@ int main(int argc, char **argv) {
     std::cerr << "Error wrong num\n";
     return 1;
   }
-  try {
-    los::readFile(input, array, m, n);
-  }
-  catch (const std::runtime_error& e) {
-    std::cerr << "Error file: " << e.what() << "\n";
+  size_t readCount = los::readFile(input, array, m, n);
+  if (readCount != m * n) {
+    std::cerr << "Error reading matrix\n";
     delete[] arrayDinamic;
     return 2;
   }
@@ -70,20 +69,23 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-void losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n) {
+size_t losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n) {
   long long temp;
+  size_t count = 0;
   for (size_t i = 0; i < m; i++) {
     for (size_t j = 0; j < n; j++) {
       file >> temp;
       if (file.fail()) {
-        throw std::runtime_error("I can not read matrix");
+        return count;
       }
-      if (temp > std::numeric_limits< int >::max()) {
-        throw std::runtime_error("Number is too large for int type");
+      if (temp > std::numeric_limits< int >::max() || temp < std::numeric_limits<int>::min()) {
+        return count;
       }
-      ptrArr[i * n + j] = static_cast<int>(temp);
+      ptrArr[i * n + j] = static_cast< int >(temp);
+      count++;
     }
   }
+  return count;
 }
 
 size_t losev::countLocMin(const int * ptrArr, size_t m, size_t n) {
