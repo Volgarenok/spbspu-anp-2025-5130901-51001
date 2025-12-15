@@ -2,7 +2,7 @@
 #include <fstream>
 namespace vishnyakov
 {
-  void spiral_reduction(int *matrix, size_t row, size_t column, std::ostream &output);
+  void spiral_reduction(int *matrix, size_t row, size_t column);
   int biggiest_diagonal(const int *matrix, size_t row, size_t column);
   size_t move(size_t type, size_t column, size_t start);
   size_t is_in(size_t *array, size_t value, size_t size);
@@ -41,7 +41,7 @@ size_t vishnyakov::is_in(size_t *array, size_t value, size_t size)
   }
   return 0;
 }
-void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column, std::ostream &output)
+void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column)
 {
   size_t start = row * column - column, type_of_mooving = 0;
   size_t *completed_values = new size_t[column * row];
@@ -178,7 +178,7 @@ int main(int argc, char ** argv)
     return 2;
   }
   int result = vishnyakov::biggiest_diagonal(matrix, row, column);
-  vishnyakov::spiral_reduction(matrix, row, column, output);
+  vishnyakov::spiral_reduction(matrix, row, column);
   output << row << ' ' << column;
   for (size_t i = 0; i < row * column; ++i)
   {
