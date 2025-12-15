@@ -9,32 +9,32 @@ namespace vishnyakov
 }
 size_t vishnyakov::move(size_t type, size_t column, size_t start)
 {
-  if(start == 0)
+  if (start == 0)
   {
     return 1;
   }
-  switch (type%4)
+  switch (type % 4)
   {
   case 0:
-    return start-column;
+    return start - column;
     break;
   case 1:
-    return start+1;
+    return start + 1;
     break;
   case 2:
-    return start+column;
+    return start + column;
     break;
   case 3:
-    return start-1;
+    return start - 1;
     break;
   }
   return start;
 }
 size_t vishnyakov::is_in(size_t *array, size_t value, size_t size)
 {
-  for (size_t i=0; i<size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
-    if (value==array[i])
+    if (value == array[i])
     {
       return 1;
     }
@@ -43,27 +43,22 @@ size_t vishnyakov::is_in(size_t *array, size_t value, size_t size)
 }
 void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column, std::ostream &output)
 {
-  size_t start = row*column-column, type_of_mooving = 0;
-  size_t *completed_values = new size_t[column*row];
-  for (size_t i = 0; i<column*row; ++i)
+  size_t start = row * column - column, type_of_mooving = 0;
+  size_t *completed_values = new size_t[column * row];
+  for (size_t i = 0; i < column * row; ++i)
   {
-    completed_values[i]=column*row;
+    completed_values[i] = column * row;
   }
-  for (size_t i = 0; i<row*column; ++i)
+  for (size_t i = 0; i < row * column; ++i)
   {
-    if (vishnyakov::move(type_of_mooving,column,start)>row*column)
+    if (vishnyakov::move(type_of_mooving, column, start) > row * column)
     {
-      type_of_mooving+=1;
+      type_of_mooving += 1;
     }
-    matrix[start] -= i+1;
-    completed_values[i]=start;
-    type_of_mooving += vishnyakov::is_in(completed_values, vishnyakov::move(type_of_mooving,column,start), row*column);
+    matrix[start] -= i + 1;
+    completed_values[i] = start;
+    type_of_mooving += vishnyakov::is_in(completed_values, vishnyakov::move(type_of_mooving,column,start), row * column);
     start = vishnyakov::move(type_of_mooving,column,start);
-  }
-  output << row << ' ' << column;
-  for (size_t i = 0; i<row*column;++i)
-  {
-    output << ' ' << matrix[i];
   }
   delete[] completed_values;
 }
@@ -75,30 +70,30 @@ int vishnyakov::biggiest_diagonal(const int *matrix, size_t row, size_t column)
   }
   int sum = 0, max_sum = matrix[column-1];
   size_t k = 0;
-  for (size_t i = 1; i<column-1; ++i)
+  for (size_t i = 1; i < column - 1; ++i)
   {
     sum = matrix[i];
-    k = i+column+1;
-    while (k%column!=0 && k<row*column)
+    k = i + column + 1;
+    while (k % column !=0 && k < row * column)
     {
       sum += matrix[k];
-      k += column+1;
+      k += column + 1;
     }
-    if(sum>max_sum)
+    if(sum > max_sum)
     {
       max_sum = sum;
     }
   }
-  for (size_t j=column; j<row*column; j+=column)
+  for (size_t j = column; j < row * column; j += column)
   {
     sum = matrix[j];
-    k = j+column+1;
-    while (k%column!=0 && k<row*column)
+    k = j + column + 1;
+    while (k % column !=0 && k < row * column)
     {
       sum += matrix[k];
-      k += column+1;
+      k += column + 1;
     }
-    if(sum>max_sum)
+    if(sum > max_sum)
     {
       max_sum = sum;
     }
@@ -117,8 +112,17 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  int num = std::atoi(argv[1]);
-  if (num != 1 && num != 2)
+  const char * string_num = argv[1];
+  size_t num = 0;
+  if (string_num[0] == '1' && string_num[1] == 0)
+  {
+    num = 1;
+  }
+  else if (string_num[0] == '2' && string_num[1] == 0)
+  {
+    num = 2;
+  }
+  else
   {
     std::cerr << "First argument is out of range or not a number\n";
     return 1;
@@ -138,9 +142,9 @@ int main(int argc, char ** argv)
   }
   int *matrix = nullptr;
   int *dynamic_matrix = nullptr;
+  int fixed_len_matrix[10000];
   if (num == 1)
   {
-    int fixed_len_matrix[10000];
     matrix = fixed_len_matrix;
   }
   else
@@ -149,7 +153,7 @@ int main(int argc, char ** argv)
     {
       dynamic_matrix = new int[row * column];
     }
-    catch (...)
+    catch (const std::bad_alloc&)
     {
       std::cerr << "Error: Memory allocation failed.\n";
       return 2;
@@ -160,7 +164,6 @@ int main(int argc, char ** argv)
   {
     if (!(input >> matrix[i]))
     {
-      input.close();
       std::cerr << "Error reading matrix\n";
       delete[] dynamic_matrix;
       return 2;
@@ -176,7 +179,12 @@ int main(int argc, char ** argv)
   }
   int result = vishnyakov::biggiest_diagonal(matrix, row, column);
   vishnyakov::spiral_reduction(matrix, row, column, output);
-  output << '\n' << result;
+  output << row << ' ' << column;
+  for (size_t i = 0; i < row * column; ++i)
+  {
+    output << ' ' << matrix[i];
+  }
+  output << '\n' << result << '\n';
   output.close();
   delete[] dynamic_matrix;
   return 0;
