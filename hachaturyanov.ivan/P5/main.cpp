@@ -134,6 +134,14 @@ hachaturyanov::rectangle_t hachaturyanov::Polygon::getFrameRect() const {
   return rectangle_t{maxx - minx, maxy - miny, point_t{(maxx + minx) / 2, (maxy + miny) / 2}};
 }
 
+void hachaturyanov::Polygon::move(point_t pnt) {
+  point_t shift = point_t{pnt.x - pos.x, pnt.y - pos.y};
+  for (size_t i = 0; i < npoints; i++) {
+    points[i] += shift;
+  }
+  pos = pnt;
+}
+
 hachaturyanov::Complexquad::Complexquad(double d1, double d2, point_t p):
  Shape(),
  vertices({}),
