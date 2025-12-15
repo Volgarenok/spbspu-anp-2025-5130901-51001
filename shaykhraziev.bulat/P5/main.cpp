@@ -104,6 +104,7 @@ void draw::Rectangle::scale(double coef) {
 }
 
 void draw::scaleRelative(Shape &shp, point_t pt, double coef) {
+  if (coef == 1) return;
   point_t c = shp.getFrameRect().pos;
   double x = pt.x + (c.x - pt.x)*coef;
   double y = pt.y + (c.y - pt.y)*coef;
@@ -236,7 +237,9 @@ int main() {
   try {
     shps[0] = new Rectangle({0, 0}, {10, 10});
     shps[1] = new Rectangle({3, 3, {-4, -6}});
-    shps[2] = new Rectangle({-3, -3}, {1, 1});
+
+    point_t pts[4] = {{0,1}, {4, 6}, {-1, -10}, {-5, -5}};
+    shps[2] = new Polygon(pts, 4);
   } catch (...) {
     std::cerr << "memalloc error" << "\n";
     err = 1;
