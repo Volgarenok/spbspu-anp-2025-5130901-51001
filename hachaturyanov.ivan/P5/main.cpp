@@ -20,11 +20,6 @@ namespace hachaturyanov {
     point_t pos;
   };
 
-  struct triangle_t {
-    point_t vertices[3];
-    point_t pos;
-  };
-
   struct Shape {
     virtual double getArea() const = 0;
     virtual rectangle_t getFrameRect() const = 0;
@@ -93,22 +88,24 @@ hachaturyanov::Polygon::Polygon(point_t* pts, size_t npts):
     for (size_t i = 0; i < npoints; i++) {
       points[i] = pts[i];
     }
-    double sumareaswx = 0;
-    double sumareaswy = 0;
+    point_t sumareasw = {};
     double sumareas = 0;
     for (size_t i = 1; i < npoints - 1; i++) {
       double iarea = triangleArea(points[0], points[i], points[i + 1]);
       double icenterx = (points[0].x + points[i].x + points[i + 1].x) / 3;
       double icentery = (points[0].y + points[i].y + points[i + 1].y) / 3;
 
-      sumareaswx += icenterx * iarea;
-      sumareaswy += icentery * iarea;
+      sumareasw += point_t{icenterx, icentery} * iarea;
       sumareas += iarea;
     }
-    pos = point_t{sumareaswx / sumareas, sumareaswy / sumareas};
+    pos = sumareasw * (1.0 / sumareas);
   } else {
     throw std::logic_error("polygon should have more than 2 vertices");
   }
+}
+
+hachaturyanov::Polygon::~Polygon() {
+  delete[] points;
 }
 
 double hachaturyanov::Polygon::getArea() const {
@@ -121,6 +118,10 @@ double hachaturyanov::Polygon::getArea() const {
     }
   }
   return 0.5 * std::abs(res);
+}
+
+hachaturyanov::rectangle_t hachaturyanov::Polygon::getFrameRect() const {
+
 }
 
 hachaturyanov::Complexquad::Complexquad(double d1, double d2, point_t p):
