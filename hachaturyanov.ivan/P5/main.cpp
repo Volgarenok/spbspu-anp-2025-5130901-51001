@@ -36,7 +36,6 @@ namespace hachaturyanov {
     void move(point_t pnt) override;
     void move(double xsh, double ysh) override;
     void scale(double k) override;
-   private:
     double width, height;
     point_t pos;
   };
@@ -48,7 +47,6 @@ namespace hachaturyanov {
     void move(point_t pnt) override;
     void move(double xsh, double ysh) override;
     void scale(double k) override;
-   private:
     point_t vertices[4];
     double diag1, diag2;
     point_t pos;
