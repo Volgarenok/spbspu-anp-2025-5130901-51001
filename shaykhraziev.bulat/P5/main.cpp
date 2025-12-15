@@ -128,9 +128,20 @@ void draw::removeArray(Shape**shps, size_t size) {
 }
 
 void draw::printParams(Shape** shps, size_t size) {
+  double area = 0;
   for (size_t i = 0; i < size; i++) {
-
+    double x = shps[i]->getArea();
+    area += x;
+    std::cout << x << "\n";
   }
+  std::cout << area << "\n";
+
+  for (size_t i = 0; i < size; i++) {
+    rectangle_t r = shps[i]->getFrameRect();
+    std::cout << "(" << r.pos.x << ", " << r.pos.y << ") " << r.height << " " << r.width << "\n";
+  }
+  rectangle_t all = getAllShapesFrameRect(shps, size);
+  std::cout << "(" << all.pos.x << ", " << all.pos.y << ") " << all.width << " " << all.height << "\n";
 }
 
 int main() {
@@ -146,8 +157,19 @@ int main() {
     std::cerr << "memalloc error" << "\n";
     err = 1;
   }
-  removeArray(shps, shp_cnt);
 
+  double x = 0, y = 0, scale = 0;
+  if (std::cin >> x >> y >> scale) {
+    printParams(shps, shp_cnt);
+    for (size_t i = 0; i < shp_cnt; i++) {
+      scaleRelative(*shps[i], {x, y}, scale);
+    }
+    printParams(shps, shp_cnt);
+  } else {
+    err = 1;
+  }
+
+  removeArray(shps, shp_cnt);
 
   return err;
 }
