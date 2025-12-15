@@ -24,6 +24,20 @@ namespace karpenko
     virtual void scale(double coefficient) = 0;
     virtual ~Shape() = default;
   };
+
+  struct Rectangle : Shape
+  {
+    double width;
+    double height;
+    point_t center;
+
+    Rectangle(double width, double height, const point_t& center) :
+      width(width),
+      height(height),
+      center(center)
+    {
+    }
+  };
 }
 
 int main()
