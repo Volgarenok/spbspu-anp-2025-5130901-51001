@@ -37,6 +37,17 @@ namespace karpenko
       center(center)
     {
     }
+
+    double getArea() const override
+    {
+      return width * height;
+    }
+
+    rectangle_t getFrameRect() const override
+    {
+      rectangle_t result = {width, height, center};
+      return result;
+    }
   };
 }
 
