@@ -121,7 +121,17 @@ double hachaturyanov::Polygon::getArea() const {
 }
 
 hachaturyanov::rectangle_t hachaturyanov::Polygon::getFrameRect() const {
-
+  double minx = points[0].x;
+  double maxx = points[0].x;
+  double miny = points[0].y;
+  double maxy = points[0].y;
+  for (size_t i = 1; i < npoints; i++) {
+    minx = std::min(minx, points[i].x);
+    maxx = std::max(maxx, points[i].x);
+    miny = std::min(miny, points[i].y);
+    maxy = std::max(maxy, points[i].y);
+  }
+  return rectangle_t{maxx - minx, maxy - miny, point_t{(maxx + minx) / 2, (maxy + miny) / 2}};
 }
 
 hachaturyanov::Complexquad::Complexquad(double d1, double d2, point_t p):
