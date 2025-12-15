@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 namespace karpenko
 {
@@ -64,6 +65,21 @@ namespace karpenko
     {
       width *= coefficient;
       height *= coefficient;
+    }
+  };
+
+  struct Triangle : Shape
+  {
+    point_t vertexA;
+    point_t vertexB;
+    point_t vertexC;
+    point_t center;
+
+    Triangle(const point_t& a, const point_t& b, const point_t& c) :
+      vertexA(a),
+      vertexB(b),
+      vertexC(c)
+    {
     }
   };
 }
