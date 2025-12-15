@@ -54,6 +54,18 @@ namespace hachaturyanov {
     point_t pos;
   };
 
+  struct Polygon: Shape {
+    explicit Polygon(point_t* pts, size_t npts);
+    double getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(point_t pnt) override;
+    void move(double xsh, double ysh) override;
+    void scale(double k) override;
+    point_t* points;
+    point_t pos;
+    size_t npoints;
+  };
+
   double triangleArea(const point_t v1, const point_t v2, const point_t v3);
 }
 
