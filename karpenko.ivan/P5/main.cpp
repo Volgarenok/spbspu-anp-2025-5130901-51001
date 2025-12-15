@@ -80,6 +80,14 @@ namespace karpenko
       vertexB(b),
       vertexC(c)
     {
+      calculateCenter();
+    }
+
+  private:
+    void calculateCenter()
+    {
+      center.x = (vertexA.x + vertexB.x + vertexC.x) / 3.0;
+      center.y = (vertexA.y + vertexB.y + vertexC.y) / 3.0;
     }
   };
 }
