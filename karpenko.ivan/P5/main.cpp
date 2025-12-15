@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <algorithm>
 
 namespace karpenko
 {
@@ -88,6 +89,30 @@ namespace karpenko
     {
       center.x = (vertexA.x + vertexB.x + vertexC.x) / 3.0;
       center.y = (vertexA.y + vertexB.y + vertexC.y) / 3.0;
+    }
+
+  public:
+    double getArea() const override
+    {
+      return 0.5 * std::fabs(
+        (vertexB.x - vertexA.x) * (vertexC.y - vertexA.y) -
+        (vertexC.x - vertexA.x) * (vertexB.y - vertexA.y)
+      );
+    }
+
+    rectangle_t getFrameRect() const override
+    {
+      double minX = std::min({vertexA.x, vertexB.x, vertexC.x});
+      double maxX = std::max({vertexA.x, vertexB.x, vertexC.x});
+      double minY = std::min({vertexA.y, vertexB.y, vertexC.y});
+      double maxY = std::max({vertexA.y, vertexB.y, vertexC.y});
+
+      double width = maxX - minX;
+      double height = maxY - minY;
+      point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
+      
+      rectangle_t result = {width, height, center};
+      return result;
     }
   };
 }
