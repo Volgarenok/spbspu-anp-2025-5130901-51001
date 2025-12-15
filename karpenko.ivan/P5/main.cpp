@@ -48,6 +48,17 @@ namespace karpenko
       rectangle_t result = {width, height, center};
       return result;
     }
+
+    void move(const point_t& point) override
+    {
+      center = point;
+    }
+
+    void move(double dx, double dy) override
+    {
+      center.x += dx;
+      center.y += dy;
+    }
   };
 }
 
