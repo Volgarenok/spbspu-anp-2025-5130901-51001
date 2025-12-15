@@ -59,6 +59,12 @@ namespace karpenko
       center.x += dx;
       center.y += dy;
     }
+
+    void scale(double coefficient) override
+    {
+      width *= coefficient;
+      height *= coefficient;
+    }
   };
 }
 
