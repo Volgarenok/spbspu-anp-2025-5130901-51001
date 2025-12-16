@@ -39,28 +39,48 @@ namespace kitserov
   rectangle_t frame(const point_t * pts, size_t s);
   void frameOutput(std::ostream& os, rectangle_t fr);
   void shapeOutput(std::ostream& os, Shape * sh, const char* name);
+  void scalePoint(Shape* sh, const point_t& p, float k);
 }
 
 int main()
 {
   using namespace kitserov;
   int err = 0;
-  size_t k = 3;
-  Shape* shapes[k] = {};
+  size_t count = 3;
+  Shape* shapes[count] = {};
   try {
     shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
     shapes[1] = new Rectangle({1.0, 0.0}, 1.0, 2.0);
     shapes[2] = new Rectangle({2.0, 0.0}, 1.0, 2.0);
-    shapeOutput(std::cout, shapes[0], "Rectangle");
   } catch (...) {
-    std::cerr << "Error allocation memory\n";
-    err = 2;
+    std::cerr << "Error!\n";
+    for (size_t i = 0; i < count; i++) {
+      delete shapes[i];
+    }
+    return 2;
+  }
+  shapeOutput(std::cout, shapes[0], "Rectangle");
+  float k = 0;
+  std::cin >> k;
+  if (k <= 0) {
+    std::cerr << "bad ratio";
+    for (size_t i = 0; i < k; i++) {
+      delete shapes[i];
+    }
+    return 1;
   }
 
+  try {
+    for (size_t i = 0; i < count; i++) {
+      scalePoint(shapes[i], {1.0, 0.0}, k);
+    }
+  } catch (...) {
+    std::cerr << "bad ratio";
+  }
+  shapeOutput(std::cout, shapes[0], "Rectangle");
   for (size_t i = 0; i < k; i++) {
     delete shapes[i];
   }
-
   return err;
 }
 
@@ -87,9 +107,6 @@ void kitserov::Rectangle::move(point_t p)
 }
 void kitserov::Rectangle::scale(float k)
 {
-  if (k <= 0){
-    throw std::logic_error("bad ratio");
-  }
   rect.width *= k;
   rect.height *= k;
 }
@@ -141,4 +158,14 @@ void kitserov::shapeOutput(std::ostream& os, Shape * sh, const char* name)
   rectangle_t frameRect = sh->getFrameRect();
   os << name << ": area = " << sh->getArea() << "\n";
   frameOutput(os, frameRect);
+}
+
+void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
+{
+  rectangle_t fr = sh -> getFrameRect();
+  float dx = p.x - fr.pos.x;
+  float dy = p.y - fr.pos.y;
+  sh -> move(dx, dy);
+  sh -> scale(k);
+  sh -> move(-dx * k, -dy * k);
 }
