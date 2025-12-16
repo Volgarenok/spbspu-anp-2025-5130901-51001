@@ -33,6 +33,18 @@ namespace kitserov
   private:
     rectangle_t rect;
   };
+  struct Xquare : Shape
+  {
+    Xquare(point_t p, float s);
+    float getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(float dx, float dy) override;
+    void move(point_t p) override;
+    void scale(float k) override;
+  private:
+    point_t centre;
+    float side;
+  };
   point_t * extend(const point_t* pts, size_t s, point_t fill);
   void extend(point_t** pts, size_t& s, point_t fill);
   void append(const Shape* sh, point_t** ppts, size_t& s);
@@ -164,4 +176,31 @@ void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
   sh -> move(dx, dy);
   sh -> scale(k);
   sh -> move(-dx * k, -dy * k);
+}
+
+
+kitserov::Xquare::Xquare(point_t p, float s) : 
+ centre(p),
+ side(s)
+{}
+float kitserov::Xquare::getArea()
+{
+  return 0.5 * side * side;
+}
+kitserov::rectangle_t kitserov::Xquare::getFrameRect()
+{
+  return {side, side, centre};
+}
+void kitserov::Xquare::move(float dx, float dy)
+{
+  centre.x += dx;
+  centre.y += dy;
+}
+void kitserov::Xquare::move(point_t p)
+{
+  centre = p;
+}
+void kitserov::Xquare::scale(float k)
+{
+  side *= k;
 }
