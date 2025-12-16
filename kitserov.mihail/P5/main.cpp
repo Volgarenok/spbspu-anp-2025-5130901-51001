@@ -37,14 +37,24 @@ namespace kitserov
   void extend(point_t ** pts, size_t & s, point_t fill);
   void append(const Shape * sh, point_t ** ppts, size_t & s);
   rectangle_t frame(const point_t * pts, size_t s);
-  char * canvas(rectangle_t fr, char fill);
-  void paint(point_t p, char* cnv, rectangle_t fr, char fill);
-  void flush(std::ostream& os, const char * cnv, rectangle_t fr);
 }
 
 int main()
 {
+  using namespace kitserov;
+  size_t k = 3;
+  Shape * shapes[k] = {};
+  try {
+    shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
+    shapes[1] = new Rectangle({1.0, 0.0}, 1.0, 2.0);
+    shapes[2] = new Rectangle({2.0, 0.0}, 1.0, 2.0);
+    
+  } catch (...) {
+    std::cerr << "Error allocation memory\n";
+    return 2;
+  }
 
+  return 0;
 }
 
 kitserov::Rectangle::Rectangle(point_t p, float w, float h):
@@ -76,15 +86,6 @@ void kitserov::Rectangle::scale(float k)
   rect.width *= k;
   rect.height *= k;
 }
-void kitserov::paint(point_t p, char * cnv, rectangle_t fr, char fill)
-{
-  int dx = static_cast<int>(p.x - (fr.pos.x - fr.width / 2));
-  int dy = static_cast<int>(fr.pos.y + fr.height / 2 - p.y);
-  if (dx >= 0 && dx < static_cast<int>(fr.width) && dy >= 0 && dy < static_cast<int>(fr.height))
-  {
-    cnv[dy * static_cast<int>(fr.width) + dx] = fill;
-  }
-}
 kitserov::point_t * kitserov::extend(const point_t * pts, size_t s, point_t fill)
 {
   point_t * r = new point_t[s + 1];
@@ -100,24 +101,6 @@ void kitserov::extend(point_t ** pts, size_t & s, point_t fill)
   delete[] *pts;
   ++s;
   *pts = r;
-}
-void kitserov::flush(std::ostream& os, const char * cnv, rectangle_t fr)
-{
-  for (size_t i = 0; i < fr.height; ++i){
-    for (size_t j = 0; j < fr.width; ++j){
-      os << cnv[i * static_cast<int>(fr.width) + j];
-    }
-    os << '\n';
-  }
-}
-char * kitserov::canvas(rectangle_t fr, char fill)
-{
-  size_t s = fr.width * fr.height;
-  char * c = new char [s];
-  for (size_t i = 0; i < s; ++i){
-    c[i] = fill;
-  }
-  return c;
 }
 kitserov::rectangle_t kitserov::frame(const point_t * pts, size_t s)
 {
