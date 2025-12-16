@@ -135,8 +135,7 @@ int main(int argc, char** argv)
     }
     return 2;
   }
-  delete[] matrix;
-  return 0;
   output << smirnova::findLocalMaximum(rows, cols, matrix) << "\n";
   output << smirnova::findElementsDiagonal(rows, cols, matrix) << "\n";
+  delete[] matrix;
 }
