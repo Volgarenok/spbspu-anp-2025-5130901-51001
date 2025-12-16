@@ -140,7 +140,6 @@ int main(int argc, char** argv)
   if (arg[0] == '2')
   {
     delete[] matrix;
-    return 2;
   }
   return 0;
 }
