@@ -33,9 +33,9 @@ namespace kitserov
   private:
     rectangle_t rect;
   };
-  point_t * extend(const point_t * pts, size_t s, point_t fill);
-  void extend(point_t ** pts, size_t & s, point_t fill);
-  void append(const Shape * sh, point_t ** ppts, size_t & s);
+  point_t * extend(const point_t* pts, size_t s, point_t fill);
+  void extend(point_t** pts, size_t & s, point_t fill);
+  void append(const Shape* sh, point_t** ppts, size_t & s);
   rectangle_t frame(const point_t * pts, size_t s);
 }
 
@@ -43,12 +43,19 @@ int main()
 {
   using namespace kitserov;
   size_t k = 3;
-  Shape * shapes[k] = {};
+  Shape* shapes[k] = {};
   try {
     shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
     shapes[1] = new Rectangle({1.0, 0.0}, 1.0, 2.0);
     shapes[2] = new Rectangle({2.0, 0.0}, 1.0, 2.0);
-    
+    rectangle_t frameRect = shapes[0]->getFrameRect();
+    float left = frameRect.pos.x - frameRect.width / 2;
+    float top = frameRect.pos.y + frameRect.height / 2;
+    float right = frameRect.pos.x + frameRect.width / 2;
+    float bottom = frameRect.pos.y - frameRect.height / 2;
+    std::cout << "Rectangle: area - " << shapes[0]->getArea() 
+     << ", frame (leftTop " << left << ", " << top
+     << " rightBot " << right << ", " << bottom << ")\n";
   } catch (...) {
     std::cerr << "Error allocation memory\n";
     return 2;
@@ -63,7 +70,7 @@ kitserov::Rectangle::Rectangle(point_t p, float w, float h):
 
 float kitserov::Rectangle::getArea() const
 {
-  return rect.width * rect.height;
+  return rect.width* rect.height;
 }
 kitserov::rectangle_t kitserov::Rectangle::getFrameRect() const
 {
@@ -88,21 +95,21 @@ void kitserov::Rectangle::scale(float k)
 }
 kitserov::point_t * kitserov::extend(const point_t * pts, size_t s, point_t fill)
 {
-  point_t * r = new point_t[s + 1];
+  point_t* r = new point_t[s + 1];
   for (size_t i = 0; i < s; ++i){
     r[i] = pts[i];
   }
   r[s] = fill;
   return r;
 }
-void kitserov::extend(point_t ** pts, size_t & s, point_t fill)
+void kitserov::extend(point_t** pts, size_t & s, point_t fill)
 {
-  point_t * r = extend(*pts, s, fill);
+  point_t* r = extend(*pts, s, fill);
   delete[] *pts;
   ++s;
   *pts = r;
 }
-kitserov::rectangle_t kitserov::frame(const point_t * pts, size_t s)
+kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
 {
   float minx = pts[0].x;
   float miny = pts[0].y;
