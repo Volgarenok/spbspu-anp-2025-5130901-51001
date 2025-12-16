@@ -57,12 +57,11 @@ namespace kitserov
 int main()
 {
   using namespace kitserov;
-  int err = 0;
   size_t count = 3;
   Shape* shapes[count] = {};
   try {
     shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
-    shapes[1] = new Rectangle({1.0, 0.0}, 1.0, 2.0);
+    shapes[1] = new Xquare({1.0, 0.0}, 2.0);
     shapes[2] = new Rectangle({2.0, 0.0}, 1.0, 2.0);
   } catch (...) {
     std::cerr << "Error!\n";
@@ -72,6 +71,7 @@ int main()
     return 2;
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
+  shapeOutput(std::cout, shapes[1], "Xquare");
   float k = 0;
   std::cin >> k;
   if (!std::cin or k <= 0) {
@@ -86,10 +86,11 @@ int main()
     scalePoint(shapes[i], {1.0, 0.0}, k);
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
+  shapeOutput(std::cout, shapes[1], "Xquare");
   for (size_t i = 0; i < k; i++) {
     delete shapes[i];
   }
-  return err;
+  return 0;
 }
 
 kitserov::Rectangle::Rectangle(point_t p, float w, float h):
@@ -183,11 +184,11 @@ kitserov::Xquare::Xquare(point_t p, float s) :
  centre(p),
  side(s)
 {}
-float kitserov::Xquare::getArea()
+float kitserov::Xquare::getArea() const
 {
   return 0.5 * side * side;
 }
-kitserov::rectangle_t kitserov::Xquare::getFrameRect()
+kitserov::rectangle_t kitserov::Xquare::getFrameRect() const
 {
   return {side, side, centre};
 }
