@@ -62,20 +62,16 @@ int main()
   shapeOutput(std::cout, shapes[0], "Rectangle");
   float k = 0;
   std::cin >> k;
-  if (k <= 0) {
-    std::cerr << "bad ratio";
+  if (!std::cin or k <= 0) {
+    std::cerr << "incorrect input\n";
     for (size_t i = 0; i < k; i++) {
       delete shapes[i];
     }
     return 1;
   }
 
-  try {
-    for (size_t i = 0; i < count; i++) {
-      scalePoint(shapes[i], {1.0, 0.0}, k);
-    }
-  } catch (...) {
-    std::cerr << "bad ratio";
+  for (size_t i = 0; i < count; i++) {
+    scalePoint(shapes[i], {1.0, 0.0}, k);
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   for (size_t i = 0; i < k; i++) {
