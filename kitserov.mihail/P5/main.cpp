@@ -34,9 +34,10 @@ namespace kitserov
     rectangle_t rect;
   };
   point_t * extend(const point_t* pts, size_t s, point_t fill);
-  void extend(point_t** pts, size_t & s, point_t fill);
-  void append(const Shape* sh, point_t** ppts, size_t & s);
+  void extend(point_t** pts, size_t& s, point_t fill);
+  void append(const Shape* sh, point_t** ppts, size_t& s);
   rectangle_t frame(const point_t * pts, size_t s);
+  void frameOutput(std::ostream& os, rectangle_t fr);
 }
 
 int main()
@@ -49,13 +50,8 @@ int main()
     shapes[1] = new Rectangle({1.0, 0.0}, 1.0, 2.0);
     shapes[2] = new Rectangle({2.0, 0.0}, 1.0, 2.0);
     rectangle_t frameRect = shapes[0]->getFrameRect();
-    float left = frameRect.pos.x - frameRect.width / 2;
-    float top = frameRect.pos.y + frameRect.height / 2;
-    float right = frameRect.pos.x + frameRect.width / 2;
-    float bottom = frameRect.pos.y - frameRect.height / 2;
-    std::cout << "Rectangle: area - " << shapes[0]->getArea() 
-     << ", frame (leftTop " << left << ", " << top
-     << " rightBot " << right << ", " << bottom << ")\n";
+    std::cout << "Rectangle: area = " << shapes[0]->getArea() << "\n";
+    frameOutput(std::cout, frameRect);
   } catch (...) {
     std::cerr << "Error allocation memory\n";
     return 2;
@@ -93,7 +89,7 @@ void kitserov::Rectangle::scale(float k)
   rect.width *= k;
   rect.height *= k;
 }
-kitserov::point_t * kitserov::extend(const point_t * pts, size_t s, point_t fill)
+kitserov::point_t* kitserov::extend(const point_t* pts, size_t s, point_t fill)
 {
   point_t* r = new point_t[s + 1];
   for (size_t i = 0; i < s; ++i){
@@ -102,7 +98,7 @@ kitserov::point_t * kitserov::extend(const point_t * pts, size_t s, point_t fill
   r[s] = fill;
   return r;
 }
-void kitserov::extend(point_t** pts, size_t & s, point_t fill)
+void kitserov::extend(point_t** pts, size_t& s, point_t fill)
 {
   point_t* r = extend(*pts, s, fill);
   delete[] *pts;
@@ -125,4 +121,13 @@ kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
   float h = maxy - miny;
   point_t p = {minx + w/2, miny + h/2};
   return rectangle_t{w, h, p};
+}
+
+void kitserov::frameOutput(std::ostream& os, rectangle_t fr)
+{
+  float left = fr.pos.x - fr.width / 2;
+  float top = fr.pos.y + fr.height / 2;
+  float right = fr.pos.x + fr.width / 2;
+  float bottom = fr.pos.y - fr.height / 2;
+  os << "Frame (leftTop " << left << ", " << top << " rightBot " << right << ", " << bottom << ")\n";
 }
