@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <iomanip>
 
 namespace karpenko
 {
@@ -340,8 +341,7 @@ int main()
   for (size_t i = 0; i < SHAPE_COUNT; ++i)
   {
     std::cout << "Shape " << i + 1 << ":\n";
-    std::cout << "  Area: " << std::fixed << std::setprecision(2)
-              << shapes[i]->getArea() << "\n";
+    std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
 
     rectangle_t frame = shapes[i]->getFrameRect();
     std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y << "), width " << frame.width << ", height " << frame.height << "\n";
@@ -390,6 +390,24 @@ int main()
   }
 
   scaleShapes(shapes, SHAPE_COUNT, scalePoint, coefficient);
+
+  std::cout << "\nAfter scaling:\n";
+  totalArea = 0.0;
+  for (size_t i = 0; i < SHAPE_COUNT; ++i)
+  {
+    std::cout << "Shape " << i + 1 << ":\n";
+    std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
+
+    rectangle_t frame = shapes[i]->getFrameRect();
+    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y << "), width " << frame.width << ", height " << frame.height << "\n";
+
+    totalArea += shapes[i]->getArea();
+  }
+
+  std::cout << "Total area: " << totalArea << "\n";
+
+  overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
+  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
 
   for (size_t i = 0; i < SHAPE_COUNT; ++i)
   {
