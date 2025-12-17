@@ -248,6 +248,20 @@ namespace karpenko
       vertexD.y = center.y + (vertexD.y - center.y) * coefficient;
     }
   };
+
+  void scaleShapes(Shape** shapes, size_t count, const point_t& point, double coefficient)
+  {
+    for (size_t i = 0; i < count; ++i)
+    {
+      rectangle_t frame = shapes[i]->getFrameRect();
+      double dx = frame.pos.x - point.x;
+      double dy = frame.pos.y - point.y;
+
+      shapes[i]->move(point);
+      shapes[i]->scale(coefficient);
+      shapes[i]->move(-dx * coefficient, -dy * coefficient);
+    }
+  }
 }
 
 int main()
