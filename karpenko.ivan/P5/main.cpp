@@ -340,7 +340,8 @@ int main()
   for (size_t i = 0; i < SHAPE_COUNT; ++i)
   {
     std::cout << "Shape " << i + 1 << ":\n";
-    std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
+    std::cout << "  Area: " << std::fixed << std::setprecision(2)
+              << shapes[i]->getArea() << "\n";
 
     rectangle_t frame = shapes[i]->getFrameRect();
     std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y << "), width " << frame.width << ", height " << frame.height << "\n";
@@ -352,6 +353,43 @@ int main()
 
   rectangle_t overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
   std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
+
+  point_t scalePoint;
+  double coefficient;
+
+  std::cout << "\nEnter scaling point (x y): ";
+  if (!(std::cin >> scalePoint.x >> scalePoint.y))
+  {
+    std::cerr << "Error: invalid point coordinates\n";
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    {
+      delete shapes[i];
+    }
+    return 1;
+  }
+
+  std::cout << "Enter scaling coefficient: ";
+  if (!(std::cin >> coefficient))
+  {
+    std::cerr << "Error: invalid coefficient\n";
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    {
+      delete shapes[i];
+    }
+    return 1;
+  }
+
+  if (coefficient <= 0.0)
+  {
+    std::cerr << "Error: scaling coefficient must be positive\n";
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    {
+      delete shapes[i];
+    }
+    return 1;
+  }
+
+  scaleShapes(shapes, SHAPE_COUNT, scalePoint, coefficient);
 
   for (size_t i = 0; i < SHAPE_COUNT; ++i)
   {
