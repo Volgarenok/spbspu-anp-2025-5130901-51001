@@ -262,6 +262,53 @@ namespace karpenko
       shapes[i]->move(-dx * coefficient, -dy * coefficient);
     }
   }
+
+  rectangle_t getOverallFrameRect(Shape** shapes, size_t count)
+  {
+    if (count == 0)
+    {
+      rectangle_t result = {0.0, 0.0, {0.0, 0.0}};
+      return result;
+    }
+
+    rectangle_t firstFrame = shapes[0]->getFrameRect();
+    double minX = firstFrame.pos.x - firstFrame.width / 2.0;
+    double maxX = firstFrame.pos.x + firstFrame.width / 2.0;
+    double minY = firstFrame.pos.y - firstFrame.height / 2.0;
+    double maxY = firstFrame.pos.y + firstFrame.height / 2.0;
+
+    for (size_t i = 1; i < count; ++i)
+    {
+      rectangle_t frame = shapes[i]->getFrameRect();
+      double left = frame.pos.x - frame.width / 2.0;
+      double right = frame.pos.x + frame.width / 2.0;
+      double bottom = frame.pos.y - frame.height / 2.0;
+      double top = frame.pos.y + frame.height / 2.0;
+
+      if (left < minX)
+      {
+        minX = left;
+      }
+      if (right > maxX)
+      {
+        maxX = right;
+      }
+      if (bottom < minY)
+      {
+        minY = bottom;
+      }
+      if (top > maxY)
+      {
+        maxY = top;
+      }
+    }
+
+    double width = maxX - minX;
+    double height = maxY - minY;
+    point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
+    rectangle_t result = {width, height, center};
+    return result;
+  }
 }
 
 int main()
