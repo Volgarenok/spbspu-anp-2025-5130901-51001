@@ -183,6 +183,37 @@ namespace karpenko
         center.y = vertexA.y + t * (vertexC.y - vertexA.y);
       }
     }
+
+    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const
+    {
+      return 0.5 * std::fabs(
+        (b.x - a.x) * (c.y - a.y) -
+        (c.x - a.x) * (b.y - a.y)
+      );
+    }
+
+  public:
+    double getArea() const override
+    {
+      double area1 = triangleArea(vertexA, vertexB, vertexC);
+      double area2 = triangleArea(vertexA, vertexC, vertexD);
+      return area1 + area2;
+    }
+
+    rectangle_t getFrameRect() const override
+    {
+      double minX = std::min({vertexA.x, vertexB.x, vertexC.x, vertexD.x});
+      double maxX = std::max({vertexA.x, vertexB.x, vertexC.x, vertexD.x});
+      double minY = std::min({vertexA.y, vertexB.y, vertexC.y, vertexD.y});
+      double maxY = std::max({vertexA.y, vertexB.y, vertexC.y, vertexD.y});
+
+      double width = maxX - minX;
+      double height = maxY - minY;
+      point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
+      
+      rectangle_t result = {width, height, center};
+      return result;
+    }
   };
 }
 
