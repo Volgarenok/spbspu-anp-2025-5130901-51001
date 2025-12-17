@@ -166,8 +166,22 @@ namespace karpenko
   private:
     void calculateCenter()
     {
-      center.x = (vertexA.x + vertexB.x + vertexC.x + vertexD.x) / 4.0;
-      center.y = (vertexA.y + vertexB.y + vertexC.y + vertexD.y) / 4.0;
+      double denominator = (vertexA.x - vertexC.x) * (vertexB.y - vertexD.y) -
+                         (vertexA.y - vertexC.y) * (vertexB.x - vertexD.x);
+
+      if (std::fabs(denominator) < 1e-9)
+      {
+        center.x = (vertexA.x + vertexB.x + vertexC.x + vertexD.x) / 4.0;
+        center.y = (vertexA.y + vertexB.y + vertexC.y + vertexD.y) / 4.0;
+      }
+      else
+      {
+        double t = ((vertexA.x - vertexB.x) * (vertexB.y - vertexD.y) -
+                   (vertexA.y - vertexB.y) * (vertexB.x - vertexD.x)) / denominator;
+
+        center.x = vertexA.x + t * (vertexC.x - vertexA.x);
+        center.y = vertexA.y + t * (vertexC.y - vertexA.y);
+      }
     }
   };
 }
