@@ -23,7 +23,11 @@ int main() {
     free(str);
     return 1;
   }
-  std::cout << los::latRmv(str, strForFirstEx, str_size) << "\n" << los::hasRep(str, str_size) << "\n";
+  size_t actual_len = 0;
+  while (str[actual_len] != '\0') {
+    actual_len++;
+  }
+  std::cout << los::latRmv(str, strForFirstEx, str_size) << "\n" << los::hasRep(str, actual_len) << "\n";
   free(str);
   free(strForFirstEx);
   return 0;
@@ -65,13 +69,6 @@ char * losev::getline(std::istream & in, size_t & capacity) {
       free(str);
       str = str_new;
     }
-  }
-  if (size == 0) {
-    free(str);
-    if (is_skips) {
-      in >> std::skipws;
-    }
-    return nullptr;
   }
   str[size] = '\0';
   if (is_skips) {
