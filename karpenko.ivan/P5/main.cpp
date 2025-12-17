@@ -144,6 +144,32 @@ namespace karpenko
       vertexC.y = center.y + (vertexC.y - center.y) * coefficient;
     }
   };
+
+  struct ComplexQuad : Shape
+  {
+    point_t vertexA;
+    point_t vertexB;
+    point_t vertexC;
+    point_t vertexD;
+    point_t center;
+
+    ComplexQuad(const point_t& a, const point_t& b,
+                const point_t& c, const point_t& d) :
+      vertexA(a),
+      vertexB(b),
+      vertexC(c),
+      vertexD(d)
+    {
+      calculateCenter();
+    }
+
+  private:
+    void calculateCenter()
+    {
+      center.x = (vertexA.x + vertexB.x + vertexC.x + vertexD.x) / 4.0;
+      center.y = (vertexA.y + vertexB.y + vertexC.y + vertexD.y) / 4.0;
+    }
+  };
 }
 
 int main()
