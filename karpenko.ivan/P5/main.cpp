@@ -313,5 +313,50 @@ namespace karpenko
 
 int main()
 {
+  using namespace karpenko;
+  
+  const size_t SHAPE_COUNT = 4;
+  Shape* shapes[SHAPE_COUNT] = {nullptr};
+
+  try
+  {
+    shapes[0] = new Rectangle(4.0, 3.0, {0.0, 0.0});
+    shapes[1] = new Triangle({-2.0, -1.0}, {2.0, -1.0}, {0.0, 3.0});
+    shapes[2] = new ComplexQuad({-1.0, 0.0}, {0.0, -2.0}, {1.0, 0.0}, {0.0, 2.0});
+    shapes[3] = new Rectangle(2.0, 5.0, {3.0, 2.0});
+  }
+  catch (const std::bad_alloc&)
+  {
+    std::cerr << "Memory allocation failed\n";
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    {
+      delete shapes[i];
+    }
+    return 1;
+  }
+
+  std::cout << "Before scaling:\n";
+  double totalArea = 0.0;
+  for (size_t i = 0; i < SHAPE_COUNT; ++i)
+  {
+    std::cout << "Shape " << i + 1 << ":\n";
+    std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
+
+    rectangle_t frame = shapes[i]->getFrameRect();
+    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y << "), width " << frame.width << ", height " << frame.height << "\n";
+
+    totalArea += shapes[i]->getArea();
+  }
+
+  std::cout << "Total area: " << totalArea << "\n";
+
+  rectangle_t overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
+  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
+
+  for (size_t i = 0; i < SHAPE_COUNT; ++i)
+  {
+    delete shapes[i];
+  }
+
   return 0;
 }
