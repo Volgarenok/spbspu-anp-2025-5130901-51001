@@ -17,6 +17,11 @@ int main() {
     std::cerr << "Fail memory\n";
     return 1;
   }
+  if (str[0] == '\0') {
+    std::cerr << "Empty input\n";
+    free(str);
+    return 1;
+  }
   char * strForFirstEx = reinterpret_cast< char* >(malloc(str_size * sizeof(char)));
   if (!strForFirstEx) {
     std::cerr << "Memory allocation failed\n";
