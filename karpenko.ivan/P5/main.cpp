@@ -214,6 +214,39 @@ namespace karpenko
       rectangle_t result = {width, height, center};
       return result;
     }
+
+    void move(const point_t& point) override
+    {
+      double dx = point.x - center.x;
+      double dy = point.y - center.y;
+      move(dx, dy);
+    }
+
+    void move(double dx, double dy) override
+    {
+      vertexA.x += dx;
+      vertexA.y += dy;
+      vertexB.x += dx;
+      vertexB.y += dy;
+      vertexC.x += dx;
+      vertexC.y += dy;
+      vertexD.x += dx;
+      vertexD.y += dy;
+      center.x += dx;
+      center.y += dy;
+    }
+
+    void scale(double coefficient) override
+    {
+      vertexA.x = center.x + (vertexA.x - center.x) * coefficient;
+      vertexA.y = center.y + (vertexA.y - center.y) * coefficient;
+      vertexB.x = center.x + (vertexB.x - center.x) * coefficient;
+      vertexB.y = center.y + (vertexB.y - center.y) * coefficient;
+      vertexC.x = center.x + (vertexC.x - center.x) * coefficient;
+      vertexC.y = center.y + (vertexC.y - center.y) * coefficient;
+      vertexD.x = center.x + (vertexD.x - center.x) * coefficient;
+      vertexD.y = center.y + (vertexD.y - center.y) * coefficient;
+    }
   };
 }
 
