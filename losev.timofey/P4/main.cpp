@@ -44,16 +44,8 @@ char * losev::getline(std::istream & in, size_t & capacity) {
     in >> std::noskipws;
   }
   size_t size = 0;
-  for (; in && size < capacity; ++size) {
-    in >> str[size];
-    if (in.fail()) {
-      if (is_skips) {
-        in >> std::skipws;
-      }
-      free(str);
-      return nullptr;
-    }
-    if (size == (capacity - 1)) {
+  while (in) {
+    if (size >= (capacity - 1)) {
       capacity += 10;
       char * str_new = reinterpret_cast< char* >(malloc(capacity * sizeof(char)));
       if (!str_new) {
@@ -69,6 +61,11 @@ char * losev::getline(std::istream & in, size_t & capacity) {
       free(str);
       str = str_new;
     }
+    in >> str[size];
+    if (in.fail()) {
+      break;
+    }
+    size++;
   }
   str[size] = '\0';
   if (is_skips) {
