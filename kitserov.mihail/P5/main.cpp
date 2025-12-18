@@ -45,6 +45,21 @@ namespace kitserov
     point_t centre;
     float side;
   };
+  struct Polygon : Shape
+  {
+    Polygon(point_t* vertices, size_t vertexCount);
+    Polygon(const Polygon& other);
+    float getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(float dx, float dy) override;
+    void move(point_t p) override;
+    void scale(float k) override;
+    ~Polygon();
+  private:
+      point_t* vertices_;
+      size_t vertexCount_;
+      point_t center_;
+  };
   point_t * extend(const point_t* pts, size_t s, point_t fill);
   void extend(point_t** pts, size_t& s, point_t fill);
   void append(const Shape* sh, point_t** ppts, size_t& s);
@@ -204,4 +219,81 @@ void kitserov::Xquare::move(point_t p)
 void kitserov::Xquare::scale(float k)
 {
   side *= k;
+}
+
+kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount) : 
+ vertices_(new point_t[vertexCount]), 
+ vertexCount_(vertexCount)
+{
+  if (vertexCount < 3) {
+    delete[] vertices_;
+    throw std::logic_error("Polygon must have at least 3 vertices");
+  }
+  for (size_t i = 0; i < vertexCount; ++i) {
+    vertices_[i] = vertices[i];
+  }
+  float sumX = 0, sumY = 0;
+  for (size_t i = 0; i < vertexCount_; ++i) {
+    sumX += vertices_[i].x;
+    sumY += vertices_[i].y;
+  }
+  center_ = {sumX / vertexCount_, sumY / vertexCount_};
+}
+kitserov::Polygon::~Polygon()
+{
+  delete[] vertices_;
+}
+float kitserov::Polygon::getArea() const
+{
+  float area = 0;
+  for (size_t i = 0; i < vertexCount_; ++i) {
+    size_t j = (i + 1) % vertexCount_;
+    area += vertices_[i].x * vertices_[j].y - vertices_[j].x * vertices_[i].y;
+  }
+  return std::abs(area) / 2.0;
+}
+kitserov::rectangle_t kitserov::Polygon::getFrameRect() const
+{
+  if (vertexCount_ == 0) {
+    return {0, 0, {0, 0}};
+  }
+  float minX = vertices_[0].x;
+  float minY = vertices_[0].y;
+  float maxX = vertices_[0].x;
+  float maxY = vertices_[0].y;
+  for (size_t i = 1; i < vertexCount_; ++i) {
+    minX = std::min(minX, vertices_[i].x);
+    minY = std::min(minY, vertices_[i].y);
+    maxX = std::max(maxX, vertices_[i].x);
+    maxY = std::max(maxY, vertices_[i].y);
+  }
+  float width = maxX - minX;
+  float height = maxY - minY;
+  point_t center = {minX + width/2, minY + height/2};
+  return {width, height, center};
+}
+
+void kitserov::Polygon::move(float dx, float dy)
+{
+  for (size_t i = 0; i < vertexCount_; ++i) {
+    vertices_[i].x += dx;
+    vertices_[i].y += dy;
+  }
+  center_.x += dx;
+  center_.y += dy;
+}
+void kitserov::Polygon::move(point_t p)
+{
+  float dx = p.x - center_.x;
+  float dy = p.y - center_.y;
+  move(dx, dy);
+}
+void kitserov::Polygon::scale(float k)
+{
+  for (size_t i = 0; i < vertexCount_; ++i) {
+    vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
+    vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
+  }
+  center_.x = center_.x + (center_.x - center_.x) * k;
+  center_.y = center_.y + (center_.y - center_.y) * k;
 }
