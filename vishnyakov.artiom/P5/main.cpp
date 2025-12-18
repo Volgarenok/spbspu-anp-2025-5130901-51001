@@ -46,9 +46,85 @@ int main()
 
 }
 
+// Невыпуклый четырёхугольник
+
+vishnyakov::Concave::Concave(point_t a, point_t b, point_t c, point_t d):
+ spot1{a},
+ spot2{b},
+ spot3{c},
+ spot4{d},
+ center{point_t {(a.x + b.x + c.x + d.x) / 4.0, (a.y + b.y + c.y + d.y) / 4.0}}
+{}
+
+vishnyakov::rectangle_t vishnyakov::Concave::getFrameRect()
+{
+  double minx = std::min(std::min(spot1.x, spot2.x, spot3.x), spot4.x);
+  double maxx = std::max(std::max(spot1.x, spot2.x, spot3.x), spot4.x);
+  double miny = std::min(std::min(spot1.y, spot2.y, spot3.y), spot4.y);
+  double maxy = std::max(std::max(spot1.y, spot2.y, spot3.y), spot4.y);
+
+  double width = maxx - minx;
+  double height = maxy - miny;
+
+  point_t center = {(maxx - minx) / 2.0, (maxy - miny) / 2.0};
+
+  return rectangle_t {width, height, center};
+}
+
+double vishnyakov::Concave::getArea() const
+{
+  double tmp_value_1 = (spot1.x - spot2.x) * (spot1.y + spot2.y);
+  double tmp_value_2 = (spot2.x - spot3.x) * (spot2.y + spot3.y);
+  double tmp_value_3 = (spot3.x - spot4.x) * (spot3.y + spot4.y);
+  double tmp_value_4 = (spot4.x - spot1.x) * (spot4.y + spot1.y);
+
+  return std::abs(tmp_value_1 + tmp_value_2 + tmp_value_3 + tmp_value_4);
+}
+
+void vishnyakov::Concave::move(double dx, double dy)
+{
+  spot1.x += dx;
+  spot2.x += dx;
+  spot3.x += dx;
+  spot4.x += dx;
+
+  spot1.y += dy;
+  spot2.y += dy;
+  spot3.y += dy;
+  spot4.y += dy;
+
+  center.x += dx;
+  center.y += dy;
+}
+
+void vishnyakov::Concave::move(const point_t &newPos)
+{
+  double dx = newPos.x - center.x;
+  double dy = newPos.y - center.y;
+
+  vishnyakov::Concave::move(dx, dy);
+}
+
+void vishnyakov::Concave::scale(double coefficient)
+{
+  spot1.x = center.x + (spot1.x - center.x) * coefficient;
+  spot2.x = center.x + (spot2.x - center.x) * coefficient;
+  spot3.x = center.x + (spot3.x - center.x) * coefficient;
+  spot4.x = center.x + (spot4.x - center.x) * coefficient;
+
+  spot1.y = center.y + (spot1.y - center.y) * coefficient;
+  spot2.y = center.y + (spot2.y - center.y) * coefficient;
+  spot3.y = center.y + (spot3.y - center.y) * coefficient;
+  spot4.y = center.y + (spot4.y - center.y) * coefficient;
+}
+
+// Треугольник
 
 vishnyakov::Triangle::Triangle(point_t a, point_t b, point_t c):
- spot1{a}, spot2{b}, spot3{c}, center{point_t {(a.x+b.x+c.x) / 3.0, (a.y+b.y+c.y) / 3.0}}
+ spot1{a},
+ spot2{b},
+ spot3{c},
+ center{point_t {(a.x + b.x + c.x) / 3.0, (a.y + b.y + c.y) / 3.0}}
 {}
 
 vishnyakov::rectangle_t vishnyakov::Triangle::getFrameRect()
