@@ -177,4 +177,48 @@ namespace krivoshapov {
     point_t Rubber::getShapeCenter() const {
         return shapeCenter_;
     }
+
+    Rectangle::Rectangle(const point_t& center, double width, double height) :
+      center_(center),
+      width_(width),
+      height_(height)
+    {
+        if (width <= 0.0 || height <= 0.0) {
+            std::cerr << "Error: rectangle dimensions must be positive\n";
+        }
+    }
+
+    double Rectangle::getArea() const {
+        return width_ * height_;
+    }
+
+    rectangle_t Rectangle::getFrameRect() const {
+        rectangle_t frame;
+        frame.width = width_;
+        frame.height = height_;
+        frame.pos = center_;
+        return frame;
+    }
+
+    void Rectangle::move(double dx, double dy) {
+        center_.x += dx;
+        center_.y += dy;
+    }
+
+    void Rectangle::move(const point_t& newPos) {
+        center_ = newPos;
+    }
+
+    void Rectangle::scale(double factor) {
+        if (factor <= 0.0) {
+            std::cerr << "Error: scale must be positive\n";
+            return;
+        }
+        width_ *= factor;
+        height_ *= factor;
+    }
+
+    point_t Rectangle::getCenter() const {
+        return center_;
+    }
 }
