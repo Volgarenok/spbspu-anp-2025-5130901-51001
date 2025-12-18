@@ -144,7 +144,7 @@ int main(int argc, char ** argv)
 
   if (first_parm == 1)
   {
-    int matrix[row][col];
+    int matrix[row + 0][col + 0];
     if (petrenko::fill_fix_array(input, *matrix, row, col) == 2)
     {
       return 2;
