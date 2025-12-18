@@ -147,6 +147,11 @@ int main(int argc, char ** argv)
     }
     std::ofstream(name_output) << std::boolalpha << petrenko::chek_is_lower_triangular_matrix(matrix, row, col);
   } else if (first_parm == 2) {
+    if (row == 0 || col == 0)
+    {
+      std::ofstream(name_output) << 0;
+      return 0;
+    }
     int **matrix = new int *[row];
     matrix[0] = new int[row * col];
     for (size_t i = 1; i != row; ++i)
