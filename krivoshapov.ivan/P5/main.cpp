@@ -39,4 +39,20 @@ namespace krivoshapov {
           double radius_;
     };
 
+    class Rubber : public Shape {
+        public:
+          Rubber(const point_t& circleCenter, double radius, const point_t& shapeCenter);
+          double getArea() const override;
+          rectangle_t getFrameRect() const override;
+          void move(double dx, double dy) override;
+          void move(const point_t& newPos) override;
+          void scale(double factor) override;
+          point_t getCircleCenter() const;
+          point_t getShapeCenter() const;
+
+        private:
+          point_t circleCenter_;
+          double radius_;
+          point_t shapeCenter_;
+    };
 }
