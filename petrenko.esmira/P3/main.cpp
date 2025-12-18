@@ -83,7 +83,7 @@ namespace petrenko
         if (!(in >> matrix[i][j]))
         {
           remove_matrix(matrix);
-          std::cerr << "Error no matrix element" << " " << j << '\n';
+          std::cerr << "Error no matrix element" << '\n';
           return 2;
         }
       }
@@ -110,18 +110,17 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  if (!isdigit(*argv[1]))
-  {
-    std::cerr << "First parameter is not a number" << '\n';
+  char * end = nullptr;
+  long num = std::strtol(argv[1], &end, 10);
+  if (num != 1 && num != 2) {
+    std::cerr << "First argument is out of range\n";
     return 1;
-  }
-  int first_parm = std::atoi(argv[1]);
-  if (first_parm > 2 || first_parm < 1)
-  {
-    std::cerr << "First parameter is out of range" << '\n';
+  } else if (isspace(*end) || end == argv[1] || *end != '\0') {
+    std::cerr << "First argument is not a number\n";
     return 1;
   }
 
+  int first_parm = std::atoi(argv[1]);
   char* name_output = argv[3];
   std::ifstream input(argv[2]);
 
