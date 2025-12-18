@@ -1,15 +1,13 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 
 namespace petrenko
 {
-  void variant1(int * matrix, size_t row, size_t col, std::string name_output)
+  bool chek_is_lower_triangular_matrix(int * matrix, size_t row, size_t col)
   {
     if (row == 0 || col == 0)
     {
-      std::ofstream(name_output) << "false";
-      return;
+      return 0;
     }
     size_t nice_row = 0;
     for (size_t i = 0; i < row; ++i)
@@ -29,16 +27,15 @@ namespace petrenko
       }
     }
     if (nice_row == row) {
-      std::ofstream(name_output) << "true";
+      return true;
     } else {
-      std::ofstream(name_output) << "false";
+      return false;
     }
-    return;
   }
 
-  void variant2(int ** matrix, size_t row, size_t col, std::string name_output)
+  size_t chek_how_col_identic_elem(int ** matrix, size_t row, size_t col)
   {
-    size_t right_col = 0;
+    size_t replay_col = 0;
     for (size_t i = 0; i < col; ++i)
     {
       int last = matrix[0][i];
@@ -46,85 +43,54 @@ namespace petrenko
       {
         if (matrix[j][i] == last)
         {
-          ++right_col;
+          ++replay_col;
           last = matrix[j][i];
           break;
         }
         last = matrix[j][i];
       }
     }
-    std::ofstream(name_output) << right_col;
-    return;
+    return col - replay_col;
   }
 
-  int take_matrix(std::string name, std::string name_output, int num)
+  int fill_fix_array(std::ifstream &in, int * matrix, size_t row, size_t col)
   {
-    std::ifstream input(name);
-
-    if (!input.is_open())
+    for (size_t i = 0; i < row; ++i)
     {
-      std::cerr << "Error open file" << '\n';
-      return 2;
-    }
-
-    size_t row, col;
-    input >> row >> col;
-    if (input.fail())
-    {
-      std::cerr << "Error no matrix element" << '\n';
-      return 2;
-    }
-    if (num == 1)
-    {
-      int matrix[row][col];
-      for (size_t i = 0; i < row; ++i)
+      for (size_t j = 0; j < col; ++j)
       {
-        for (size_t j = 0; j < col; ++j)
+        if (!(in >> *matrix))
         {
-          input >> matrix[i][j];
-          if (input.fail())
-          {
-            std::cerr << "Error no matrix element" << '\n';
-            return 2;
-          }
+          std::cerr << "Error no matrix element" << '\n';
+          return 2;
+        }
+        ++matrix;
+      }
+    }
+    return 0;
+  }
+
+  void remove_matrix(int ** matrix)
+  {
+    delete [] matrix[0];
+    delete [] matrix;
+  }
+
+  int fill_dynamic_array(std::ifstream &in, int **matrix, size_t row, size_t col)
+  {
+    size_t i = 0;
+    for (; i < row; ++i)
+    {
+      for (size_t j = 0; j < col; ++j)
+      {
+        if (!(in >> matrix[i][j]))
+        {
+          remove_matrix(matrix);
+          std::cerr << "Error no matrix element" << " " << j << '\n';
+          return 2;
         }
       }
-      variant1(&matrix[0][0], row, col, name_output);
-      return 0;
     }
-    else if (num == 2)
-    {
-      int **matrix = new int *[row];
-      for (size_t i = 0; i < row; ++i)
-      {
-        matrix[i] = new int[col];
-      }
-      size_t i = 0;
-      for (; i < row; ++i)
-      {
-        for (size_t j = 0; j < col; ++j)
-        {
-          input >> matrix[i][j];
-          if (input.fail())
-          {
-            for (size_t e = 0; e < row; ++e)
-            {
-              delete [] matrix[e];
-            }
-            delete [] matrix;
-            std::cerr << "Error no matrix element" << '\n';
-            return 2;
-          }
-        }
-      }
-      variant2(matrix, row, col, name_output);
-      for (size_t i = 0; i < row; ++i)
-      {
-        delete [] matrix[i];
-      }
-      delete [] matrix;
-    }
-    input.close();
     return 0;
   }
 }
@@ -152,14 +118,51 @@ int main(int argc, char ** argv)
     std::cerr << "First parameter is not a number" << '\n';
     return 1;
   }
-  int first_parm = atoi(argv[1]);
+  int first_parm = std::atoi(argv[1]);
   if (first_parm > 2 || first_parm < 1)
   {
     std::cerr << "First parameter is out of range" << '\n';
     return 1;
   }
 
-  std::string name_output = argv[3];
-  std::string name_input = argv[2];
-  return petrenko::take_matrix(name_input, name_output, first_parm);
+  char* name_output = argv[3];
+  std::ifstream input(argv[2]);
+
+  if (!input.is_open())
+  {
+    std::cerr << "Error open file" << '\n';
+    return 2;
+  }
+
+  size_t row, col;
+  input >> row >> col;
+  if (input.fail())
+  {
+    std::cerr << "Error no matrix element" << '\n';
+    return 2;
+  }
+
+  if (first_parm == 1)
+  {
+    int matrix[row][col];
+    if (petrenko::fill_fix_array(input, *matrix, row, col) == 2)
+    {
+      return 2;
+    }
+    std::ofstream(name_output) << std::boolalpha << petrenko::chek_is_lower_triangular_matrix(*matrix, row, col);
+  } else if (first_parm == 2) {
+    int **matrix = new int *[row];
+    matrix[0] = new int[row * col];
+    for (size_t i = 1; i != row; ++i)
+    {
+      matrix[i] = matrix[i - 1] + col;
+    }
+    if (petrenko::fill_dynamic_array(input, matrix, row, col) == 2)
+    {
+      return 2;
+    }
+    std::ofstream(name_output) << petrenko::chek_how_col_identic_elem(matrix, row, col);
+    petrenko::remove_matrix(matrix);
+  }
+  return 0;
 }
