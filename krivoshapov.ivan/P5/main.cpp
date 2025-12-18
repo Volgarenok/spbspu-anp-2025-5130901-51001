@@ -71,4 +71,47 @@ namespace krivoshapov {
           double width_;
           double height_;
     };
+
+    Circle::Circle(const point_t& center, double radius) :
+      center_(center),
+      radius_(radius)
+    {
+        if (radius <= 0.0){
+            std::cerr << "Error: circle radius must be positive\n";
+        }
+    }
+
+    double Circle::getArea() const {
+        return M_PI * radius_ * radius_;
+    }
+
+    rectangle_t Circle::getFrameRect() const {
+        rectangle_t frame;
+        frame.width = 2.0 * radius_;
+        frame.height = 2.0 * radius_;
+        frame.pos = center_;
+        return frame;
+    }
+
+    void Circle::move(double dx, double dy) {
+        center_.x += dx;
+        center_.y += dy;
+    }
+
+    void Circle::move(const point_t& newPos){
+        center_ = newPos;
+    }
+
+    void Circle::scale(double factor) {
+        if (factor <= 0.0) {
+            std::cerr << "Error: scale factor must be positive\n";
+            return;
+        }
+        radius_ *= factor;
+    }
+
+
+    point_t Circle::getCenter() const {
+        return center_;
+    }
 }
