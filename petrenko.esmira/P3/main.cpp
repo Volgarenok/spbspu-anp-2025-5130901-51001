@@ -3,7 +3,7 @@
 
 namespace petrenko
 {
-  bool chek_is_lower_triangular_matrix(int * matrix, size_t row, size_t col)
+  bool chek_is_lower_triangular_matrix(int *matrix, size_t row, size_t col)
   {
     if (row == 0 || col == 0)
     {
@@ -55,17 +55,14 @@ namespace petrenko
 
   int fill_fix_array(std::ifstream &in, int * matrix, size_t row, size_t col)
   {
-    for (size_t i = 0; i < row; ++i)
+    for (size_t i = 0; i < row * col; ++i)
     {
-      for (size_t j = 0; j < col; ++j)
+      if (!(in >> *matrix))
       {
-        if (!(in >> *matrix))
-        {
-          std::cerr << "Error no matrix element" << '\n';
-          return 2;
-        }
-        ++matrix;
+        std::cerr << "Error no matrix element" << '\n';
+        return 2;
       }
+      ++matrix;
     }
     return 0;
   }
@@ -144,12 +141,12 @@ int main(int argc, char ** argv)
 
   if (first_parm == 1)
   {
-    int matrix[row + 0][col + 0];
-    if (petrenko::fill_fix_array(input, *matrix, row, col) == 2)
+    int matrix[10000];
+    if (petrenko::fill_fix_array(input, matrix, row, col) == 2)
     {
       return 2;
     }
-    std::ofstream(name_output) << std::boolalpha << petrenko::chek_is_lower_triangular_matrix(*matrix, row, col);
+    std::ofstream(name_output) << std::boolalpha << petrenko::chek_is_lower_triangular_matrix(matrix, row, col);
   } else if (first_parm == 2) {
     int **matrix = new int *[row];
     matrix[0] = new int[row * col];
