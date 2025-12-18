@@ -110,8 +110,71 @@ namespace krivoshapov {
         radius_ *= factor;
     }
 
-
     point_t Circle::getCenter() const {
         return center_;
+    }
+
+    Rubber::Rubber(const point_t& circleCenter, double radius, const point_t& shapeCenter) :
+      circleCenter_(circleCenter),
+      radius_(radius),
+      shapeCenter_(shapeCenter)
+    {
+        if (radius <= 0.0){
+            std::cerr << "Error: rubber radius must be positive\n";
+        }
+
+        double dx = shapeCenter.x - circleCenter.x;
+        double dy = shapeCenter.y - circleCenter.y;
+        double dist = std::sqrt(dx * dx + dy * dy);
+
+        if (dist >= radius) {
+            std::cerr << "Error: shape center must be inside the circle\n";
+        }
+    }
+
+    double Rubber::getArea() const {
+        return M_PI * radius_ * radius_;
+    }
+
+    rectangle_t Rubber::getFrameRect() const {
+        rectangle_t frame;
+        frame.width = 2.0 * radius_;
+        frame.height = 2.0 * radius_;
+        frame.pos = circleCenter_;
+        return frame;
+    }
+
+    void Rubber::move(double dx, double dy){
+        circleCenter_.x += dx;
+        circleCenter_.y += dy;
+        shapeCenter_.x += dx;
+        shapeCenter_.y += dy;
+    }
+
+    void Rubber::move(const point_t& newPos){
+        double dx = newPos.x - shapeCenter_.x;
+        double dy = newPos.y - shapeCenter_.y;
+        move(dx, dy);
+    }
+
+    void Rubber::scale(double factor) {
+        if (factor <= 0.0){
+            std::cerr << "Error: scale factor must be positive\n";
+            return;
+        }
+
+        radius_ *= factor;
+        double dx = circleCenter_.x - shapeCenter_.x;
+        double dy = circleCenter_.y - shapeCenter_.y;
+        circleCenter_.x = shapeCenter_.x + dx * factor;
+        circleCenter_.y = shapeCenter_.y + dy * factor;
+    }
+
+    point_t Rubber::getCircleCenter() const {
+        return circleCenter_;
+    }
+
+    point_t Rubber::getShapeCenter() const {
+        return shapeCenter_;
     }
 }
