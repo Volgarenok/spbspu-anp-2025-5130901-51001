@@ -16,7 +16,7 @@ namespace vishnyakov
     virtual double getArea() const = 0;
     virtual rectangle_t getFrameRect() = 0;
     virtual void move(double dx, double dy) = 0;
-    virtual void move(const point_t &newPos) = 0;
+    virtual void move(const point_t newPos) = 0;
     virtual void scale(double coefficient) = 0;
     virtual ~Shape() = default;
   };
@@ -27,7 +27,7 @@ namespace vishnyakov
     rectangle_t getFrameRect() override;
     double getArea() const override;
     void move(double dx, double dy) override;
-    void move(const point_t &newPos) override;
+    void move(const point_t newPos) override;
     void scale(double coefficient) override;
   };
 
@@ -37,13 +37,14 @@ namespace vishnyakov
     rectangle_t getFrameRect() override;
     double getArea() const override;
     void move(double dx, double dy) override;
-    void move(const point_t &newPos) override;
+    void move(const point_t newPos) override;
     void scale(double coefficient) override;
   };
 
   double min(double * nums, size_t size);
   double max(double * nums, size_t size);
   rectangle_t FrameRect_for_all_shapes(Shape ** shapes, size_t size);
+  void Scale_Shapes_relative_to_the_point(Shape ** shapes, size_t size, point_t point, double coefficient);
 }
 
 int main()
@@ -103,6 +104,21 @@ vishnyakov::rectangle_t vishnyakov::FrameRect_for_all_shapes(Shape ** shapes, si
   return rectangle_t {width, height, center};
 }
 
+void vishnyakov::Scale_Shapes_relative_to_the_point(Shape ** shapes, size_t size, point_t point, double coefficient)
+{
+  for (size_t i = 0; i < size; ++i)
+  {
+    rectangle_t frame = shapes[i]->getFrameRect();
+
+    double dx = point.x - frame.pos.x;
+    double dy = point.y - frame.pos.y;
+
+    shapes[i]->move(point);
+    shapes[i]->scale(coefficient);
+    shapes[i]->move(-dx * coefficient, -dy * coefficient);
+  }
+}
+
 // Невыпуклый четырёхугольник
 
 vishnyakov::Concave::Concave(point_t a, point_t b, point_t c, point_t d):
@@ -157,7 +173,7 @@ void vishnyakov::Concave::move(double dx, double dy)
   center.y += dy;
 }
 
-void vishnyakov::Concave::move(const point_t &newPos)
+void vishnyakov::Concave::move(const point_t newPos)
 {
   double dx = newPos.x - center.x;
   double dy = newPos.y - center.y;
@@ -232,7 +248,7 @@ void vishnyakov::Triangle::move(double dx, double dy)
   center.y += dy;
 }
 
-void vishnyakov::Triangle::move(const point_t &newPos)
+void vishnyakov::Triangle::move(const point_t newPos)
 {
   double dx = newPos.x - center.x;
   double dy = newPos.y - center.y;
