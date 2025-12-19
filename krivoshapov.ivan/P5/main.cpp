@@ -299,4 +299,12 @@ namespace krivoshapov {
 
         return result;
     }
+
+    double getTotalArea(Shape** shapes, size_t count) {
+        double total = 0.0;
+        for (size_t i =0; i < count; ++i) {
+            total += shapes[i] -> getArea();
+        }
+        return total;
+    }
 }
