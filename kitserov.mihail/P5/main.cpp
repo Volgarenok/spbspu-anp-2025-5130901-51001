@@ -66,6 +66,7 @@ namespace kitserov
   void frameOutput(std::ostream& os, rectangle_t fr);
   void shapeOutput(std::ostream& os, Shape * sh, const char* name);
   void scalePoint(Shape* sh, const point_t& p, float k);
+  rectangle_t getOverallFrame(Shape** shapes, size_t count);
 }
 
 int main()
@@ -93,6 +94,9 @@ int main()
   shapeOutput(std::cout, shapes[1], "Xquare");
   shapeOutput(std::cout, shapes[2], "Polygon");
   std::cout << "Total area = " << totalAreaPrevious << "\n";
+  rectangle_t overallFrame = getOverallFrame(shapes, count);
+  std::cout << "Overall frame:\n";
+  frameOutput(std::cout, overallFrame);
   float k = 0;
   std::cin >> k;
   if (!std::cin or k <= 0) {
@@ -111,6 +115,9 @@ int main()
   shapeOutput(std::cout, shapes[1], "Xquare");
   shapeOutput(std::cout, shapes[2], "Polygon");
   std::cout << "Total area = " << totalAreaAfter << "\n";
+  overallFrame = getOverallFrame(shapes, count);
+  std::cout << "Overall frame:\n";
+  frameOutput(std::cout, overallFrame);
   for (size_t i = 0; i < count; i++) {
     delete shapes[i];
   }
@@ -303,4 +310,27 @@ void kitserov::Polygon::scale(float k)
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
     vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
   }
+}
+kitserov::rectangle_t kitserov::getOverallFrame(Shape** shapes, size_t count)
+{
+  rectangle_t firstFrame = shapes[0]->getFrameRect();
+  float minX = firstFrame.pos.x - firstFrame.width / 2;
+  float maxX = firstFrame.pos.x + firstFrame.width / 2;
+  float minY = firstFrame.pos.y - firstFrame.height / 2;
+  float maxY = firstFrame.pos.y + firstFrame.height / 2;
+  for (size_t i = 1; i < count; ++i) {
+    rectangle_t frame = shapes[i]->getFrameRect();
+    float left = frame.pos.x - frame.width / 2;
+    float right = frame.pos.x + frame.width / 2;
+    float bottom = frame.pos.y - frame.height / 2;
+    float top = frame.pos.y + frame.height / 2;
+    minX = std::min(minX, left);
+    maxX = std::max(maxX, right);
+    minY = std::min(minY, bottom);
+    maxY = std::max(maxY, top);
+  }
+  float width = maxX - minX;
+  float height = maxY - minY;
+  point_t center = {minX + width / 2, minY + height / 2};
+  return {width, height, center};
 }
