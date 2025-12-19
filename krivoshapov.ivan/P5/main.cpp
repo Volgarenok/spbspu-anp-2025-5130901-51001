@@ -221,4 +221,28 @@ namespace krivoshapov {
     point_t Rectangle::getCenter() const {
         return center_;
     }
+
+    void sclaleShape(Shape** shapes, size_t count, const point_t& scaleCenter, double factor) {
+        if (factor <= 0.0) {
+            std::cerr << "Error: scale factor must be positive\n";
+            return;
+        }
+
+        for (size_t i = 0; i < count; ++i) {
+            rectangle_t frame = shapes[i] -> getFrameRect();
+            point_t shapeCenter = frame.pos;
+
+            double dx = shapeCenter.x - scaleCenter.x;
+            double dy = shapeCenter.y - scaleCenter.y;
+
+            shapes[i] -> move(scaleCenter);
+            shapes[i] -> scale(factor);
+
+            point_t newCenter;
+            newCenter.x = scaleCenter.x + dx * factor;
+            newCenter.y = scaleCenter.y + dy * factor;
+            shapes[i] -> move(newCenter);
+        }
+    }
+
 }
