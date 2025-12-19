@@ -21,6 +21,17 @@ namespace vishnyakov
     virtual ~Shape() = default;
   };
 
+  struct Rectangle:Shape {
+    double width, height;
+    point_t center;
+    Rectangle(double w, double h, point_t c);
+    rectangle_t getFrameRect() override;
+    double getArea() const override;
+    void move(double dx, double dy) override;
+    void move(const point_t newPos) override;
+    void scale(double coefficient) override;
+  };
+
   struct Concave:Shape {
     point_t spot1, spot2, spot3, spot4, center;
     Concave(point_t a, point_t b, point_t c, point_t d);
