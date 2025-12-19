@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+
 namespace vishnyakov
 {
   struct point_t {
@@ -16,7 +17,7 @@ namespace vishnyakov
     virtual rectangle_t getFrameRect() = 0;
     virtual void move(double dx, double dy) = 0;
     virtual void move(const point_t &newPos) = 0;
-    virtual void scale(double coefficient);
+    virtual void scale(double coefficient) = 0;
     virtual ~Shape() = default;
   };
 
@@ -39,11 +40,67 @@ namespace vishnyakov
     void move(const point_t &newPos) override;
     void scale(double coefficient) override;
   };
+
+  double min(double * nums, size_t size);
+  double max(double * nums, size_t size);
+  rectangle_t FrameRect_for_all_shapes(Shape ** shapes, size_t size);
 }
 
 int main()
 {
 
+}
+
+double vishnyakov::min(double * nums, size_t size)
+{
+  double min_value = nums[0];
+  for (size_t i = 1; i < size; ++i)
+  {
+    min_value = nums[i-1] > nums[i] ? nums[i] : nums[i-1];
+  }
+  return min_value;
+}
+
+double vishnyakov::max(double * nums, size_t size)
+{
+  double max_value = nums[0];
+  for (size_t i = 1; i < size; ++i)
+  {
+    max_value = nums[i-1] < nums[i] ? nums[i] : nums[i-1];
+  }
+  return max_value;
+}
+
+vishnyakov::rectangle_t vishnyakov::FrameRect_for_all_shapes(Shape ** shapes, size_t size)
+{
+  if (size == 0)
+  {
+    return rectangle_t {0.0, 0.0, {0.0, 0.0}};
+  }
+
+  rectangle_t frame = shapes[0]->getFrameRect();
+
+  double minx = frame.pos.x - frame.width / 2.0;
+  double maxx = frame.pos.x + frame.width / 2.0;
+  double miny = frame.pos.x - frame.height / 2.0;
+  double maxy = frame.pos.x + frame.height / 2.0;
+
+  for (size_t i = 1; i < size; ++ i)
+  {
+    rectangle_t frame = shapes[i]->getFrameRect();
+
+    minx = frame.pos.x - frame.width / 2.0 < minx ? frame.pos.x - frame.width / 2.0 : minx;
+    maxx = frame.pos.x + frame.width / 2.0 > maxx ? frame.pos.x + frame.width / 2.0 : maxx;
+    miny = frame.pos.y - frame.width / 2.0 < miny ? frame.pos.y - frame.width / 2.0 : miny;
+    maxy = frame.pos.y + frame.width / 2.0 > maxy ? frame.pos.y + frame.width / 2.0 : maxy;
+  }
+
+  double width = maxx - minx;
+  double height = maxy - miny;
+
+  point_t center = {(minx + maxx) / 2.0, (miny + maxy) / 2.0};
+
+  return rectangle_t {width, height, center};
 }
 
 // Невыпуклый четырёхугольник
@@ -58,10 +115,13 @@ vishnyakov::Concave::Concave(point_t a, point_t b, point_t c, point_t d):
 
 vishnyakov::rectangle_t vishnyakov::Concave::getFrameRect()
 {
-  double minx = std::min(std::min(spot1.x, spot2.x, spot3.x), spot4.x);
-  double maxx = std::max(std::max(spot1.x, spot2.x, spot3.x), spot4.x);
-  double miny = std::min(std::min(spot1.y, spot2.y, spot3.y), spot4.y);
-  double maxy = std::max(std::max(spot1.y, spot2.y, spot3.y), spot4.y);
+  double x_vlaues[4] = {spot1.x, spot2.x, spot3.x, spot4.x};
+  double y_vlaues[4] = {spot1.y, spot2.y, spot3.y, spot4.y};
+
+  double minx = vishnyakov::min(x_vlaues, 4);
+  double maxx = vishnyakov::max(x_vlaues, 4);
+  double miny = vishnyakov::min(y_vlaues, 4);
+  double maxy = vishnyakov::max(y_vlaues, 4);
 
   double width = maxx - minx;
   double height = maxy - miny;
@@ -129,10 +189,13 @@ vishnyakov::Triangle::Triangle(point_t a, point_t b, point_t c):
 
 vishnyakov::rectangle_t vishnyakov::Triangle::getFrameRect()
 {
-  double minx = std::min(spot1.x, spot2.x, spot3.x);
-  double miny = std::min(spot1.y, spot2.y, spot3.y);
-  double maxx = std::max(spot1.x, spot2.x, spot3.x);
-  double maxy = std::max(spot1.y, spot2.y, spot3.y);
+  double x_values[3] = {spot1.x, spot2.x, spot3.x};
+  double y_values[3] = {spot1.y, spot2.y, spot3.y};
+
+  double minx = vishnyakov::min(x_values, 3);
+  double miny = vishnyakov::max(x_values, 3);
+  double maxx = vishnyakov::min(y_values, 3);
+  double maxy = vishnyakov::max(y_values, 3);
 
   double width = maxx - minx;
   double height = maxy - miny;
@@ -145,11 +208,14 @@ vishnyakov::rectangle_t vishnyakov::Triangle::getFrameRect()
 double vishnyakov::Triangle::getArea() const
 {
   double side1 = 0, side2 = 0 , side3 = 0, p = 0;
+
   side1 = sqrt((spot1.x - spot2.x) * (spot1.x - spot2.x) + (spot1.y - spot2.y) * (spot1.y - spot2.y));
   side2 = sqrt((spot2.x - spot3.x) * (spot2.x - spot3.x) + (spot2.y - spot3.y) * (spot2.y - spot3.y));
   side3 = sqrt((spot1.x - spot3.x) * (spot1.x - spot3.x) + (spot1.y - spot3.y) * (spot1.y - spot3.y));
+
   p = 0.5 * (side1 + side2 + side3);
-  return sqrt(p* (p - side1) * (p - side2) * (p - side3));
+
+  return sqrt(p * (p - side1) * (p - side2) * (p - side3));
 }
 
 void vishnyakov::Triangle::move(double dx, double dy)
