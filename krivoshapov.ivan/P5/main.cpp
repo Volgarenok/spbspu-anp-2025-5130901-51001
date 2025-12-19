@@ -308,3 +308,21 @@ namespace krivoshapov {
         return total;
     }
 }
+
+int main() {
+    using namespace krivoshapov;
+
+    const size_t shapeCount = 3;
+    Shape* shapes[shapeCount];
+
+    point_t rectCenter = {10.0, 10.0};
+    shapes[0] = new Rectangle(rectCenter, 5.0, 3.0);
+
+    point_t circleCenter = {5.0, 5.0};
+    shapes[1] = new Circle(circleCenter, 2.0);
+
+    point_t rubberCircleCenter = {15.0, 15.0};
+    point_t rubberShapeCenter = {14.5, 14.5};
+    shapes[2] = new Rubber(rubberCircleCenter, 4.0, rubberShapeCenter);
+
+}
