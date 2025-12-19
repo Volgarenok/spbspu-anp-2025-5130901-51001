@@ -367,4 +367,24 @@ int main() {
     }
 
     scaleShapes(shapes, shapeCount, scalePoint, scaleFactor);
+
+    std::cout << "\n === After scaling ===\n\n";
+
+    for (size_t i = 0; i < shapeCount; ++i) {
+        printShapeInfo(*shape[i], i);
+    }
+
+    totalArea = getTotalArea(shapes, shapeCount);
+    std::cout << "\n Total area: " << totalArea << "\n";
+
+    std::cout << "\n  Overall frame rectangle: center("
+            << overallFrame.pos.x << ", " << overallFrame.pos.y
+            << "), width: " << overallFrame.width
+            << ", height: " << overallFrame.height << "\n";
+
+    for (size_t i = 0; i < shapeCount; ++i) {
+        delete shapes[i];
+    }
+
+    return 0;
 }
