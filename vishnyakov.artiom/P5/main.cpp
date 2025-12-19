@@ -130,6 +130,41 @@ void vishnyakov::Scale_Shapes_relative_to_the_point(Shape ** shapes, size_t size
   }
 }
 
+// Четырёхугольник
+
+vishnyakov::Rectangle::Rectangle(double w, double h, point_t c):
+ width{w},
+ height{h},
+ center{c}
+{}
+
+vishnyakov::rectangle_t vishnyakov::Rectangle::getFrameRect()
+{
+  return rectangle_t {width, height, center};
+}
+
+double vishnyakov::Rectangle::getArea() const
+{
+  return width * height;
+}
+
+void vishnyakov::Rectangle::move(double dx, double dy)
+{
+  center.x += dx;
+  center.y += dy;
+}
+
+void vishnyakov::Rectangle::move(const point_t newPos)
+{
+  center = newPos;
+}
+
+void vishnyakov::Rectangle::scale(double coefficient)
+{
+  width *= coefficient;
+  height *= coefficient;
+}
+
 // Невыпуклый четырёхугольник
 
 vishnyakov::Concave::Concave(point_t a, point_t b, point_t c, point_t d):
