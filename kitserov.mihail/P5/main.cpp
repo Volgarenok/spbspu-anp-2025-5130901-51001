@@ -95,17 +95,17 @@ int main()
   rectangle_t overallFrame = getOverallFrame(shapes, count);
   std::cout << "Overall frame:\n";
   frameOutput(std::cout, overallFrame);
-  float k = 0;
-  std::cin >> k;
-  if (!std::cin || k <= 0) {
-    std::cerr << "incorrect input\n";
-    for (size_t i = 0; i < count; i++) {
-      delete shapes[i];
-    }
-    return 1;
-  }
   float totalAreaAfter = 0.0;
+  float k = 0;
   for (size_t i = 0; i < count; i++) {
+    std::cin >> k;
+    if (!std::cin || k == 0) {
+      std::cerr << "incorrect input\n";
+      for (size_t i = 0; i < count; i++) {
+        delete shapes[i];
+      }
+      return 1;
+    }
     scalePoint(shapes[i], {1.0, 0.0}, k);
     totalAreaAfter += shapes[i]->getArea();
   }
