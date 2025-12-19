@@ -99,7 +99,7 @@ int main()
   float k = 0;
   for (size_t i = 0; i < count; i++) {
     std::cin >> k;
-    if (!std::cin || k == 0) {
+    if (!std::cin || k <= 0) {
       std::cerr << "incorrect input\n";
       for (size_t i = 0; i < count; i++) {
         delete shapes[i];
