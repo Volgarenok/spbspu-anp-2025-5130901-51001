@@ -245,4 +245,12 @@ namespace krivoshapov {
         }
     }
 
+    void printShapeInfo(const Shape& shape, size_t index) {
+        std::cout << "Shape" << index + 1 << ":\n";
+        std::cout << "Area:" << shape.getArea() << "\n";
+
+        rectangle_t frame = shape.getFrameRect();
+        std::cout << "Frame rectangle center(" << frame.pos.x << ", " << frame.pos.y << "), width:"
+                  << frame.width << ", height:" << frame.height << "\n";
+    }
 }
