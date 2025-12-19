@@ -222,7 +222,7 @@ namespace krivoshapov {
         return center_;
     }
 
-    void sclaleShape(Shape** shapes, size_t count, const point_t& scaleCenter, double factor) {
+    void ScaleShapes(Shape** shapes, size_t count, const point_t& scaleCenter, double factor) {
         if (factor <= 0.0) {
             std::cerr << "Error: scale factor must be positive\n";
             return;
@@ -325,4 +325,46 @@ int main() {
     point_t rubberShapeCenter = {14.5, 14.5};
     shapes[2] = new Rubber(rubberCircleCenter, 4.0, rubberShapeCenter);
 
+    std::cout << "=== Before scaling ===\n\n";
+
+    for (size_t i = 0; i < shapeCount; ++i) {
+        printShapeInfo(*shapes[i], i);
+    }
+
+    double totalArea = getTotalArea(shapes, shapeCount);
+    std::cout << "\n Total area: " << totalArea << "\n";
+
+    rectangle_t overallFrame = getOverallFrameRect(shapes, shapeCount);
+    std::cout << "\n Overall frame rectangle: center(" << overallFrame.pos.x << ", "
+              << overallFrame.pos.y << "), width: " << overallFrame.width << ", height: "
+              << overallFrame.height << "\n";
+
+    std::cout << "\n === Scaling ===\n\n";
+
+    point_t scalePoint;
+    double scaleFactor;
+
+    std::cout << "Enter scaling point (x y):";
+    std::cin >> scalePoint.x >> scalePoint.y;
+
+    if (!std::cin) {
+        std::cerr << "Error: invalid point input\n";
+        for (size_t i = 0; i < shapeCount; ++i){
+            delete shapes[i];
+        }
+        return 1;
+    }
+
+    std::cout << "Enter scale factor:";
+    std::cin >> scaleFactor;
+
+    if (!std::cin) {
+        std::cerr << "Error: invalid scale factor input\n";
+        for (size_t i = 0; i < shapeCount; ++i) {
+            delete shapes[i];
+        }
+        return 1;
+    }
+
+    scaleShapes(shapes, shapeCount, scalePoint, scaleFactor);
 }
