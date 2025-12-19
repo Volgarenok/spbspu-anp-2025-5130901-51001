@@ -48,7 +48,6 @@ namespace kitserov
   struct Polygon : Shape
   {
     Polygon(point_t* vertices, size_t vertexCount);
-    Polygon(const Polygon& other);
     float getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(float dx, float dy) override;
@@ -77,7 +76,8 @@ int main()
   try {
     shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
     shapes[1] = new Xquare({1.0, 0.0}, 2.0);
-    shapes[2] = new Rectangle({2.0, 0.0}, 1.0, 2.0);
+    point_t triangleVertices[3] = {{3.0, 0.0}, {4.0, 2.0}, {5.0, 0.0}};
+    shapes[2] = new Polygon(triangleVertices, 3);
   } catch (...) {
     std::cerr << "Error!\n";
     for (size_t i = 0; i < count; i++) {
@@ -87,11 +87,12 @@ int main()
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   shapeOutput(std::cout, shapes[1], "Xquare");
+  shapeOutput(std::cout, shapes[2], "Polygon");
   float k = 0;
   std::cin >> k;
   if (!std::cin or k <= 0) {
     std::cerr << "incorrect input\n";
-    for (size_t i = 0; i < k; i++) {
+    for (size_t i = 0; i < count; i++) {
       delete shapes[i];
     }
     return 1;
@@ -102,7 +103,8 @@ int main()
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   shapeOutput(std::cout, shapes[1], "Xquare");
-  for (size_t i = 0; i < k; i++) {
+  shapeOutput(std::cout, shapes[2], "Polygon");
+  for (size_t i = 0; i < count; i++) {
     delete shapes[i];
   }
   return 0;
