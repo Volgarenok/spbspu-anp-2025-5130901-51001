@@ -85,9 +85,14 @@ int main()
     }
     return 2;
   }
+  float totalAreaPrevious = 0.0;
+  for (size_t i = 0; i < count; i++) {
+    totalAreaPrevious += shapes[i] -> getArea();
+  }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   shapeOutput(std::cout, shapes[1], "Xquare");
   shapeOutput(std::cout, shapes[2], "Polygon");
+  std::cout << "Total area = " << totalAreaPrevious << "\n";
   float k = 0;
   std::cin >> k;
   if (!std::cin or k <= 0) {
@@ -97,13 +102,15 @@ int main()
     }
     return 1;
   }
-
+  float totalAreaAfter = 0.0;
   for (size_t i = 0; i < count; i++) {
     scalePoint(shapes[i], {1.0, 0.0}, k);
+    totalAreaAfter += shapes[i] -> getArea();
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   shapeOutput(std::cout, shapes[1], "Xquare");
   shapeOutput(std::cout, shapes[2], "Polygon");
+  std::cout << "Total area = " << totalAreaAfter << "\n";
   for (size_t i = 0; i < count; i++) {
     delete shapes[i];
   }
@@ -296,6 +303,4 @@ void kitserov::Polygon::scale(float k)
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
     vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
   }
-  center_.x = center_.x + (center_.x - center_.x) * k;
-  center_.y = center_.y + (center_.y - center_.y) * k;
 }
