@@ -70,8 +70,8 @@ namespace kitserov
 int main()
 {
   using namespace kitserov;
+  Shape* shapes[3] = {};
   size_t count = 3;
-  Shape* shapes[count] = {};
   try {
     shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
     shapes[1] = new Xquare({1.0, 0.0}, 2.0);
