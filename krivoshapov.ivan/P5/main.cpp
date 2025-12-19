@@ -253,4 +253,50 @@ namespace krivoshapov {
         std::cout << "Frame rectangle center(" << frame.pos.x << ", " << frame.pos.y << "), width:"
                   << frame.width << ", height:" << frame.height << "\n";
     }
+
+    rectangle_t getOverallFrameRect(Shape** shapes, size_t count) {
+        rectangle_t result;
+
+        if (count == 0) {
+            result.width = 0.0;
+            result.height = 0.0;
+            result.pos.x = 0.0;
+            result.pos.y = 0.0;
+            return result;
+        }
+
+        rectangle_t firstFrame = shapes[0] -> getFrameRect();
+        double minX = firstFrame.pos.x - firstFrame.width / 2;
+        double maxX = firstFrame.pos.x + firstFrame.width / 2;
+        double minY = firstFrame.pos.y - firstFrame.height / 2;
+        double maxY = firstFrame.pos.y + firstFrame.height / 2;
+
+        for (size_t i = 1; i < count; ++i) {
+            rectangle_t frame = shapes[i] -> getFrameRect();
+
+            double left = frame.pos.x - frame.width / 2;
+            double right = frame.pos.x + frame.width / 2;
+            double bottom = frame.pos.y - frame.height / 2;
+            double top = frame.pos.y + frame.height / 2;
+
+            if (left < minX) {
+                minX = left;
+            }
+            if (right > maxX) {
+                maxX = right;
+            }
+            if (bottom < minY) {
+                minY = bottom;
+            }
+            if (top > maxY) {
+                maxY = top;
+            }
+        }
+        result.width = maxX - minX;
+        result.height = maxY - minY;
+        result.pos.x = minX + result.width / 2;
+        result.pos.y = minY + result.height / 2;
+
+        return result;
+    }
 }
