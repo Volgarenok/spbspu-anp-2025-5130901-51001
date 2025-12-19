@@ -366,12 +366,12 @@ int main() {
         return 1;
     }
 
-    scaleShapes(shapes, shapeCount, scalePoint, scaleFactor);
+    ScaleShapes(shapes, shapeCount, scalePoint, scaleFactor);
 
     std::cout << "\n === After scaling ===\n\n";
 
     for (size_t i = 0; i < shapeCount; ++i) {
-        printShapeInfo(*shape[i], i);
+        printShapeInfo(*shapes[i], i);
     }
 
     totalArea = getTotalArea(shapes, shapeCount);
