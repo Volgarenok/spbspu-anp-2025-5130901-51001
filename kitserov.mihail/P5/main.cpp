@@ -1,4 +1,5 @@
 #include <iostream>
+
 namespace kitserov
 {
   struct point_t
@@ -55,16 +56,13 @@ namespace kitserov
     void scale(float k) override;
     ~Polygon();
   private:
-      point_t* vertices_;
-      size_t vertexCount_;
-      point_t center_;
+    point_t* vertices_;
+    size_t vertexCount_;
+    point_t center_;
   };
-  point_t * extend(const point_t* pts, size_t s, point_t fill);
-  void extend(point_t** pts, size_t& s, point_t fill);
-  void append(const Shape* sh, point_t** ppts, size_t& s);
-  rectangle_t frame(const point_t * pts, size_t s);
+  rectangle_t frame(const point_t* pts, size_t s);
   void frameOutput(std::ostream& os, rectangle_t fr);
-  void shapeOutput(std::ostream& os, Shape * sh, const char* name);
+  void shapeOutput(std::ostream& os, Shape* sh, const char* name);
   void scalePoint(Shape* sh, const point_t& p, float k);
   rectangle_t getOverallFrame(Shape** shapes, size_t count);
 }
@@ -88,7 +86,7 @@ int main()
   }
   float totalAreaPrevious = 0.0;
   for (size_t i = 0; i < count; i++) {
-    totalAreaPrevious += shapes[i] -> getArea();
+    totalAreaPrevious += shapes[i]->getArea();
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   shapeOutput(std::cout, shapes[1], "Xquare");
@@ -99,7 +97,7 @@ int main()
   frameOutput(std::cout, overallFrame);
   float k = 0;
   std::cin >> k;
-  if (!std::cin or k <= 0) {
+  if (!std::cin || k <= 0) {
     std::cerr << "incorrect input\n";
     for (size_t i = 0; i < count; i++) {
       delete shapes[i];
@@ -109,7 +107,7 @@ int main()
   float totalAreaAfter = 0.0;
   for (size_t i = 0; i < count; i++) {
     scalePoint(shapes[i], {1.0, 0.0}, k);
-    totalAreaAfter += shapes[i] -> getArea();
+    totalAreaAfter += shapes[i]->getArea();
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   shapeOutput(std::cout, shapes[1], "Xquare");
@@ -130,49 +128,38 @@ kitserov::Rectangle::Rectangle(point_t p, float w, float h):
 
 float kitserov::Rectangle::getArea() const
 {
-  return rect.width* rect.height;
+  return rect.width * rect.height;
 }
+
 kitserov::rectangle_t kitserov::Rectangle::getFrameRect() const
 {
   return rect;
 }
+
 void kitserov::Rectangle::move(float dx, float dy)
 {
   rect.pos.x += dx;
   rect.pos.y += dy;
 }
+
 void kitserov::Rectangle::move(point_t p)
 {
   rect.pos = p;
 }
+
 void kitserov::Rectangle::scale(float k)
 {
   rect.width *= k;
   rect.height *= k;
 }
-kitserov::point_t* kitserov::extend(const point_t* pts, size_t s, point_t fill)
-{
-  point_t* r = new point_t[s + 1];
-  for (size_t i = 0; i < s; ++i){
-    r[i] = pts[i];
-  }
-  r[s] = fill;
-  return r;
-}
-void kitserov::extend(point_t** pts, size_t& s, point_t fill)
-{
-  point_t* r = extend(*pts, s, fill);
-  delete[] *pts;
-  ++s;
-  *pts = r;
-}
+
 kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
 {
   float minx = pts[0].x;
   float miny = pts[0].y;
   float maxx = pts[0].x;
   float maxy = pts[0].y;
-  for (size_t i = 0; i < s; ++i){
+  for (size_t i = 0; i < s; ++i) {
     minx = std::min(minx, pts[i].x);
     miny = std::min(miny, pts[i].y);
     maxx = std::max(maxx, pts[i].x);
@@ -193,7 +180,7 @@ void kitserov::frameOutput(std::ostream& os, rectangle_t fr)
   os << "Frame (leftTop " << left << ", " << top << " rightBot " << right << ", " << bottom << ")\n";
 }
 
-void kitserov::shapeOutput(std::ostream& os, Shape * sh, const char* name)
+void kitserov::shapeOutput(std::ostream& os, Shape* sh, const char* name)
 {
   rectangle_t frameRect = sh->getFrameRect();
   os << name << ": area = " << sh->getArea() << "\n";
@@ -202,49 +189,49 @@ void kitserov::shapeOutput(std::ostream& os, Shape * sh, const char* name)
 
 void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
 {
-  rectangle_t fr = sh -> getFrameRect();
+  rectangle_t fr = sh->getFrameRect();
   float dx = p.x - fr.pos.x;
   float dy = p.y - fr.pos.y;
-  sh -> move(dx, dy);
-  sh -> scale(k);
-  sh -> move(-dx * k, -dy * k);
+  sh->move(dx, dy);
+  sh->scale(k);
+  sh->move(-dx * k, -dy * k);
 }
 
-
-kitserov::Xquare::Xquare(point_t p, float s) : 
- centre(p),
- side(s)
+kitserov::Xquare::Xquare(point_t p, float s) :
+  centre(p),
+  side(s)
 {}
+
 float kitserov::Xquare::getArea() const
 {
   return 0.5 * side * side;
 }
+
 kitserov::rectangle_t kitserov::Xquare::getFrameRect() const
 {
   return {side, side, centre};
 }
+
 void kitserov::Xquare::move(float dx, float dy)
 {
   centre.x += dx;
   centre.y += dy;
 }
+
 void kitserov::Xquare::move(point_t p)
 {
   centre = p;
 }
+
 void kitserov::Xquare::scale(float k)
 {
   side *= k;
 }
 
-kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount) : 
- vertices_(new point_t[vertexCount]), 
- vertexCount_(vertexCount)
+kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount) :
+  vertices_(new point_t[vertexCount]),
+  vertexCount_(vertexCount)
 {
-  if (vertexCount < 3) {
-    delete[] vertices_;
-    throw std::logic_error("Polygon must have at least 3 vertices");
-  }
   for (size_t i = 0; i < vertexCount; ++i) {
     vertices_[i] = vertices[i];
   }
@@ -255,10 +242,12 @@ kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount) :
   }
   center_ = {sumX / vertexCount_, sumY / vertexCount_};
 }
+
 kitserov::Polygon::~Polygon()
 {
   delete[] vertices_;
 }
+
 float kitserov::Polygon::getArea() const
 {
   float area = 0;
@@ -268,6 +257,7 @@ float kitserov::Polygon::getArea() const
   }
   return std::abs(area) / 2.0;
 }
+
 kitserov::rectangle_t kitserov::Polygon::getFrameRect() const
 {
   if (vertexCount_ == 0) {
@@ -298,12 +288,14 @@ void kitserov::Polygon::move(float dx, float dy)
   center_.x += dx;
   center_.y += dy;
 }
+
 void kitserov::Polygon::move(point_t p)
 {
   float dx = p.x - center_.x;
   float dy = p.y - center_.y;
   move(dx, dy);
 }
+
 void kitserov::Polygon::scale(float k)
 {
   for (size_t i = 0; i < vertexCount_; ++i) {
@@ -311,6 +303,7 @@ void kitserov::Polygon::scale(float k)
     vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
   }
 }
+
 kitserov::rectangle_t kitserov::getOverallFrame(Shape** shapes, size_t count)
 {
   rectangle_t firstFrame = shapes[0]->getFrameRect();
