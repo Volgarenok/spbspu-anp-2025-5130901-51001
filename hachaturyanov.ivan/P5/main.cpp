@@ -68,11 +68,36 @@ namespace hachaturyanov {
   };
 
   double triangleArea(const point_t v1, const point_t v2, const point_t v3);
+  rectangle_t getFrame(Shape** shs, size_t n);
+  double getSumArea(Shape** shs, size_t n);
 }
 
 int main()
 {
+  using namespace hachaturyanov;
+  Shape* shapes[2] = {};
 
+  try {
+    shapes[0] = new Complexquad(4, 9, {0, 0});
+
+    point_t* polygon = new point_t[5];
+    polygon[0] = {10, 10};
+    polygon[1] = {12, 8};
+    polygon[2] = {12, 6};
+    polygon[3] = {8, 4};
+    polygon[4] = {6, 8};
+    shapes[1] = new Polygon(polygon, 5);
+
+  } catch (...) {
+    std::cerr << "Error: bad allocation\n";
+    delete[] shapes[0];
+    delete[] shapes[1];
+    return 1;
+  }
+
+  delete[] shapes[0];
+  delete[] shapes[1];
+  return 0;
 }
 
 double hachaturyanov::triangleArea(const point_t v1, const point_t v2, const point_t v3)
