@@ -14,6 +14,8 @@ namespace hachaturyanov {
   point_t& operator+=(point_t &pnt, double k);
   point_t& operator+=(point_t &left, const point_t &right);
   point_t operator+(point_t left, const point_t &right);
+  point_t operator-=(point_t &left, const point_t &right);
+  point_t operator-(point_t left, const point_t &right);
 
   struct rectangle_t {
     double width, height;
@@ -142,6 +144,25 @@ void hachaturyanov::Polygon::move(point_t pnt) {
   pos = pnt;
 }
 
+void hachaturyanov::Polygon::move(double xsh, double ysh) {
+  point_t shift = point_t{xsh, ysh};
+  pos += shift;
+  for (size_t i = 0; i < npoints; i++) {
+    points[i] += shift;
+  }
+}
+
+void hachaturyanov::Polygon::scale(double k) {
+  if (k > 0) {
+    for (size_t i = 0; i < npoints; i++) {
+      point_t rel = points[i] - pos;
+      points[i] = (pos + rel * k);
+    }
+  } else {
+    throw std::logic_error("coefficient must be positive");
+  }
+}
+
 hachaturyanov::Complexquad::Complexquad(double d1, double d2, point_t p):
  Shape(),
  vertices({}),
@@ -194,7 +215,7 @@ void hachaturyanov::Complexquad::scale(double k) {
     diag1 *= k;
     diag2 *= k;
     for (size_t i = 0; i < 4; i++) {
-      point_t rel = vertices[i] + (pos * -1.0);
+      point_t rel = vertices[i] - pos;
       vertices[i] = (pos + rel * k);
     }
   } else {
@@ -271,4 +292,13 @@ hachaturyanov::point_t& hachaturyanov::operator+=(point_t &left, const point_t &
 
 hachaturyanov::point_t hachaturyanov::operator+(point_t left, const point_t &right) {
   return left += right;
+}
+
+hachaturyanov::point_t hachaturyanov::operator-=(point_t &left, const point_t &right) {
+  left.x -= right.x;
+  left.y -= right.y;
+}
+
+hachaturyanov::point_t hachaturyanov::operator-(point_t left, const point_t &right) {
+  return left -= right;
 }
