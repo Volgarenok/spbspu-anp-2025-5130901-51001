@@ -109,7 +109,8 @@ int main()
   return 0;
 }
 
-hachaturyanov::rectangle_t hachaturyanov::getFrame(Shape** shs, size_t n) {
+hachaturyanov::rectangle_t hachaturyanov::getFrame(Shape** shs, size_t n)
+{
   rectangle_t* rects = new rectangle_t[n];
   rectangle_t min_rect = shs[0]->getFrameRect();
   rectangle_t max_rect = shs[0]->getFrameRect();
