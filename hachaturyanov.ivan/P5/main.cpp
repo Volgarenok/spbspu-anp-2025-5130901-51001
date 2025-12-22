@@ -14,7 +14,7 @@ namespace hachaturyanov {
   point_t& operator+=(point_t &pnt, double k);
   point_t& operator+=(point_t &left, const point_t &right);
   point_t operator+(point_t left, const point_t &right);
-  point_t operator-=(point_t &left, const point_t &right);
+  point_t& operator-=(point_t &left, const point_t &right);
   point_t operator-(point_t left, const point_t &right);
 
   struct rectangle_t {
@@ -351,7 +351,7 @@ hachaturyanov::point_t hachaturyanov::operator+(point_t left, const point_t &rig
   return left += right;
 }
 
-hachaturyanov::point_t hachaturyanov::operator-=(point_t &left, const point_t &right) {
+hachaturyanov::point_t& hachaturyanov::operator-=(point_t &left, const point_t &right) {
   left.x -= right.x;
   left.y -= right.y;
 }
