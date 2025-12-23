@@ -29,7 +29,8 @@ size_t kitserov::countRowsWithoutSame(size_t rows, size_t cols, int* matrix)
   return answer;
 }
 
-bool kitserov::isDigit(const char* str) {
+bool kitserov::isDigit(const char* str)
+{
   if (str == nullptr || *str == '\0') {
     return false;
   }
@@ -134,7 +135,7 @@ int main(int argc, char* argv[])
   size_t result1 = countRowsWithoutSame(rows, cols, matrix);
   bool result2 = isUpTriangleMatrix(rows, cols, matrix);
   output << result1 << '\n';
-  output << std::boolalpha << result2 << '\0';
+  output << std::boolalpha << result2 << '\n';
   if (num == 2) {
     delete[] matrix;
   }
