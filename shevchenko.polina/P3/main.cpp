@@ -51,7 +51,7 @@ void shevchenko::spiralAdd(int * data, size_t rows, size_t cols)
         count++;
         if (i == 0)
         {
-            break;
+          break;
         }
       }
       right--;
@@ -65,7 +65,7 @@ void shevchenko::spiralAdd(int * data, size_t rows, size_t cols)
         count++;
         if (j == 0)
         {
-            break;
+          break;
         }
       }
       top++;
@@ -160,10 +160,10 @@ size_t shevchenko::readMatrix(std::istream & in, int * data, size_t rows, size_t
     {
         if (!(in >> data[k]))
         {
-            break;
+            return read_cnt;
         }
-        read_cnt++;
     }
+    ++read_cnt;
     return read_cnt;
 }
 
@@ -195,146 +195,106 @@ size_t shevchenko::writeSmoothMatrix(std::ostream & out, const double * data, si
 
 int main(int argc, char * argv[])
 {
+  if (argc != 4)
+  {
     if (argc < 4)
     {
-        std::cerr << "Not enough arguments";
-        return 1;
-    }
-
-    if (argc > 4)
-    {
-        std::cerr << "Too many arguments";
-        return 1;
-    }
-
-    int num = 0;
-
-    try {
-        num = std::stoi(argv[1]);
-    }
-    catch (...)
-    {
-        std::cerr << "First parameter is not a number";
-        return 1;
-    }
-
-    if (num != 1 && num != 2)
-    {
-        std::cerr << "First parameter is out of range";
-        return 1;
-    }
-
-    const char * inputFile = argv[2];
-    const char * outputFile = argv[3];
-
-    std::ifstream fin(inputFile);
-    if (!fin.is_open())
-    {
-        std::cerr << "readMatrix failed";
-        return 2;
-    }
-
-    std::ofstream fout(outputFile);
-    if (!fout.is_open())
-    {
-      std::cerr << "Cannot open output file";
-      return 2;
-    }
-
-    size_t rows = 0;
-    size_t cols = 0;
-    if (!(fin >> rows >> cols))
-    {
-      std::cerr << "Cannot read matrix";
-      return 2;
-    }
-    if (rows == 0 && cols == 0)
-    {
-      std::ofstream fout(outputFile);
-      if (!fout.is_open())
-      {
-        std::cerr << "Cannot open output file";
-        return 2;
-      }
-      fout << "0 0";
-      return 0;
-    }
-
-    size_t total = rows * cols;
-    if (num == 1 && total > 10000)
-    {
-        std::cerr << "Matrix size exceeds";
-        return 2;
-    }
-
-    if (num == 1)
-    {
-      const size_t max_size = 10000;
-      int staticData[max_size];
-      int staticDataCopy[max_size];
-
-      size_t read_cnt = shevchenko::readMatrix(fin, staticData, rows, cols);
-      if (read_cnt != total)
-      {
-        std::cerr << "Not enough data";
-        return 2;
-      }
-
-      for (size_t i = 0; i < total; ++i)
-      {
-        staticDataCopy[i] = staticData[i];
-      }
-
-      shevchenko::spiralAdd(staticData, rows, cols);
-      shevchenko::writeMatrix(fout, staticData, rows, cols);
-      fout << "\n";
-
-      double staticSmoothData[max_size];
-      shevchenko::averageNeighbors(staticDataCopy, staticSmoothData, rows, cols);
-      shevchenko::writeSmoothMatrix(fout, staticSmoothData, rows, cols);
+      std::cerr << "Not enough arguments";
     }
     else
     {
-      int * dynamicData = nullptr;
-      int * dynamicDataCopy = nullptr;
-
-      try {
-        dynamicData = new int[total];
-        dynamicDataCopy = new int[total];
-      }
-      catch (...)
-      {
-        std::cerr << "Memory allocation failed";
-        if (dynamicData) delete[] dynamicData;
-        if (dynamicDataCopy) delete[] dynamicDataCopy;
-        return 2;
-      }
-
-      size_t read_cnt = shevchenko::readMatrix(fin, dynamicData, rows, cols);
-      if (read_cnt != total)
-      {
-        std::cerr << "Not enough data";
-        delete[] dynamicData;
-        delete[] dynamicDataCopy;
-        return 2;
-      }
-      for (size_t i = 0; i < total; ++i)
-      {
-        dynamicDataCopy[i] = dynamicData[i];
-      }
-
-      shevchenko::spiralAdd(dynamicData, rows, cols);
-      shevchenko::writeMatrix(fout, dynamicData, rows, cols);
-      fout << "\n";
-
-      double * dynamicSmoothData = new double[total];
-      shevchenko::averageNeighbors(dynamicDataCopy, dynamicSmoothData, rows, cols);
-      shevchenko::writeSmoothMatrix(fout, dynamicSmoothData, rows, cols);
-
-      delete[] dynamicData;
-      delete[] dynamicDataCopy;
-      delete[] dynamicSmoothData;
+      std::cerr << "Too many arguments";
     }
-    return 0;
-}
+  return 1;
+  }
 
+  std::string arg1(argv[1]);
+  if (arg1.length() != 1 || (arg1[0] != '1' && arg1[0] != '2'))
+  {
+    std::cerr << "First parameter is out of range";
+    return 1;
+  }
+
+  int num = arg1[0] - '0';
+
+  const char * inputFile = argv[2];
+  const char * outputFile = argv[3];
+
+  std::ifstream fin(inputFile);
+  if (!fin.is_open())
+  {
+    std::cerr << "readMatrix failed";
+    return 2;
+  }
+
+  size_t rows = 0;
+  size_t cols = 0;
+  if (!(fin >> rows >> cols))
+  {
+    std::cerr << "Cannot read matrix";
+    return 2;
+  }
+
+  std::ofstream fout(outputFile);
+  if (!fout.is_open())
+  {
+    std::cerr << "Cannot open output file";
+    return 2;
+  }
+  if (rows == 0 && cols == 0)
+  {
+    fout << "0 0";
+    return 0;
+  }
+  size_t total = rows * cols;
+
+  if (num == 1 && total > 10000)
+  {
+    std::cerr << "Matrix size exceeds";
+    return 2;
+  }
+
+  int * data = nullptr;
+  if (num == 1)
+  {
+    const size_t max_size = 10000;
+    static int staticData[max_size];
+    data = staticData;
+  }
+  else
+  {
+    data = new int[total];
+  }
+
+  size_t read_cnt = shevchenko::readMatrix(fin, data, rows, cols);
+  if (read_cnt != total)
+  {
+    std::cerr << "Not enough data";
+    if (num == 2) delete[] data;
+    return 2;
+  }
+
+  int * dataCopy = new int[total];
+  for (size_t i = 0; i < total; ++i)
+  {
+    dataCopy[i] = data[i];
+  }
+
+  shevchenko::spiralAdd(data, rows, cols);
+  shevchenko::writeMatrix(fout, data, rows, cols);
+  fout << "\n";
+
+  double * smoothData = new double[total];
+  shevchenko::averageNeighbors(dataCopy, smoothData, rows, cols);
+  shevchenko::writeSmoothMatrix(fout, smoothData, rows, cols);
+  fout << "\n";
+
+  delete[] dataCopy;
+  delete[] smoothData;
+
+  if (num == 2)
+  {
+    delete[] data;
+  }
+  return 0;
+}
