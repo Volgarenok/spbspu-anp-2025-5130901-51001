@@ -36,7 +36,7 @@ bool kitserov::isDigit(const char* str) {
   if (!std::isdigit(static_cast< unsigned char >(str[0]))) {
     return false;
   }
-  if (!(str[1] == '\0')){
+  if (!(str[1] == '\0')) {
     return false;
   }
   return true;
@@ -83,7 +83,10 @@ int main(int argc, char* argv[])
     return 1;
   }
   int num = std::atoi(argv[1]);
-
+  if (num != 1 && num != 2) {
+    std::cerr << "First argument out incorrect (not 1 or 2)\n";
+    return 1;
+  }
   std::ifstream input(argv[2]);
   if (!input.is_open()) {
     std::cerr << "Failed to open input file\n";
@@ -109,8 +112,8 @@ int main(int argc, char* argv[])
   } else {
     try {
       matrix = new int[rows * cols];
-    } catch (...) {
-      std::cerr << "Error allocating memory\n";
+    } catch (const std::bad_alloc& e) {
+      std::cerr << "Error allocating memory: " << e.what() << "\n";
       return 2;
     }
   }
