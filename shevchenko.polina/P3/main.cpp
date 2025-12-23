@@ -270,8 +270,11 @@ int main(int argc, char * argv[])
   if (read_cnt != total)
   {
     std::cerr << "Not enough data";
-    if (num == 2) delete[] data;
-    return 2;
+    if (num == 2)
+    {
+      delete[] data;
+    }
+  return 2;
   }
 
   int * dataCopy = new int[total];
