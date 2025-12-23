@@ -26,7 +26,14 @@ int main()
   stepanov::toLower(str);
   std::cout << str << '\n';
 
-  char* withoutVowels = new char[size + 1];
+  char* withoutVowels = nullptr;
+  try {
+    withoutVowels = new char[size + 1];
+  } catch (const std::bad_alloc& e) {
+    delete[] str;
+    std::cerr << "Cannot allocate memory\n";
+    return 1;
+  }
   withoutVowels[size] = '\0';
   stepanov::removeVowels(str, withoutVowels);
   std::cout << withoutVowels << '\n';
@@ -95,11 +102,10 @@ void stepanov::removeVowels(const char* str, char* output)
 {
   size_t pos = 0;
   for (size_t i = 0; str[i] != '\0'; i++) {
-    if (stepanov::isVowel(str[i])) {
-      continue;
+    if (!stepanov::isVowel(str[i])) {
+      output[pos] = str[i];
+      pos++;
     }
-    output[pos] = str[i];
-    pos++;
   }
   output[pos] = '\0';
 }
