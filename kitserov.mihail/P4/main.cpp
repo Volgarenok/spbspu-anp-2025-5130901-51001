@@ -1,8 +1,7 @@
 #include <iostream>
 #include <iomanip>
 
-namespace kitserov
-{
+namespace kitserov {
   char* getline(std::istream& in, size_t& s);
   void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
@@ -101,11 +100,13 @@ int main()
     return 1;
   }
 
-  char* removedLetters = reinterpret_cast< char* >(malloc(s));
+  char* removedLetters = reinterpret_cast< char* >(malloc(s + 1));
   if (!removedLetters) {
     std::cerr << "Failed memory allocation\n";
     free(data);
     return 1;
+  } else {
+    removedLetters[s] = '\0';
   }
   kitserov::removeLetters(data, removedLetters);
 
@@ -115,6 +116,8 @@ int main()
     free(data);
     free(removedLetters);
     return 1;
+  } else {
+    missedLetters[26] = '\0';
   }
   kitserov::missLetters(data, missedLetters);
 
