@@ -1,8 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-namespace kitserov
-{
+namespace kitserov {
   size_t countRowsWithoutSame(size_t rows, size_t cols, int* matrix);
   bool isUpTriangleMatrix(size_t rows, size_t cols, int* matrix);
   bool isDigit(const char* str);
