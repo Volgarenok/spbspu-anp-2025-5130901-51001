@@ -58,10 +58,9 @@ int volkovich::minDiagonal(const int *matrix, size_t rows, size_t columns)
   int sum = 0;
   for (size_t i = 0; i < rows; i++)
   {
-    int j = static_cast<int>(s) - static_cast<int>(i);
-    if (j >= 0 && j < static_cast<int>(columns))
+    if (s >= i && s - i < columns)
     {
-      sum += matrix[i * columns + j];
+      sum += matrix[i * columns + (s - i)];
     }
   }
   int res = sum;
@@ -70,10 +69,9 @@ int volkovich::minDiagonal(const int *matrix, size_t rows, size_t columns)
     int sum = 0;
     for (size_t i = 0; i < rows; i++)
     {
-      int j = static_cast<int>(s) - static_cast<int>(i);
-      if (j >= 0 && j < static_cast<int>(columns))
+      if (s >= i && s - i < columns)
       {
-        sum += matrix[i * columns + j];
+        sum += matrix[i * columns + (s - i)];
       }
     }
     res = std::min(sum, res);
