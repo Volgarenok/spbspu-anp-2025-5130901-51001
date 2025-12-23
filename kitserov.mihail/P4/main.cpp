@@ -7,7 +7,7 @@ namespace kitserov {
   void missLetters(const char* source, char* destination);
 }
 
-const size_t ALPHABET_SIZE = 26
+const size_t ALPHABET_SIZE = 26;
 
 void kitserov::missLetters(const char* source, char* destination)
 {
@@ -110,9 +110,8 @@ int main()
     std::cerr << "Failed memory allocation\n";
     free(data);
     return 1;
-  } else {
-    removedLetters[s] = '\0';
   }
+  removedLetters[s] = '\0';
   kitserov::removeLetters(data, removedLetters);
 
   char* missedLetters = reinterpret_cast< char* >(malloc(ALPHABET_SIZE + 1));
@@ -121,9 +120,8 @@ int main()
     free(data);
     free(removedLetters);
     return 1;
-  } else {
-    missedLetters[ALPHABET_SIZE] = '\0';
   }
+  missedLetters[ALPHABET_SIZE] = '\0';
   kitserov::missLetters(data, missedLetters);
 
   std::cout << missedLetters << "\n";
