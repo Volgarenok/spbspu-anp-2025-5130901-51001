@@ -7,11 +7,13 @@ namespace kitserov {
   void missLetters(const char* source, char* destination);
 }
 
+const size_t ALPHABET_SIZE = 26
+
 void kitserov::missLetters(const char* source, char* destination)
 {
   size_t dstIndex = 0;
   const char* alphavit = "abcdefghijklmnopqrstuvwxyz";
-  const size_t alphavitSize = 26;
+  const size_t alphavitSize = ALPHABET_SIZE;
   for (size_t j = 0; j < alphavitSize; ++j) {
     unsigned char alphavit_char = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
@@ -64,6 +66,10 @@ char* kitserov::getline(std::istream& in, size_t& size)
     if (size == capacity) {
       char* temp = reinterpret_cast< char* >(malloc(capacity * 2 + 1));
       if (!temp) {
+        free(data);
+        if (isSkipws) {
+          in >> std::skipws;
+        }
         return nullptr;
       }
       for (size_t j = 0; j < capacity; j++) {
@@ -88,8 +94,7 @@ char* kitserov::getline(std::istream& in, size_t& size)
 int main()
 {
   size_t s = 0;
-  char* data = nullptr;
-  data = kitserov::getline(std::cin, s);
+  char* data = kitserov::getline(std::cin, s);
   if (!data) {
     std::cerr << "Failed read line or memory allocation error\n";
     return 1;
@@ -110,14 +115,14 @@ int main()
   }
   kitserov::removeLetters(data, removedLetters);
 
-  char* missedLetters = reinterpret_cast< char* >(malloc(27));
+  char* missedLetters = reinterpret_cast< char* >(malloc(ALPHABET_SIZE + 1));
   if (!missedLetters) {
     std::cerr << "Failed memory allocation\n";
     free(data);
     free(removedLetters);
     return 1;
   } else {
-    missedLetters[26] = '\0';
+    missedLetters[ALPHABET_SIZE] = '\0';
   }
   kitserov::missLetters(data, missedLetters);
 
