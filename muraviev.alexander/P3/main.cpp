@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
   }
 
   char* endptr = nullptr;
-  const long num = std::strtol(argv[1], &endptr, 10);
+  const long num = std::strtol(argv[1], std::addressof(endptr), 10);
 
   if (*endptr != '\0') {
     cerr << "First parameter is not a number\n";
