@@ -1,7 +1,6 @@
 #include <iostream>
 
-namespace kitserov
-{
+namespace kitserov {
   struct point_t
   {
     float x, y;
