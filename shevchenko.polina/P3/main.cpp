@@ -206,14 +206,19 @@ int main(int argc, char * argv[])
     return 1;
   }
 
-  std::string arg1(argv[1]);
-  if (arg1.length() != 1 || (arg1[0] != '1' && arg1[0] != '2'))
+  int num = 0;
+  try {
+      num = std::stoi(argv[1]);
+  } catch (...) {
+      std::cerr << "First parameter is not a number";
+      return 1;
+  }
+        
+  if (num != 1 && num != 2)
   {
     std::cerr << "First parameter is out of range";
     return 1;
   }
-
-  int num = arg1[0] - '0';
 
   const char * inputFile = argv[2];
   const char * outputFile = argv[3];
