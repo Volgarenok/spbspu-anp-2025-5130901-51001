@@ -236,14 +236,14 @@ int main(int argc, char *argv[])
       return 2;
     }
 
-    static int fixedMatrix[karpenko::kMaxSize];
-    inputMatrix = fixedMatrix;
+    inputMatrix = new int[totalElements];
 
     std::size_t readCount = karpenko::readMatrix(inputStream, inputMatrix, rows, cols);
 
     if (readCount != totalElements)
     {
       std::cerr << "Error: Not enough data\n";
+      delete[] inputMatrix;
       return 2;
     }
   }
@@ -277,17 +277,11 @@ int main(int argc, char *argv[])
   if (!outputStream)
   {
     std::cerr << "Error: Failed to write matrix to output file\n";
-    if (operation == 2)
-    {
-      delete[] inputMatrix;
-    }
+    delete[] inputMatrix;
     return 2;
   }
 
-  if (operation == 2)
-  {
-    delete[] inputMatrix;
-  }
+  delete[] inputMatrix;
 
   std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
   return 0;
