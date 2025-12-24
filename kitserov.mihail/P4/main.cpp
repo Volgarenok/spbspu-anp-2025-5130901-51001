@@ -5,6 +5,23 @@ namespace kitserov {
   char* getline(std::istream& in, size_t& s);
   void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
+  int hasSameChars(const char* str1, const char* str2);
+}
+
+int kitserov::hasSameChars(const char* str1, const char* str2)
+{
+  unsigned char charSet[256] = {0};
+  for (size_t i = 0; str1[i] != '\0'; ++i) {
+    unsigned char c = static_cast< unsigned char >(str1[i]);
+    charSet[c] = 1;
+  }
+  for (size_t i = 0; str2[i] != '\0'; ++i) {
+    unsigned char c = static_cast< unsigned char >(str2[i]);
+    if (charSet[c] != 0) {
+      return 1;
+    }
+  }
+  return 0;
 }
 
 const size_t ALPHABET_SIZE = 26;
