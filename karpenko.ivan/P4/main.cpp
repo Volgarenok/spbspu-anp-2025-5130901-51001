@@ -74,37 +74,36 @@ namespace karpenko
 
   char *myGetline(std::istream &in, size_t &length)
 {
-  const size_t INITIAL_BUFFER_SIZE = 16;
+  const size_t INITIAL_CAPACITY = 16;
   const size_t GROW_FACTOR = 2;
 
-  size_t bufferSize = INITIAL_BUFFER_SIZE;
-  char *buffer = new char[bufferSize];
+  size_t capacity = INITIAL_CAPACITY;
+  char *buffer = new char[capacity];
 
-  size_t i = 0;
+  length = 0;
   char c;
 
   try
   {
     while (in.get(c) && c != '\n')
     {
-      if (i >= bufferSize - 1)
+      if (length >= capacity - 1)
       {
-        size_t newSize = bufferSize * GROW_FACTOR;
-        char *newBuffer = new char[newSize];
+        size_t newCapacity = capacity * GROW_FACTOR;
+        char *newBuffer = new char[newCapacity];
 
-        std::memcpy(newBuffer, buffer, i);
+        std::memcpy(newBuffer, buffer, length);
         delete[] buffer;
         buffer = newBuffer;
-        bufferSize = newSize;
+        capacity = newCapacity;
       }
 
-      buffer[i++] = c;
+      buffer[length++] = c;
     }
 
-    buffer[i] = '\0';
-    length = i;
+    buffer[length] = '\0';
 
-    if (in.eof() && i == 0)
+    if (in.eof() && length == 0)
     {
       delete[] buffer;
       return nullptr;
