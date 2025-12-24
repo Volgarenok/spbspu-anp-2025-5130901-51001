@@ -15,11 +15,11 @@ namespace karpenko
 
     for (size_t i = 0; i < maxLen; ++i)
     {
-      if (i < len1 && resultIndex < resultSize - 1)
+      if (i < len1)
       {
         result[resultIndex++] = str1[i];
       }
-      if (i < len2 && resultIndex < resultSize - 1)
+      if (i < len2)
       {
         result[resultIndex++] = str2[i];
       }
@@ -27,14 +27,14 @@ namespace karpenko
 
     if (len1 > len2)
     {
-      for (size_t i = len2; i < len1 && resultIndex < resultSize - 1; ++i)
+      for (size_t i = len2; i < len1; ++i)
       {
         result[resultIndex++] = str1[i];
       }
     }
     else if (len2 > len1)
     {
-      for (size_t i = len1; i < len2 && resultIndex < resultSize - 1; ++i)
+      for (size_t i = len1; i < len2; ++i)
       {
         result[resultIndex++] = str2[i];
       }
@@ -132,15 +132,15 @@ int main()
   const char line2[] = "def_";
   const size_t line2Length = sizeof(line2) - 1;
 
-  const size_t maxUniTwoResultLength = line1Length + line2Length + (line1Length > line2Length ? line1Length : line2Length);
+  const size_t result1Size = line1Length + line2Length;
 
   char *result1 = nullptr;
   char *result2 = nullptr;
 
   try
   {
-    result1 = new char[maxUniTwoResultLength + 1]();
-    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1, maxUniTwoResultLength + 1);
+    result1 = new char[result1Size + 1]();
+    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1, result1Size + 1);
     std::cout << result1 << '\n';
 
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
