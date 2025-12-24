@@ -1,8 +1,9 @@
 #include <iostream>
 #include <iomanip>
 
-namespace kitserov {
-  char* getline(std::istream& in, size_t& s);
+namespace kitserov
+{
+  char* getline(std::istream& in, size_t& size);
   void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
   int hasSameChars(const char* str1, const char* str2);
@@ -32,18 +33,18 @@ void kitserov::missLetters(const char* source, char* destination)
   const char* alphavit = "abcdefghijklmnopqrstuvwxyz";
   const size_t alphavitSize = ALPHABET_SIZE;
   for (size_t j = 0; j < alphavitSize; ++j) {
-    unsigned char alphavit_char = static_cast< unsigned char >(alphavit[j]);
+    unsigned char alphavitChar = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
     size_t i = 0;
     while (source[i] != '\0') {
-      unsigned char source_char = static_cast< unsigned char >(std::tolower(source[i++]));
-      if (alphavit_char == source_char) {
+      unsigned char sourceChar = static_cast< unsigned char >(std::tolower(source[i++]));
+      if (alphavitChar == sourceChar) {
         charInData = true;
         break;
       }
     }
     if (!charInData) {
-      destination[dstIndex++] = alphavit_char;
+      destination[dstIndex++] = alphavitChar;
     }
   }
   destination[dstIndex] = '\0';
@@ -54,8 +55,8 @@ void kitserov::removeLetters(const char* source, char* destination)
   size_t srcIndex = 0;
   size_t dstIndex = 0;
   while (source[srcIndex] != '\0') {
-    unsigned char source_char = static_cast< unsigned char >(source[srcIndex]);
-    bool isLetter = std::isalpha(source_char) != 0;
+    unsigned char sourceChar = static_cast< unsigned char >(source[srcIndex]);
+    bool isLetter = std::isalpha(sourceChar) != 0;
     if (!isLetter) {
       destination[dstIndex] = source[srcIndex];
       dstIndex++;
