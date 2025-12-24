@@ -80,10 +80,10 @@ namespace karpenko
               continue;
             }
 
-            if ((di == -1 && i == 0) ||
-                (di == 1 && i == rows - 1) ||
-                (dj == -1 && j == 0) ||
-                (dj == 1 && j == cols - 1))
+             if ((di == -1 && i == 0)
+                || (di == 1 && i == rows - 1)
+                || (dj == -1 && j == 0)
+                || (dj == 1 && j == cols - 1))
             {
               continue;
             }
