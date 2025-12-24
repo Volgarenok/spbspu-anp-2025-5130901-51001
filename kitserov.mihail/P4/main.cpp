@@ -141,8 +141,12 @@ int main()
   missedLetters[ALPHABET_SIZE] = '\0';
   kitserov::missLetters(data, missedLetters);
 
+  const char* str2 = "abs";
+  int hasSame = kitserov::hasSameChars(data, str2);
+
   std::cout << missedLetters << "\n";
   std::cout << removedLetters << "\n";
+  std::cout << hasSame << "\n";
   free(data);
   free(removedLetters);
   free(missedLetters);
