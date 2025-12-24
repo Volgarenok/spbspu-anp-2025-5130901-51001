@@ -195,17 +195,15 @@ size_t shevchenko::writeSmoothMatrix(std::ostream & out, const double * data, si
 
 int main(int argc, char * argv[])
 {
-  if (argc != 4)
+  if (argc < 4)
   {
-    if (argc < 4)
-    {
-      std::cerr << "Not enough arguments";
-    }
-    else
-    {
-      std::cerr << "Too many arguments";
-    }
-  return 1;
+    std::cerr << "Not enough arguments";
+    return 1;
+  }
+  if (argc > 4)
+  {
+    std::cerr << "Too many arguments";
+    return 1;
   }
 
   std::string arg1(argv[1]);
