@@ -73,16 +73,18 @@ namespace karpenko
   }
 
   char *myGetline(std::istream &in, size_t &length)
+{
+  const size_t INITIAL_BUFFER_SIZE = 16;
+  const size_t GROW_FACTOR = 2;
+
+  size_t bufferSize = INITIAL_BUFFER_SIZE;
+  char *buffer = new char[bufferSize];
+
+  size_t i = 0;
+  char c;
+
+  try
   {
-    const size_t INITIAL_BUFFER_SIZE = 16;
-    const size_t GROW_FACTOR = 2;
-
-    size_t bufferSize = INITIAL_BUFFER_SIZE;
-    char *buffer = new char[bufferSize];
-
-    size_t i = 0;
-    char c;
-
     while (in.get(c) && c != '\n')
     {
       if (i >= bufferSize - 1)
@@ -110,6 +112,12 @@ namespace karpenko
 
     return buffer;
   }
+  catch (const std::bad_alloc &)
+  {
+    delete[] buffer;
+    throw;
+  }
+}
 }
 
 int main()
