@@ -151,7 +151,7 @@ size_t shevchenko::readMatrix(std::istream & in, int * data, size_t rows, size_t
 {
     if (rows == 0 || cols == 0)
     {
-        return 0;
+      return 0;
     }
 
     size_t total = rows * cols;
@@ -160,7 +160,7 @@ size_t shevchenko::readMatrix(std::istream & in, int * data, size_t rows, size_t
     {
         if (!(in >> data[k]))
         {
-            return read_cnt;
+          return read_cnt;
         }
     }
     ++read_cnt;
