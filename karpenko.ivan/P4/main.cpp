@@ -73,50 +73,50 @@ namespace karpenko
   }
 
   char *myGetline(std::istream &in, size_t &length)
-{
-  const size_t INITIAL_CAPACITY = 16;
-  const size_t GROW_FACTOR = 2;
-
-  size_t capacity = INITIAL_CAPACITY;
-  char *buffer = new char[capacity];
-
-  length = 0;
-  char c;
-
-  try
   {
-    while (in.get(c) && c != '\n')
-    {
-      if (length >= capacity - 1)
-      {
-        size_t newCapacity = capacity * GROW_FACTOR;
-        char *newBuffer = new char[newCapacity];
+    const size_t INITIAL_CAPACITY = 16;
+    const size_t GROW_FACTOR = 2;
 
-        std::memcpy(newBuffer, buffer, length);
-        delete[] buffer;
-        buffer = newBuffer;
-        capacity = newCapacity;
+    size_t capacity = INITIAL_CAPACITY;
+    char *buffer = new char[capacity];
+
+    length = 0;
+    char c;
+
+    try
+    {
+      while (in.get(c) && c != '\n')
+      {
+        if (length >= capacity - 1)
+        {
+          size_t newCapacity = capacity * GROW_FACTOR;
+          char *newBuffer = new char[newCapacity];
+
+          std::memcpy(newBuffer, buffer, length);
+          delete[] buffer;
+          buffer = newBuffer;
+          capacity = newCapacity;
+        }
+
+        buffer[length++] = c;
       }
 
-      buffer[length++] = c;
+      buffer[length] = '\0';
+
+      if (in.eof() && length == 0)
+      {
+        delete[] buffer;
+        return nullptr;
+      }
+
+      return buffer;
     }
-
-    buffer[length] = '\0';
-
-    if (in.eof() && length == 0)
+    catch (const std::bad_alloc &)
     {
       delete[] buffer;
-      return nullptr;
+      throw;
     }
-
-    return buffer;
   }
-  catch (const std::bad_alloc &)
-  {
-    delete[] buffer;
-    throw;
-  }
-}
 }
 
 int main()
@@ -124,33 +124,23 @@ int main()
   size_t line1Length = 0;
   char *line1 = karpenko::myGetline(std::cin, line1Length);
 
-  
-  if (!std::cin.good() && std::cin.eof())
+  if (!line1)
   {
-    if (line1Length == 0)
-    {
-      delete[] line1;
-      return 0;
-    }
-  }
-  else if (!std::cin)
-  {
-    delete[] line1;
-    std::cerr << "Error reading string\n";
-    return 1;
+    return 0;
   }
 
   const char line2[] = "def_";
   const size_t line2Length = sizeof(line2) - 1;
+
+  const size_t maxUniTwoResultLength = line1Length + line2Length + (line1Length > line2Length ? line1Length : line2Length);
 
   char *result1 = nullptr;
   char *result2 = nullptr;
 
   try
   {
-    const size_t result1Size = line1Length + line2Length;
-    result1 = new char[result1Size + 1]();
-    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1, result1Size + 1);
+    result1 = new char[maxUniTwoResultLength + 1]();
+    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1, maxUniTwoResultLength + 1);
     std::cout << result1 << '\n';
 
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
