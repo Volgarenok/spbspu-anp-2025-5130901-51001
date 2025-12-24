@@ -8,7 +8,8 @@ namespace losev {
   size_t countLocMin(const int * ptrArr, size_t m, size_t n);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   namespace los = losev;
   if (argc > 4) {
     std::cerr << "Too many arguments\n";
@@ -41,7 +42,7 @@ int main(int argc, char **argv) {
       return 0;
     }
   } else {
-    std::cerr <<"I can not open input file\n";
+    std::cerr << "I can not open input file\n";
     return 1;
   }
   int *arrayDinamic = nullptr;
@@ -49,12 +50,9 @@ int main(int argc, char **argv) {
   int *array = nullptr;
   if (*argv[1] == '1') {
     array = arrayStack;
-  } else if (*argv[1] == '2') {
+  } else {
     arrayDinamic = new int[n * m];
     array = arrayDinamic;
-  } else {
-    std::cerr << "Error wrong num\n";
-    return 1;
   }
   size_t readCount = los::readFile(input, array, m, n);
   if (readCount != m * n) {
@@ -69,8 +67,9 @@ int main(int argc, char **argv) {
   return 0;
 }
 
-size_t losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n) {
-  long long temp;
+size_t losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n)
+{
+  int temp;
   size_t count = 0;
   for (size_t i = 0; i < m; i++) {
     for (size_t j = 0; j < n; j++) {
@@ -78,17 +77,15 @@ size_t losev::readFile(std::ifstream & file, int * ptrArr, size_t m, size_t n) {
       if (file.fail()) {
         return count;
       }
-      if (temp > std::numeric_limits< int >::max() || temp < std::numeric_limits<int>::min()) {
-        return count;
-      }
-      ptrArr[i * n + j] = static_cast< int >(temp);
+      ptrArr[i * n + j] = temp;
       count++;
     }
   }
   return count;
 }
 
-size_t losev::countLocMin(const int * ptrArr, size_t m, size_t n) {
+size_t losev::countLocMin(const int * ptrArr, size_t m, size_t n)
+{
   size_t count = 0;
   bool isLocMin;
   for (size_t i = 1; i < m - 1; i++) {
@@ -109,7 +106,8 @@ size_t losev::countLocMin(const int * ptrArr, size_t m, size_t n) {
   return count;
 }
 
-size_t losev::findNumRowMaxRepl(const int * ptrArr, size_t m, size_t n) {
+size_t losev::findNumRowMaxRepl(const int * ptrArr, size_t m, size_t n)
+{
   size_t numRowMaxsLenRep = 0;
   size_t maxLenRep = 0;
   for (size_t i = 0; i < m; i++) {
