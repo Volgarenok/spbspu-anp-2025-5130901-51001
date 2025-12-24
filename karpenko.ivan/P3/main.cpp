@@ -225,40 +225,22 @@ int main(int argc, char *argv[])
     return 0;
   }
 
-  int *inputMatrix = nullptr;
   std::size_t totalElements = rows * cols;
 
-  if (operation == 1)
+  if (operation == 1 && totalElements > karpenko::kMaxSize)
   {
-    if (totalElements > karpenko::kMaxSize)
-    {
-      std::cerr << "Error: Matrix size exceeds maximum allowed size\n";
-      return 2;
-    }
-
-    inputMatrix = new int[totalElements];
-
-    std::size_t readCount = karpenko::readMatrix(inputStream, inputMatrix, rows, cols);
-
-    if (readCount != totalElements)
-    {
-      std::cerr << "Error: Not enough data\n";
-      delete[] inputMatrix;
-      return 2;
-    }
+    std::cerr << "Error: Matrix size exceeds maximum allowed size\n";
+    return 2;
   }
-  else
+
+  int *inputMatrix = new int[totalElements];
+  std::size_t readCount = karpenko::readMatrix(inputStream, inputMatrix, rows, cols);
+
+  if (readCount != totalElements)
   {
-    inputMatrix = new int[totalElements];
-
-    std::size_t readCount = karpenko::readMatrix(inputStream, inputMatrix, rows, cols);
-
-    if (readCount != totalElements)
-    {
-      std::cerr << "Error: Not enough data\n";
-      delete[] inputMatrix;
-      return 2;
-    }
+    std::cerr << "Error: Not enough data\n";
+    delete[] inputMatrix;
+    return 2;
   }
 
   if (operation == 1)
