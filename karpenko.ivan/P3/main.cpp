@@ -243,27 +243,42 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  if (operation == 1)
+  try
   {
-    karpenko::transformMatrixSpiral(rows, cols, inputMatrix);
-    karpenko::writeMatrix(outputStream, inputMatrix, rows, cols);
-  }
-  else
-  {
-    double *smoothedMatrix = new double[totalElements];
-    karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
-    karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
-    delete[] smoothedMatrix;
-  }
+    if (operation == 1)
+    {
+      karpenko::transformMatrixSpiral(rows, cols, inputMatrix);
+      karpenko::writeMatrix(outputStream, inputMatrix, rows, cols);
+    }
+    else
+    {
+      double *smoothedMatrix = new double[totalElements];
+      karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
+      karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
+      delete[] smoothedMatrix;
+    }
 
-  if (!outputStream)
+    if (!outputStream)
+    {
+      std::cerr << "Error: Failed to write matrix to output file\n";
+      delete[] inputMatrix;
+      return 2;
+    }
+
+    delete[] inputMatrix;
+  }
+  catch (const std::bad_alloc&)
   {
-    std::cerr << "Error: Failed to write matrix to output file\n";
+    std::cerr << "Error: Memory allocation failed\n";
     delete[] inputMatrix;
     return 2;
   }
-
-  delete[] inputMatrix;
+  catch (...)
+  {
+    std::cerr << "Error: Unexpected exception occurred\n";
+    delete[] inputMatrix;
+    return 2;
+  }
 
   std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
   return 0;
