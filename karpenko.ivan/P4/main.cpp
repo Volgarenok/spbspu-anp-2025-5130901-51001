@@ -124,8 +124,18 @@ int main()
   size_t line1Length = 0;
   char *line1 = karpenko::myGetline(std::cin, line1Length);
 
-  if (!line1)
+  
+  if (!std::cin.good() && std::cin.eof())
   {
+    if (line1Length == 0)
+    {
+      delete[] line1;
+      return 0;
+    }
+  }
+  else if (!std::cin)
+  {
+    delete[] line1;
     std::cerr << "Error reading string\n";
     return 1;
   }
