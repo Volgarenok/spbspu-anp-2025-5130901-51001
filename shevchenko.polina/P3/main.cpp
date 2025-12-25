@@ -213,7 +213,7 @@ int main(int argc, char * argv[])
       std::cerr << "First parameter is not a number";
       return 1;
   }
-        
+
   if (num != 1 && num != 2)
   {
     std::cerr << "First parameter is out of range";
