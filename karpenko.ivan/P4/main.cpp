@@ -139,11 +139,15 @@ int main()
 
   try
   {
-    result1 = new char[result1Size + 1]();
+    result1 = new char[result1Size + 1];
+    result1[result1Size] = '\0';
+    
     karpenko::uniTwo(line1, line1Length, line2, line2Length, result1, result1Size + 1);
     std::cout << result1 << '\n';
 
-    result2 = new char[karpenko::ALPHABET_RESULT_SIZE]();
+    result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
+    result2[karpenko::ALPHABET_RESULT_SIZE - 1] = '\0';
+    
     karpenko::shrSym(line1, result2);
     std::cout << result2 << '\n';
 
