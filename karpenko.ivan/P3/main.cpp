@@ -261,7 +261,6 @@ int main(int argc, char *argv[])
       delete[] inputMatrix;
       return 2;
     }
-    
     karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
     karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
     delete[] smoothedMatrix;
