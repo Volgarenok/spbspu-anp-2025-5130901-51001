@@ -99,7 +99,6 @@ namespace karpenko
           delete[] buffer;
           throw;
         }
-        
         std::memcpy(newBuffer, buffer, size);
         delete[] buffer;
         buffer = newBuffer;
