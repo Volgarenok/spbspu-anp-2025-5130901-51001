@@ -1,18 +1,18 @@
 #include <iostream>
 namespace vishnyakov
 {
-  size_t Amount_of_lat_letters(char *str, size_t len); // Вариант 9
-  void Uppercase_to_lowercase(char *str, size_t len); // Вариант 11
-  bool is_in(char *str, char letter, size_t len);
-  void copy(const char * a, char * b, size_t l);
-  char * getline(std::istream &input, size_t &size);
+  size_t amountOfLatLetters(char *str);
+  void uppercaseToLowercase(char *str);
+  bool isIn(char *str, char letter);
+  void copy(const char *a, char *b, size_t l);
+  char *getline(std::istream &input, size_t &size);
 }
 
-bool vishnyakov::is_in(char *str, char letter, size_t len)
+bool vishnyakov::isIn(char *str, char letter)
 {
-  for(size_t i = 0; i < len; ++i)
+  for(size_t i = 0; str[i] != '\0'; ++i)
   {
-    if(str[i] == letter)
+    if (str[i] == letter)
     {
         return 1;
     }
@@ -20,7 +20,7 @@ bool vishnyakov::is_in(char *str, char letter, size_t len)
   return 0;
 }
 
-void vishnyakov::copy(const char * a, char * b, size_t l)
+void vishnyakov::copy(const char *a, char *b, size_t l)
 {
   for (size_t i = 0; i < l; ++i)
   {
@@ -28,36 +28,32 @@ void vishnyakov::copy(const char * a, char * b, size_t l)
   }
 }
 
-char * vishnyakov::getline(std::istream &input, size_t &size)
+char *vishnyakov::getline(std::istream &input, size_t &size)
 {
   bool is_flag = input.flags() & std::ios_base::skipws;
 
-  size_t buffer = 16;
-  size_t len = 0;
+  size_t capacity = 16;
 
-  char* line = static_cast<char*>(malloc(sizeof(char) * buffer));
+  char* line = reinterpret_cast<char*>(malloc(sizeof(char) * capacity));
 
-  if (!line) {
-    size = 0;
+  if (!line) 
+  {
     throw std::bad_alloc();
   }
 
-  if (is_flag) {
+  if (is_flag) 
+  {
     input >> std::noskipws;
   }
 
   char sym;
 
-  while (!(input >> sym).fail())
+  while (!(input >> sym).fail() && sym != '\n')
   {
-    if (sym == '\n') {
-      break;
-    }
-
-    if (len + 1 >= buffer)
+    if (size + 1 >= capacity)
     {
-      size_t new_buffer = buffer * 2;
-      char* tmp_line = static_cast<char*>(malloc(sizeof(char) * new_buffer));
+      size_t new_capacity = capacity * 2;
+      char *tmp_line = reinterpret_cast< char* >(malloc(sizeof(char) * new_capacity));
 
       if (!tmp_line)
       {
@@ -70,13 +66,13 @@ char * vishnyakov::getline(std::istream &input, size_t &size)
         throw std::bad_alloc();
       }
 
-      vishnyakov::copy(line, tmp_line, len);
+      vishnyakov::copy(line, tmp_line, size);
       free(line);
-      buffer = new_buffer;
+      capacity = new_capacity;
       line = tmp_line;
     }
 
-    line[len++] = sym;
+    line[size++] = sym;
 
   }
 
@@ -85,36 +81,35 @@ char * vishnyakov::getline(std::istream &input, size_t &size)
     input >> std::skipws;
   }
 
-  if (len == 0 && !input)
+  if (size == 0 && !input)
   {
     free(line);
     size = 0;
     throw std::logic_error("Input failed");
   }
 
-  line[len] = 0;
-  size = len;
+  line[size] = 0;
   return line;
 }
 
-size_t vishnyakov::Amount_of_lat_letters(char *str, size_t len)
+size_t vishnyakov::amountOfLatLetters(char *str)
 {
   size_t result = 0;
-  const char *Lowercase_lat_alphabet = "abcdefghijklmnopqrstuvwxyz";
+  const char *lowercase_lat_alphabet = "abcdefghijklmnopqrstuvwxyz";
   for(size_t i = 0; i < 26; ++i)
   {
-    result += vishnyakov::is_in(str, Lowercase_lat_alphabet[i], len);
+    result += vishnyakov::isIn(str, lowercase_lat_alphabet[i]);
   }
   return result;
 }
 
- void vishnyakov::Uppercase_to_lowercase(char *str, size_t len)
+ void vishnyakov::uppercaseToLowercase(char *str)
 {
-  for(size_t i = 0; i < len; i++)
+  for(size_t i = 0; str[i] != '\0'; i++)
   {
     if (std::isalpha(str[i]))
     {
-        str[i] = std::tolower(str[i]);
+      str[i] = std::tolower(str[i]);
     }
   }
 }
@@ -140,8 +135,8 @@ int main()
     return 1;
   }
 
-  Uppercase_to_lowercase(line, size);
-  std::cout << Amount_of_lat_letters(line, size) << '\n';
+  uppercaseToLowercase(line);
+  std::cout << amountOfLatLetters(line) << '\n';
   std:: cout << line << '\n';
 
   free(line);
