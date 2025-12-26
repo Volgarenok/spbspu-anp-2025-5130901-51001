@@ -149,19 +149,12 @@ namespace karpenko
   {
     if (!str || !*str)
     {
-      std::cerr << "Error: First parameter is null or empty\n";
       return 0;
     }
 
     char *endptr = nullptr;
     std::strtol(str, std::addressof(endptr), 10);
-
-    if (*endptr != '\0')
-    {
-      std::cerr << "Error: First parameter is not a valid number\n";
-      return 0;
-    }
-    return 1;
+    return (*endptr == '\0') ? 1 : 0;
   }
 }
 
@@ -176,6 +169,7 @@ int main(int argc, char *argv[])
 
   if (!karpenko::checkIsNumber(argv[1]))
   {
+    std::cerr << "Error: First parameter is not a valid number\n";
     return 1;
   }
 
