@@ -234,7 +234,7 @@ int main(int argc, char *argv[])
   }
 
   int *inputMatrix = nullptr;
-  
+
   if (operation == 1)
   {
     if (totalElements > karpenko::kMaxSize)
@@ -268,7 +268,7 @@ int main(int argc, char *argv[])
 
   int *spiralMatrix = nullptr;
   double *smoothedMatrix = nullptr;
-  
+
   try
   {
     spiralMatrix = new int[totalElements];
@@ -278,8 +278,14 @@ int main(int argc, char *argv[])
   {
     std::cerr << "Error: Memory allocation failed for processing\n";
     delete[] inputMatrix;
-    if (spiralMatrix) delete[] spiralMatrix;
-    if (smoothedMatrix) delete[] smoothedMatrix;
+    if (spiralMatrix)
+    {
+      delete[] spiralMatrix;
+    }
+    if (smoothedMatrix)
+    {
+      delete[] smoothedMatrix;
+    }
     return 2;
   }
 
@@ -289,7 +295,6 @@ int main(int argc, char *argv[])
   }
 
   karpenko::transformMatrixSpiral(rows, cols, spiralMatrix);
-
   karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
 
   if (operation == 1)
@@ -314,7 +319,7 @@ int main(int argc, char *argv[])
   delete[] spiralMatrix;
   delete[] smoothedMatrix;
 
-  std::cout << (operation == 1 ? "spiral transformation successfully" : "smoothed matrix successfully") << "\n";
+  std::cout << (operation == 1 ? "Spiral transformation completed successfully" : "Matrix smoothing completed successfully") << "\n";
 
   return 0;
 }
