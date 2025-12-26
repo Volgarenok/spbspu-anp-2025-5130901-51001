@@ -119,13 +119,19 @@ namespace karpenko
 
 int main()
 {
+  if (std::cin.eof())
+  {
+    std::cerr << "Error: no input provided\n";
+    return 1;
+  }
+
   size_t line1Length = 0;
   char* line1 = karpenko::myGetline(std::cin, line1Length);
 
-  if (!line1 || line1Length == 0)
+  if (!line1)
   {
-    delete[] line1;
-    return 0;
+    std::cerr << "Error: memory allocation failed\n";
+    return 1;
   }
 
   const char line2[] = "def_";
