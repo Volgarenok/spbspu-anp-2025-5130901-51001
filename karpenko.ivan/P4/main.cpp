@@ -13,7 +13,7 @@ namespace karpenko
     {
       return;
     }
-    
+
     const size_t maxLen = (len1 > len2) ? len1 : len2;
     size_t resultIndex = 0;
 
