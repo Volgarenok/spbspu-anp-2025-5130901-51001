@@ -9,33 +9,41 @@ namespace karpenko
 
   void uniTwo(const char* str1, size_t len1, const char* str2, size_t len2, char* result, size_t resultSize)
 {
-    if (result == nullptr || resultSize == 0) {
-        return;
+    if (result == nullptr || resultSize == 0)
+    {
+      return;
     }
     
     const size_t maxLen = (len1 > len2) ? len1 : len2;
     size_t resultIndex = 0;
 
-    for (size_t i = 0; i < maxLen; ++i) {
-        if (i < len1 && resultIndex < resultSize - 1) {
-            result[resultIndex++] = str1[i];
-        }
-        if (i < len2 && resultIndex < resultSize - 1) {
-            result[resultIndex++] = str2[i];
-        }
+    for (size_t i = 0; i < maxLen; ++i)
+    {
+      if (i < len1 && resultIndex < resultSize - 1)
+      {
+        result[resultIndex++] = str1[i];
+      }
+      if (i < len2 && resultIndex < resultSize - 1)
+      {
+        result[resultIndex++] = str2[i];
+      }
     }
 
     if (len1 > len2) {
-        for (size_t i = len2; i < len1 && resultIndex < resultSize - 1; ++i) {
-            result[resultIndex++] = str1[i];
-        }
-    } else if (len2 > len1) {
-        for (size_t i = len1; i < len2 && resultIndex < resultSize - 1; ++i) {
-            result[resultIndex++] = str2[i];
-        }
+      for (size_t i = len2; i < len1 && resultIndex < resultSize - 1; ++i)
+      {
+        result[resultIndex++] = str1[i];
+      }
+    } 
+    else if (len2 > len1)
+    {
+      for (size_t i = len1; i < len2 && resultIndex < resultSize - 1; ++i)
+      {
+        result[resultIndex++] = str2[i];
+      }
     }
 
-    result[resultIndex] = '\0';
+  result[resultIndex] = '\0';
 }
   void shrSym(const char* input, char* result)
   {
