@@ -50,6 +50,18 @@ namespace draw {
     explicit Polygon(point_t * a, size_t size);
   };
 
+  struct Concave : Shape {
+    point_t points[4];
+    point_t center;
+    double area;
+    double getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(point_t to) override;
+    void move(double dx, double dy) override;
+    void scale(double coef) override;
+    explicit Concave(point_t * a, size_t size);
+  };
+
   void scaleRelative(Shape& shp, point_t pt, double coef);
   rectangle_t getAllShapesFrameRect(Shape** shps, size_t size);
   void removeArray(Shape**shps, size_t size);
@@ -245,14 +257,16 @@ int main() {
     err = 1;
   }
 
+  printParams(shps, shp_cnt);
+
   double x = 0, y = 0, scale = 0;
   if (std::cin >> x >> y >> scale) {
-    printParams(shps, shp_cnt);
     for (size_t i = 0; i < shp_cnt; i++) {
       scaleRelative(*shps[i], {x, y}, scale);
     }
     printParams(shps, shp_cnt);
   } else {
+    std::cerr << "input error" << "\n";
     err = 1;
   }
 
