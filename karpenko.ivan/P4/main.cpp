@@ -83,33 +83,34 @@ namespace karpenko
     size = 0;
     char c;
 
-    try
+    while (in.get(c) && c != '\n')
     {
-      while (in.get(c) && c != '\n')
+      if (size >= capacity - 1)
       {
-        if (size >= capacity - 1)
+        size_t newCapacity = capacity * GROW_FACTOR;
+        char *newBuffer = nullptr;
+
+        try
         {
-          size_t newCapacity = capacity * GROW_FACTOR;
-          char *newBuffer = new char[newCapacity];
-
-          std::memcpy(newBuffer, buffer, size);
-          delete[] buffer;
-          buffer = newBuffer;
-          capacity = newCapacity;
+          newBuffer = new char[newCapacity];
         }
-
-        buffer[size++] = c;
+        catch (const std::bad_alloc &)
+        {
+          delete[] buffer;
+          throw;
+        }
+        
+        std::memcpy(newBuffer, buffer, size);
+        delete[] buffer;
+        buffer = newBuffer;
+        capacity = newCapacity;
       }
 
-      buffer[size] = '\0';
+      buffer[size++] = c;
+    }
 
-      return buffer;
-    }
-    catch (const std::bad_alloc &)
-    {
-      delete[] buffer;
-      throw;
-    }
+    buffer[size] = '\0';
+    return buffer;
   }
 }
 
