@@ -6,6 +6,7 @@ namespace kitserov
   char* getline(std::istream& in, size_t& size);
   void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
+  const size_t alphabetSize = 26;
   int hasSameChars(const char* str1, const char* str2);
 }
 
@@ -25,13 +26,11 @@ int kitserov::hasSameChars(const char* str1, const char* str2)
   return 0;
 }
 
-const size_t ALPHABET_SIZE = 26;
-
 void kitserov::missLetters(const char* source, char* destination)
 {
   size_t dstIndex = 0;
   const char* alphavit = "abcdefghijklmnopqrstuvwxyz";
-  const size_t alphavitSize = ALPHABET_SIZE;
+  const size_t alphavitSize = alphabetSize;
   for (size_t j = 0; j < alphavitSize; ++j) {
     unsigned char alphavitChar = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
@@ -132,14 +131,14 @@ int main()
   removedLetters[s] = '\0';
   kitserov::removeLetters(data, removedLetters);
 
-  char* missedLetters = reinterpret_cast< char* >(malloc(ALPHABET_SIZE + 1));
+  char* missedLetters = reinterpret_cast< char* >(malloc(kitserov::alphabetSize + 1));
   if (!missedLetters) {
     std::cerr << "Failed memory allocation\n";
     free(data);
     free(removedLetters);
     return 1;
   }
-  missedLetters[ALPHABET_SIZE] = '\0';
+  missedLetters[kitserov::alphabetSize] = '\0';
   kitserov::missLetters(data, missedLetters);
 
   const char* str2 = "abs";
