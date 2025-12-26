@@ -169,8 +169,8 @@ int main(int argc, char *argv[])
 {
   if (argc != 4)
   {
-    std::cerr << "Usage: " << (argc > 0 ? argv[0] : "program") << " num input output\n";
-    std::cerr << "  num: 1 for spiral transformation, 2 for matrix smoothing\n";
+    std::cerr << "Usage: " << (argc > 0 ? argv[0] : "program") << " operation input output\n";
+    std::cerr << "  operation: 1 for array of fixed size, 2 for dynamic array\n";
     return 1;
   }
 
@@ -221,19 +221,42 @@ int main(int argc, char *argv[])
   if (rows == 0 && cols == 0)
   {
     outputStream << "0 0";
-    std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully (empty matrix)\n";
+    std::cout << "Both matrix operations completed successfully (empty matrix)\n";
     return 0;
   }
 
   std::size_t totalElements = rows * cols;
 
-  if (operation == 1 && totalElements > karpenko::kMaxSize)
+  if (totalElements > karpenko::kMaxSize)
   {
     std::cerr << "Error: Matrix size exceeds maximum allowed size\n";
     return 2;
   }
 
-  int *inputMatrix = new int[totalElements];
+  int *inputMatrix = nullptr;
+  
+  if (operation == 1)
+  {
+    if (totalElements > karpenko::kMaxSize)
+    {
+      std::cerr << "Error: Matrix too large for fixed-size array\n";
+      return 2;
+    }
+    inputMatrix = new int[totalElements];
+  }
+  else
+  {
+    try
+    {
+      inputMatrix = new int[totalElements];
+    }
+    catch (const std::bad_alloc&)
+    {
+      std::cerr << "Error: Memory allocation failed for dynamic array\n";
+      return 2;
+    }
+  }
+
   std::size_t readCount = karpenko::readMatrix(inputStream, inputMatrix, rows, cols);
 
   if (readCount != totalElements)
@@ -243,39 +266,55 @@ int main(int argc, char *argv[])
     return 2;
   }
 
+  int *spiralMatrix = nullptr;
+  double *smoothedMatrix = nullptr;
+  
+  try
+  {
+    spiralMatrix = new int[totalElements];
+    smoothedMatrix = new double[totalElements];
+  }
+  catch (const std::bad_alloc&)
+  {
+    std::cerr << "Error: Memory allocation failed for processing\n";
+    delete[] inputMatrix;
+    if (spiralMatrix) delete[] spiralMatrix;
+    if (smoothedMatrix) delete[] smoothedMatrix;
+    return 2;
+  }
+
+  for (std::size_t i = 0; i < totalElements; ++i)
+  {
+    spiralMatrix[i] = inputMatrix[i];
+  }
+
+  karpenko::transformMatrixSpiral(rows, cols, spiralMatrix);
+
+  karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
+
   if (operation == 1)
   {
-    karpenko::transformMatrixSpiral(rows, cols, inputMatrix);
-    karpenko::writeMatrix(outputStream, inputMatrix, rows, cols);
+    karpenko::writeMatrix(outputStream, spiralMatrix, rows, cols);
   }
   else
   {
-    double *smoothedMatrix = nullptr;
-    try
-    {
-      smoothedMatrix = new double[totalElements];
-    }
-    catch (const std::bad_alloc&)
-    {
-      std::cerr << "Error: Memory allocation failed\n";
-      delete[] inputMatrix;
-      return 2;
-    }
-
-    karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
     karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
-    delete[] smoothedMatrix;
   }
 
   if (!outputStream)
   {
     std::cerr << "Error: Failed to write matrix to output file\n";
     delete[] inputMatrix;
+    delete[] spiralMatrix;
+    delete[] smoothedMatrix;
     return 2;
   }
 
   delete[] inputMatrix;
+  delete[] spiralMatrix;
+  delete[] smoothedMatrix;
 
-  std::cout << (operation == 1 ? "Spiral transformation" : "Matrix smoothing") << " completed successfully\n";
+  std::cout << (operation == 1 ? "spiral transformation successfully" : "smoothed matrix successfully") << "\n";
+
   return 0;
 }
