@@ -2,10 +2,10 @@
 #include <fstream>
 namespace vishnyakov
 {
-  void spiral_reduction(int *matrix, size_t row, size_t column);
-  int biggiest_diagonal(const int *matrix, size_t row, size_t column);
+  void spiralReduction(int *matrix, size_t row, size_t column);
+  int biggiestDiagonal(const int *matrix, size_t row, size_t column);
   size_t move(size_t type, size_t column, size_t start);
-  size_t is_in(size_t *array, size_t value, size_t size);
+  size_t isIn(size_t *array, size_t value, size_t size);
 }
 size_t vishnyakov::move(size_t type, size_t column, size_t start)
 {
@@ -30,7 +30,7 @@ size_t vishnyakov::move(size_t type, size_t column, size_t start)
   }
   return start;
 }
-size_t vishnyakov::is_in(size_t *array, size_t value, size_t size)
+size_t vishnyakov::isIn(size_t *array, size_t value, size_t size)
 {
   for (size_t i = 0; i < size; ++i)
   {
@@ -41,7 +41,7 @@ size_t vishnyakov::is_in(size_t *array, size_t value, size_t size)
   }
   return 0;
 }
-void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column)
+void vishnyakov::spiralReduction(int *matrix, size_t row, size_t column)
 {
   size_t start = row * column - column, type_of_mooving = 0;
   size_t *completed_values = new size_t[column * row];
@@ -53,16 +53,16 @@ void vishnyakov::spiral_reduction(int *matrix, size_t row, size_t column)
   {
     if (vishnyakov::move(type_of_mooving, column, start) > row * column)
     {
-      type_of_mooving += 1;
+      type_of_mooving++;
     }
     matrix[start] -= i + 1;
     completed_values[i] = start;
-    type_of_mooving += vishnyakov::is_in(completed_values, vishnyakov::move(type_of_mooving,column,start), row * column);
+    type_of_mooving += vishnyakov::isIn(completed_values, vishnyakov::move(type_of_mooving, column, start), row * column);
     start = vishnyakov::move(type_of_mooving,column,start);
   }
   delete[] completed_values;
 }
-int vishnyakov::biggiest_diagonal(const int *matrix, size_t row, size_t column)
+int vishnyakov::biggiestDiagonal(const int *matrix, size_t row, size_t column)
 {
   if (row == 0 || column == 0)
   {
@@ -79,7 +79,7 @@ int vishnyakov::biggiest_diagonal(const int *matrix, size_t row, size_t column)
       sum += matrix[k];
       k += column + 1;
     }
-    if(sum > max_sum)
+    if (sum > max_sum)
     {
       max_sum = sum;
     }
@@ -93,7 +93,7 @@ int vishnyakov::biggiest_diagonal(const int *matrix, size_t row, size_t column)
       sum += matrix[k];
       k += column + 1;
     }
-    if(sum > max_sum)
+    if (sum > max_sum)
     {
       max_sum = sum;
     }
@@ -177,8 +177,8 @@ int main(int argc, char ** argv)
     delete[] dynamic_matrix;
     return 2;
   }
-  int result = vishnyakov::biggiest_diagonal(matrix, row, column);
-  vishnyakov::spiral_reduction(matrix, row, column);
+  int result = vishnyakov::biggiestDiagonal(matrix, row, column);
+  vishnyakov::spiralReduction(matrix, row, column);
   output << row << ' ' << column;
   for (size_t i = 0; i < row * column; ++i)
   {
