@@ -80,7 +80,7 @@ namespace karpenko
               continue;
             }
 
-             if ((di == -1 && i == 0)
+            if ((di == -1 && i == 0)
                 || (di == 1 && i == rows - 1)
                 || (dj == -1 && j == 0)
                 || (dj == 1 && j == cols - 1))
@@ -261,6 +261,7 @@ int main(int argc, char *argv[])
       delete[] inputMatrix;
       return 2;
     }
+
     karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
     karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
     delete[] smoothedMatrix;
