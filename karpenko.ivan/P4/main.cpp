@@ -119,7 +119,7 @@ namespace karpenko
 
 int main()
 {
-  if (std::cin.eof())
+  if (std::cin.peek() == EOF)
   {
     std::cerr << "Error: no input provided\n";
     return 1;
@@ -128,9 +128,13 @@ int main()
   size_t line1Length = 0;
   char* line1 = karpenko::myGetline(std::cin, line1Length);
 
-  if (!line1)
+  if (!line1 || (line1Length == 0 && line1[0] == '\0'))
   {
-    std::cerr << "Error: memory allocation failed\n";
+    if (line1)
+    {
+      delete[] line1;
+    }
+    std::cerr << "Error: empty input\n";
     return 1;
   }
 
