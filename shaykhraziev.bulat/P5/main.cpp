@@ -260,7 +260,7 @@ int main() {
   printParams(shps, shp_cnt);
 
   double x = 0, y = 0, scale = 0;
-  if (std::cin >> x >> y >> scale) {
+  if (std::cin >> x >> y >> scale && scale >= 0) {
     for (size_t i = 0; i < shp_cnt; i++) {
       scaleRelative(*shps[i], {x, y}, scale);
     }
