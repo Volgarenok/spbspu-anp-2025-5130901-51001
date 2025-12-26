@@ -103,12 +103,6 @@ namespace karpenko
 
       buffer[size] = '\0';
 
-      if (in.eof() && size == 0)
-      {
-        delete[] buffer;
-        return nullptr;
-      }
-
       return buffer;
     }
     catch (const std::bad_alloc &)
@@ -124,8 +118,9 @@ int main()
   size_t line1Length = 0;
   char *line1 = karpenko::myGetline(std::cin, line1Length);
 
-  if (!line1)
+  if (!line1 || line1Length == 0)
   {
+    delete[] line1;
     return 0;
   }
 
