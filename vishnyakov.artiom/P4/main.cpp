@@ -36,12 +36,12 @@ char *vishnyakov::getline(std::istream &input, size_t &size)
 
   char* line = reinterpret_cast<char*>(malloc(sizeof(char) * capacity));
 
-  if (!line) 
+  if (!line)
   {
     throw std::bad_alloc();
   }
 
-  if (is_flag) 
+  if (is_flag)
   {
     input >> std::noskipws;
   }
