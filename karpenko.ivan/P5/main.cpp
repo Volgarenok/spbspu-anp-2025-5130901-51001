@@ -97,24 +97,19 @@ namespace karpenko
     void scale(double coefficient) override;
 
   private:
-    void moveImpl(double dx, double dy) noexcept;
-    void scaleImpl(double coefficient) noexcept;
-    void calculateCenter() noexcept;
-    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
+    point_t getCenter() const noexcept;
+    point_t getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept;
     
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
-    point_t center_;
   };
 
   Triangle::Triangle(const point_t& a, const point_t& b, const point_t& c) noexcept:
     vertexA_(a),
     vertexB_(b),
     vertexC_(c)
-  {
-    calculateCenter();
-  }
+  {}
 
   double Triangle::getArea() const noexcept
   {
@@ -143,17 +138,19 @@ namespace karpenko
 
   void Triangle::move(const point_t& point) noexcept
   {
-    double dx = point.x - center_.x;
-    double dy = point.y - center_.y;
-    moveImpl(dx, dy);
+    point_t center = getCenter();
+    double dx = point.x - center.x;
+    double dy = point.y - center.y;
+    
+    vertexA_.x += dx;
+    vertexA_.y += dy;
+    vertexB_.x += dx;
+    vertexB_.y += dy;
+    vertexC_.x += dx;
+    vertexC_.y += dy;
   }
 
   void Triangle::move(double dx, double dy) noexcept
-  {
-    moveImpl(dx, dy);
-  }
-
-  void Triangle::moveImpl(double dx, double dy) noexcept
   {
     vertexA_.x += dx;
     vertexA_.y += dy;
@@ -161,8 +158,22 @@ namespace karpenko
     vertexB_.y += dy;
     vertexC_.x += dx;
     vertexC_.y += dy;
-    center_.x += dx;
-    center_.y += dy;
+  }
+
+  point_t Triangle::getCenter() const noexcept
+  {
+    return {
+      (vertexA_.x + vertexB_.x + vertexC_.x) / 3.0,
+      (vertexA_.y + vertexB_.y + vertexC_.y) / 3.0
+    };
+  }
+
+  point_t Triangle::getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept
+  {
+    return {
+      center.x + (vertex.x - center.x) * coefficient,
+      center.y + (vertex.y - center.y) * coefficient
+    };
   }
 
   void Triangle::scale(double coefficient)
@@ -171,30 +182,11 @@ namespace karpenko
     {
       throw std::invalid_argument("Scaling coefficient must be positive");
     }
-    scaleImpl(coefficient);
-  }
-
-  void Triangle::scaleImpl(double coefficient) noexcept
-  {
-    vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
-    vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
-    vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
-    vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
-    vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
-    vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
-  }
-
-  void Triangle::calculateCenter() noexcept
-  {
-    center_.x = (vertexA_.x + vertexB_.x + vertexC_.x) / 3.0;
-    center_.y = (vertexA_.y + vertexB_.y + vertexC_.y) / 3.0;
-  }
-
-  double Triangle::triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept
-  {
-    double part1 = (b.x - a.x) * (c.y - a.y);
-    double part2 = (c.x - a.x) * (b.y - a.y);
-    return 0.5 * std::fabs(part1 - part2);
+    
+    point_t center = getCenter();
+    vertexA_ = getScaledVertex(vertexA_, center, coefficient);
+    vertexB_ = getScaledVertex(vertexB_, center, coefficient);
+    vertexC_ = getScaledVertex(vertexC_, center, coefficient);
   }
 
   struct ComplexQuad final: public Shape
@@ -208,16 +200,13 @@ namespace karpenko
     void scale(double coefficient) override;
 
   private:
-    void moveImpl(double dx, double dy) noexcept;
-    void scaleImpl(double coefficient) noexcept;
-    void calculateCenter() noexcept;
+    point_t getCenter() const noexcept;
     double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
     
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
     point_t vertexD_;
-    point_t center_;
   };
 
   ComplexQuad::ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d) noexcept:
@@ -225,9 +214,7 @@ namespace karpenko
     vertexB_(b),
     vertexC_(c),
     vertexD_(d)
-  {
-    calculateCenter();
-  }
+  {}
 
   double ComplexQuad::getArea() const noexcept
   {
@@ -256,17 +243,21 @@ namespace karpenko
 
   void ComplexQuad::move(const point_t& point) noexcept
   {
-    double dx = point.x - center_.x;
-    double dy = point.y - center_.y;
-    moveImpl(dx, dy);
+    point_t center = getCenter();
+    double dx = point.x - center.x;
+    double dy = point.y - center.y;
+    
+    vertexA_.x += dx;
+    vertexA_.y += dy;
+    vertexB_.x += dx;
+    vertexB_.y += dy;
+    vertexC_.x += dx;
+    vertexC_.y += dy;
+    vertexD_.x += dx;
+    vertexD_.y += dy;
   }
 
   void ComplexQuad::move(double dx, double dy) noexcept
-  {
-    moveImpl(dx, dy);
-  }
-
-  void ComplexQuad::moveImpl(double dx, double dy) noexcept
   {
     vertexA_.x += dx;
     vertexA_.y += dy;
@@ -276,32 +267,9 @@ namespace karpenko
     vertexC_.y += dy;
     vertexD_.x += dx;
     vertexD_.y += dy;
-    center_.x += dx;
-    center_.y += dy;
   }
 
-  void ComplexQuad::scale(double coefficient)
-  {
-    if (coefficient <= 0.0)
-    {
-      throw std::invalid_argument("Scaling coefficient must be positive");
-    }
-    scaleImpl(coefficient);
-  }
-
-  void ComplexQuad::scaleImpl(double coefficient) noexcept
-  {
-    vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
-    vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
-    vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
-    vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
-    vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
-    vertexC_.y = center_.y + (vertexC_.y - center_.y) * коэффициент;
-    vertexD_.x = center_.x + (vertexD_.x - center_.x) * coefficient;
-    vertexD_.y = center_.y + (vertexD_.y - center_.y) * coefficient;
-  }
-
-  void ComplexQuad::calculateCenter() noexcept
+  point_t ComplexQuad::getCenter() const noexcept
   {
     const double epsilon = 1e-9;
     double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y) -
@@ -309,16 +277,20 @@ namespace karpenko
 
     if (std::fabs(denominator) < epsilon)
     {
-      center_.x = (vertexA_.x + vertexB_.x + vertexC_.x + vertexD_.x) / 4.0;
-      center_.y = (vertexA_.y + vertexB_.y + vertexC_.y + vertexD_.y) / 4.0;
+      return {
+        (vertexA_.x + vertexB_.x + vertexC_.x + vertexD_.x) / 4.0,
+        (vertexA_.y + vertexB_.y + vertexC_.y + vertexD_.y) / 4.0
+      };
     }
     else
     {
       double t = ((vertexA_.x - vertexB_.x) * (vertexB_.y - vertexD_.y) -
                  (vertexA_.y - vertexB_.y) * (vertexB_.x - vertexD_.x)) / denominator;
 
-      center_.x = vertexA_.x + t * (vertexC_.x - vertexA_.x);
-      center_.y = vertexA_.y + t * (vertexC_.y - vertexA_.y);
+      return {
+        vertexA_.x + t * (vertexC_.x - vertexA_.x),
+        vertexA_.y + t * (vertexC_.y - vertexA_.y)
+      };
     }
   }
 
@@ -327,6 +299,28 @@ namespace karpenko
     double part1 = (b.x - a.x) * (c.y - a.y);
     double part2 = (c.x - a.x) * (b.y - a.y);
     return 0.5 * std::fabs(part1 - part2);
+  }
+
+  void ComplexQuad::scale(double coefficient)
+  {
+    if (coefficient <= 0.0)
+    {
+      throw std::invalid_argument("Scaling coefficient must be positive");
+    }
+    
+    point_t center = getCenter();
+    
+    auto scaleVertex = [&center, coefficient](const point_t& vertex) {
+      return point_t{
+        center.x + (vertex.x - center.x) * coefficient,
+        center.y + (vertex.y - center.y) * coefficient
+      };
+    };
+    
+    vertexA_ = scaleVertex(vertexA_);
+    vertexB_ = scaleVertex(vertexB_);
+    vertexC_ = scaleVertex(vertexC_);
+    vertexD_ = scaleVertex(vertexD_);
   }
 
   void scaleShapes(Shape** shapes, size_t count, const point_t& point, double coefficient)
