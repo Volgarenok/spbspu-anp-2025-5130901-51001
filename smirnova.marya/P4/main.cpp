@@ -120,7 +120,7 @@ int main()
   if (!lines[1]) {
     std::cerr << "Memory allocation failed\n";
     free(lines[0]);
-    return 1;
+    return 0;
   }
   std::strcpy(lines[1], "default");
   lengths[1] = 7;
