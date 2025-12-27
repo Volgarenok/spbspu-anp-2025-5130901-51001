@@ -333,9 +333,9 @@ void draw::Concave::move(point_t to) {
 }
 
 void draw::Concave::scale(double coef) {
-  for (auto & point : points) {
-    point.x = center.x + (point.x - center.x) * coef;
-    point.y = center.y + (point.y - center.y) * coef;
+  for (size_t i = 0; i < 4; i++) {
+    points[i].x = center.x + (points[i].x - center.x) * coef;
+    points[i].y = center.y + (points[i].y - center.y) * coef;
   }
 }
 
