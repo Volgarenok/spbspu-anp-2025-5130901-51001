@@ -90,6 +90,10 @@ int main(int argc, char** argv)
   if (rows == 0 || cols == 0)
   {
     std::ofstream output(argv[3]);
+    if (!output.is_open()) {
+      std::cerr << "Cannot open output file\n";
+      return 1;
+    }
     output << "0 0\n0\n";
     return 0;
   }
@@ -112,7 +116,7 @@ int main(int argc, char** argv)
       {
         delete[] matrix;
       }
-      return 2;
+      return 1;
     }
   }
   char extra = '\0';
@@ -123,6 +127,14 @@ int main(int argc, char** argv)
   }
   input.close();
   std::ofstream output(argv[3]);
+  if (!output.is_open()) {
+    std::cerr << "Cannot open output file\n";
+    if (arg[0] == '2')
+    {
+      delete[] matrix;
+    }
+    return 1;
+  }
   output << smirnova::findLocalMaximum(rows, cols, matrix) << "\n";
   output << smirnova::findElementsDiagonal(rows, cols, matrix) << "\n";
   if (arg[0] == '2')
