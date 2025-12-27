@@ -360,7 +360,7 @@ namespace karpenko
     double width = right - left;
     double height = top - bottom;
     point_t center = {(left + right) / 2.0, (bottom + top) / 2.0};
-    
+
     rectangle_t result;
     result.width = width;
     result.height = height;
@@ -383,13 +383,13 @@ namespace karpenko
   double printAllShapesInfo(const Shape* const* shapes, size_t count, const std::string& title)
   {
     std::cout << "\n" << title << ":\n";
-    
+
     double totalArea = 0.0;
     for (size_t i = 0; i < count; ++i)
     {
       printShapeInfo(shapes[i], i);
       totalArea += shapes[i]->getArea();
-      
+
       if (i < count - 1)
       {
         std::cout << "\n";
