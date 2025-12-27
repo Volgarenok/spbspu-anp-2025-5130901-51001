@@ -99,7 +99,6 @@ namespace karpenko
   private:
     point_t getCenter() const noexcept;
     point_t getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept;
-    
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
@@ -141,7 +140,6 @@ namespace karpenko
     point_t center = getCenter();
     double dx = point.x - center.x;
     double dy = point.y - center.y;
-    
     vertexA_.x += dx;
     vertexA_.y += dy;
     vertexB_.x += dx;
@@ -182,7 +180,6 @@ namespace karpenko
     {
       throw std::invalid_argument("Scaling coefficient must be positive");
     }
-    
     point_t center = getCenter();
     vertexA_ = getScaledVertex(vertexA_, center, coefficient);
     vertexB_ = getScaledVertex(vertexB_, center, coefficient);
@@ -202,7 +199,6 @@ namespace karpenko
   private:
     point_t getCenter() const noexcept;
     double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
-    
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
@@ -246,7 +242,6 @@ namespace karpenko
     point_t center = getCenter();
     double dx = point.x - center.x;
     double dy = point.y - center.y;
-    
     vertexA_.x += dx;
     vertexA_.y += dy;
     vertexB_.x += dx;
@@ -272,8 +267,8 @@ namespace karpenko
   point_t ComplexQuad::getCenter() const noexcept
   {
     const double epsilon = 1e-9;
-    double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y) -
-                       (vertexA_.y - vertexC_.y) * (vertexB_.x - vertexD_.x);
+    double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y)
+                       - (vertexA_.y - vertexC_.y) * (vertexB_.x - vertexD_.x);
 
     if (std::fabs(denominator) < epsilon)
     {
@@ -284,8 +279,8 @@ namespace karpenko
     }
     else
     {
-      double t = ((vertexA_.x - vertexB_.x) * (vertexB_.y - vertexD_.y) -
-                 (vertexA_.y - vertexB_.y) * (vertexB_.x - vertexD_.x)) / denominator;
+      double t = ((vertexA_.x - vertexB_.x) * (vertexB_.y - vertexD_.y)
+      - (vertexA_.y - vertexB_.y) * (vertexB_.x - vertexD_.x)) / denominator;
 
       return {
         vertexA_.x + t * (vertexC_.x - vertexA_.x),
@@ -307,16 +302,13 @@ namespace karpenko
     {
       throw std::invalid_argument("Scaling coefficient must be positive");
     }
-    
     point_t center = getCenter();
-    
     auto scaleVertex = [&center, coefficient](const point_t& vertex) {
       return point_t{
         center.x + (vertex.x - center.x) * coefficient,
         center.y + (vertex.y - center.y) * coefficient
       };
     };
-    
     vertexA_ = scaleVertex(vertexA_);
     vertexB_ = scaleVertex(vertexB_);
     vertexC_ = scaleVertex(vertexC_);
@@ -403,7 +395,6 @@ namespace karpenko
         std::cout << "\n";
       }
     }
-    
     return totalArea;
   }
 
