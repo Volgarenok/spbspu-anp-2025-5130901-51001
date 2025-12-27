@@ -31,42 +31,12 @@ namespace karpenko
   struct Rectangle final: public Shape
   {
   public:
-    Rectangle(double width, double height, const point_t& center) noexcept:
-      width_(width),
-      height_(height),
-      center_(center)
-    {}
-
-    double getArea() const noexcept override
-    {
-      return width_ * height_;
-    }
-
-    rectangle_t getFrameRect() const noexcept override
-    {
-      rectangle_t frame;
-      frame.width = width_;
-      frame.height = height_;
-      frame.pos = center_;
-      return frame;
-    }
-
-    void move(const point_t& point) noexcept override
-    {
-      center_ = point;
-    }
-
-    void move(double dx, double dy) noexcept override
-    {
-      center_.x += dx;
-      center_.y += dy;
-    }
-
-    void scale(double coefficient) override
-    {
-      width_ *= coefficient;
-      height_ *= coefficient;
-    }
+    Rectangle(double width, double height, const point_t& center) noexcept;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(const point_t& point) noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void scale(double coefficient) override;
 
   private:
     double width_;
@@ -74,189 +44,253 @@ namespace karpenko
     point_t center_;
   };
 
+  Rectangle::Rectangle(double width, double height, const point_t& center) noexcept:
+    width_(width),
+    height_(height),
+    center_(center)
+  {}
+
+  double Rectangle::getArea() const noexcept
+  {
+    return width_ * height_;
+  }
+
+  rectangle_t Rectangle::getFrameRect() const noexcept
+  {
+    rectangle_t frame;
+    frame.width = width_;
+    frame.height = height_;
+    frame.pos = center_;
+    return frame;
+  }
+
+  void Rectangle::move(const point_t& point) noexcept
+  {
+    center_ = point;
+  }
+
+  void Rectangle::move(double dx, double dy) noexcept
+  {
+    center_.x += dx;
+    center_.y += dy;
+  }
+
+  void Rectangle::scale(double coefficient)
+  {
+    width_ *= coefficient;
+    height_ *= coefficient;
+  }
+
   struct Triangle final: public Shape
   {
   public:
-    Triangle(const point_t& a, const point_t& b, const point_t& c) noexcept:
-      vertexA_(a),
-      vertexB_(b),
-      vertexC_(c)
-    {
-      calculateCenter();
-    }
-
-    double getArea() const noexcept override
-    {
-      double part1 = (vertexB_.x - vertexA_.x) * (vertexC_.y - vertexA_.y);
-      double part2 = (vertexC_.x - vertexA_.x) * (vertexB_.y - vertexA_.y);
-      return 0.5 * std::fabs(part1 - part2);
-    }
-
-    rectangle_t getFrameRect() const noexcept override
-    {
-      double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x});
-      double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x});
-      double minY = std::min({vertexA_.y, vertexB_.y, vertexC_.y});
-      double maxY = std::max({vertexA_.y, vertexB_.y, vertexC_.y});
-
-      double width = maxX - minX;
-      double height = maxY - minY;
-      point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-
-      rectangle_t frame;
-      frame.width = width;
-      frame.height = height;
-      frame.pos = center;
-      return frame;
-    }
-
-    void move(const point_t& point) noexcept override
-    {
-      double dx = point.x - center_.x;
-      double dy = point.y - center_.y;
-      move(dx, dy);
-    }
-
-    void move(double dx, double dy) noexcept override
-    {
-      vertexA_.x += dx;
-      vertexA_.y += dy;
-      vertexB_.x += dx;
-      vertexB_.y += dy;
-      vertexC_.x += dx;
-      vertexC_.y += dy;
-      center_.x += dx;
-      center_.y += dy;
-    }
-
-    void scale(double coefficient) override
-    {
-      vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
-      vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
-      vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
-      vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
-      vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
-      vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
-    }
+    Triangle(const point_t& a, const point_t& b, const point_t& c) noexcept;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(const point_t& point) noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void scale(double coefficient) override;
 
   private:
-    void calculateCenter() noexcept
-    {
-      center_.x = (vertexA_.x + vertexB_.x + vertexC_.x) / 3.0;
-      center_.y = (vertexA_.y + vertexB_.y + vertexC_.y) / 3.0;
-    }
-
+    void calculateCenter() noexcept;
+    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
+    
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
     point_t center_;
   };
 
+  Triangle::Triangle(const point_t& a, const point_t& b, const point_t& c) noexcept:
+    vertexA_(a),
+    vertexB_(b),
+    vertexC_(c)
+  {
+    calculateCenter();
+  }
+
+  double Triangle::getArea() const noexcept
+  {
+    double part1 = (vertexB_.x - vertexA_.x) * (vertexC_.y - vertexA_.y);
+    double part2 = (vertexC_.x - vertexA_.x) * (vertexB_.y - vertexA_.y);
+    return 0.5 * std::fabs(part1 - part2);
+  }
+
+  rectangle_t Triangle::getFrameRect() const noexcept
+  {
+    double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x});
+    double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x});
+    double minY = std::min({vertexA_.y, vertexB_.y, vertexC_.y});
+    double maxY = std::max({vertexA_.y, vertexB_.y, vertexC_.y});
+
+    double width = maxX - minX;
+    double height = maxY - minY;
+    point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
+
+    rectangle_t frame;
+    frame.width = width;
+    frame.height = height;
+    frame.pos = center;
+    return frame;
+  }
+
+  void Triangle::move(const point_t& point) noexcept
+  {
+    double dx = point.x - center_.x;
+    double dy = point.y - center_.y;
+    move(dx, dy);
+  }
+
+  void Triangle::move(double dx, double dy) noexcept
+  {
+    vertexA_.x += dx;
+    vertexA_.y += dy;
+    vertexB_.x += dx;
+    vertexB_.y += dy;
+    vertexC_.x += dx;
+    vertexC_.y += dy;
+    center_.x += dx;
+    center_.y += dy;
+  }
+
+  void Triangle::scale(double coefficient)
+  {
+    vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
+    vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
+    vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
+    vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
+    vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
+    vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
+  }
+
+  void Triangle::calculateCenter() noexcept
+  {
+    center_.x = (vertexA_.x + vertexB_.x + vertexC_.x) / 3.0;
+    center_.y = (vertexA_.y + vertexB_.y + vertexC_.y) / 3.0;
+  }
+
+  double Triangle::triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept
+  {
+    double part1 = (b.x - a.x) * (c.y - a.y);
+    double part2 = (c.x - a.x) * (b.y - a.y);
+    return 0.5 * std::fabs(part1 - part2);
+  }
+
   struct ComplexQuad final: public Shape
   {
   public:
-    ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d) noexcept:
-      vertexA_(a),
-      vertexB_(b),
-      vertexC_(c),
-      vertexD_(d)
-    {
-      calculateCenter();
-    }
-
-    double getArea() const noexcept override
-    {
-      double area1 = triangleArea(vertexA_, vertexB_, vertexC_);
-      double area2 = triangleArea(vertexA_, vertexC_, vertexD_);
-      return area1 + area2;
-    }
-
-    rectangle_t getFrameRect() const noexcept override
-    {
-      double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
-      double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
-      double minY = std::min({vertexA_.y, vertexB_.y, vertexC_.y, vertexD_.y});
-      double maxY = std::max({vertexA_.y, vertexB_.y, vertexC_.y, vertexD_.y});
-
-      double width = maxX - minX;
-      double height = maxY - minY;
-      point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-
-      rectangle_t frame;
-      frame.width = width;
-      frame.height = height;
-      frame.pos = center;
-      return frame;
-    }
-
-    void move(const point_t& point) noexcept override
-    {
-      double dx = point.x - center_.x;
-      double dy = point.y - center_.y;
-      move(dx, dy);
-    }
-
-    void move(double dx, double dy) noexcept override
-    {
-      vertexA_.x += dx;
-      vertexA_.y += dy;
-      vertexB_.x += dx;
-      vertexB_.y += dy;
-      vertexC_.x += dx;
-      vertexC_.y += dy;
-      vertexD_.x += dx;
-      vertexD_.y += dy;
-      center_.x += dx;
-      center_.y += dy;
-    }
-
-    void scale(double coefficient) override
-    {
-      vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
-      vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
-      vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
-      vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
-      vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
-      vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
-      vertexD_.x = center_.x + (vertexD_.x - center_.x) * coefficient;
-      vertexD_.y = center_.y + (vertexD_.y - center_.y) * coefficient;
-    }
+    ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d) noexcept;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(const point_t& point) noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void scale(double coefficient) override;
 
   private:
-    void calculateCenter() noexcept
-    {
-      const double epsilon = 1e-9;
-      double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y) -
-                         (vertexA_.y - vertexC_.y) * (vertexB_.x - vertexD_.x);
-
-      if (std::fabs(denominator) < epsilon)
-      {
-        center_.x = (vertexA_.x + vertexB_.x + vertexC_.x + vertexD_.x) / 4.0;
-        center_.y = (vertexA_.y + vertexB_.y + vertexC_.y + vertexD_.y) / 4.0;
-      }
-      else
-      {
-        double t = ((vertexA_.x - vertexB_.x) * (vertexB_.y - vertexD_.y) -
-                   (vertexA_.y - vertexB_.y) * (vertexB_.x - vertexD_.x)) / denominator;
-
-        center_.x = vertexA_.x + t * (vertexC_.x - vertexA_.x);
-        center_.y = vertexA_.y + t * (vertexC_.y - vertexA_.y);
-      }
-    }
-
-    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept
-    {
-      double part1 = (b.x - a.x) * (c.y - a.y);
-      double part2 = (c.x - a.x) * (b.y - a.y);
-      return 0.5 * std::fabs(part1 - part2);
-    }
-
+    void calculateCenter() noexcept;
+    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
+    
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
     point_t vertexD_;
     point_t center_;
   };
+
+  ComplexQuad::ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d) noexcept:
+    vertexA_(a),
+    vertexB_(b),
+    vertexC_(c),
+    vertexD_(d)
+  {
+    calculateCenter();
+  }
+
+  double ComplexQuad::getArea() const noexcept
+  {
+    double area1 = triangleArea(vertexA_, vertexB_, vertexC_);
+    double area2 = triangleArea(vertexA_, vertexC_, vertexD_);
+    return area1 + area2;
+  }
+
+  rectangle_t ComplexQuad::getFrameRect() const noexcept
+  {
+    double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
+    double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
+    double minY = std::min({vertexA_.y, vertexB_.y, vertexC_.y, vertexD_.y});
+    double maxY = std::max({vertexA_.y, vertexB_.y, vertexC_.y, vertexD_.y});
+
+    double width = maxX - minX;
+    double height = maxY - minY;
+    point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
+
+    rectangle_t frame;
+    frame.width = width;
+    frame.height = height;
+    frame.pos = center;
+    return frame;
+  }
+
+  void ComplexQuad::move(const point_t& point) noexcept
+  {
+    double dx = point.x - center_.x;
+    double dy = point.y - center_.y;
+    move(dx, dy);
+  }
+
+  void ComplexQuad::move(double dx, double dy) noexcept
+  {
+    vertexA_.x += dx;
+    vertexA_.y += dy;
+    vertexB_.x += dx;
+    vertexB_.y += dy;
+    vertexC_.x += dx;
+    vertexC_.y += dy;
+    vertexD_.x += dx;
+    vertexD_.y += dy;
+    center_.x += dx;
+    center_.y += dy;
+  }
+
+  void ComplexQuad::scale(double coefficient)
+  {
+    vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
+    vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
+    vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
+    vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
+    vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
+    vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
+    vertexD_.x = center_.x + (vertexD_.x - center_.x) * coefficient;
+    vertexD_.y = center_.y + (vertexD_.y - center_.y) * coefficient;
+  }
+
+  void ComplexQuad::calculateCenter() noexcept
+  {
+    const double epsilon = 1e-9;
+    double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y) -
+                       (vertexA_.y - vertexC_.y) * (vertexB_.x - vertexD_.x);
+
+    if (std::fabs(denominator) < epsilon)
+    {
+      center_.x = (vertexA_.x + vertexB_.x + vertexC_.x + vertexD_.x) / 4.0;
+      center_.y = (vertexA_.y + vertexB_.y + vertexC_.y + vertexD_.y) / 4.0;
+    }
+    else
+    {
+      double t = ((vertexA_.x - vertexB_.x) * (vertexB_.y - vertexD_.y) -
+                 (vertexA_.y - vertexB_.y) * (vertexB_.x - vertexD_.x)) / denominator;
+
+      center_.x = vertexA_.x + t * (vertexC_.x - vertexA_.x);
+      center_.y = vertexA_.y + t * (vertexC_.y - vertexA_.y);
+    }
+  }
+
+  double ComplexQuad::triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept
+  {
+    double part1 = (b.x - a.x) * (c.y - a.y);
+    double part2 = (c.x - a.x) * (b.y - a.y);
+    return 0.5 * std::fabs(part1 - part2);
+  }
 
   void scaleShapes(Shape** shapes, size_t count, const point_t& point, double coefficient)
   {
