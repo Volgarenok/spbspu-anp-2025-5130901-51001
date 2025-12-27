@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 
 namespace draw {
   struct point_t {
