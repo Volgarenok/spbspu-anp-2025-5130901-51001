@@ -368,14 +368,53 @@ namespace karpenko
     result.pos = center;
     return result;
   }
+
+  void printShapeInfo(const Shape* shape, size_t index)
+  {
+    std::cout << "Shape " << index + 1 << ":\n";
+    std::cout << "  Area: " << std::fixed << std::setprecision(2) << shape->getArea() << "\n";
+
+    rectangle_t frame = shape->getFrameRect();
+    std::cout << "  Frame Rect:\n";
+    std::cout << "    Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
+    std::cout << "    Width: " << frame.width << "\n";
+    std::cout << "    Height: " << frame.height << "\n";
+  }
+
+  double printAllShapesInfo(const Shape* const* shapes, size_t count, const std::string& title)
+  {
+    std::cout << "\n" << title << ":\n";
+    
+    double totalArea = 0.0;
+    for (size_t i = 0; i < count; ++i)
+    {
+      printShapeInfo(shapes[i], i);
+      totalArea += shapes[i]->getArea();
+      
+      if (i < count - 1)
+      {
+        std::cout << "\n";
+      }
+    }
+    
+    return totalArea;
+  }
+
+  void printOverallFrameRect(const rectangle_t& frame)
+  {
+    std::cout << "\nOverall Frame Rect:\n";
+    std::cout << "  Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
+    std::cout << "  Width: " << frame.width << "\n";
+    std::cout << "  Height: " << frame.height << "\n";
+  }
 }
 
 int main()
 {
   using namespace karpenko;
 
-  const size_t shapeCount = 4;
-  Shape* shapes[shapeCount] = {nullptr};
+  const size_t SHAPE_COUNT = 4;
+  Shape* shapes[SHAPE_COUNT] = {nullptr};
 
   try
   {
@@ -387,32 +426,18 @@ int main()
   catch (const std::bad_alloc&)
   {
     std::cerr << "Memory allocation failed\n";
-    for (size_t i = 0; i < shapeCount; ++i)
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
     {
       delete shapes[i];
     }
     return 1;
   }
 
-  std::cout << "Before scaling:\n";
-  double totalArea = 0.0;
-  for (size_t i = 0; i < shapeCount; ++i)
-  {
-    std::cout << "Shape " << i + 1 << ":\n";
-    std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
+  double totalArea = printAllShapesInfo(const_cast< const Shape** >(shapes), SHAPE_COUNT, "Before scaling");
+  std::cout << "\nTotal area: " << totalArea << "\n";
 
-    rectangle_t frame = shapes[i]->getFrameRect();
-    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y
-              << "), width " << frame.width << ", height " << frame.height << "\n";
-
-    totalArea += shapes[i]->getArea();
-  }
-
-  std::cout << "Total area: " << totalArea << "\n";
-
-  rectangle_t overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), shapeCount);
-  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y
-            << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
+  rectangle_t overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), SHAPE_COUNT);
+  printOverallFrameRect(overallFrame);
 
   point_t scalePoint;
   double coefficient;
@@ -421,7 +446,7 @@ int main()
   if (!(std::cin >> scalePoint.x >> scalePoint.y))
   {
     std::cerr << "Error: invalid point coordinates\n";
-    for (size_t i = 0; i < shapeCount; ++i)
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
     {
       delete shapes[i];
     }
@@ -432,7 +457,7 @@ int main()
   if (!(std::cin >> coefficient))
   {
     std::cerr << "Error: invalid coefficient\n";
-    for (size_t i = 0; i < shapeCount; ++i)
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
     {
       delete shapes[i];
     }
@@ -442,36 +467,22 @@ int main()
   if (coefficient <= 0.0)
   {
     std::cerr << "Error: scaling coefficient must be positive\n";
-    for (size_t i = 0; i < shapeCount; ++i)
+    for (size_t i = 0; i < SHAPE_COUNT; ++i)
     {
       delete shapes[i];
     }
     return 1;
   }
 
-  scaleShapes(shapes, shapeCount, scalePoint, coefficient);
+  scaleShapes(shapes, SHAPE_COUNT, scalePoint, coefficient);
 
-  std::cout << "\nAfter scaling:\n";
-  totalArea = 0.0;
-  for (size_t i = 0; i < shapeCount; ++i)
-  {
-    std::cout << "Shape " << i + 1 << ":\n";
-    std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
+  totalArea = printAllShapesInfo(const_cast< const Shape** >(shapes), SHAPE_COUNT, "After scaling");
+  std::cout << "\nTotal area: " << totalArea << "\n";
 
-    rectangle_t frame = shapes[i]->getFrameRect();
-    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y
-              << "), width " << frame.width << ", height " << frame.height << "\n";
+  overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), SHAPE_COUNT);
+  printOverallFrameRect(overallFrame);
 
-    totalArea += shapes[i]->getArea();
-  }
-
-  std::cout << "Total area: " << totalArea << "\n";
-
-  overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), shapeCount);
-  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y
-            << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
-
-  for (size_t i = 0; i < shapeCount; ++i)
+  for (size_t i = 0; i < SHAPE_COUNT; ++i)
   {
     delete shapes[i];
   }
