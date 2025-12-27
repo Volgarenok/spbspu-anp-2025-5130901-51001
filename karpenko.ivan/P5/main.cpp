@@ -330,12 +330,12 @@ namespace karpenko
     }
   }
 
-  rectangle_t getOverallFrameRect(Shape** shapes, size_t count)
+  rectangle_t getOverallFrameRect(const Shape* const* shapes, size_t count)
   {
     const rectangle_t emptyFrame = {0.0, 0.0, {0.0, 0.0}};
     if (count == 0)
     {
-      return emptyFrame;
+        return emptyFrame;
     }
 
     rectangle_t firstFrame = shapes[0]->getFrameRect();
@@ -346,34 +346,34 @@ namespace karpenko
 
     for (size_t i = 1; i < count; ++i)
     {
-      rectangle_t frame = shapes[i]->getFrameRect();
-      double left = frame.pos.x - frame.width / 2.0;
-      double right = frame.pos.x + frame.width / 2.0;
-      double bottom = frame.pos.y - frame.height / 2.0;
-      double top = frame.pos.y + frame.height / 2.0;
+        rectangle_t frame = shapes[i]->getFrameRect();
+        double left = frame.pos.x - frame.width / 2.0;
+        double right = frame.pos.x + frame.width / 2.0;
+        double bottom = frame.pos.y - frame.height / 2.0;
+        double top = frame.pos.y + frame.height / 2.0;
 
-      if (left < minX)
-      {
-        minX = left;
-      }
-      if (right > maxX)
-      {
-        maxX = right;
-      }
-      if (bottom < minY)
-      {
-        minY = bottom;
-      }
-      if (top > maxY)
-      {
-        maxY = top;
-      }
+        if (left < minX)
+        {
+            minX = left;
+        }
+        if (right > maxX)
+        {
+            maxX = right;
+        }
+        if (bottom < minY)
+        {
+            minY = bottom;
+        }
+        if (top > maxY)
+        {
+            maxY = top;
+        }
     }
 
     double width = maxX - minX;
     double height = maxY - minY;
     point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-    
+
     rectangle_t result;
     result.width = width;
     result.height = height;
@@ -422,7 +422,7 @@ int main()
 
   std::cout << "Total area: " << totalArea << "\n";
 
-  rectangle_t overallFrame = getOverallFrameRect(shapes, shapeCount);
+  rectangle_t overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), shapeCount);
   std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y
             << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
 
