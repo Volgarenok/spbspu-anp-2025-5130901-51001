@@ -262,13 +262,13 @@ draw::Concave::Concave(const point_t *a, size_t size): points(), center() {
   double d0 = distToLine(a[1], a[3], a[0]);
   double d2 = distToLine(a[1], a[3], a[2]);
 
-  if (d1/abs(d1) == d3/abs(d3)) {
+  if ((d1 == 0.0 && d3 == 0.0) || round(d1/abs(d1)) == round(d3/abs(d3))) {
     if (abs(d1) < abs(d3)) {
       center = a[1];
     } else {
       center = a[3];
     }
-  } else if (d0/abs(d0) == d2/abs(d2)) {
+  } else if ((d0 == 0.0 && d2 == 0.0) || round(d0/abs(d0)) == round(d2/abs(d2))) {
     if (abs(d0) < abs(d2)) {
       center = a[0];
     } else {
@@ -295,7 +295,7 @@ double draw::Concave::getArea() const {
   double xx = (points[0].x - points[2].x) * (points[1].x - points[3].x);
   double yy = (points[0].y - points[2].y) * (points[1].y - points[3].y);
 
-  double cosa = abs(xx+yy) / (d1+d2);
+  double cosa = abs(xx+yy) / (d1*d2);
   double sina = sqrt(1 - cosa*cosa);
 
   return 0.5 * d1 * d2 * sina;
@@ -319,9 +319,9 @@ draw::rectangle_t draw::Concave::getFrameRect() const {
 }
 
 void draw::Concave::move(double dx, double dy) {
-  for (auto & point : points) {
-    point.x += dx;
-    point.y += dy;
+  for (size_t i = 0; i < 4; i++) {
+    points[i].x += dx;
+    points[i].y += dy;
   }
   center.x += dx;
   center.y += dy;
@@ -360,17 +360,19 @@ int main() {
     err = 1;
   }
 
-  printParams(shps, shp_cnt);
-
-  double x = 0, y = 0, scale = 0;
-  if (std::cin >> x >> y >> scale && scale >= 0) {
-    for (size_t i = 0; i < shp_cnt; i++) {
-      scaleRelative(*shps[i], {x, y}, scale);
-    }
+  if (err == 0) {
     printParams(shps, shp_cnt);
-  } else {
-    std::cerr << "bad input" << "\n";
-    err = 1;
+
+    double x = 0, y = 0, scale = 0;
+    if (std::cin >> x >> y >> scale && scale >= 0) {
+      for (size_t i = 0; i < shp_cnt; i++) {
+        scaleRelative(*shps[i], {x, y}, scale);
+      }
+      printParams(shps, shp_cnt);
+    } else {
+      std::cerr << "bad input" << "\n";
+      err = 1;
+    }
   }
 
   removeArray(shps, shp_cnt);
