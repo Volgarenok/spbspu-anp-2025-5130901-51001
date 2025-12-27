@@ -1,5 +1,4 @@
 #include <iostream>
-#include <__xlocale.h>
 
 namespace draw {
   struct point_t {
