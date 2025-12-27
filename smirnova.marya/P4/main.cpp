@@ -111,6 +111,7 @@ int main()
 
   if (!line || (lengths[0] == 0 && !std::cin)) {
     std::cerr << "No input provided or memory allocation failed\n";
+    free(line);
     return 1;
   }
 
