@@ -2,6 +2,7 @@
 #include <cmath>
 #include <algorithm>
 #include <iomanip>
+#include <stdexcept>
 
 namespace karpenko
 {
@@ -77,6 +78,10 @@ namespace karpenko
 
   void Rectangle::scale(double coefficient)
   {
+    if (coefficient <= 0.0)
+    {
+      throw std::invalid_argument("Scaling coefficient must be positive");
+    }
     width_ *= coefficient;
     height_ *= coefficient;
   }
@@ -162,6 +167,10 @@ namespace karpenko
 
   void Triangle::scale(double coefficient)
   {
+    if (coefficient <= 0.0)
+    {
+      throw std::invalid_argument("Scaling coefficient must be positive");
+    }
     scaleImpl(coefficient);
   }
 
@@ -273,6 +282,10 @@ namespace karpenko
 
   void ComplexQuad::scale(double coefficient)
   {
+    if (coefficient <= 0.0)
+    {
+      throw std::invalid_argument("Scaling coefficient must be positive");
+    }
     scaleImpl(coefficient);
   }
 
@@ -283,7 +296,7 @@ namespace karpenko
     vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
     vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
     vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
-    vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
+    vertexC_.y = center_.y + (vertexC_.y - center_.y) * коэффициент;
     vertexD_.x = center_.x + (vertexD_.x - center_.x) * coefficient;
     vertexD_.y = center_.y + (vertexD_.y - center_.y) * coefficient;
   }
@@ -464,17 +477,19 @@ int main()
     return 1;
   }
 
-  if (coefficient <= 0.0)
+  try
   {
-    std::cerr << "Error: scaling coefficient must be positive\n";
+    scaleShapes(shapes, SHAPE_COUNT, scalePoint, coefficient);
+  }
+  catch (const std::invalid_argument& e)
+  {
+    std::cerr << "Error during scaling: " << e.what() << "\n";
     for (size_t i = 0; i < SHAPE_COUNT; ++i)
     {
       delete shapes[i];
     }
     return 1;
   }
-
-  scaleShapes(shapes, SHAPE_COUNT, scalePoint, coefficient);
 
   totalArea = printAllShapesInfo(const_cast< const Shape** >(shapes), SHAPE_COUNT, "After scaling");
   std::cout << "\nTotal area: " << totalArea << "\n";
