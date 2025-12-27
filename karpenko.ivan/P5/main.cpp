@@ -20,233 +20,237 @@ namespace karpenko
 
   struct Shape
   {
+    virtual ~Shape() = default;
     virtual double getArea() const = 0;
     virtual rectangle_t getFrameRect() const = 0;
     virtual void move(const point_t& point) = 0;
     virtual void move(double dx, double dy) = 0;
     virtual void scale(double coefficient) = 0;
-    virtual ~Shape() = default;
   };
 
-  struct Rectangle : Shape
+  struct Rectangle: public Shape
   {
-    double width;
-    double height;
-    point_t center;
+    double width_;
+    double height_;
+    point_t center_;
 
-    Rectangle(double width, double height, const point_t& center) :
-      width(width),
-      height(height),
-      center(center)
-    {
-    }
+    Rectangle(double width, double height, const point_t& center):
+      width_(width),
+      height_(height),
+      center_(center)
+    {}
 
     double getArea() const override
     {
-      return width * height;
+      return width_ * height_;
     }
 
     rectangle_t getFrameRect() const override
     {
-      rectangle_t result = {width, height, center};
-      return result;
+      rectangle_t frame;
+      frame.width = width_;
+      frame.height = height_;
+      frame.pos = center_;
+      return frame;
     }
 
     void move(const point_t& point) override
     {
-      center = point;
+      center_ = point;
     }
 
     void move(double dx, double dy) override
     {
-      center.x += dx;
-      center.y += dy;
+      center_.x += dx;
+      center_.y += dy;
     }
 
     void scale(double coefficient) override
     {
-      width *= coefficient;
-      height *= coefficient;
+      width_ *= coefficient;
+      height_ *= coefficient;
     }
   };
 
-  struct Triangle : Shape
+  struct Triangle: public Shape
   {
-    point_t vertexA;
-    point_t vertexB;
-    point_t vertexC;
-    point_t center;
+    point_t vertexA_;
+    point_t vertexB_;
+    point_t vertexC_;
+    point_t center_;
 
-    Triangle(const point_t& a, const point_t& b, const point_t& c) :
-      vertexA(a),
-      vertexB(b),
-      vertexC(c)
+    Triangle(const point_t& a, const point_t& b, const point_t& c):
+      vertexA_(a),
+      vertexB_(b),
+      vertexC_(c)
     {
       calculateCenter();
     }
 
-  private:
-    void calculateCenter()
-    {
-      center.x = (vertexA.x + vertexB.x + vertexC.x) / 3.0;
-      center.y = (vertexA.y + vertexB.y + vertexC.y) / 3.0;
-    }
-
-  public:
     double getArea() const override
     {
-      return 0.5 * std::fabs(
-        (vertexB.x - vertexA.x) * (vertexC.y - vertexA.y) -
-        (vertexC.x - vertexA.x) * (vertexB.y - vertexA.y)
-      );
+      double part1 = (vertexB_.x - vertexA_.x) * (vertexC_.y - vertexA_.y);
+      double part2 = (vertexC_.x - vertexA_.x) * (vertexB_.y - vertexA_.y);
+      return 0.5 * std::fabs(part1 - part2);
     }
 
     rectangle_t getFrameRect() const override
     {
-      double minX = std::min({vertexA.x, vertexB.x, vertexC.x});
-      double maxX = std::max({vertexA.x, vertexB.x, vertexC.x});
-      double minY = std::min({vertexA.y, vertexB.y, vertexC.y});
-      double maxY = std::max({vertexA.y, vertexB.y, vertexC.y});
+      double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x});
+      double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x});
+      double minY = std::min({vertexA_.y, vertexB_.y, vertexC_.y});
+      double maxY = std::max({vertexA_.y, vertexB_.y, vertexC_.y});
 
       double width = maxX - minX;
       double height = maxY - minY;
       point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-      
-      rectangle_t result = {width, height, center};
-      return result;
+
+      rectangle_t frame;
+      frame.width = width;
+      frame.height = height;
+      frame.pos = center;
+      return frame;
     }
 
     void move(const point_t& point) override
     {
-      double dx = point.x - center.x;
-      double dy = point.y - center.y;
+      double dx = point.x - center_.x;
+      double dy = point.y - center_.y;
       move(dx, dy);
     }
 
     void move(double dx, double dy) override
     {
-      vertexA.x += dx;
-      vertexA.y += dy;
-      vertexB.x += dx;
-      vertexB.y += dy;
-      vertexC.x += dx;
-      vertexC.y += dy;
-      center.x += dx;
-      center.y += dy;
+      vertexA_.x += dx;
+      vertexA_.y += dy;
+      vertexB_.x += dx;
+      vertexB_.y += dy;
+      vertexC_.x += dx;
+      vertexC_.y += dy;
+      center_.x += dx;
+      center_.y += dy;
     }
 
     void scale(double coefficient) override
     {
-      vertexA.x = center.x + (vertexA.x - center.x) * coefficient;
-      vertexA.y = center.y + (vertexA.y - center.y) * coefficient;
-      vertexB.x = center.x + (vertexB.x - center.x) * coefficient;
-      vertexB.y = center.y + (vertexB.y - center.y) * coefficient;
-      vertexC.x = center.x + (vertexC.x - center.x) * coefficient;
-      vertexC.y = center.y + (vertexC.y - center.y) * coefficient;
-    }
-  };
-
-  struct ComplexQuad : Shape
-  {
-    point_t vertexA;
-    point_t vertexB;
-    point_t vertexC;
-    point_t vertexD;
-    point_t center;
-
-    ComplexQuad(const point_t& a, const point_t& b,
-                const point_t& c, const point_t& d) :
-      vertexA(a),
-      vertexB(b),
-      vertexC(c),
-      vertexD(d)
-    {
-      calculateCenter();
+      vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
+      vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
+      vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
+      vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
+      vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
+      vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
     }
 
   private:
     void calculateCenter()
     {
-      double denominator = (vertexA.x - vertexC.x) * (vertexB.y - vertexD.y) -
-                         (vertexA.y - vertexC.y) * (vertexB.x - vertexD.x);
-
-      if (std::fabs(denominator) < 1e-9)
-      {
-        center.x = (vertexA.x + vertexB.x + vertexC.x + vertexD.x) / 4.0;
-        center.y = (vertexA.y + vertexB.y + vertexC.y + vertexD.y) / 4.0;
-      }
-      else
-      {
-        double t = ((vertexA.x - vertexB.x) * (vertexB.y - vertexD.y) -
-                   (vertexA.y - vertexB.y) * (vertexB.x - vertexD.x)) / denominator;
-
-        center.x = vertexA.x + t * (vertexC.x - vertexA.x);
-        center.y = vertexA.y + t * (vertexC.y - vertexA.y);
-      }
+      center_.x = (vertexA_.x + vertexB_.x + vertexC_.x) / 3.0;
+      center_.y = (vertexA_.y + vertexB_.y + vertexC_.y) / 3.0;
     }
+  };
 
-    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const
+  struct ComplexQuad: public Shape
+  {
+    point_t vertexA_;
+    point_t vertexB_;
+    point_t vertexC_;
+    point_t vertexD_;
+    point_t center_;
+
+    ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d):
+      vertexA_(a),
+      vertexB_(b),
+      vertexC_(c),
+      vertexD_(d)
     {
-      return 0.5 * std::fabs(
-        (b.x - a.x) * (c.y - a.y) -
-        (c.x - a.x) * (b.y - a.y)
-      );
+      calculateCenter();
     }
 
-  public:
     double getArea() const override
     {
-      double area1 = triangleArea(vertexA, vertexB, vertexC);
-      double area2 = triangleArea(vertexA, vertexC, vertexD);
+      double area1 = triangleArea(vertexA_, vertexB_, vertexC_);
+      double area2 = triangleArea(vertexA_, vertexC_, vertexD_);
       return area1 + area2;
     }
 
     rectangle_t getFrameRect() const override
     {
-      double minX = std::min({vertexA.x, vertexB.x, vertexC.x, vertexD.x});
-      double maxX = std::max({vertexA.x, vertexB.x, vertexC.x, vertexD.x});
-      double minY = std::min({vertexA.y, vertexB.y, vertexC.y, vertexD.y});
-      double maxY = std::max({vertexA.y, vertexB.y, vertexC.y, vertexD.y});
+      double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
+      double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
+      double minY = std::min({vertexA_.y, vertexB_.y, vertexC_.y, vertexD_.y});
+      double maxY = std::max({vertexA_.y, vertexB_.y, vertexC_.y, vertexD_.y});
 
       double width = maxX - minX;
       double height = maxY - minY;
       point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-      
-      rectangle_t result = {width, height, center};
-      return result;
+
+      rectangle_t frame;
+      frame.width = width;
+      frame.height = height;
+      frame.pos = center;
+      return frame;
     }
 
     void move(const point_t& point) override
     {
-      double dx = point.x - center.x;
-      double dy = point.y - center.y;
+      double dx = point.x - center_.x;
+      double dy = point.y - center_.y;
       move(dx, dy);
     }
 
     void move(double dx, double dy) override
     {
-      vertexA.x += dx;
-      vertexA.y += dy;
-      vertexB.x += dx;
-      vertexB.y += dy;
-      vertexC.x += dx;
-      vertexC.y += dy;
-      vertexD.x += dx;
-      vertexD.y += dy;
-      center.x += dx;
-      center.y += dy;
+      vertexA_.x += dx;
+      vertexA_.y += dy;
+      vertexB_.x += dx;
+      vertexB_.y += dy;
+      vertexC_.x += dx;
+      vertexC_.y += dy;
+      vertexD_.x += dx;
+      vertexD_.y += dy;
+      center_.x += dx;
+      center_.y += dy;
     }
 
     void scale(double coefficient) override
     {
-      vertexA.x = center.x + (vertexA.x - center.x) * coefficient;
-      vertexA.y = center.y + (vertexA.y - center.y) * coefficient;
-      vertexB.x = center.x + (vertexB.x - center.x) * coefficient;
-      vertexB.y = center.y + (vertexB.y - center.y) * coefficient;
-      vertexC.x = center.x + (vertexC.x - center.x) * coefficient;
-      vertexC.y = center.y + (vertexC.y - center.y) * coefficient;
-      vertexD.x = center.x + (vertexD.x - center.x) * coefficient;
-      vertexD.y = center.y + (vertexD.y - center.y) * coefficient;
+      vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
+      vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
+      vertexB_.x = center_.x + (vertexB_.x - center_.x) * coefficient;
+      vertexB_.y = center_.y + (vertexB_.y - center_.y) * coefficient;
+      vertexC_.x = center_.x + (vertexC_.x - center_.x) * coefficient;
+      vertexC_.y = center_.y + (vertexC_.y - center_.y) * coefficient;
+      vertexD_.x = center_.x + (vertexD_.x - center_.x) * coefficient;
+      vertexD_.y = center_.y + (vertexD_.y - center_.y) * coefficient;
+    }
+
+  private:
+    void calculateCenter()
+    {
+      const double epsilon = 1e-9;
+      double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y) -
+                         (vertexA_.y - vertexC_.y) * (vertexB_.x - vertexD_.x);
+
+      if (std::fabs(denominator) < epsilon)
+      {
+        center_.x = (vertexA_.x + vertexB_.x + vertexC_.x + vertexD_.x) / 4.0;
+        center_.y = (vertexA_.y + vertexB_.y + vertexC_.y + vertexD_.y) / 4.0;
+      }
+      else
+      {
+        double t = ((vertexA_.x - vertexB_.x) * (vertexB_.y - vertexD_.y) -
+                   (vertexA_.y - vertexB_.y) * (vertexB_.x - vertexD_.x)) / denominator;
+
+        center_.x = vertexA_.x + t * (vertexC_.x - vertexA_.x);
+        center_.y = vertexA_.y + t * (vertexC_.y - vertexA_.y);
+      }
+    }
+
+    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const
+    {
+      double part1 = (b.x - a.x) * (c.y - a.y);
+      double part2 = (c.x - a.x) * (b.y - a.y);
+      return 0.5 * std::fabs(part1 - part2);
     }
   };
 
@@ -266,10 +270,10 @@ namespace karpenko
 
   rectangle_t getOverallFrameRect(Shape** shapes, size_t count)
   {
+    const rectangle_t emptyFrame = {0.0, 0.0, {0.0, 0.0}};
     if (count == 0)
     {
-      rectangle_t result = {0.0, 0.0, {0.0, 0.0}};
-      return result;
+      return emptyFrame;
     }
 
     rectangle_t firstFrame = shapes[0]->getFrameRect();
@@ -307,7 +311,11 @@ namespace karpenko
     double width = maxX - minX;
     double height = maxY - minY;
     point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-    rectangle_t result = {width, height, center};
+    
+    rectangle_t result;
+    result.width = width;
+    result.height = height;
+    result.pos = center;
     return result;
   }
 }
@@ -315,9 +323,9 @@ namespace karpenko
 int main()
 {
   using namespace karpenko;
-  
-  const size_t SHAPE_COUNT = 4;
-  Shape* shapes[SHAPE_COUNT] = {nullptr};
+
+  const size_t shapeCount = 4;
+  Shape* shapes[shapeCount] = {nullptr};
 
   try
   {
@@ -329,7 +337,7 @@ int main()
   catch (const std::bad_alloc&)
   {
     std::cerr << "Memory allocation failed\n";
-    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    for (size_t i = 0; i < shapeCount; ++i)
     {
       delete shapes[i];
     }
@@ -338,21 +346,23 @@ int main()
 
   std::cout << "Before scaling:\n";
   double totalArea = 0.0;
-  for (size_t i = 0; i < SHAPE_COUNT; ++i)
+  for (size_t i = 0; i < shapeCount; ++i)
   {
     std::cout << "Shape " << i + 1 << ":\n";
     std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
 
     rectangle_t frame = shapes[i]->getFrameRect();
-    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y << "), width " << frame.width << ", height " << frame.height << "\n";
+    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y
+              << "), width " << frame.width << ", height " << frame.height << "\n";
 
     totalArea += shapes[i]->getArea();
   }
 
   std::cout << "Total area: " << totalArea << "\n";
 
-  rectangle_t overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
-  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
+  rectangle_t overallFrame = getOverallFrameRect(shapes, shapeCount);
+  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y
+            << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
 
   point_t scalePoint;
   double coefficient;
@@ -361,7 +371,7 @@ int main()
   if (!(std::cin >> scalePoint.x >> scalePoint.y))
   {
     std::cerr << "Error: invalid point coordinates\n";
-    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    for (size_t i = 0; i < shapeCount; ++i)
     {
       delete shapes[i];
     }
@@ -372,7 +382,7 @@ int main()
   if (!(std::cin >> coefficient))
   {
     std::cerr << "Error: invalid coefficient\n";
-    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    for (size_t i = 0; i < shapeCount; ++i)
     {
       delete shapes[i];
     }
@@ -382,34 +392,36 @@ int main()
   if (coefficient <= 0.0)
   {
     std::cerr << "Error: scaling coefficient must be positive\n";
-    for (size_t i = 0; i < SHAPE_COUNT; ++i)
+    for (size_t i = 0; i < shapeCount; ++i)
     {
       delete shapes[i];
     }
     return 1;
   }
 
-  scaleShapes(shapes, SHAPE_COUNT, scalePoint, coefficient);
+  scaleShapes(shapes, shapeCount, scalePoint, coefficient);
 
   std::cout << "\nAfter scaling:\n";
   totalArea = 0.0;
-  for (size_t i = 0; i < SHAPE_COUNT; ++i)
+  for (size_t i = 0; i < shapeCount; ++i)
   {
     std::cout << "Shape " << i + 1 << ":\n";
     std::cout << "  Area: " << std::fixed << std::setprecision(2) << shapes[i]->getArea() << "\n";
 
     rectangle_t frame = shapes[i]->getFrameRect();
-    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y << "), width " << frame.width << ", height " << frame.height << "\n";
+    std::cout << "  Frame Rect: center(" << frame.pos.x << ", " << frame.pos.y
+              << "), width " << frame.width << ", height " << frame.height << "\n";
 
     totalArea += shapes[i]->getArea();
   }
 
   std::cout << "Total area: " << totalArea << "\n";
 
-  overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
-  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
+  overallFrame = getOverallFrameRect(shapes, shapeCount);
+  std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y
+            << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
 
-  for (size_t i = 0; i < SHAPE_COUNT; ++i)
+  for (size_t i = 0; i < shapeCount; ++i)
   {
     delete shapes[i];
   }
