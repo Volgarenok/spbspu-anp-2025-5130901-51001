@@ -335,45 +335,33 @@ namespace karpenko
     const rectangle_t emptyFrame = {0.0, 0.0, {0.0, 0.0}};
     if (count == 0)
     {
-        return emptyFrame;
+      return emptyFrame;
     }
 
     rectangle_t firstFrame = shapes[0]->getFrameRect();
-    double minX = firstFrame.pos.x - firstFrame.width / 2.0;
-    double maxX = firstFrame.pos.x + firstFrame.width / 2.0;
-    double minY = firstFrame.pos.y - firstFrame.height / 2.0;
-    double maxY = firstFrame.pos.y + firstFrame.height / 2.0;
+    double left = firstFrame.pos.x - firstFrame.width / 2.0;
+    double right = firstFrame.pos.x + firstFrame.width / 2.0;
+    double bottom = firstFrame.pos.y - firstFrame.height / 2.0;
+    double top = firstFrame.pos.y + firstFrame.height / 2.0;
 
     for (size_t i = 1; i < count; ++i)
     {
-        rectangle_t frame = shapes[i]->getFrameRect();
-        double left = frame.pos.x - frame.width / 2.0;
-        double right = frame.pos.x + frame.width / 2.0;
-        double bottom = frame.pos.y - frame.height / 2.0;
-        double top = frame.pos.y + frame.height / 2.0;
+      rectangle_t frame = shapes[i]->getFrameRect();
+      double currentLeft = frame.pos.x - frame.width / 2.0;
+      double currentRight = frame.pos.x + frame.width / 2.0;
+      double currentBottom = frame.pos.y - frame.height / 2.0;
+      double currentTop = frame.pos.y + frame.height / 2.0;
 
-        if (left < minX)
-        {
-            minX = left;
-        }
-        if (right > maxX)
-        {
-            maxX = right;
-        }
-        if (bottom < minY)
-        {
-            minY = bottom;
-        }
-        if (top > maxY)
-        {
-            maxY = top;
-        }
+      left = std::min(left, currentLeft);
+      right = std::max(right, currentRight);
+      bottom = std::min(bottom, currentBottom);
+      top = std::max(top, currentTop);
     }
 
-    double width = maxX - minX;
-    double height = maxY - minY;
-    point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-
+    double width = right - left;
+    double height = top - bottom;
+    point_t center = {(left + right) / 2.0, (bottom + top) / 2.0};
+    
     rectangle_t result;
     result.width = width;
     result.height = height;
@@ -479,7 +467,7 @@ int main()
 
   std::cout << "Total area: " << totalArea << "\n";
 
-  overallFrame = getOverallFrameRect(shapes, shapeCount);
+  overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), shapeCount);
   std::cout << "Overall Frame Rect: center(" << overallFrame.pos.x << ", " << overallFrame.pos.y
             << "), width " << overallFrame.width << ", height " << overallFrame.height << "\n";
 
