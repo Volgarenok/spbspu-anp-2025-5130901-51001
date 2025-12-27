@@ -14,12 +14,12 @@ namespace kitserov {
 
   struct Shape
   {
+    virtual ~Shape() = default;
     virtual float getArea() const = 0;
     virtual rectangle_t getFrameRect() const = 0;
     virtual void move(float dx, float dy) = 0;
     virtual void move(point_t p) = 0;
     virtual void scale(float k) = 0;
-    virtual ~Shape() = default;
   };
 
   struct Rectangle : Shape
@@ -48,12 +48,12 @@ namespace kitserov {
   struct Polygon : Shape
   {
     Polygon(point_t* vertices, size_t vertexCount);
+    ~Polygon();
     float getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(float dx, float dy) override;
     void move(point_t p) override;
     void scale(float k) override;
-    ~Polygon();
   private:
     point_t* vertices_;
     size_t vertexCount_;
@@ -103,7 +103,7 @@ int main()
       for (size_t i = 0; i < count; i++) {
         delete shapes[i];
       }
-      return 1;
+      return 0;
     }
     scalePoint(shapes[i], {1.0, 0.0}, k);
     totalAreaAfter += shapes[i]->getArea();
