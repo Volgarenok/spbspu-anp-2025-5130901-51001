@@ -306,7 +306,7 @@ draw::rectangle_t draw::Concave::getFrameRect() const {
   double miny = points[0].y;
   double maxx = points[0].x;
   double maxy = points[0].y;
-  for (size_t i = 0; i < 4; i++) {
+  for (size_t i = 1; i < 4; i++) {
     minx = std::min(minx, points[i].x);
     miny = std::min(miny, points[i].y);
     maxx = std::max(maxx, points[i].x);
