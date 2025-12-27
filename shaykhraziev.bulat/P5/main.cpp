@@ -1,4 +1,5 @@
 #include <iostream>
+#include <__xlocale.h>
 
 namespace draw {
   struct point_t {
@@ -53,19 +54,20 @@ namespace draw {
   struct Concave : Shape {
     point_t points[4];
     point_t center;
-    double area;
     double getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(point_t to) override;
     void move(double dx, double dy) override;
     void scale(double coef) override;
-    explicit Concave(point_t * a, size_t size);
+    explicit Concave(const point_t * a, size_t size);
   };
 
   void scaleRelative(Shape& shp, point_t pt, double coef);
   rectangle_t getAllShapesFrameRect(Shape** shps, size_t size);
   void removeArray(Shape**shps, size_t size);
   void printParams(Shape** shps, size_t size);
+  double distToLine(point_t d1, point_t d2, point_t m);
+  double euclidDist(point_t d1, point_t d2);
 }
 
 bool draw::operator==(const point_t lhs, const point_t rhs) {
@@ -84,7 +86,7 @@ bool draw::operator!=(const rectangle_t &lhs, const rectangle_t &rhs) {
   return !(rhs == lhs);
 }
 
-draw::Rectangle::Rectangle(point_t a, point_t b) {
+draw::Rectangle::Rectangle(point_t a, point_t b): center() {
   center = {a.x + (b.x - a.x)/2, a.y + (b.y - a.y)/2};
   width = b.x - a.x;
   height = b.y - a.y;
@@ -241,17 +243,118 @@ void draw::Polygon::scale(double coef) {
   }
 }
 
+double draw::distToLine(point_t d1, point_t d2, point_t m) {
+  double A = d1.y - d2.y;
+  double B = d2.x - d1.x;
+  double C = d1.x * d2.y - d1.y * d2.x;
+
+  return (A*m.x + B*m.y + C) / sqrt(A*A + B*B);
+}
+
+
+draw::Concave::Concave(const point_t *a, size_t size): points(), center() {
+  if (size != 4) throw std::invalid_argument("Must have four vertices");
+  // 0 - 2
+  double d1 = distToLine(a[0], a[2], a[1]);
+  double d3 = distToLine(a[0], a[2], a[3]);
+
+  // 1 - 3
+  double d0 = distToLine(a[1], a[3], a[0]);
+  double d2 = distToLine(a[1], a[3], a[2]);
+
+  if (d1/abs(d1) == d3/abs(d3)) {
+    if (abs(d1) < abs(d3)) {
+      center = a[1];
+    } else {
+      center = a[3];
+    }
+  } else if (d0/abs(d0) == d2/abs(d2)) {
+    if (abs(d0) < abs(d2)) {
+      center = a[0];
+    } else {
+      center = a[2];
+    }
+  } else {
+    throw std::invalid_argument("No such concave");
+  }
+
+  for (size_t i = 0; i < size; i++) {
+    points[i] = a[i];
+  }
+}
+
+double draw::euclidDist(point_t d1, point_t d2) {
+  return sqrt((d1.x - d2.x) * (d1.x - d2.x) + (d1.y - d2.y) * (d1.y - d2.y));
+}
+
+
+double draw::Concave::getArea() const {
+  double d1 = euclidDist(points[0], points[2]);
+  double d2 = euclidDist(points[1], points[3]);
+
+  double xx = (points[0].x - points[2].x) * (points[1].x - points[3].x);
+  double yy = (points[0].y - points[2].y) * (points[1].y - points[3].y);
+
+  double cosa = abs(xx+yy) / (d1+d2);
+  double sina = sqrt(1 - cosa*cosa);
+
+  return 0.5 * d1 * d2 * sina;
+}
+
+draw::rectangle_t draw::Concave::getFrameRect() const {
+  double minx = points[0].x;
+  double miny = points[0].y;
+  double maxx = points[0].x;
+  double maxy = points[0].y;
+  for (auto point : points) {
+    minx = std::min(minx, point.x);
+    miny = std::min(miny, point.y);
+    maxx = std::max(maxx, point.x);
+    maxy = std::max(maxy, point.y);
+  }
+  double width = maxx - minx, height = maxy - miny;
+  point_t p = {minx + width/2, miny + height/2};
+
+  return {width, height, p};
+}
+
+void draw::Concave::move(double dx, double dy) {
+  for (auto & point : points) {
+    point.x += dx;
+    point.y += dy;
+  }
+  center.x += dx;
+  center.y += dy;
+}
+
+void draw::Concave::move(point_t to) {
+  double dx = to.x - center.x, dy = to.y - center.y;
+  move(dx, dy);
+}
+
+void draw::Concave::scale(double coef) {
+  for (auto & point : points) {
+    point.x = center.x + (point.x - center.x) * coef;
+    point.y = center.y + (point.y - center.y) * coef;
+  }
+}
+
+
 int main() {
   using namespace draw;
   int err = 0;
-  size_t shp_cnt = 3;
-  Shape *shps[3] = {};
+  size_t shp_cnt = 4;
+  Shape *shps[4] = {};
   try {
     shps[0] = new Rectangle({0, 0}, {10, 10});
     shps[1] = new Rectangle({3, 3, {-4, -6}});
 
     point_t pts[4] = {{0,1}, {4, 6}, {-1, -10}, {-5, -5}};
     shps[2] = new Polygon(pts, 4);
+
+    point_t pts2[4] = {{0,5}, {5,1}, {1,0}, {2,2}};
+    shps[3] = new Concave(pts2, 4);
+
   } catch (...) {
     std::cerr << "memalloc error" << "\n";
     err = 1;
@@ -266,7 +369,7 @@ int main() {
     }
     printParams(shps, shp_cnt);
   } else {
-    std::cerr << "input error" << "\n";
+    std::cerr << "bad input" << "\n";
     err = 1;
   }
 
