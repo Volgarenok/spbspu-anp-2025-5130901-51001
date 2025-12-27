@@ -92,6 +92,8 @@ namespace karpenko
     void scale(double coefficient) override;
 
   private:
+    void moveImpl(double dx, double dy) noexcept;
+    void scaleImpl(double coefficient) noexcept;
     void calculateCenter() noexcept;
     double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
     
@@ -138,10 +140,15 @@ namespace karpenko
   {
     double dx = point.x - center_.x;
     double dy = point.y - center_.y;
-    move(dx, dy);
+    moveImpl(dx, dy);
   }
 
   void Triangle::move(double dx, double dy) noexcept
+  {
+    moveImpl(dx, dy);
+  }
+
+  void Triangle::moveImpl(double dx, double dy) noexcept
   {
     vertexA_.x += dx;
     vertexA_.y += dy;
@@ -154,6 +161,11 @@ namespace karpenko
   }
 
   void Triangle::scale(double coefficient)
+  {
+    scaleImpl(coefficient);
+  }
+
+  void Triangle::scaleImpl(double coefficient) noexcept
   {
     vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
     vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
@@ -187,6 +199,8 @@ namespace karpenko
     void scale(double coefficient) override;
 
   private:
+    void moveImpl(double dx, double dy) noexcept;
+    void scaleImpl(double coefficient) noexcept;
     void calculateCenter() noexcept;
     double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
     
@@ -235,10 +249,15 @@ namespace karpenko
   {
     double dx = point.x - center_.x;
     double dy = point.y - center_.y;
-    move(dx, dy);
+    moveImpl(dx, dy);
   }
 
   void ComplexQuad::move(double dx, double dy) noexcept
+  {
+    moveImpl(dx, dy);
+  }
+
+  void ComplexQuad::moveImpl(double dx, double dy) noexcept
   {
     vertexA_.x += dx;
     vertexA_.y += dy;
@@ -253,6 +272,11 @@ namespace karpenko
   }
 
   void ComplexQuad::scale(double coefficient)
+  {
+    scaleImpl(coefficient);
+  }
+
+  void ComplexQuad::scaleImpl(double coefficient) noexcept
   {
     vertexA_.x = center_.x + (vertexA_.x - center_.x) * coefficient;
     vertexA_.y = center_.y + (vertexA_.y - center_.y) * coefficient;
