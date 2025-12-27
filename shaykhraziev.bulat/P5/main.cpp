@@ -65,7 +65,7 @@ namespace draw {
   void scaleRelative(Shape& shp, point_t pt, double coef);
   rectangle_t getAllShapesFrameRect(Shape** shps, size_t size);
   void removeArray(Shape**shps, size_t size);
-  void printParams(Shape** shps, size_t size);
+  void outputParams(std::ostream& out, Shape** shps, size_t size);
   double distToLine(point_t d1, point_t d2, point_t m);
   double euclidDist(point_t d1, point_t d2);
 }
@@ -155,21 +155,21 @@ void draw::removeArray(Shape**shps, size_t size) {
   }
 }
 
-void draw::printParams(Shape** shps, size_t size) {
+void draw::outputParams(std::ostream& out, Shape** shps, size_t size) {
   double area = 0;
   for (size_t i = 0; i < size; i++) {
     double x = shps[i]->getArea();
     area += x;
-    std::cout << x << "\n";
+    out << x << "\n";
   }
-  std::cout << area << "\n";
+  out << area << "\n";
 
   for (size_t i = 0; i < size; i++) {
     rectangle_t r = shps[i]->getFrameRect();
-    std::cout << "(" << r.pos.x << ", " << r.pos.y << ") " << r.height << " " << r.width << "\n";
+    out << "(" << r.pos.x << ", " << r.pos.y << ") " << r.height << " " << r.width << "\n";
   }
   rectangle_t all = getAllShapesFrameRect(shps, size);
-  std::cout << "(" << all.pos.x << ", " << all.pos.y << ") " << all.width << " " << all.height << "\n";
+  out << "(" << all.pos.x << ", " << all.pos.y << ") " << all.width << " " << all.height << "\n";
 }
 
 draw::Polygon::Polygon(point_t *a, size_t size): points(a), size(size), center({0, 0}){
@@ -349,10 +349,10 @@ int main() {
     shps[0] = new Rectangle({0, 0}, {10, 10});
     shps[1] = new Rectangle({3, 3, {-4, -6}});
 
-    point_t pts[4] = {{0,1}, {4, 6}, {-1, -10}, {-5, -5}};
+    point_t pts[] = {{0,1}, {4, 6}, {-1, -10}, {-5, -5}};
     shps[2] = new Polygon(pts, 4);
 
-    point_t pts2[4] = {{0,5}, {5,1}, {1,0}, {2,2}};
+    point_t pts2[] = {{0,5}, {5,1}, {1,0}, {2,2}};
     shps[3] = new Concave(pts2, 4);
 
   } catch (...) {
@@ -361,14 +361,14 @@ int main() {
   }
 
   if (err == 0) {
-    printParams(shps, shp_cnt);
+    outputParams(std::cout, shps, shp_cnt);
 
     double x = 0, y = 0, scale = 0;
     if (std::cin >> x >> y >> scale && scale >= 0) {
       for (size_t i = 0; i < shp_cnt; i++) {
         scaleRelative(*shps[i], {x, y}, scale);
       }
-      printParams(shps, shp_cnt);
+      outputParams(std::cout, shps, shp_cnt);
     } else {
       std::cerr << "bad input" << "\n";
       err = 1;
