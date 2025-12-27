@@ -20,32 +20,29 @@ namespace karpenko
 
   struct Shape
   {
-    virtual ~Shape() = default;
-    virtual double getArea() const = 0;
-    virtual rectangle_t getFrameRect() const = 0;
-    virtual void move(const point_t& point) = 0;
-    virtual void move(double dx, double dy) = 0;
+    virtual ~Shape() noexcept = default;
+    virtual double getArea() const noexcept = 0;
+    virtual rectangle_t getFrameRect() const noexcept = 0;
+    virtual void move(const point_t& point) noexcept = 0;
+    virtual void move(double dx, double dy) noexcept = 0;
     virtual void scale(double coefficient) = 0;
   };
 
-  struct Rectangle: public Shape
+  struct Rectangle final: public Shape
   {
-    double width_;
-    double height_;
-    point_t center_;
-
-    Rectangle(double width, double height, const point_t& center):
+  public:
+    Rectangle(double width, double height, const point_t& center) noexcept:
       width_(width),
       height_(height),
       center_(center)
     {}
 
-    double getArea() const override
+    double getArea() const noexcept override
     {
       return width_ * height_;
     }
 
-    rectangle_t getFrameRect() const override
+    rectangle_t getFrameRect() const noexcept override
     {
       rectangle_t frame;
       frame.width = width_;
@@ -54,12 +51,12 @@ namespace karpenko
       return frame;
     }
 
-    void move(const point_t& point) override
+    void move(const point_t& point) noexcept override
     {
       center_ = point;
     }
 
-    void move(double dx, double dy) override
+    void move(double dx, double dy) noexcept override
     {
       center_.x += dx;
       center_.y += dy;
@@ -70,16 +67,17 @@ namespace karpenko
       width_ *= coefficient;
       height_ *= coefficient;
     }
+
+  private:
+    double width_;
+    double height_;
+    point_t center_;
   };
 
-  struct Triangle: public Shape
+  struct Triangle final: public Shape
   {
-    point_t vertexA_;
-    point_t vertexB_;
-    point_t vertexC_;
-    point_t center_;
-
-    Triangle(const point_t& a, const point_t& b, const point_t& c):
+  public:
+    Triangle(const point_t& a, const point_t& b, const point_t& c) noexcept:
       vertexA_(a),
       vertexB_(b),
       vertexC_(c)
@@ -87,14 +85,14 @@ namespace karpenko
       calculateCenter();
     }
 
-    double getArea() const override
+    double getArea() const noexcept override
     {
       double part1 = (vertexB_.x - vertexA_.x) * (vertexC_.y - vertexA_.y);
       double part2 = (vertexC_.x - vertexA_.x) * (vertexB_.y - vertexA_.y);
       return 0.5 * std::fabs(part1 - part2);
     }
 
-    rectangle_t getFrameRect() const override
+    rectangle_t getFrameRect() const noexcept override
     {
       double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x});
       double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x});
@@ -112,14 +110,14 @@ namespace karpenko
       return frame;
     }
 
-    void move(const point_t& point) override
+    void move(const point_t& point) noexcept override
     {
       double dx = point.x - center_.x;
       double dy = point.y - center_.y;
       move(dx, dy);
     }
 
-    void move(double dx, double dy) override
+    void move(double dx, double dy) noexcept override
     {
       vertexA_.x += dx;
       vertexA_.y += dy;
@@ -142,22 +140,22 @@ namespace karpenko
     }
 
   private:
-    void calculateCenter()
+    void calculateCenter() noexcept
     {
       center_.x = (vertexA_.x + vertexB_.x + vertexC_.x) / 3.0;
       center_.y = (vertexA_.y + vertexB_.y + vertexC_.y) / 3.0;
     }
-  };
 
-  struct ComplexQuad: public Shape
-  {
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
-    point_t vertexD_;
     point_t center_;
+  };
 
-    ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d):
+  struct ComplexQuad final: public Shape
+  {
+  public:
+    ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d) noexcept:
       vertexA_(a),
       vertexB_(b),
       vertexC_(c),
@@ -166,14 +164,14 @@ namespace karpenko
       calculateCenter();
     }
 
-    double getArea() const override
+    double getArea() const noexcept override
     {
       double area1 = triangleArea(vertexA_, vertexB_, vertexC_);
       double area2 = triangleArea(vertexA_, vertexC_, vertexD_);
       return area1 + area2;
     }
 
-    rectangle_t getFrameRect() const override
+    rectangle_t getFrameRect() const noexcept override
     {
       double minX = std::min({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
       double maxX = std::max({vertexA_.x, vertexB_.x, vertexC_.x, vertexD_.x});
@@ -191,14 +189,14 @@ namespace karpenko
       return frame;
     }
 
-    void move(const point_t& point) override
+    void move(const point_t& point) noexcept override
     {
       double dx = point.x - center_.x;
       double dy = point.y - center_.y;
       move(dx, dy);
     }
 
-    void move(double dx, double dy) override
+    void move(double dx, double dy) noexcept override
     {
       vertexA_.x += dx;
       vertexA_.y += dy;
@@ -225,7 +223,7 @@ namespace karpenko
     }
 
   private:
-    void calculateCenter()
+    void calculateCenter() noexcept
     {
       const double epsilon = 1e-9;
       double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y) -
@@ -246,12 +244,18 @@ namespace karpenko
       }
     }
 
-    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const
+    double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept
     {
       double part1 = (b.x - a.x) * (c.y - a.y);
       double part2 = (c.x - a.x) * (b.y - a.y);
       return 0.5 * std::fabs(part1 - part2);
     }
+
+    point_t vertexA_;
+    point_t vertexB_;
+    point_t vertexC_;
+    point_t vertexD_;
+    point_t center_;
   };
 
   void scaleShapes(Shape** shapes, size_t count, const point_t& point, double coefficient)
