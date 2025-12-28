@@ -8,7 +8,7 @@ namespace losev {
   size_t countLocMin(const int * ptrArr, size_t m, size_t n);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char ** argv)
 {
   namespace los = losev;
   if (argc > 4) {
@@ -34,8 +34,8 @@ int main(int argc, char **argv)
   if (input.is_open()) {
     input >> m >> n;
     if (input.fail()) {
-        std::cerr << "I can not read matrix size\n";
-        return 2;
+      std::cerr << "I can not read matrix size\n";
+      return 2;
     }
     if (m == 0 && n == 0) {
       output << 0 << "\n" << 0 << " " << 0 << "\n";
