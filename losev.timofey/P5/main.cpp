@@ -108,6 +108,70 @@ namespace losev {
       Radius *= coef;
     }
   };
+  class Ring : public Shape
+  {
+  private:
+    point_t Center;
+    double outerRadius;
+    double innerRadius;
+  public:
+    Ring(const point_t& center, double outerR, double innerR) {
+      if (outerR <= 0 || innerR <= 0) {
+        throw std::invalid_argument("Radii must be positive");
+      }
+      if (innerR >= outerR) {
+        throw std::invalid_argument("Inner radius must be less than outer radius");
+      }
+      Center = center;
+      outerRadius = outerR;
+      innerRadius = innerR;
+    }
+    Ring(double x, double y, double outerR, double innerR) {
+      if (outerR <= 0 || innerR <= 0) {
+        throw std::invalid_argument("Radii must be positive");
+      }
+      if (innerR >= outerR) {
+        throw std::invalid_argument("Inner radius must be less than outer radius");
+      }
+      Center.x = x;
+      Center.y = y;
+      outerRadius = outerR;
+      innerRadius = innerR;
+    }
+    double getArea() const override {
+      return 3.1415 * (outerRadius * outerRadius - innerRadius * innerRadius);
+    }
+    rectangle_t getFrameRect() const override {
+      rectangle_t frameRect;
+      frameRect.width = 2.0 * outerRadius;
+      frameRect.height = 2.0 * outerRadius;
+      frameRect.pos = Center;
+      return frameRect;
+    }
+    void move(const point_t& point) override {
+      Center = point;
+    }
+    void move(double dx, double dy) override {
+      Center.x += dx;
+      Center.y += dy;
+    }
+    void scale(double coef) override {
+      if (coef <= 0) {
+        throw std::invalid_argument("Scale coefficient must be positive");
+      }
+      outerRadius *= coef;
+      innerRadius *= coef;
+    }
+    point_t getCenter() const {
+      return Center;
+    }
+    double getOuterRadius() const {
+      return outerRadius;
+    }
+    double getInnerRadius() const {
+      return innerRadius;
+    }
+  };
   void scaleFromPoint(Shape& shape, const losev::point_t& point, double coef);
   rectangle_t getOverallFrameRect(Shape** shapes, size_t count);
   void printShapesInfo(Shape** shapes, size_t count);
@@ -116,18 +180,22 @@ int main()
 {
   using namespace losev;
   try {
-    Shape** shapes = new Shape*[2];
+    Shape** shapes = new Shape*[6];
     shapes[0] = new Rectangle(4.0, 3.0, {1.0, 2.0});
-    shapes[1] = new Circle({0.0, 0.0}, 2.0);
+    shapes[1] = new Rectangle(rectangle_t{5.0, 2.0, {3.0, 4.0}});
+    shapes[2] = new Circle({0.0, 0.0}, 2.0);
+    shapes[3] = new Circle(5.0, 5.0, 1.5);
+    shapes[4] = new Ring({2.0, -1.0}, 3.0, 1.0);
+    shapes[5] = new Ring(-2.0, -2.0, 2.5, 0.5);
     std::cout << "=== BEFORE scaling ===\n";
-    printShapesInfo(shapes, 2);
+    printShapesInfo(shapes, 6);
     point_t scalePoint;
     double scaleCoef;
     std::cout << "\n=== Scaling parameters input ===\n";
     std::cout << "Enter scaling point coordinates (x y): ";
     if (!(std::cin >> scalePoint.x >> scalePoint.y)) {
       std::cerr << "Error: invalid coordinate input!\n";
-      for (size_t i = 0; i < 2; ++i) {
+      for (size_t i = 0; i < 6; ++i) {
         delete shapes[i];
       }
       delete[] shapes;
@@ -136,7 +204,7 @@ int main()
     std::cout << "Enter scaling coefficient (positive number): ";
     if (!(std::cin >> scaleCoef)) {
       std::cerr << "Error: invalid coefficient input!\n";
-      for (size_t i = 0; i < 2; ++i) {
+      for (size_t i = 0; i < 6; ++i) {
         delete shapes[i];
       }
       delete[] shapes;
@@ -144,21 +212,21 @@ int main()
     }
     if (scaleCoef <= 0) {
       std::cerr << "Error: scaling coefficient must be positive!" << "\n";
-      for (size_t i = 0; i < 2; ++i) {
+      for (size_t i = 0; i < 6; ++i) {
         delete shapes[i];
       }
       delete[] shapes;
       return 1;
     }
-    for (size_t i = 0; i < 2; ++i) {
+    for (size_t i = 0; i < 6; ++i) {
       scaleFromPoint(*shapes[i], scalePoint, scaleCoef);
     }
     std::cout << "\n=== AFTER scaling ===" << "\n";
-    printShapesInfo(shapes, 2);
+    printShapesInfo(shapes, 6);
     std::cout << "\nScaling performed relative to point ("
     << scalePoint.x << ", " << scalePoint.y 
     << ") with coefficient " << scaleCoef << "\n";
-    for (size_t i = 0; i < 2; ++i) {
+    for (size_t i = 0; i < 6; ++i) {
       delete shapes[i];
     }
     delete[] shapes;
