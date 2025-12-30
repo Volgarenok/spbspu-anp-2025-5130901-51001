@@ -230,34 +230,34 @@ int main()
     Square sq(3.0, {5.0, 5.0});
     Triangle tri({0.0, 0.0}, {4.0, 0.0}, {2.0, 3.0});
     Shape* shapes[3] = { &rect, &tri, &sq };
-    const char* names[3] = { "Прямоугольник", "Треугольник",  "Квадрат" };
-    std::cout << "До масштабирования:\n";
+    const char* names[3] = { "Rectangle", "Triangle", "Square" };
+    std::cout << "Before scaling:\n";
     double totalArea = 0.0;
     for (int i = 0; i < 3; ++i)
     {
       double area = shapes[i]->getArea();
       rectangle_t frame = shapes[i]->getFrameRect();
       totalArea += area;
-      std::cout << names[i] << ": площадь = " << area << "\n";
-      std::cout << "Ограничивающий прямоугольник: ширина = " << frame.width <<", высота = " << frame.height
-      << ", центр = (" << frame.pos.x << ", " << frame.pos.y << ")\n";
+      std::cout << names[i] << ": square = " << area << "\n";
+      std::cout << "Bounding rectangle: width = " << frame.width <<", height = " << frame.height 
+      << ", center = (" << frame.pos.x << ", " << frame.pos.y << ")\n";
     }
-    std::cout << "Суммарная площадь: " << totalArea << "\n";
+    std::cout << "Total area: " << totalArea << "\n";
     rectangle_t totalFrame = getTotalFrameRect(shapes, 3);
-    std::cout << "Общий ограничивающий прямоугольник: ширина = " << totalFrame.width << ", высота = " << totalFrame.height << ", центр = (" << totalFrame.pos.x << ", " << totalFrame.pos.y << ")\n";
+    std::cout << "Overall bounding box: width = " << totalFrame.width << ", height = " << totalFrame.height << ", center = (" << totalFrame.pos.x << ", " << totalFrame.pos.y << ")\n";
 
     point_t scalePoint;
     double k;
-    std::cout << "Введите точку масштабирования (x y): ";
+    std::cout << "Enter the zoom point (x y): ";
     if (!(std::cin >> scalePoint.x >> scalePoint.y))
     {
-      std::cerr << "Ошибка ввода: некорректная точка масштабирования\n";
+      std::cerr << "Input error: Invalid scaling point\n";
       return 1;
     }
-    std::cout << "Введите коэффициент масштабирования: ";
+    std::cout << "Enter the scaling factor: ";
     if (!(std::cin >> k) || k <= 0.0)
     {
-      std::cerr << "Ошибка ввода: некорректный коэффициент масштабирования\n";
+      std::cerr << "Input error: Invalid scaling factor\n";
       return 1;
     }
     for (int i = 0; i < 3; ++i)
@@ -270,23 +270,23 @@ int main()
       shapes[i]->move(-dx, -dy);
     }
 
-    std::cout << "\nПосле масштабирования:\n";
+    std::cout << "\nAfter scaling:\n";
     totalArea = 0.0;
     for (int i = 0; i < 3; ++i)
     {
       double area = shapes[i]->getArea();
       rectangle_t frame = shapes[i]->getFrameRect();
       totalArea += area;
-      std::cout << names[i] << ": площадь = " << area << "\n";
-      std::cout << "Ограничивающий прямоугольник: ширина = " << frame.width << ", высота = " << frame.height << ", центр = (" << frame.pos.x << ", " << frame.pos.y << ")\n";
+      std::cout << names[i] << ": area = " << area << "\n";
+      std::cout << "Bounding rectangle: width = " << frame.width << ", height = " << frame.height << ", center = (" << frame.pos.x << ", " << frame.pos.y << ")\n";
     }
-    std::cout << "Суммарная площадь: " << totalArea << "\n";
+    std::cout << "Total area: " << totalArea << "\n";
     totalFrame = getTotalFrameRect(shapes, 3);
-    std::cout << "Общий ограничивающий прямоугольник: ширина = " << totalFrame.width << ", высота = " << totalFrame.height << ", центр = (" << totalFrame.pos.x << ", " << totalFrame.pos.y << ")\n";
+    std::cout << "Overall bounding box: width = " << totalFrame.width << ", height = " << totalFrame.height << ", center = (" << totalFrame.pos.x << ", " << totalFrame.pos.y << ")\n";
   }
   catch (const std::exception& e)
   {
-    std::cerr << "Ошибка: " << e.what() << "\n";
+    std::cerr << "Error: " << e.what() << "\n";
     return 1;
   }
 
