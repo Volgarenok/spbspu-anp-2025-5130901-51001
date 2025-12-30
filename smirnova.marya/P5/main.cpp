@@ -58,7 +58,7 @@ namespace smirnova
       if (k <= 0.0) {
         throw std::invalid_argument("Incorrect coefficient\n");
       }
-      width_ *= k; 
+      width_ *= k;
       height_ *= k;
     }
   };
