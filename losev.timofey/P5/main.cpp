@@ -63,5 +63,51 @@ namespace losev {
       Rect.height *= coef;
     }
   };
+  class Circle : Shape
+  {
+  private:
+    point_t Center;
+    double Radius;
+  public:
+    ~Circle();
+    Circle(const point_t & center, double radius) {
+      if (radius <= 0) {
+        throw std::invalid_argument("Radius must be positive");
+      }
+      Center = center;
+      Radius = radius;
+    }
+    Circle(double x, double y, double radius) {
+      if (radius <= 0) {
+        throw std::invalid_argument("Radius must be positive");
+      }
+      Center.x = x;
+      Center.y = y;
+      Radius = radius;
+    }
+    double getArea() const override {
+      return 3.1415 * Radius * Radius;
+    }
+     rectangle_t getFrameRect() const override {
+      rectangle_t frameRect;
+      frameRect.width = 2.0 * Radius;
+      frameRect.height = 2.0 * Radius;
+      frameRect.pos = Center;
+      return frameRect;
+    }
+     void move(const point_t & point) override {
+      Center = point;
+    }
+    void move(double dx, double dy) override {
+      Center.x += dx;
+      Center.y += dy;
+    } 
+    void scale(double coef) override {
+      if (coef <= 0) {
+        throw std::invalid_argument("Scale coefficient must be positive");
+      }
+      Radius *= coef;
+    }
+  };
 
 }
