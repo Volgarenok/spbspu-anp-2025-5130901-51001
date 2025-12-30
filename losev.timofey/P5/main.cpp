@@ -7,8 +7,61 @@ namespace losev {
     double width, height;
     point_t pos;
   };
-  struct Shape {
-    virtual double getArea();
-    virtual rectangle_t getFrameRect();
+  class Shape {
+  public:
+    virtual ~Shape() = default;
+    virtual double getArea() const = 0;
+    virtual rectangle_t getFrameRect() const = 0;
+    virtual void move(const point_t & point) = 0;
+    virtual void move(double dx, double dy) = 0;
+    virtual void scale(double coef) = 0;
   };
+  class Rectangle : Shape {
+  private:
+    rectangle_t Rect;
+  public:
+    Rectangle(double width, double height, const point_t& center) {
+      if (width <= 0 || height <= 0)
+      {
+        throw std::invalid_argument("Width and height must be positive");
+      }
+      Rect.width = width;
+      Rect.height = height;
+      Rect.pos = center;
+    }
+    Rectangle(const rectangle_t& rect){
+      if (rect.width <= 0 || rect.height <= 0)
+      {
+        throw std::invalid_argument("Width and height must be positive");
+      }
+      Rect = rect;
+    }
+    double getArea() const override
+    {
+      return Rect.width * Rect.height;
+    }
+    rectangle_t getFrameRect() const override
+    {
+      return Rect;
+    }
+    void move(const point_t & point) override
+    {
+      Rect.pos = point;
+    }
+    void move(double dx, double dy) override
+    {
+      Rect.pos.x += dx;
+      Rect.pos.y += dy;
+    }
+    void scale(double coef) override
+    {
+      if (coef <= 0)
+      {
+        throw std::invalid_argument("Scale coefficient must be positive");
+      }
+      Rect.width *= coef;
+      Rect.height *= coef;
+    }
+  };
+
 }
