@@ -2,7 +2,6 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
-
 namespace smirnova
 {
 struct point_t
