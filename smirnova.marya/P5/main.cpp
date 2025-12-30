@@ -239,7 +239,7 @@ int main()
       rectangle_t frame = shapes[i]->getFrameRect();
       totalArea += area;
       std::cout << names[i] << ": площадь = " << area << "\n";
-      std::cout << "Ограничивающий прямоугольник: ширина = " << frame.width <<", высота = " << frame.height 
+      std::cout << "Ограничивающий прямоугольник: ширина = " << frame.width <<", высота = " << frame.height
       << ", центр = (" << frame.pos.x << ", " << frame.pos.y << ")\n";
     }
     std::cout << "Суммарная площадь: " << totalArea << "\n";
