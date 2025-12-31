@@ -197,7 +197,7 @@ rectangle_t getTotalFrameRect(Shape *shapes[], int count) noexcept {
   return total;
 }
 
-} // namespace smirnova
+}
 
 int main() {
   using namespace smirnova;
