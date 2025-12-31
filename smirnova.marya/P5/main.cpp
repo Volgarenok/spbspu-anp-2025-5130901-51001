@@ -47,6 +47,14 @@ inline rectangle_t makeFrameRect(
   return {w, h, center};
 }
 
+inline point_t getCentroid(const point_t& a,
+                           const point_t& b,
+                           const point_t& c) noexcept
+{
+  return {(a.x + b.x + c.x) / 3.0,
+          (a.y + b.y + c.y) / 3.0};
+}
+
 class Rectangle final : public Shape
 {
  public:
@@ -192,9 +200,11 @@ Triangle::Triangle(const point_t a,
 
 double Triangle::getArea() const noexcept
 {
-  return 0.5 * std::abs(a_.x * (b_.y - c_.y) +
-                        b_.x * (c_.y - a_.y) +
-                        c_.x * (a_.y - b_.y));
+	double term1 = a_.x * (b_.y - c_.y);
+  double term2 = b_.x * (c_.y - a_.y);
+  double term3 = c_.x * (a_.y - b_.y);
+  double result = term1 + term2 + term3;
+  return 0.5 * std::abs(result);
 }
 
 rectangle_t Triangle::getFrameRect()
@@ -215,9 +225,9 @@ rectangle_t Triangle::getFrameRect()
 
 void Triangle::move(const point_t& p)
 {
-  rectangle_t frame = getFrameRect();
-  double dx = p.x - frame.pos.x;
-  double dy = p.y - frame.pos.y;
+  point_t centroid = getCentroid(a_, b_, c_);
+  double dx = p.x - centroid.x;
+  double dy = p.y - centroid.y;
   move(dx, dy);
 }
 
@@ -236,8 +246,7 @@ void Triangle::scale(const double k)
     throw std::invalid_argument(
         "Invalid scale factor");
   }
-  rectangle_t frame = getFrameRect();
-  point_t center = frame.pos;
+  point_t center = getCentroid(a_, b_, c_);
   a_.x = center.x + (a_.x - center.x) * k;
   a_.y = center.y + (a_.y - center.y) * k;
   b_.x = center.x + (b_.x - center.x) * k;
@@ -277,7 +286,7 @@ rectangle_t getTotalFrameRect(Shape* shapes[],
   return total;
 }
 
-}  // namespace smirnova
+}
 
 int main()
 {
@@ -381,3 +390,4 @@ int main()
 
   return 0;
 }
+
