@@ -22,7 +22,7 @@ namespace kitserov {
     virtual void scale(float k) = 0;
   };
 
-  struct Rectangle : Shape
+  struct Rectangle final : Shape
   {
     Rectangle(point_t p, float w, float h);
     float getArea() const override;
@@ -33,7 +33,7 @@ namespace kitserov {
   private:
     rectangle_t rect;
   };
-  struct Xquare : Shape
+  struct Xquare final : Shape
   {
     Xquare(point_t p, float s);
     float getArea() const override;
@@ -45,7 +45,7 @@ namespace kitserov {
     point_t centre;
     float side;
   };
-  struct Polygon : Shape
+  struct Polygon final : Shape
   {
     Polygon(point_t* vertices, size_t vertexCount);
     ~Polygon();
