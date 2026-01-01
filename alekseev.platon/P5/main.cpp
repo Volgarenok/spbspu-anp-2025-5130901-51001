@@ -109,6 +109,7 @@ namespace draw
   };
 
   void scaleRelative(Shape &shp, point_t about, double coef);
+  void scaleAllRelative(Shape *const *shps, size_t size, point_t about, double coef);
   rectangle_t getAllShapesFrameRect(Shape *const *shps, size_t size);
   void outputParams(std::ostream &out, Shape *const *shps, size_t size);
   void removeArray(Shape **shps, size_t size);
@@ -278,6 +279,13 @@ namespace draw
     shp.move(new_center);
   }
 
+  void scaleAllRelative(Shape *const *shps, size_t size, point_t about, double coef)
+  {
+    for (size_t i = 0; i < size; ++i) {
+      scaleRelative(*shps[i], about, coef);
+    }
+  }
+
   rectangle_t getAllShapesFrameRect(Shape *const *shps, size_t size)
   {
     if (size == 0) {
@@ -381,9 +389,7 @@ int main()
       err = 1;
     } else {
       try {
-        for (size_t i = 0; i < shape_count; ++i) {
-          draw::scaleRelative(*shapes[i], about, coef);
-        }
+        draw::scaleAllRelative(shapes, shape_count, about, coef);
         draw::outputParams(std::cout, shapes, shape_count);
       } catch (const std::exception &e) {
         std::cerr << "scale error: " << e.what() << "\n";
