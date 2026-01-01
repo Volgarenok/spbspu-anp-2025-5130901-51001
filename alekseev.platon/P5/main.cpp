@@ -158,8 +158,8 @@ namespace draw
 
   void Rectangle::scale(double coef)
   {
-    if (coef <= 0.0) {
-      throw std::invalid_argument("scale: coef must be > 0");
+    if (!std::isfinite(coef) || coef <= 0.0) {
+      throw std::invalid_argument("scale: coef must be finite and > 0");
     }
     width_ *= coef;
     height_ *= coef;
@@ -209,8 +209,8 @@ namespace draw
 
   void Square::scale(double coef)
   {
-    if (coef <= 0.0) {
-      throw std::invalid_argument("scale: coef must be > 0");
+    if (!std::isfinite(coef) || coef <= 0.0) {
+      throw std::invalid_argument("scale: coef must be finite and > 0");
     }
     side_ *= coef;
   }
@@ -259,14 +259,17 @@ namespace draw
 
   void Xquare::scale(double coef)
   {
-    if (coef <= 0.0) {
-      throw std::invalid_argument("scale: coef must be > 0");
+    if (!std::isfinite(coef) || coef <= 0.0) {
+      throw std::invalid_argument("scale: coef must be finite and > 0");
     }
     diagonal_ *= coef;
   }
 
   void scaleRelative(Shape &shp, point_t about, double coef)
   {
+    if (!std::isfinite(coef) || coef <= 0.0) {
+      throw std::invalid_argument("scaleRelative: coef must be finite and > 0");
+    }
     if (coef == 1.0) {
       return;
     }
@@ -345,7 +348,10 @@ namespace draw
     if (!(in >> about.x >> about.y >> coef)) {
       return ReadStatus::bad_input;
     }
-    if (coef <= 0.0) {
+    if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
+      return ReadStatus::bad_input;
+    }
+    if (!std::isfinite(coef) || coef <= 0.0) {
       return ReadStatus::bad_coef;
     }
     return ReadStatus::ok;
