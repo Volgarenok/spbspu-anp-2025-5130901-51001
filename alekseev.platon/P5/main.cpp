@@ -367,7 +367,7 @@ namespace draw
 
     for (size_t i = 0; i < size; ++i) {
       const rectangle_t r = shps[i]->getFrameRect();
-      out << "(" << r.pos.x << ", " << r.pos.y << ") " << r.width << " " << r.height << "\n";
+      out << "(" << r.pos.x << ", " << r.pos.y << ") " << r.height << " " << r.width << "\n";
     }
 
     const rectangle_t all = getAllShapesFrameRect(shps, size);
