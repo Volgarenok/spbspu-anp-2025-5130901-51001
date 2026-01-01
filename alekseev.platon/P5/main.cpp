@@ -67,6 +67,23 @@ namespace draw
     double height_;
   };
 
+  class Square : public Shape
+  {
+  public:
+    Square(point_t center, double side);
+    explicit Square(rectangle_t r);
+
+    double getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(point_t to) override;
+    void move(double dx, double dy) override;
+    void scale(double coef) override;
+
+  private:
+    point_t center_;
+    double side_;
+  };
+
   void scaleRelative(Shape &shp, point_t about, double coef);
   rectangle_t getAllShapesFrameRect(Shape *const *shps, size_t size);
   void outputParams(std::ostream &out, Shape *const *shps, size_t size);
@@ -78,7 +95,7 @@ namespace draw
     height_(std::abs(b.y - a.y))
   {
     if (width_ <= 0.0 || height_ <= 0.0) {
-      throw std::invalid_argument("bad width or height");
+      throw std::invalid_argument("Rectangle: width and height must be positive");
     }
   }
 
@@ -88,7 +105,7 @@ namespace draw
     height_(r.height)
   {
     if (width_ <= 0.0 || height_ <= 0.0) {
-      throw std::invalid_argument("bad width or height");
+      throw std::invalid_argument("Rectangle: width and height must be positive");
     }
   }
 
@@ -120,6 +137,56 @@ namespace draw
     }
     width_ *= coef;
     height_ *= coef;
+  }
+
+  Square::Square(point_t center, double side):
+    center_(center),
+    side_(side)
+  {
+    if (side_ <= 0.0) {
+      throw std::invalid_argument("Square: side must be positive");
+    }
+  }
+
+  Square::Square(rectangle_t r):
+    center_(r.pos),
+    side_(r.width)
+  {
+    if (r.width <= 0.0 || r.height <= 0.0) {
+      throw std::invalid_argument("Square: width and height must be positive");
+    }
+    if (r.width != r.height) {
+      throw std::invalid_argument("Square: width must equal height");
+    }
+  }
+
+  double Square::getArea() const
+  {
+    return side_ * side_;
+  }
+
+  rectangle_t Square::getFrameRect() const
+  {
+    return {side_, side_, center_};
+  }
+
+  void Square::move(point_t to)
+  {
+    center_ = to;
+  }
+
+  void Square::move(double dx, double dy)
+  {
+    center_.x += dx;
+    center_.y += dy;
+  }
+
+  void Square::scale(double coef)
+  {
+    if (coef <= 0.0) {
+      throw std::invalid_argument("scale: coef must be > 0");
+    }
+    side_ *= coef;
   }
 
   void scaleRelative(Shape &shp, point_t about, double coef)
@@ -195,12 +262,14 @@ int main()
 {
   int err = 0;
 
-  const size_t shape_count = 2;
+  const size_t shape_count = 4;
   draw::Shape *shapes[shape_count] = {};
 
   try {
     shapes[0] = new draw::Rectangle({0.0, 0.0}, {10.0, 5.0});
     shapes[1] = new draw::Rectangle(draw::rectangle_t{4.0, 8.0, {-5.0, 3.0}});
+    shapes[2] = new draw::Square({2.0, 2.0}, 6.0);
+    shapes[3] = new draw::Square(draw::rectangle_t{5.0, 5.0, {10.0, -2.0}});
   } catch (const std::exception &e) {
     std::cerr << "init error: " << e.what() << "\n";
     err = 2;
@@ -241,4 +310,3 @@ int main()
   draw::removeArray(shapes, shape_count);
   return err;
 }
-
