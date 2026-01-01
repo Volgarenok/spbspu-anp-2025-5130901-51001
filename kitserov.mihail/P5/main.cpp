@@ -60,7 +60,7 @@ namespace kitserov {
     point_t center_;
   };
   rectangle_t frame(const point_t* pts, size_t s);
-  void frameOutput(std::ostream& os, rectangle_t fr);
+  void frameOutput(std::ostream& os, const rectangle_t& fr);
   void shapeOutput(std::ostream& os, Shape* sh, const char* name);
   void scalePoint(Shape* sh, const point_t& p, float k);
   rectangle_t getOverallFrame(const Shape* const* shapes, size_t count);
@@ -72,10 +72,10 @@ int main()
   Shape* shapes[3] = {};
   const size_t count = 3;
   try {
-    shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
-    shapes[1] = new Xquare({1.0, 0.0}, 2.0);
+    shapes[0] = new Rectangle{{0.0, 0.0}, 1.0, 2.0};
+    shapes[1] = new Xquare{{1.0, 0.0}, 2.0};
     point_t triangleVertices[3] = {{3.0, 0.0}, {4.0, 2.0}, {5.0, 0.0}};
-    shapes[2] = new Polygon(triangleVertices, 3);
+    shapes[2] = new Polygon{triangleVertices, 3};
   } catch (...) {
     std::cerr << "Error!\n";
     for (size_t i = 0; i < count; i++) {
@@ -96,6 +96,7 @@ int main()
   frameOutput(std::cout, overallFrame);
   float totalAreaAfter = 0.0;
   float k = 0;
+  std::cout << "Ratio: ";
   std::cin >> k;
   if (!std::cin || k <= 0) {
     std::cerr << "incorrect input\n";
@@ -104,6 +105,13 @@ int main()
     }
     return 0;
   }
+  std::cout << "Point for scale: ";
+  float xx = 0.0;
+  float yy = 0.0;
+  std::cout << "x = ";
+  std::cin >> xx;
+  std::cout << "y = ";
+  std::cin >> yy;
   for (size_t i = 0; i < count; i++) {
     scalePoint(shapes[i], {1.0, 0.0}, k);
     totalAreaAfter += shapes[i]->getArea();
@@ -168,7 +176,7 @@ kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
     {minx + (maxx - minx) / 2, miny + (maxy - miny) / 2}};
 }
 
-void kitserov::frameOutput(std::ostream& os, rectangle_t fr)
+void kitserov::frameOutput(std::ostream& os, const rectangle_t& fr)
 {
   float left = fr.pos.x - fr.width / 2;
   float top = fr.pos.y + fr.height / 2;
