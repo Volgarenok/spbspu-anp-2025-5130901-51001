@@ -84,6 +84,23 @@ namespace draw
     double side_;
   };
 
+  class Xquare : public Shape
+  {
+  public:
+    Xquare(point_t center, double diagonal);
+    explicit Xquare(rectangle_t r);
+
+    double getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(point_t to) override;
+    void move(double dx, double dy) override;
+    void scale(double coef) override;
+
+  private:
+    point_t center_;
+    double diagonal_;
+  };
+
   void scaleRelative(Shape &shp, point_t about, double coef);
   rectangle_t getAllShapesFrameRect(Shape *const *shps, size_t size);
   void outputParams(std::ostream &out, Shape *const *shps, size_t size);
@@ -189,6 +206,56 @@ namespace draw
     side_ *= coef;
   }
 
+  Xquare::Xquare(point_t center, double diagonal):
+    center_(center),
+    diagonal_(diagonal)
+  {
+    if (diagonal_ <= 0.0) {
+      throw std::invalid_argument("Xquare: diagonal must be positive");
+    }
+  }
+
+  Xquare::Xquare(rectangle_t r):
+    center_(r.pos),
+    diagonal_(r.width)
+  {
+    if (r.width <= 0.0 || r.height <= 0.0) {
+      throw std::invalid_argument("Xquare: width and height must be positive");
+    }
+    if (r.width != r.height) {
+      throw std::invalid_argument("Xquare: width must equal height");
+    }
+  }
+
+  double Xquare::getArea() const
+  {
+    return (diagonal_ * diagonal_) / 2.0;
+  }
+
+  rectangle_t Xquare::getFrameRect() const
+  {
+    return {diagonal_, diagonal_, center_};
+  }
+
+  void Xquare::move(point_t to)
+  {
+    center_ = to;
+  }
+
+  void Xquare::move(double dx, double dy)
+  {
+    center_.x += dx;
+    center_.y += dy;
+  }
+
+  void Xquare::scale(double coef)
+  {
+    if (coef <= 0.0) {
+      throw std::invalid_argument("scale: coef must be > 0");
+    }
+    diagonal_ *= coef;
+  }
+
   void scaleRelative(Shape &shp, point_t about, double coef)
   {
     if (coef == 1.0) {
@@ -262,7 +329,7 @@ int main()
 {
   int err = 0;
 
-  const size_t shape_count = 4;
+  const size_t shape_count = 6;
   draw::Shape *shapes[shape_count] = {};
 
   try {
@@ -270,6 +337,8 @@ int main()
     shapes[1] = new draw::Rectangle(draw::rectangle_t{4.0, 8.0, {-5.0, 3.0}});
     shapes[2] = new draw::Square({2.0, 2.0}, 6.0);
     shapes[3] = new draw::Square(draw::rectangle_t{5.0, 5.0, {10.0, -2.0}});
+    shapes[4] = new draw::Xquare({-3.0, -3.0}, 8.0);
+    shapes[5] = new draw::Xquare(draw::rectangle_t{10.0, 10.0, {0.0, 12.0}});
   } catch (const std::exception &e) {
     std::cerr << "init error: " << e.what() << "\n";
     err = 2;
