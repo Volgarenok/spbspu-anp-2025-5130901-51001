@@ -371,7 +371,7 @@ namespace draw
     }
 
     const rectangle_t all = getAllShapesFrameRect(shps, size);
-    out << "(" << all.pos.x << ", " << all.pos.y << ") " << all.width << " " << all.height << "\n";
+    out << "(" << all.pos.x << ", " << all.pos.y << ") " << all.height << " " << all.width << "\n";
   }
 
   void removeArray(Shape **shps, size_t size)
