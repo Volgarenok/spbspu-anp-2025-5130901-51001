@@ -22,7 +22,7 @@ namespace kitserov {
     virtual void scale(float k) = 0;
   };
 
-  struct Rectangle final : Shape
+  struct Rectangle final: Shape
   {
     Rectangle(point_t p, float w, float h);
     float getArea() const override;
@@ -31,9 +31,9 @@ namespace kitserov {
     void move(point_t p) override;
     void scale(float k) override;
   private:
-    rectangle_t rect;
+    rectangle_t rect_;
   };
-  struct Xquare final : Shape
+  struct Xquare final: Shape
   {
     Xquare(point_t p, float s);
     float getArea() const override;
@@ -42,10 +42,10 @@ namespace kitserov {
     void move(point_t p) override;
     void scale(float k) override;
   private:
-    point_t centre;
-    float side;
+    point_t centre_;
+    float side_;
   };
-  struct Polygon final : Shape
+  struct Polygon final: Shape
   {
     Polygon(point_t* vertices, size_t vertexCount);
     ~Polygon();
@@ -122,34 +122,34 @@ int main()
 }
 
 kitserov::Rectangle::Rectangle(point_t p, float w, float h):
-  rect{w, h, p}
+  rect_{w, h, p}
 {}
 
 float kitserov::Rectangle::getArea() const
 {
-  return rect.width * rect.height;
+  return rect_.width * rect_.height;
 }
 
 kitserov::rectangle_t kitserov::Rectangle::getFrameRect() const
 {
-  return rect;
+  return rect_;
 }
 
 void kitserov::Rectangle::move(float dx, float dy)
 {
-  rect.pos.x += dx;
-  rect.pos.y += dy;
+  rect_.pos.x += dx;
+  rect_.pos.y += dy;
 }
 
 void kitserov::Rectangle::move(point_t p)
 {
-  rect.pos = p;
+  rect_.pos = p;
 }
 
 void kitserov::Rectangle::scale(float k)
 {
-  rect.width *= k;
-  rect.height *= k;
+  rect_.width *= k;
+  rect_.height *= k;
 }
 
 kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
@@ -197,34 +197,34 @@ void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
 }
 
 kitserov::Xquare::Xquare(point_t p, float s) :
-  centre(p),
-  side(s)
+  centre_(p),
+  side_(s)
 {}
 
 float kitserov::Xquare::getArea() const
 {
-  return 0.5 * side * side;
+  return 0.5 * side_ * side_;
 }
 
 kitserov::rectangle_t kitserov::Xquare::getFrameRect() const
 {
-  return {side, side, centre};
+  return {side_, side_, centre_};
 }
 
 void kitserov::Xquare::move(float dx, float dy)
 {
-  centre.x += dx;
-  centre.y += dy;
+  centre_.x += dx;
+  centre_.y += dy;
 }
 
 void kitserov::Xquare::move(point_t p)
 {
-  centre = p;
+  centre_ = p;
 }
 
 void kitserov::Xquare::scale(float k)
 {
-  side *= k;
+  side_ *= k;
 }
 
 kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount) :
