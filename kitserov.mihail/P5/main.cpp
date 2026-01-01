@@ -63,14 +63,14 @@ namespace kitserov {
   void frameOutput(std::ostream& os, rectangle_t fr);
   void shapeOutput(std::ostream& os, Shape* sh, const char* name);
   void scalePoint(Shape* sh, const point_t& p, float k);
-  rectangle_t getOverallFrame(Shape** shapes, size_t count);
+  rectangle_t getOverallFrame(const Shape* const* shapes, size_t count);
 }
 
 int main()
 {
   using namespace kitserov;
   Shape* shapes[3] = {};
-  size_t count = 3;
+  const size_t count = 3;
   try {
     shapes[0] = new Rectangle({0.0, 0.0}, 1.0, 2.0);
     shapes[1] = new Xquare({1.0, 0.0}, 2.0);
@@ -96,15 +96,15 @@ int main()
   frameOutput(std::cout, overallFrame);
   float totalAreaAfter = 0.0;
   float k = 0;
-  for (size_t i = 0; i < count; i++) {
-    std::cin >> k;
-    if (!std::cin || k <= 0) {
-      std::cerr << "incorrect input\n";
-      for (size_t i = 0; i < count; i++) {
-        delete shapes[i];
-      }
-      return 0;
+  std::cin >> k;
+  if (!std::cin || k <= 0) {
+    std::cerr << "incorrect input\n";
+    for (size_t i = 0; i < count; i++) {
+      delete shapes[i];
     }
+    return 0;
+  }
+  for (size_t i = 0; i < count; i++) {
     scalePoint(shapes[i], {1.0, 0.0}, k);
     totalAreaAfter += shapes[i]->getArea();
   }
@@ -303,7 +303,7 @@ void kitserov::Polygon::scale(float k)
   }
 }
 
-kitserov::rectangle_t kitserov::getOverallFrame(Shape** shapes, size_t count)
+kitserov::rectangle_t kitserov::getOverallFrame(const Shape* const* shapes, size_t count)
 {
   rectangle_t firstFrame = shapes[0]->getFrameRect();
   float minX = firstFrame.pos.x - firstFrame.width / 2;
