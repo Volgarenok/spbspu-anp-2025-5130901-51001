@@ -101,11 +101,18 @@ namespace draw
     double diagonal_;
   };
 
+  enum class ReadStatus
+  {
+    ok,
+    bad_input,
+    bad_coef
+  };
+
   void scaleRelative(Shape &shp, point_t about, double coef);
   rectangle_t getAllShapesFrameRect(Shape *const *shps, size_t size);
   void outputParams(std::ostream &out, Shape *const *shps, size_t size);
   void removeArray(Shape **shps, size_t size);
-  bool readScaleParams(std::istream &in, point_t &about, double &coef);
+  ReadStatus readScaleParams(std::istream &in, point_t &about, double &coef);
 
   Rectangle::Rectangle(point_t a, point_t b):
     center_({(a.x + b.x) / 2.0, (a.y + b.y) / 2.0}),
@@ -325,12 +332,15 @@ namespace draw
     }
   }
 
-  bool readScaleParams(std::istream &in, point_t &about, double &coef)
+  ReadStatus readScaleParams(std::istream &in, point_t &about, double &coef)
   {
     if (!(in >> about.x >> about.y >> coef)) {
-      return false;
+      return ReadStatus::bad_input;
     }
-    return coef > 0.0;
+    if (coef <= 0.0) {
+      return ReadStatus::bad_coef;
+    }
+    return ReadStatus::ok;
   }
 }
 
@@ -362,8 +372,12 @@ int main()
     draw::point_t about = {0.0, 0.0};
     double coef = 0.0;
 
-    if (!draw::readScaleParams(std::cin, about, coef)) {
+    const draw::ReadStatus st = draw::readScaleParams(std::cin, about, coef);
+    if (st == draw::ReadStatus::bad_input) {
       std::cerr << "bad input\n";
+      err = 1;
+    } else if (st == draw::ReadStatus::bad_coef) {
+      std::cerr << "bad scale coef\n";
       err = 1;
     } else {
       try {
