@@ -15,20 +15,20 @@ namespace kitserov {
   struct Shape
   {
     virtual ~Shape() = default;
-    virtual float getArea() const = 0;
-    virtual rectangle_t getFrameRect() const = 0;
-    virtual void move(float dx, float dy) = 0;
-    virtual void move(point_t p) = 0;
+    virtual float getArea() const noexcept = 0;
+    virtual rectangle_t getFrameRect() const noexcept = 0;
+    virtual void move(float dx, float dy) noexcept = 0;
+    virtual void move(point_t p) noexcept = 0;
     virtual void scale(float k) = 0;
   };
 
   struct Rectangle final: Shape
   {
     Rectangle(point_t p, float w, float h);
-    float getArea() const override;
-    rectangle_t getFrameRect() const override;
-    void move(float dx, float dy) override;
-    void move(point_t p) override;
+    float getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(float dx, float dy) noexcept override;
+    void move(point_t p) noexcept override;
     void scale(float k) override;
   private:
     rectangle_t rect_;
@@ -36,10 +36,10 @@ namespace kitserov {
   struct Xquare final: Shape
   {
     Xquare(point_t p, float s);
-    float getArea() const override;
-    rectangle_t getFrameRect() const override;
-    void move(float dx, float dy) override;
-    void move(point_t p) override;
+    float getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(float dx, float dy) noexcept override;
+    void move(point_t p) noexcept override;
     void scale(float k) override;
   private:
     point_t centre_;
@@ -49,10 +49,10 @@ namespace kitserov {
   {
     Polygon(point_t* vertices, size_t vertexCount);
     ~Polygon();
-    float getArea() const override;
-    rectangle_t getFrameRect() const override;
-    void move(float dx, float dy) override;
-    void move(point_t p) override;
+    float getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(float dx, float dy) noexcept override;
+    void move(point_t p) noexcept override;
     void scale(float k) override;
   private:
     point_t* vertices_;
@@ -113,7 +113,7 @@ int main()
   std::cout << "y = ";
   std::cin >> yy;
   for (size_t i = 0; i < count; i++) {
-    scalePoint(shapes[i], {1.0, 0.0}, k);
+    scalePoint(shapes[i], {xx, yy}, k);
     totalAreaAfter += shapes[i]->getArea();
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
@@ -133,23 +133,23 @@ kitserov::Rectangle::Rectangle(point_t p, float w, float h):
   rect_{w, h, p}
 {}
 
-float kitserov::Rectangle::getArea() const
+float kitserov::Rectangle::getArea() const noexcept
 {
   return rect_.width * rect_.height;
 }
 
-kitserov::rectangle_t kitserov::Rectangle::getFrameRect() const
+kitserov::rectangle_t kitserov::Rectangle::getFrameRect() const noexcept
 {
   return rect_;
 }
 
-void kitserov::Rectangle::move(float dx, float dy)
+void kitserov::Rectangle::move(float dx, float dy) noexcept
 {
   rect_.pos.x += dx;
   rect_.pos.y += dy;
 }
 
-void kitserov::Rectangle::move(point_t p)
+void kitserov::Rectangle::move(point_t p) noexcept
 {
   rect_.pos = p;
 }
@@ -207,23 +207,23 @@ kitserov::Xquare::Xquare(point_t p, float s) :
   side_(s)
 {}
 
-float kitserov::Xquare::getArea() const
+float kitserov::Xquare::getArea() const noexcept
 {
   return 0.5 * side_ * side_;
 }
 
-kitserov::rectangle_t kitserov::Xquare::getFrameRect() const
+kitserov::rectangle_t kitserov::Xquare::getFrameRect() const noexcept
 {
   return {side_, side_, centre_};
 }
 
-void kitserov::Xquare::move(float dx, float dy)
+void kitserov::Xquare::move(float dx, float dy) noexcept
 {
   centre_.x += dx;
   centre_.y += dy;
 }
 
-void kitserov::Xquare::move(point_t p)
+void kitserov::Xquare::move(point_t p) noexcept
 {
   centre_ = p;
 }
@@ -253,7 +253,7 @@ kitserov::Polygon::~Polygon()
   delete[] vertices_;
 }
 
-float kitserov::Polygon::getArea() const
+float kitserov::Polygon::getArea() const noexcept
 {
   float area = 0;
   for (size_t i = 0; i < vertexCount_; ++i) {
@@ -263,7 +263,7 @@ float kitserov::Polygon::getArea() const
   return std::abs(area) / 2.0;
 }
 
-kitserov::rectangle_t kitserov::Polygon::getFrameRect() const
+kitserov::rectangle_t kitserov::Polygon::getFrameRect() const noexcept
 {
   if (vertexCount_ == 0) {
     return {0, 0, {0, 0}};
@@ -284,7 +284,7 @@ kitserov::rectangle_t kitserov::Polygon::getFrameRect() const
   return {width, height, center};
 }
 
-void kitserov::Polygon::move(float dx, float dy)
+void kitserov::Polygon::move(float dx, float dy) noexcept
 {
   for (size_t i = 0; i < vertexCount_; ++i) {
     vertices_[i].x += dx;
@@ -294,7 +294,7 @@ void kitserov::Polygon::move(float dx, float dy)
   center_.y += dy;
 }
 
-void kitserov::Polygon::move(point_t p)
+void kitserov::Polygon::move(point_t p) noexcept
 {
   float dx = p.x - center_.x;
   float dy = p.y - center_.y;
