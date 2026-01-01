@@ -105,6 +105,7 @@ namespace draw
   rectangle_t getAllShapesFrameRect(Shape *const *shps, size_t size);
   void outputParams(std::ostream &out, Shape *const *shps, size_t size);
   void removeArray(Shape **shps, size_t size);
+  bool readScaleParams(std::istream &in, point_t &about, double &coef);
 
   Rectangle::Rectangle(point_t a, point_t b):
     center_({(a.x + b.x) / 2.0, (a.y + b.y) / 2.0}),
@@ -323,6 +324,14 @@ namespace draw
       shps[i] = nullptr;
     }
   }
+
+  bool readScaleParams(std::istream &in, point_t &about, double &coef)
+  {
+    if (!(in >> about.x >> about.y >> coef)) {
+      return false;
+    }
+    return coef > 0.0;
+  }
 }
 
 int main()
@@ -350,20 +359,16 @@ int main()
   if (err == 0) {
     draw::outputParams(std::cout, shapes, shape_count);
 
-    double x = 0.0;
-    double y = 0.0;
+    draw::point_t about = {0.0, 0.0};
     double coef = 0.0;
 
-    if (!(std::cin >> x >> y >> coef)) {
+    if (!draw::readScaleParams(std::cin, about, coef)) {
       std::cerr << "bad input\n";
-      err = 1;
-    } else if (coef <= 0.0) {
-      std::cerr << "bad scale coef\n";
       err = 1;
     } else {
       try {
         for (size_t i = 0; i < shape_count; ++i) {
-          draw::scaleRelative(*shapes[i], {x, y}, coef);
+          draw::scaleRelative(*shapes[i], about, coef);
         }
         draw::outputParams(std::cout, shapes, shape_count);
       } catch (const std::exception &e) {
