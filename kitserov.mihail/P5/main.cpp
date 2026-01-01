@@ -164,10 +164,8 @@ kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
     maxx = std::max(maxx, pts[i].x);
     maxy = std::max(maxy, pts[i].y);
   }
-  float w = maxx - minx;
-  float h = maxy - miny;
-  point_t p = {minx + w/2, miny + h/2};
-  return rectangle_t{w, h, p};
+  return rectangle_t{maxx - minx, maxy - miny, 
+    {minx + (maxx - minx) / 2, miny + (maxy - miny) / 2}};
 }
 
 void kitserov::frameOutput(std::ostream& os, rectangle_t fr)
