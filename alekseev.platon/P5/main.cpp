@@ -120,8 +120,11 @@ namespace draw
     width_(std::abs(b.x - a.x)),
     height_(std::abs(b.y - a.y))
   {
-    if (width_ <= 0.0 || height_ <= 0.0) {
-      throw std::invalid_argument("Rectangle: width and height must be positive");
+    if (!std::isfinite(a.x) || !std::isfinite(a.y) || !std::isfinite(b.x) || !std::isfinite(b.y)) {
+      throw std::invalid_argument("Rectangle: bad points");
+    }
+    if (!std::isfinite(width_) || !std::isfinite(height_) || width_ <= 0.0 || height_ <= 0.0) {
+      throw std::invalid_argument("Rectangle: bad size");
     }
   }
 
@@ -130,8 +133,11 @@ namespace draw
     width_(r.width),
     height_(r.height)
   {
-    if (width_ <= 0.0 || height_ <= 0.0) {
-      throw std::invalid_argument("Rectangle: width and height must be positive");
+    if (!std::isfinite(center_.x) || !std::isfinite(center_.y)) {
+      throw std::invalid_argument("Rectangle: bad center");
+    }
+    if (!std::isfinite(width_) || !std::isfinite(height_) || width_ <= 0.0 || height_ <= 0.0) {
+      throw std::invalid_argument("Rectangle: bad size");
     }
   }
 
@@ -147,11 +153,17 @@ namespace draw
 
   void Rectangle::move(point_t to)
   {
+    if (!std::isfinite(to.x) || !std::isfinite(to.y)) {
+      throw std::invalid_argument("move: bad point");
+    }
     center_ = to;
   }
 
   void Rectangle::move(double dx, double dy)
   {
+    if (!std::isfinite(dx) || !std::isfinite(dy)) {
+      throw std::invalid_argument("move: bad shift");
+    }
     center_.x += dx;
     center_.y += dy;
   }
@@ -159,7 +171,7 @@ namespace draw
   void Rectangle::scale(double coef)
   {
     if (!std::isfinite(coef) || coef <= 0.0) {
-      throw std::invalid_argument("scale: coef must be finite and > 0");
+      throw std::invalid_argument("scale: bad coef");
     }
     width_ *= coef;
     height_ *= coef;
@@ -169,8 +181,11 @@ namespace draw
     center_(center),
     side_(side)
   {
-    if (side_ <= 0.0) {
-      throw std::invalid_argument("Square: side must be positive");
+    if (!std::isfinite(center_.x) || !std::isfinite(center_.y)) {
+      throw std::invalid_argument("Square: bad center");
+    }
+    if (!std::isfinite(side_) || side_ <= 0.0) {
+      throw std::invalid_argument("Square: bad side");
     }
   }
 
@@ -178,11 +193,14 @@ namespace draw
     center_(r.pos),
     side_(r.width)
   {
-    if (r.width <= 0.0 || r.height <= 0.0) {
-      throw std::invalid_argument("Square: width and height must be positive");
+    if (!std::isfinite(center_.x) || !std::isfinite(center_.y)) {
+      throw std::invalid_argument("Square: bad center");
+    }
+    if (!std::isfinite(r.width) || !std::isfinite(r.height) || r.width <= 0.0 || r.height <= 0.0) {
+      throw std::invalid_argument("Square: bad size");
     }
     if (r.width != r.height) {
-      throw std::invalid_argument("Square: width must equal height");
+      throw std::invalid_argument("Square: not a square");
     }
   }
 
@@ -198,11 +216,17 @@ namespace draw
 
   void Square::move(point_t to)
   {
+    if (!std::isfinite(to.x) || !std::isfinite(to.y)) {
+      throw std::invalid_argument("move: bad point");
+    }
     center_ = to;
   }
 
   void Square::move(double dx, double dy)
   {
+    if (!std::isfinite(dx) || !std::isfinite(dy)) {
+      throw std::invalid_argument("move: bad shift");
+    }
     center_.x += dx;
     center_.y += dy;
   }
@@ -210,7 +234,7 @@ namespace draw
   void Square::scale(double coef)
   {
     if (!std::isfinite(coef) || coef <= 0.0) {
-      throw std::invalid_argument("scale: coef must be finite and > 0");
+      throw std::invalid_argument("scale: bad coef");
     }
     side_ *= coef;
   }
@@ -219,8 +243,11 @@ namespace draw
     center_(center),
     diagonal_(diagonal)
   {
-    if (diagonal_ <= 0.0) {
-      throw std::invalid_argument("Xquare: diagonal must be positive");
+    if (!std::isfinite(center_.x) || !std::isfinite(center_.y)) {
+      throw std::invalid_argument("Xquare: bad center");
+    }
+    if (!std::isfinite(diagonal_) || diagonal_ <= 0.0) {
+      throw std::invalid_argument("Xquare: bad diagonal");
     }
   }
 
@@ -228,11 +255,14 @@ namespace draw
     center_(r.pos),
     diagonal_(r.width)
   {
-    if (r.width <= 0.0 || r.height <= 0.0) {
-      throw std::invalid_argument("Xquare: width and height must be positive");
+    if (!std::isfinite(center_.x) || !std::isfinite(center_.y)) {
+      throw std::invalid_argument("Xquare: bad center");
+    }
+    if (!std::isfinite(r.width) || !std::isfinite(r.height) || r.width <= 0.0 || r.height <= 0.0) {
+      throw std::invalid_argument("Xquare: bad size");
     }
     if (r.width != r.height) {
-      throw std::invalid_argument("Xquare: width must equal height");
+      throw std::invalid_argument("Xquare: bad frame");
     }
   }
 
@@ -248,11 +278,17 @@ namespace draw
 
   void Xquare::move(point_t to)
   {
+    if (!std::isfinite(to.x) || !std::isfinite(to.y)) {
+      throw std::invalid_argument("move: bad point");
+    }
     center_ = to;
   }
 
   void Xquare::move(double dx, double dy)
   {
+    if (!std::isfinite(dx) || !std::isfinite(dy)) {
+      throw std::invalid_argument("move: bad shift");
+    }
     center_.x += dx;
     center_.y += dy;
   }
@@ -260,15 +296,18 @@ namespace draw
   void Xquare::scale(double coef)
   {
     if (!std::isfinite(coef) || coef <= 0.0) {
-      throw std::invalid_argument("scale: coef must be finite and > 0");
+      throw std::invalid_argument("scale: bad coef");
     }
     diagonal_ *= coef;
   }
 
   void scaleRelative(Shape &shp, point_t about, double coef)
   {
+    if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
+      throw std::invalid_argument("scaleRelative: bad point");
+    }
     if (!std::isfinite(coef) || coef <= 0.0) {
-      throw std::invalid_argument("scaleRelative: coef must be finite and > 0");
+      throw std::invalid_argument("scaleRelative: bad coef");
     }
     if (coef == 1.0) {
       return;
