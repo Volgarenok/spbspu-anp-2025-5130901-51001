@@ -207,7 +207,7 @@ int main(int argc, char * argv[])
     }
     return 1;
   }
-  
+
   std::string arg1(argv[1]);
   if (arg1.length() != 1 || (arg1[0] != '1' && arg1[0] != '2'))
   {
