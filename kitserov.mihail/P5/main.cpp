@@ -18,7 +18,7 @@ namespace kitserov {
     virtual float getArea() const noexcept = 0;
     virtual rectangle_t getFrameRect() const noexcept = 0;
     virtual void move(float dx, float dy) noexcept = 0;
-    virtual void move(point_t p) noexcept = 0;
+    virtual void move(const point_t& p) noexcept = 0;
     virtual void scale(float k) = 0;
   };
 
@@ -28,7 +28,7 @@ namespace kitserov {
     float getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(float dx, float dy) noexcept override;
-    void move(point_t p) noexcept override;
+    void move(const point_t& p) noexcept override;
     void scale(float k) override;
   private:
     rectangle_t rect_;
@@ -39,7 +39,7 @@ namespace kitserov {
     float getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(float dx, float dy) noexcept override;
-    void move(point_t p) noexcept override;
+    void move(const point_t& p) noexcept override;
     void scale(float k) override;
   private:
     point_t centre_;
@@ -52,7 +52,7 @@ namespace kitserov {
     float getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(float dx, float dy) noexcept override;
-    void move(point_t p) noexcept override;
+    void move(const point_t& p) noexcept override;
     void scale(float k) override;
   private:
     point_t* vertices_;
@@ -61,7 +61,7 @@ namespace kitserov {
   };
   rectangle_t frame(const point_t* pts, size_t s);
   void frameOutput(std::ostream& os, const rectangle_t& fr);
-  void shapeOutput(std::ostream& os, Shape* sh, const char* name);
+  void shapeOutput(std::ostream& os, const Shape* sh, const char* name);
   void scalePoint(Shape* sh, const point_t& p, float k);
   rectangle_t getOverallFrame(const Shape* const* shapes, size_t count);
 }
@@ -81,7 +81,7 @@ int main()
     for (size_t i = 0; i < count; i++) {
       delete shapes[i];
     }
-    return 0;
+    return 2;
   }
   float totalAreaPrevious = 0.0;
   for (size_t i = 0; i < count; i++) {
@@ -98,7 +98,7 @@ int main()
   float k = 0;
   std::cout << "Ratio: ";
   std::cin >> k;
-  if (!std::cin || k <= 0) {
+  if (!std::cin) {
     std::cerr << "incorrect input\n";
     for (size_t i = 0; i < count; i++) {
       delete shapes[i];
@@ -113,8 +113,15 @@ int main()
   std::cout << "y = ";
   std::cin >> yy;
   for (size_t i = 0; i < count; i++) {
-    scalePoint(shapes[i], {xx, yy}, k);
-    totalAreaAfter += shapes[i]->getArea();
+    try {
+      scalePoint(shapes[i], {xx, yy}, k);
+      totalAreaAfter += shapes[i]->getArea();
+    } catch (const std::exception& e) {
+      std::cerr << "Error: " << e.what() << "\n";
+      for (size_t i = 0; i < count; i++) {
+        delete shapes[i];
+      }
+    }
   }
   shapeOutput(std::cout, shapes[0], "Rectangle");
   shapeOutput(std::cout, shapes[1], "Xquare");
@@ -149,7 +156,7 @@ void kitserov::Rectangle::move(float dx, float dy) noexcept
   rect_.pos.y += dy;
 }
 
-void kitserov::Rectangle::move(point_t p) noexcept
+void kitserov::Rectangle::move(const point_t& p) noexcept
 {
   rect_.pos = p;
 }
@@ -188,7 +195,7 @@ void kitserov::frameOutput(std::ostream& os, const rectangle_t& fr)
   os << "Frame (leftTop " << left << ", " << top << " rightBot " << right << ", " << bottom << ")\n";
 }
 
-void kitserov::shapeOutput(std::ostream& os, Shape* sh, const char* name)
+void kitserov::shapeOutput(std::ostream& os, const Shape* sh, const char* name)
 {
   rectangle_t frameRect = sh->getFrameRect();
   os << name << ": area = " << sh->getArea() << "\n";
@@ -226,7 +233,7 @@ void kitserov::Xquare::move(float dx, float dy) noexcept
   centre_.y += dy;
 }
 
-void kitserov::Xquare::move(point_t p) noexcept
+void kitserov::Xquare::move(const point_t& p) noexcept
 {
   centre_ = p;
 }
@@ -300,7 +307,7 @@ void kitserov::Polygon::move(float dx, float dy) noexcept
   center_.y += dy;
 }
 
-void kitserov::Polygon::move(point_t p) noexcept
+void kitserov::Polygon::move(const point_t& p) noexcept
 {
   float dx = p.x - center_.x;
   float dy = p.y - center_.y;
