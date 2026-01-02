@@ -76,12 +76,12 @@ int main()
     shapes[1] = new Xquare{{1.0, 0.0}, 2.0};
     point_t triangleVertices[3] = {{3.0, 0.0}, {4.0, 2.0}, {5.0, 0.0}};
     shapes[2] = new Polygon{triangleVertices, 3};
-  } catch (...) {
-    std::cerr << "Error!\n";
+  } catch (const std::exception& e) {
+    std::cerr << "Error: " << e.what() << "\n";
     for (size_t i = 0; i < count; i++) {
       delete shapes[i];
     }
-    return 2;
+    return 0;
   }
   float totalAreaPrevious = 0.0;
   for (size_t i = 0; i < count; i++) {
@@ -156,6 +156,9 @@ void kitserov::Rectangle::move(point_t p) noexcept
 
 void kitserov::Rectangle::scale(float k)
 {
+  if (k <= 0) {
+    throw std::logic_error("bad ratio");
+  }
   rect_.width *= k;
   rect_.height *= k;
 }
@@ -230,6 +233,9 @@ void kitserov::Xquare::move(point_t p) noexcept
 
 void kitserov::Xquare::scale(float k)
 {
+  if (k <= 0) {
+    throw std::logic_error("bad ratio");
+  }
   side_ *= k;
 }
 
@@ -303,6 +309,9 @@ void kitserov::Polygon::move(point_t p) noexcept
 
 void kitserov::Polygon::scale(float k)
 {
+  if (k <= 0) {
+    throw std::logic_error("bad ratio");
+  }
   for (size_t i = 0; i < vertexCount_; ++i) {
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
     vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
