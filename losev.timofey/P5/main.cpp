@@ -223,7 +223,9 @@ int main()
     }
     std::cout << "\n=== AFTER scaling ===" << "\n";
     printShapesInfo(shapes, 6);
-    std::cout << "\nScaling performed relative to point (" << scalePoint.x << ", " << scalePoint.y << ") with coefficient " << scaleCoef << "\n";
+    std::cout << "\nScaling performed relative to point ("
+     << scalePoint.x << ", " << scalePoint.y << ") with coefficient "
+     << scaleCoef << "\n";
     for (size_t i = 0; i < 6; ++i) {
       delete shapes[i];
     }
