@@ -97,7 +97,7 @@ namespace losev {
     void move(double dx, double dy) override {
       Center.x += dx;
       Center.y += dy;
-    } 
+    }
     void scale(double coef) override {
       if (coef <= 0) {
         throw std::invalid_argument("Scale coefficient must be positive");
