@@ -21,17 +21,15 @@ namespace losev {
     rectangle_t Rect;
   public:
     Rectangle(double width, double height, const point_t& center) {
-      if (width <= 0 || height <= 0)
-      {
+      if (width <= 0 || height <= 0) {
         throw std::invalid_argument("Width and height must be positive");
       }
       Rect.width = width;
       Rect.height = height;
       Rect.pos = center;
     }
-    Rectangle(const rectangle_t& rect){
-      if (rect.width <= 0 || rect.height <= 0)
-      {
+    Rectangle(const rectangle_t& rect) {
+      if (rect.width <= 0 || rect.height <= 0) {
         throw std::invalid_argument("Width and height must be positive");
       }
       Rect = rect;
@@ -55,8 +53,7 @@ namespace losev {
     }
     void scale(double coef) override
     {
-      if (coef <= 0)
-      {
+      if (coef <= 0) {
         throw std::invalid_argument("Scale coefficient must be positive");
       }
       Rect.width *= coef;
@@ -261,16 +258,16 @@ losev::rectangle_t losev::getOverallFrameRect(Shape** shapes, size_t count) {
     double right = rect.pos.x + rect.width / 2;
     double bottom = rect.pos.y - rect.height / 2;
     double top = rect.pos.y + rect.height / 2;
-    if (left < minX){
+    if (left < minX) {
       minX = left;
     }
-    if (right > maxX){
+    if (right > maxX) {
       maxX = right;
     }
-    if (bottom < minY){
+    if (bottom < minY) {
       minY = bottom;
     }
-    if (top > maxY){
+    if (top > maxY) {
       maxY = top;
     }
   }
