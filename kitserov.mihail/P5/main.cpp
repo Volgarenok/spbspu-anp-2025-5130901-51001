@@ -126,7 +126,7 @@ int main()
       for (size_t i = 0; i < count; i++) {
         delete shapes[i];
       }
-      return 2;
+      return 0;
     }
   }
 
