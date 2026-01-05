@@ -124,7 +124,7 @@ int main()
       for (size_t i = 0; i < count; i++) {
         delete shapes[i];
       }
-      return 0;
+      return 2;
     }
   }
   std::cout << "AFTER SCALING\n";
