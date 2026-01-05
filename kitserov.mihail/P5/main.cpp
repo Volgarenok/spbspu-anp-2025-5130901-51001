@@ -99,6 +99,13 @@ int main()
   std::cout << "BEFORE SCALING\n";
   printAllInfo(std::cout, shapes, shapeNames, count);
 
+  std::cout << "Point for scale:\n";
+  float xx = 0.0;
+  float yy = 0.0;
+  std::cout << "x = ";
+  std::cin >> xx;
+  std::cout << "y = ";
+  std::cin >> yy;
   float k = 0;
   std::cout << "Ratio: ";
   std::cin >> k;
@@ -109,15 +116,6 @@ int main()
     }
     return 1;
   }
-
-  std::cout << "Point for scale:\n";
-  float xx = 0.0;
-  float yy = 0.0;
-  std::cout << "x = ";
-  std::cin >> xx;
-  std::cout << "y = ";
-  std::cin >> yy;
-
   for (size_t i = 0; i < count; i++) {
     try {
       scalePoint(shapes[i], {xx, yy}, k);
@@ -129,7 +127,6 @@ int main()
       return 0;
     }
   }
-
   std::cout << "AFTER SCALING\n";
   printAllInfo(std::cout, shapes, shapeNames, count);
 
