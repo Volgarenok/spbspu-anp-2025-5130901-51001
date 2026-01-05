@@ -62,6 +62,7 @@ namespace kitserov {
   rectangle_t frame(const point_t* pts, size_t s);
   void frameOutput(std::ostream& os, const rectangle_t& fr);
   void shapeOutput(std::ostream& os, const Shape* sh, const char* name);
+  void printAllInfo(std::ostream& os, const Shape* const* shapes, const char* const* names, size_t count);
   void scalePoint(Shape* sh, const point_t& p, float k);
   rectangle_t getOverallFrame(const Shape* const* shapes, size_t count);
 }
@@ -347,4 +348,24 @@ kitserov::rectangle_t kitserov::getOverallFrame(const Shape* const* shapes, size
   float height = maxY - minY;
   point_t center = {minX + width / 2, minY + height / 2};
   return {width, height, center};
+}
+
+void kitserov::printAllInfo(std::ostream& os, const Shape* const* shapes, const char* const* names, size_t count)
+{
+  for (size_t i = 0; i < count; ++i) {
+    if (shapes[i] != nullptr) {
+      const char* name = (names != nullptr && i < count) ? names[i] : "Shape";
+      shapeOutput(os, shapes[i], name);
+    }
+  }
+  float totalArea = 0.0f;
+  for (size_t i = 0; i < count; ++i) {
+    if (shapes[i] != nullptr) {
+      totalArea += shapes[i]->getArea();
+    }
+  }
+  os << "Total area = " << totalArea << "\n";
+  rectangle_t overallFrame = getOverallFrame(shapes, count);
+  os << "Overall frame:\n";
+  frameOutput(os, overallFrame);
 }
