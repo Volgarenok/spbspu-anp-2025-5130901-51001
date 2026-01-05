@@ -72,6 +72,7 @@ int main()
   using namespace kitserov;
   Shape* shapes[3] = {};
   const size_t count = 3;
+  const char* shapeNames[] = {"Rectangle", "Xquare", "Polygon"};
   try {
     shapes[0] = new Rectangle{{0.0, 0.0}, 1.0, 2.0};
     shapes[1] = new Xquare{{1.0, 0.0}, 2.0};
@@ -88,14 +89,8 @@ int main()
   for (size_t i = 0; i < count; i++) {
     totalAreaPrevious += shapes[i]->getArea();
   }
-  shapeOutput(std::cout, shapes[0], "Rectangle");
-  shapeOutput(std::cout, shapes[1], "Xquare");
-  shapeOutput(std::cout, shapes[2], "Polygon");
-  std::cout << "Total area = " << totalAreaPrevious << "\n";
-  rectangle_t overallFrame = getOverallFrame(shapes, count);
-  std::cout << "Overall frame:\n";
-  frameOutput(std::cout, overallFrame);
-  float totalAreaAfter = 0.0;
+  std::cout << "BEFORE SCALING\n";
+  printAllInfo(std::cout, shapes, shapeNames, count);
   float k = 0;
   std::cout << "Ratio: ";
   std::cin >> k;
@@ -116,7 +111,6 @@ int main()
   for (size_t i = 0; i < count; i++) {
     try {
       scalePoint(shapes[i], {xx, yy}, k);
-      totalAreaAfter += shapes[i]->getArea();
     } catch (const std::exception& e) {
       std::cerr << "Error: " << e.what() << "\n";
       for (size_t i = 0; i < count; i++) {
@@ -124,13 +118,8 @@ int main()
       }
     }
   }
-  shapeOutput(std::cout, shapes[0], "Rectangle");
-  shapeOutput(std::cout, shapes[1], "Xquare");
-  shapeOutput(std::cout, shapes[2], "Polygon");
-  std::cout << "Total area = " << totalAreaAfter << "\n";
-  overallFrame = getOverallFrame(shapes, count);
-  std::cout << "Overall frame:\n";
-  frameOutput(std::cout, overallFrame);
+  std::cout << "AFTER SCALING\n";
+  printAllInfo(std::cout, shapes, shapeNames, count);
   for (size_t i = 0; i < count; i++) {
     delete shapes[i];
   }
