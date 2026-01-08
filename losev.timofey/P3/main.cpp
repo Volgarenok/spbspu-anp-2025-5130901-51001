@@ -24,7 +24,7 @@ int main(int argc, char ** argv)
   }
   std::ofstream output(argv[3]);
   if (!output.is_open()) {
-    std::cerr <<"I can not open output file\n";
+    std::cerr << "I can not open output file\n";
     return 1;
   } else {
     output.clear();
