@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include <algorithm>
+#include <cmath>
 
 void shaykhraziev::scaleRelative(Shape& shp, point_t pt, double coef)
 {
