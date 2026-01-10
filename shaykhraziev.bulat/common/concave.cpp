@@ -1,6 +1,7 @@
 #include "concave.hpp"
 #include <stdexcept>
 #include "utils.hpp"
+#include <cmath>
 
 shaykhraziev::Concave::Concave(const point_t* a, size_t size) :
   points(),
