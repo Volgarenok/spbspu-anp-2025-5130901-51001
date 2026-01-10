@@ -125,7 +125,7 @@ namespace alekseev {
 
     errno = 0;
     char* end = nullptr;
-    const long val = std::strtol(s, &end, 10);
+    const long val = std::strtol(s, std::addressof(end), 10);
 
     if (errno != 0 || end == s || *end != '\0') {
       return false;
@@ -204,39 +204,34 @@ int main(int argc, char* argv[])
   int rc = 0;
 
   if (taskNum == 2) {
-    dyn = new (std::nothrow) int[total];
-    if (!dyn) {
+    try {
+      dyn = new int[total];
+    } catch (const std::bad_alloc&) {
       std::cerr << "Cannot allocate memory\n";
-      rc = 2;
-      goto cleanup;
+      return 2;
     }
     data = dyn;
   }
 
-  {
-    const size_t read = alekseev::readMatrix(input, data, rows, cols);
-    if (read != total) {
-      std::cerr << "Cannot read matrix elements\n";
-      rc = 2;
-      goto cleanup;
-    }
+  const size_t read = alekseev::readMatrix(input, data, rows, cols);
+  if (read != total) {
+    std::cerr << "Cannot read matrix elements\n";
+    delete[] dyn;
+    return 2;
   }
 
-  {
-    const size_t saddleCount = alekseev::countSaddlePoints(data, rows, cols);
-    const size_t seriesColumn = alekseev::findLongestSeriesColumn(data, rows, cols);
+  const size_t saddleCount = alekseev::countSaddlePoints(data, rows, cols);
+  const size_t seriesColumn = alekseev::findLongestSeriesColumn(data, rows, cols);
 
-    std::ofstream output(outputFile);
-    if (!output.is_open()) {
-      std::cerr << "Cannot open output file\n";
-      rc = 2;
-      goto cleanup;
-    }
-
-    alekseev::writeResults(output, saddleCount, seriesColumn);
+  std::ofstream output(outputFile);
+  if (!output.is_open()) {
+    std::cerr << "Cannot open output file\n";
+    delete[] dyn;
+    return 2;
   }
 
-cleanup:
+  alekseev::writeResults(output, saddleCount, seriesColumn);
+
   delete[] dyn;
-  return rc;
+  return 0;
 }
