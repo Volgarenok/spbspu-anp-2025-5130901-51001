@@ -17,16 +17,12 @@ size_t vishnyakov::move(size_t type, size_t column, size_t start)
   {
   case 0:
     return start - column;
-    break;
   case 1:
     return start + 1;
-    break;
   case 2:
     return start + column;
-    break;
   case 3:
     return start - 1;
-    break;
   }
   return start;
 }
@@ -58,7 +54,7 @@ void vishnyakov::spiralReduction(int *matrix, size_t row, size_t column)
     matrix[start] -= i + 1;
     completed_values[i] = start;
     type_of_mooving += vishnyakov::isIn(completed_values, vishnyakov::move(type_of_mooving, column, start), row * column);
-    start = vishnyakov::move(type_of_mooving,column,start);
+    start = vishnyakov::move(type_of_mooving, column, start);
   }
   delete[] completed_values;
 }
@@ -68,7 +64,7 @@ int vishnyakov::biggiestDiagonal(const int *matrix, size_t row, size_t column)
   {
     return 0;
   }
-  int sum = 0, max_sum = matrix[column-1];
+  int sum = 0, max_sum = matrix[column - 1];
   size_t k = 0;
   for (size_t i = 1; i < column - 1; ++i)
   {
@@ -100,7 +96,7 @@ int vishnyakov::biggiestDiagonal(const int *matrix, size_t row, size_t column)
   }
   return max_sum;
 }
-int main(int argc, char ** argv)
+int main(int argc, char **argv)
 {
   if (argc < 4)
   {
@@ -112,7 +108,7 @@ int main(int argc, char ** argv)
     std::cerr << "Too many arguments\n";
     return 1;
   }
-  const char * string_num = argv[1];
+  const char *string_num = argv[1];
   size_t num = 0;
   if (string_num[0] == '1' && string_num[1] == 0)
   {
@@ -136,7 +132,6 @@ int main(int argc, char ** argv)
   size_t row = 0, column = 0;
   if (!(input >> row >> column))
   {
-    input.close();
     std::cerr << "Error reading matrix sizes\n";
     return 2;
   }
@@ -185,7 +180,6 @@ int main(int argc, char ** argv)
     output << ' ' << matrix[i];
   }
   output << '\n' << result << '\n';
-  output.close();
   delete[] dynamic_matrix;
   return 0;
 }
