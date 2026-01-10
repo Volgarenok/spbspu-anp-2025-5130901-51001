@@ -76,7 +76,6 @@ shaykhraziev::Shape** shaykhraziev::addAt(Shape** curr, Shape* shp, size_t& size
 {
   if (size + 1 > capacity) {
     Shape** extended = extend(curr, capacity, 1);
-    if (capacity != 0) delete[] curr;
     curr = extended;
     ++capacity;
   }
