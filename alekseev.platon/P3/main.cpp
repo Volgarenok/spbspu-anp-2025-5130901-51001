@@ -201,8 +201,6 @@ int main(int argc, char* argv[])
   int* dyn = nullptr;
   int* data = fixed;
 
-  int rc = 0;
-
   if (taskNum == 2) {
     try {
       dyn = new int[total];
