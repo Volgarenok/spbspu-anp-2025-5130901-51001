@@ -202,7 +202,7 @@ int main() {
   std::cout << "-----------------------------------------------------";
   std::cout << "\nResult 1: " << result1 << "\n";
 
-  size_t maxLen = lengths[0] + lengths[1];
+  size_t maxLen = lengths[0] + lengths[1] + 1;
   char *result2 = reinterpret_cast<char*>(malloc(maxLen + 1));
   if (!result2) {
     std::cerr << "\nMemory allocation failed\n";
@@ -242,7 +242,7 @@ int main() {
     std::cout << "\nResult3: " << result3 << "\n";
 
     size_t maxLen = strlen(words[i]) + strlen(defaultStr) + 1;
-    char *result4 = reinterpret_cast<char*>(malloc(maxLen));
+    char *result4 = reinterpret_cast<char*>(malloc(maxLen + 1));
     if (!result4) {
       return 0;
     } else {
