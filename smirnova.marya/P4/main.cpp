@@ -227,7 +227,7 @@ int main() {
 
   if (!words || countWords == 0) {
     std::cerr << "\nMemory allocation failed or nothing entered\n";
-    if (words) {
+    if (!words) {
       free(words);
       return 1;
     }
@@ -244,7 +244,11 @@ int main() {
     size_t maxLen = strlen(words[i]) + strlen(defaultStr) + 1;
     char *result4 = reinterpret_cast<char*>(malloc(maxLen + 1));
     if (!result4) {
-      return 0;
+      for (size_t i = 0; i < countWords; i++) {
+        free(words[i]);
+      }
+      free(words);
+      return 1;
     } else {
       smirnova::appendDigits(words[i], defaultStr, result4);
       std::cout << "Result4: " << result4 << "\n";
