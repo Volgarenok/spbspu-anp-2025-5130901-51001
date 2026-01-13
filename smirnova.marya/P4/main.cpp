@@ -193,7 +193,7 @@ int main() {
 
   lines[0] = line;
 
-  lines[1] = reinterpret_cast<char*>(malloc(8));
+  lines[1] = reinterpret_cast<char*>(malloc(10));
   if (!lines[1]) {
     std::cerr << "\nMemory allocation failed\n";
     free(lines[0]);
