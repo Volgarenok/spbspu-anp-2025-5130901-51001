@@ -8,7 +8,7 @@ char *getLine(std::istream &in, size_t &size);
 char **getWords(std::istream &in, size_t &size, bool (*checkSpace)(char));
 int compareStrings(const char *a, const char *b);
 void appendDigits(const char *a, const char *b, char *result);
-} // namespace smirnova
+}
 
 bool checkSpace(char ch) {
   return std::isspace(static_cast<unsigned char>(ch));
@@ -18,13 +18,13 @@ char **smirnova::getWords(std::istream &in, size_t &size,
                           bool (*checkSpace)(char)) {
   const size_t MAX_WORDS = 100;
   const size_t INITIAL_BUF = 16;
-  char *buffer = (char *)malloc(INITIAL_BUF);
+  char *buffer = reinterpret_cast<char*>(malloc(INITIAL_BUF));
   if (!buffer) {
     return nullptr;
   }
   size_t bufCap = INITIAL_BUF;
   size_t bufLen = 0;
-  char **words = static_cast<char **>(malloc(MAX_WORDS * sizeof(char *)));
+  char **words = reinterpret_cast<char **>(malloc(MAX_WORDS * sizeof(char *)));
   if (!words) {
     free(buffer);
     return nullptr;
@@ -35,7 +35,7 @@ char **smirnova::getWords(std::istream &in, size_t &size,
   while (in.get(ch) && ch != '\n') {
     if (checkSpace(ch)) {
       if (inWord && bufLen > 0) {
-        char *word = static_cast<char *>(malloc(bufLen + 1));
+        char *word = reinterpret_cast<char*>(malloc(bufLen + 1));
         if (!word) {
           free(buffer);
           return nullptr;
@@ -56,7 +56,7 @@ char **smirnova::getWords(std::istream &in, size_t &size,
     } else {
       if (bufLen + 1 >= bufCap) {
         size_t newCap = bufCap * 2;
-        char *newBuffer = static_cast<char *>(malloc(newCap));
+        char *newBuffer = reinterpret_cast<char*>(malloc(newCap));
         if (!newBuffer) {
           break;
         }
@@ -72,7 +72,7 @@ char **smirnova::getWords(std::istream &in, size_t &size,
     }
   }
   if (inWord && bufLen > 0 && (countWords < MAX_WORDS)) {
-    char *word = static_cast<char *>(malloc(bufLen + 1));
+    char *word = reinterpret_cast<char*>(malloc(bufLen + 1));
     if (!word) {
       free(buffer);
       return nullptr;
@@ -98,7 +98,7 @@ char *smirnova::getLine(std::istream &in, size_t &size) {
   size_t capacity = 16;
   size_t length = 0;
 
-  char *str = reinterpret_cast<char *>(malloc(capacity));
+  char *str = reinterpret_cast<char*>(malloc(capacity));
   if (!str) {
     return 0;
   }
@@ -107,7 +107,7 @@ char *smirnova::getLine(std::istream &in, size_t &size) {
   while (in.get(ch) && ch != '\n') {
     if (length + 1 >= capacity) {
       size_t newCapacity = capacity * 2;
-      char *buffer = reinterpret_cast<char *>(malloc(newCapacity));
+      char *buffer = reinterpret_cast<char*>(malloc(newCapacity));
       if (!buffer) {
         free(str);
         return 0;
@@ -126,7 +126,7 @@ char *smirnova::getLine(std::istream &in, size_t &size) {
     in >> std::skipws;
   }
 
-  char *result = reinterpret_cast<char *>(malloc(length + 1));
+  char *result = reinterpret_cast<char*>(malloc(length + 1));
   if (!result) {
     free(str);
     return 0;
@@ -188,7 +188,7 @@ int main() {
 
   lines[0] = line;
 
-  lines[1] = reinterpret_cast<char *>(malloc(8));
+  lines[1] = reinterpret_cast<char*>(malloc(8));
   if (!lines[1]) {
     std::cerr << "\nMemory allocation failed\n";
     free(lines[0]);
@@ -203,7 +203,7 @@ int main() {
   std::cout << "\nResult 1: " << result1 << "\n";
 
   size_t maxLen = lengths[0] + lengths[1];
-  char *result2 = reinterpret_cast<char *>(malloc(maxLen + 1));
+  char *result2 = reinterpret_cast<char*>(malloc(maxLen + 1));
   if (!result2) {
     std::cerr << "\nMemory allocation failed\n";
     free(lines[0]);
@@ -242,7 +242,7 @@ int main() {
     std::cout << "\nResult3: " << result3 << "\n";
 
     size_t maxLen = strlen(words[i]) + strlen(defaultStr) + 1;
-    char *result4 = static_cast<char *>(malloc(maxLen));
+    char *result4 = reinterpret_cast<char*>(malloc(maxLen));
     if (!result4) {
       return 0;
     } else {
