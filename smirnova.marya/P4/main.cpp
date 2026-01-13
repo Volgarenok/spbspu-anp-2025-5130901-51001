@@ -165,10 +165,14 @@ void smirnova::appendDigits(const char *a, const char *b, char *result) {
 
   for (size_t j = 0; b[j] != '\0'; j++) {
     if (std::isdigit(static_cast<unsigned char>(b[j]))) {
-      result[count++] = b[j];
+      for (size_t i = 0; a[i] != '\0'; i++) {
+        if (a[i] == b[j]) {
+          result[count++] = b[j];
+          break;
+        }
+      }
     }
   }
-
   result[count] = '\0';
 }
 
