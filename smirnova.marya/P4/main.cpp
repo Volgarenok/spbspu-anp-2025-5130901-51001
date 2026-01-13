@@ -58,7 +58,8 @@ char **smirnova::getWords(std::istream &in, size_t &size,
         size_t newCap = bufCap * 2;
         char *newBuffer = reinterpret_cast<char*>(malloc(newCap));
         if (!newBuffer) {
-          break;
+          free(buffer);
+          return nullptr;
         }
         for (size_t i = 0; i < bufLen; i++) {
           newBuffer[i] = buffer[i];
@@ -195,7 +196,7 @@ int main() {
     return 0;
   }
   std::strcpy(lines[1], "default12");
-  lengths[1] = 7;
+  lengths[1] = 9;
 
   int result1 = smirnova::compareStrings(lines[0], lines[1]);
   std::cout << "\nStrings:\n" << lines[0] << "\n" << lines[1] << "\n";
@@ -227,7 +228,7 @@ int main() {
 
   if (!words || countWords == 0) {
     std::cerr << "\nMemory allocation failed or nothing entered\n";
-    if (!words) {
+    if (words) {
       free(words);
       return 1;
     }
