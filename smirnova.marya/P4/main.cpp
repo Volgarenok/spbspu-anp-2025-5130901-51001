@@ -226,7 +226,7 @@ int main() {
   std::cout << "\n-----------------------------------------------------\n";
   std::cout << "Enter the line for the additional task:" << "\n";
 
-  size_t countWords = 0;
+  /* size_t countWords = 0;
   char **words = smirnova::getWords(std::cin, countWords, checkSpace);
   std::cout << "-----------------------------------------------------";
 
@@ -265,7 +265,7 @@ int main() {
   for (size_t i = 0; i < countWords; i++) {
     free(words[i]);
   }
-  free(words);
+  free(words); */
 
   return 0;
 }
