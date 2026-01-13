@@ -4,31 +4,31 @@
 #include <cstring>
 
 namespace muraviev {
-  void copyEls(char* copy_to, const char* copy_from, size_t len);
-  char* getline(std::istream& in, size_t& size);
+  void copyEls(char* copy_to, const char* copy_from, size_t size);
+  char* getline(std::istream& in, size_t& foundSize);
   char* intertwinedLine(char* tmp, const char* line1, const char* line2,
     size_t size_1, size_t size_2);
-  char* digitsAddedLine(char* tmp, const char* add_to, const char* take_from,
-    size_t size_1, size_t size_2);
+  char* digitsAddedLine(char* result, const char* add_to, const char* take_from,
+    size_t size_1);
 }
 
-void muraviev::copyEls(char* copy_to, const char* copy_from, size_t len)
+void muraviev::copyEls(char* copy_to, const char* copy_from, size_t size)
 {
-  for (size_t i = 0; i < len; ++i) {
+  for (size_t i = 0; i < size; ++i) {
     copy_to[i] = copy_from[i];
   }
 }
 
-char* muraviev::getline(std::istream& in, size_t& size)
+char* muraviev::getline(std::istream& in, size_t& foundSize)
 {
   bool is_skips = in.flags() & std::ios_base::skipws;
-  size_t buffer = 16;
-  size_t len = 0;
-  char* line = static_cast<char*>(malloc(sizeof(char) * buffer));
+  size_t capacity = 16;
+  size_t size = 0;
+  char* line = reinterpret_cast<char*>(malloc(sizeof(char) * capacity));
 
   if (!line) {
-    size = 0;
-    throw std::bad_alloc();
+    foundSize = 0;
+    return nullptr;
   }
 
   if (is_skips) {
@@ -36,45 +36,41 @@ char* muraviev::getline(std::istream& in, size_t& size)
   }
 
   char sym;
-  while (!(in >> sym).fail()) {
-    if (sym == '\n') {
-      break;
-    }
-
-    if (len + 1 >= buffer) {
-      size_t new_buffer = buffer * 2;
-      char* tmp_line = static_cast<char*>(malloc(sizeof(char) * new_buffer));
+  while (!(in >> sym).fail() && sym != '\n') {
+    if (size + 1 >= capacity) {
+      size_t new_capacity = capacity * 2;
+      char* tmp_line = reinterpret_cast<char*>(malloc(sizeof(char) * new_capacity));
 
       if (!tmp_line) {
         free(line);
-        size = 0;
+        foundSize = 0;
         if (is_skips) {
           in >> std::skipws;
         }
-        throw std::bad_alloc();
+        return nullptr;
       }
 
-      copyEls(tmp_line, line, len);
+      copyEls(tmp_line, line, size);
       free(line);
-      buffer = new_buffer;
+      capacity = new_capacity;
       line = tmp_line;
     }
 
-    line[len++] = sym;
+    line[size++] = sym;
   }
 
   if (is_skips) {
     in >> std::skipws;
   }
 
-  if (len == 0 && !in) {
+  if (size == 0 && !in) {
     free(line);
-    size = 0;
+    foundSize = 0;
     throw std::logic_error("Input failed");
   }
 
-  line[len] = 0;
-  size = len;
+  line[size] = '\0';
+  foundSize = size;
   return line;
 }
 
@@ -102,24 +98,24 @@ char* muraviev::intertwinedLine(char* tmp, const char* line1, const char* line2,
     }
   }
 
-  tmp[bigSize] = 0;
+  tmp[bigSize] = '\0';
   return tmp;
 }
 
-char* muraviev::digitsAddedLine(char* tmp, const char* add_to, const char* take_from,
-  size_t size_1, size_t size_2)
+char* muraviev::digitsAddedLine(char* result, const char* add_to, const char* take_from,
+  size_t size_1)
 {
-  copyEls(tmp, add_to, size_1);
+  copyEls(result, add_to, size_1);
   size_t resIndex = size_1;
 
-  for (size_t i = 0; i < size_2; ++i) {
+  for (size_t i = 0; take_from[i] != '\0'; ++i) {
     if (std::isdigit(take_from[i])) {
-      tmp[resIndex++] = take_from[i];
+      result[resIndex++] = take_from[i];
     }
   }
 
-  tmp[resIndex] = 0;
-  return tmp;
+  result[resIndex] = '\0';
+  return result;
 }
 
 int main()
@@ -129,9 +125,11 @@ int main()
 
   try {
     line1 = muraviev::getline(std::cin, size_1);
-  } catch (const std::bad_alloc& e) {
-    std::cerr << "Allocation error: " << e.what() << '\n';
-    return 1;
+
+    if (line1 == nullptr) {
+      std::cerr << "Allocation error." << '\n';
+      return 1;
+    }
   } catch (const std::logic_error& e) {
     std::cerr << "Logic error: " << e.what() << '\n';
     return 1;
@@ -139,28 +137,22 @@ int main()
 
   const char* line2 = "def ";
   size_t size_2 = std::strlen(line2);
-  char* inter_tmp = static_cast<char*>(malloc(sizeof(char) * (size_1 + size_2 + 1)));
+  char* inter_tmp = reinterpret_cast<char*>(malloc(sizeof(char) * (size_1 + size_2 + 1)));
 
   if (!inter_tmp) {
     std::cerr << "Allocation error\n";
     free(line1);
     return 1;
   }
+  inter_tmp[0] = '\0';
 
   char* intertwined = muraviev::intertwinedLine(inter_tmp, line1, line2, size_1, size_2);
   std::cout << intertwined << "\n";
 
   const char* line3 = "g1h2k";
   size_t size_3 = std::strlen(line3);
-  size_t digsFound = 0;
 
-  for (size_t i = 0; i < size_3; ++i) {
-    if (std::isdigit(line3[i])) {
-      ++digsFound;
-    }
-  }
-
-  char* withDigs_tmp = static_cast<char*>(malloc(sizeof(char) * (size_1 + digsFound + 1)));
+  char* withDigs_tmp = reinterpret_cast<char*>(malloc(sizeof(char) * (size_1 + size_3 + 1)));
 
   if (!withDigs_tmp) {
     std::cerr << "Allocation error\n";
@@ -168,8 +160,9 @@ int main()
     free(intertwined);
     return 1;
   }
+  withDigs_tmp[0] = '\0';
 
-  char* lineWithDigs = muraviev::digitsAddedLine(withDigs_tmp, line1, line3, size_1, size_3);
+  char* lineWithDigs = muraviev::digitsAddedLine(withDigs_tmp, line1, line3, size_1);
   std::cout << lineWithDigs << "\n";
 
   free(line1);
