@@ -230,7 +230,7 @@ int main() {
     std::cerr << "\nMemory allocation failed or nothing entered\n";
     if (words) {
       free(words);
-      return 1;
+      return 0;
     }
   }
   const char *defaultStr = "8default7";
