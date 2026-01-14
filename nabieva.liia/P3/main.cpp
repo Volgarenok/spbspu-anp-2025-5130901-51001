@@ -105,35 +105,35 @@ bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile,
     delete[] dynamicMatrix;
     return true;
   }
-  size_t top = 0;
-  size_t bottom = rows - 1;
-  size_t left = 0;
-  size_t right = cols - 1;
+  int top = 0;
+  int bottom = rows - 1;
+  int left = 0;
+  int right = cols - 1;
   int value = 1;
   while (top <= bottom && left <= right) {
     if (top <= bottom) {
-      for (size_t j = left; j <= right; j++) {
+      for (size_t j = left; j <= static_cast<size_t>(right); j++) {
         dynamicMatrix[bottom * cols + j] += value;
         value++;
       }
       bottom--;
     }
     if (left <= right) {
-      for (size_t i = bottom; i >= top; i--) {
+      for (size_t i = bottom; i >= static_cast<size_t>(top); i--) {
         dynamicMatrix[i * cols + right] += value;
         value++;
       }
       right--;
     }
     if (top <= bottom) {
-      for (size_t j = right; j >= left; j--) {
+      for (size_t j = right; j >= static_cast<size_t>(left); j--) {
         dynamicMatrix[top * cols + j] += value;
         value++;
       }
       top++;
     }
     if (left <= right) {
-      for (size_t i = top; i <= bottom; i++) {
+      for (size_t i = top; i <= static_cast<size_t>(bottom); i++) {
         dynamicMatrix[i * cols + left] += value;
         value++;
       }
