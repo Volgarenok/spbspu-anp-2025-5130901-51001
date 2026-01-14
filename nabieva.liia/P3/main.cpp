@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <climits>
 
 bool checkArgc(int argc)
 {
@@ -41,20 +42,11 @@ bool checkArgv(char* argv[])
   return true;
 }
 
-bool transformFixMatrix(std::ifstream& inputFile, std::ofstream& outputFile)
+bool transformFixMatrix(std::ifstream& inputFile, std::ofstream& outputFile, size_t rows, size_t cols)
 {
-  int rows = 0;
-  int cols = 0;
-  if (!(inputFile >> rows)) {
-    std::cerr << "Error rows";
-    return false;
-  }
-  if (!(inputFile >> cols)) {
-    std::cerr << "Error cols";
-    return false;
-  }
+  const int MAX_MATRIX_SIZE = 10000;
   int num;
-  int fixMatrix[rows * cols];
+  int fixMatrix[MAX_MATRIX_SIZE];
   size_t c = 0;
   while (inputFile >> num) {
     fixMatrix[c] = num;
@@ -73,14 +65,14 @@ bool transformFixMatrix(std::ifstream& inputFile, std::ofstream& outputFile)
     return true;
   }
 
-  int diagSum[rows + cols - 1] = {};
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
+  int diagSum[MAX_MATRIX_SIZE] = {};
+  for (size_t i = 0; i < rows; i++) {
+    for (size_t j = 0; j < cols; j++) {
       diagSum[i + j] += fixMatrix[i * cols + j];
     }
   }
   int minSum = diagSum[0];
-  for (int i = 0; i < rows + cols - 1; i++) {
+  for (size_t i = 0; i < rows + cols - 1; i++) {
     if (minSum > diagSum[i]) {
       minSum = diagSum[i];
     }
@@ -89,18 +81,8 @@ bool transformFixMatrix(std::ifstream& inputFile, std::ofstream& outputFile)
   return true;
 }
 
-bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile)
+bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile, size_t rows, size_t cols)
 {
-  int rows = 0;
-  int cols = 0;
-  if (!(inputFile >> rows)) {
-    std::cerr << "Error rows";
-    return false;
-  }
-  if (!(inputFile >> cols)) {
-    std::cerr << "Error cols";
-    return false;
-  }
   int num;
   int* dynamicMatrix = new int[rows * cols];
   size_t c = 0;
@@ -153,7 +135,7 @@ bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile)
     }
   }
   outputFile << rows << " " << cols << " ";
-  for (int i = 0; i < rows * cols - 1; i++) {
+  for (size_t i = 0; i < rows * cols - 1; i++) {
     outputFile << dynamicMatrix[i] << " ";
   }
   outputFile << dynamicMatrix[rows * cols - 1] << "\n";
@@ -175,13 +157,23 @@ int main(int argc, char* argv[])
     std::cerr << "Cannot open output file\n";
     return false;
   }
+  size_t rows = 0;
+  size_t cols = 0;
+  if (!(inputFile >> rows)) {
+    std::cerr << "Error rows";
+    return false;
+  }
+  if (!(inputFile >> cols)) {
+    std::cerr << "Error cols";
+    return false;
+  }
   if (std::stoi(argv[1]) == 1) {
-    if (!transformFixMatrix(inputFile, outputFile)) {
+    if (!transformFixMatrix(inputFile, outputFile, rows, cols)) {
       return 2;
     }
   }
   else if (std::stoi(argv[1]) == 2) {
-    if (!transformDynamicMatrix(inputFile, outputFile)) {
+    if (!transformDynamicMatrix(inputFile, outputFile, rows, cols)) {
       return 2;
     }
   }
