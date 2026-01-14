@@ -91,43 +91,49 @@ bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile,
     c++;
   }
   if (rows * cols != c) {
+    delete[] dynamicMatrix;
     std::cerr << "Incorrect number of parameters\n";
     return false;
   }
   if (inputFile.fail() && !inputFile.eof()) {
+    delete[] dynamicMatrix;
     std::cerr << "Error input\n";
     return false;
   }
-
-  int top = 0;
-  int bottom = rows - 1;
-  int left = 0;
-  int right = cols - 1;
+  if (rows == 0 || cols == 0) {
+    outputFile << rows << " " << cols << "\n";
+    delete[] dynamicMatrix;
+    return true;
+  }
+  size_t top = 0;
+  size_t bottom = rows - 1;
+  size_t left = 0;
+  size_t right = cols - 1;
   int value = 1;
   while (top <= bottom && left <= right) {
     if (top <= bottom) {
-      for (int j = left; j <= right; j++) {
+      for (size_t j = left; j <= right; j++) {
         dynamicMatrix[bottom * cols + j] += value;
         value++;
       }
       bottom--;
     }
     if (left <= right) {
-      for (int i = bottom; i >= top; i--) {
+      for (size_t i = bottom; i >= top; i--) {
         dynamicMatrix[i * cols + right] += value;
         value++;
       }
       right--;
     }
     if (top <= bottom) {
-      for (int j = right; j >= left; j--) {
+      for (size_t j = right; j >= left; j--) {
         dynamicMatrix[top * cols + j] += value;
         value++;
       }
       top++;
     }
     if (left <= right) {
-      for (int i = top; i <= bottom; i++) {
+      for (size_t i = top; i <= bottom; i++) {
         dynamicMatrix[i * cols + left] += value;
         value++;
       }
@@ -139,6 +145,7 @@ bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile,
     outputFile << dynamicMatrix[i] << " ";
   }
   outputFile << dynamicMatrix[rows * cols - 1] << "\n";
+  delete[] dynamicMatrix;
   return true;
 }
 
@@ -151,21 +158,21 @@ int main(int argc, char* argv[])
   std::ofstream outputFile(argv[3]);
   if (!inputFile.is_open()) {
     std::cerr << "Cannot open input file\n";
-    return false;
+    return 2;
   }
   if (!outputFile.is_open()) {
     std::cerr << "Cannot open output file\n";
-    return false;
+    return 2;
   }
   size_t rows = 0;
   size_t cols = 0;
   if (!(inputFile >> rows)) {
     std::cerr << "Error rows";
-    return false;
+    return 2;
   }
   if (!(inputFile >> cols)) {
     std::cerr << "Error cols";
-    return false;
+    return 2;
   }
   if (std::stoi(argv[1]) == 1) {
     if (!transformFixMatrix(inputFile, outputFile, rows, cols)) {
