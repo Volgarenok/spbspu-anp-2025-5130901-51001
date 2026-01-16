@@ -9,7 +9,6 @@ namespace karpenko
   {
     const size_t INITIAL_CAPACITY = 16;
     const double GROW_FACTOR = 1.5;
-    
     size_t capacity = INITIAL_CAPACITY;
     char* buffer = new char[capacity];
     size = 0;
@@ -35,7 +34,6 @@ namespace karpenko
           delete[] buffer;
           throw;
         }
-        
         std::memcpy(newBuffer, buffer, size);
         delete[] buffer;
         buffer = newBuffer;
