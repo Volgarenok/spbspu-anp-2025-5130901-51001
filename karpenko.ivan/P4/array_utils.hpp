@@ -1,0 +1,15 @@
+#ifndef ARRAY_UTILS_HPP
+#define ARRAY_UTILS_HPP
+
+#include <iostream>
+
+namespace karpenko
+{
+  bool isWordChar(char ch);
+  
+  char** readWords(std::istream& in, size_t& wordCount);
+  
+  void resizeCharArray(char*& array, size_t& capacity, size_t requiredSize);
+}
+
+#endif
