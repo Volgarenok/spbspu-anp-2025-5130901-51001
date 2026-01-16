@@ -1,11 +1,12 @@
 #include "string_reader.hpp"
 #include <iostream>
 #include <cstring>
+#include <cstddef>
 
 namespace karpenko
 {
-  char* readStringWithAmortization(std::istream& in, size_t& size,
-    bool (*checkChar)(char))
+  char* read_string_with_amortization(std::istream& in, size_t& size,
+    bool (*check_char)(char))
   {
     const size_t INITIAL_CAPACITY = 16;
     const double GROW_FACTOR = 1.5;
@@ -16,20 +17,20 @@ namespace karpenko
     size = 0;
     char c;
 
-    while (in.get(c) && checkChar(c))
+    while (in.get(c) && check_char(c))
     {
       if (size >= capacity - 1)
       {
-        size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
-        if (newCapacity <= capacity)
+        size_t new_capacity = static_cast< size_t >(capacity * GROW_FACTOR);
+        if (new_capacity <= capacity)
         {
-          newCapacity = capacity + 1;
+          new_capacity = capacity + 1;
         }
 
-        char* newBuffer = nullptr;
+        char* new_buffer = nullptr;
         try
         {
-          newBuffer = new char[newCapacity];
+          new_buffer = new char[new_capacity];
         }
         catch (const std::bad_alloc&)
         {
@@ -37,10 +38,10 @@ namespace karpenko
           throw;
         }
 
-        std::memcpy(newBuffer, buffer, size);
+        std::memcpy(new_buffer, buffer, size);
         delete[] buffer;
-        buffer = newBuffer;
-        capacity = newCapacity;
+        buffer = new_buffer;
+        capacity = new_capacity;
       }
 
       buffer[size++] = c;
