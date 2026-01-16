@@ -114,12 +114,12 @@ namespace karpenko
   {
     const double GROW_FACTOR = 1.5;
     size_t new_capacity = static_cast< size_t >(capacity * GROW_FACTOR);
-    
+
     if (new_capacity <= capacity)
     {
       new_capacity = capacity + 1;
     }
-    
+
     while (new_capacity < required_size)
     {
       new_capacity = static_cast< size_t >(new_capacity * GROW_FACTOR);
