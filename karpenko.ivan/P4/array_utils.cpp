@@ -42,7 +42,6 @@ namespace karpenko
         char* wordCopy = new char[wordSize + 1];
         std::memcpy(wordCopy, currentWord, wordSize);
         wordCopy[wordSize] = '\0';
-        
         words[wordCount] = wordCopy;
         wordCount++;
         inWord = false;
