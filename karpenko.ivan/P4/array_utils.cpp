@@ -1,152 +1,144 @@
 #include "array_utils.hpp"
 #include <iostream>
 #include <cstring>
-#include <cstddef>
-#include <stdexcept>
+#include <cstdlib>
 
 namespace karpenko
 {
-  bool isWordChar(char ch)
+  bool is_word_char(char ch)
   {
     return !std::isspace(static_cast< unsigned char >(ch));
   }
 
-  char** readWords(std::istream& in, size_t& wordCount)
+  char** read_words(std::istream& in, size_t& word_count)
   {
     const size_t MAX_WORDS = 100;
-    const size_t MAX_WORD_LEN = 256;
-    
-    char** words = nullptr;
-    try
-    {
-      words = new char*[MAX_WORDS];
-    }
-    catch (const std::bad_alloc&)
-    {
-      wordCount = 0;
-      throw;
-    }
-    
-    char wordBuffer[MAX_WORD_LEN];
-    wordCount = 0;
+    const size_t INITIAL_CAPACITY = 16;
+    const double GROW_FACTOR = 1.5;
+
+    char** words = new char*[MAX_WORDS];
+
+    word_count = 0;
     char c;
-    bool inWord = false;
-    size_t wordLen = 0;
-    
-    auto finishWord = [&]()
+    bool in_word = false;
+    size_t word_size = 0;
+    char* current_word = nullptr;
+
+    auto finish_word = [&]()
+    {
+      if (in_word && word_size > 0)
       {
-        if (inWord && wordLen > 0)
+        if (word_count >= MAX_WORDS)
         {
-          if (wordCount >= MAX_WORDS)
+          for (size_t i = 0; i < word_count; ++i)
           {
-            for (size_t i = 0; i < wordCount; ++i)
-            {
-              delete[] words[i];
-            }
-            delete[] words;
-            throw std::runtime_error("too many words");
+            delete[] words[i];
           }
-          
-          char* wordCopy = nullptr;
+          delete[] words;
+          std::cerr << "Error: too many words\n";
+          std::exit(1);
+        }
+        words[word_count] = current_word;
+        word_count++;
+        in_word = false;
+        word_size = 0;
+        current_word = nullptr;
+      }
+    };
+
+    while (in.get(c))
+    {
+      if (c == '\n')
+      {
+        finish_word();
+        break;
+      }
+
+      if (is_word_char(c))
+      {
+        if (!in_word)
+        {
+          in_word = true;
+          current_word = new char[INITIAL_CAPACITY];
+          word_size = 0;
+        }
+
+        if (word_size >= INITIAL_CAPACITY - 1)
+        {
+          size_t new_capacity = static_cast< size_t >(INITIAL_CAPACITY * GROW_FACTOR);
+          char* new_buffer = nullptr;
           try
           {
-            wordCopy = new char[wordLen + 1];
+            new_buffer = new char[new_capacity];
           }
           catch (const std::bad_alloc&)
           {
-            for (size_t i = 0; i < wordCount; ++i)
-            {
-              delete[] words[i];
-            }
-            delete[] words;
+            delete[] current_word;
             throw;
           }
-          
-          std::memcpy(wordCopy, wordBuffer, wordLen);
-          wordCopy[wordLen] = '\0';
-          words[wordCount] = wordCopy;
-          wordCount++;
-          inWord = false;
-          wordLen = 0;
+
+          std::memcpy(new_buffer, current_word, word_size);
+          delete[] current_word;
+          current_word = new_buffer;
         }
-      };
-    
-    try
-    {
-      while (in.get(c))
-      {
-        if (c == '\n')
-        {
-          finishWord();
-          break;
-        }
-        
-        if (isWordChar(c))
-        {
-          if (!inWord)
-          {
-            inWord = true;
-            wordLen = 0;
-          }
-          
-          if (wordLen >= MAX_WORD_LEN - 1)
-          {
-            for (size_t i = 0; i < wordCount; ++i)
-            {
-              delete[] words[i];
-            }
-            delete[] words;
-            throw std::runtime_error("word too long");
-          }
-          
-          wordBuffer[wordLen++] = c;
-        }
-        else
-        {
-          finishWord();
-        }
+
+        current_word[word_size++] = c;
+        current_word[word_size] = '\0';
       }
-      
-      finishWord();
-    }
-    catch (...)
-    {
-      for (size_t i = 0; i < wordCount; ++i)
+      else
       {
-        delete[] words[i];
+        finish_word();
       }
-      delete[] words;
-      wordCount = 0;
-      throw;
     }
-    
-    if (wordCount == 0)
+
+    finish_word();
+
+    if (word_count == 0)
     {
       delete[] words;
       return nullptr;
     }
-    
-    char** resizedWords = nullptr;
+
+    char** resized_words = new char*[word_count];
+    for (size_t i = 0; i < word_count; ++i)
+    {
+      resized_words[i] = words[i];
+    }
+    delete[] words;
+
+    return resized_words;
+  }
+
+  void resize_char_array(char*& array, size_t& capacity,
+    size_t required_size)
+  {
+    const double GROW_FACTOR = 1.5;
+    size_t new_capacity = static_cast< size_t >(capacity * GROW_FACTOR);
+
+    if (new_capacity <= capacity)
+    {
+      new_capacity = capacity + 1;
+    }
+
+    while (new_capacity < required_size)
+    {
+      new_capacity = static_cast< size_t >(new_capacity * GROW_FACTOR);
+    }
+
+    char* new_array = nullptr;
     try
     {
-      resizedWords = new char*[wordCount];
+      new_array = new char[new_capacity];
     }
     catch (const std::bad_alloc&)
     {
-      for (size_t i = 0; i < wordCount; ++i)
-      {
-        delete[] words[i];
-      }
-      delete[] words;
+      delete[] array;
       throw;
     }
-    
-    for (size_t i = 0; i < wordCount; ++i)
-    {
-      resizedWords[i] = words[i];
-    }
-    delete[] words;
-    
-    return resizedWords;
+
+    std::memcpy(new_array, array, capacity);
+    delete[] array;
+    array = new_array;
+    capacity = new_capacity;
   }
 }
