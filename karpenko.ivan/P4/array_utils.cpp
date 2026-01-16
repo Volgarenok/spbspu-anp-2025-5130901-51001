@@ -22,7 +22,7 @@ namespace karpenko
     bool inWord = false;
     size_t wordSize = 0;
     char* currentWord = new char[MAX_WORD_LENGTH];
-    
+
     auto finishWord = [&]()
     {
       if (inWord && wordSize > 0)
@@ -42,6 +42,7 @@ namespace karpenko
         char* wordCopy = new char[wordSize + 1];
         std::memcpy(wordCopy, currentWord, wordSize);
         wordCopy[wordSize] = '\0';
+
         words[wordCount] = wordCopy;
         wordCount++;
         inWord = false;
@@ -104,7 +105,8 @@ namespace karpenko
     return resizedWords;
   }
 
-  void resizeCharArray(char*& array, size_t& capacity, size_t requiredSize)
+  void resizeCharArray(char*& array, size_t& capacity,
+    size_t requiredSize)
   {
     const double GROW_FACTOR = 1.5;
     size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
