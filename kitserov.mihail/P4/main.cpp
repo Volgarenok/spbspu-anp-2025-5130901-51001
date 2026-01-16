@@ -7,10 +7,13 @@ namespace kitserov
   void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
   int hasSameChars(const char* str1, const char* str2);
-  
+
   char* getlineAmortized(std::istream& in, size_t& size, size_t& capacity);
-  char* getWord(std::istream& in, size_t& size)
+  char* getWord(std::istream& in, size_t& size);
+  int isLetter(int c);
   char** readWords(std::istream& in, size_t& wordCount, int (*checkChar)(int) = nullptr);
+  void freeWords(char** words, size_t count);
+
   const size_t alphabetSize = 26;
   const size_t initialCapacity = 8;
   const double expansion = 2;
@@ -70,13 +73,19 @@ void kitserov::removeLetters(const char* source, char* destination)
   destination[dstIndex] = '\0';
 }
 
+int kitserov::isLetter(int c)
+{
+  unsigned char uc = static_cast<unsigned char>(c);
+  return (uc >= 'A' && uc <= 'Z') || (uc >= 'a' && uc <= 'z');
+}
+
 char* kitserov::getline(std::istream& in, size_t& size, size_t capacity)
 {
   bool isSkipws = in.flags() & std::ios_base::skipws;
   if (isSkipws) {
     in >> std::noskipws;
   }
-  char* data = reinterpret_cast< char* >(malloc(2));
+  char* data = reinterpret_cast< char* >(malloc(capacity));
   if (!data) {
     return nullptr;
   }
@@ -147,6 +156,9 @@ char* kitserov::getWord(std::istream& in, size_t& size)
       data = temp;
       capacity = newCapacity;
     }
+    if (!in.fail() && letter != '\n') {
+      in.putback(letter);
+    }
     data[size] = letter;
     size++;
     in >> letter;
@@ -170,21 +182,68 @@ char** kitserov::readWords(std::istream& in, size_t& wordCount, int (*checkChar)
   }
   size_t wordsCapacity = initialWordsCapacity;
   wordCount = 0;
-  bool wasSkipws = std::ios::fmtflags & std::ios_base::skipws;
+  std::ios::fmtflags originalFlags = in.flags();
+  bool wasSkipws = (originalFlags & std::ios_base::skipws) != 0;
   if (!wasSkipws) {
       in >> std::skipws;
   }
+  checkChar = isLetter;
   while (true) {
     size_t wordSize = 0;
-    char* word = kitserov::getWord(in, wordSize);)
+    char* word = kitserov::getWord(in, wordSize);
     if (!word || wordSize == 0) {
       if (word) {
       	free(word);
       }
       break;
     }
-    
+    bool validWord = true;
+    for (size_t i = 0; i < wordSize; ++i) {
+      unsigned char c = static_cast< unsigned char >(word[i]);
+      if (checkChar(c) == 0) {
+        validWord = false;
+        break;
+      }
+    }
+    if (validWord) {
+      if (wordCount >= wordsCapacity) {
+        size_t newCapacity = wordsCapacity * 2;
+        char** temp = reinterpret_cast< char** >(realloc(words, newCapacity * sizeof(char*)));
+        if (!temp) {
+          free(word);
+          break;
+        }
+        words = temp;
+        wordsCapacity = newCapacity;
+      }
+      words[wordCount] = word;
+      wordCount++;
+    } else {
+      free(word);
+    }
+    char nextChar;
+    if (!(in >> nextChar)) {
+      break;
+    }
+    if (nextChar == '\n') {
+      in.putback(nextChar);
+      break;
+    } else if (nextChar == ' ' || nextChar == '\t') {
+      continue;
+    }
+    in.putback(nextChar);
+    break;
   }
+  
+  if (!wasSkipws) {
+    in >> std::noskipws;
+  }
+  
+  if (wordCount == 0) {
+    free(words);
+    return nullptr;
+  }
+  return words;
 }
 
 void kitserov::freeWords(char** words, size_t count)
