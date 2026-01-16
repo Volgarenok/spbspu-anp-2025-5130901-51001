@@ -5,12 +5,12 @@
 
 namespace karpenko
 {
-  bool isWordChar(char ch)
+  bool is_word_char(char ch)
   {
     return !std::isspace(static_cast< unsigned char >(ch));
   }
 
-  char** readWords(std::istream& in, size_t& wordCount)
+  char** read_words(std::istream& in, size_t& word_count)
   {
     const size_t MAX_WORDS = 100;
     const size_t INITIAL_CAPACITY = 16;
@@ -18,19 +18,19 @@ namespace karpenko
 
     char** words = new char*[MAX_WORDS];
 
-    wordCount = 0;
+    word_count = 0;
     char c;
-    bool inWord = false;
-    size_t wordSize = 0;
-    char* currentWord = nullptr;
+    bool in_word = false;
+    size_t word_size = 0;
+    char* current_word = nullptr;
 
-    auto finishWord = [&]()
+    auto finish_word = [&]()
     {
-      if (inWord && wordSize > 0)
+      if (in_word && word_size > 0)
       {
-        if (wordCount >= MAX_WORDS)
+        if (word_count >= MAX_WORDS)
         {
-          for (size_t i = 0; i < wordCount; ++i)
+          for (size_t i = 0; i < word_count; ++i)
           {
             delete[] words[i];
           }
@@ -38,11 +38,11 @@ namespace karpenko
           std::cerr << "Error: too many words\n";
           std::exit(1);
         }
-        words[wordCount] = currentWord;
-        wordCount++;
-        inWord = false;
-        wordSize = 0;
-        currentWord = nullptr;
+        words[word_count] = current_word;
+        word_count++;
+        in_word = false;
+        word_size = 0;
+        current_word = nullptr;
       }
     };
 
@@ -50,84 +50,85 @@ namespace karpenko
     {
       if (c == '\n')
       {
-        finishWord();
+        finish_word();
         break;
       }
 
-      if (isWordChar(c))
+      if (is_word_char(c))
       {
-        if (!inWord)
+        if (!in_word)
         {
-          inWord = true;
-          currentWord = new char[INITIAL_CAPACITY];
-          wordSize = 0;
+          in_word = true;
+          current_word = new char[INITIAL_CAPACITY];
+          word_size = 0;
         }
 
-        if (wordSize >= INITIAL_CAPACITY - 1)
+        if (word_size >= INITIAL_CAPACITY - 1)
         {
-          size_t newCapacity = static_cast< size_t >(INITIAL_CAPACITY * GROW_FACTOR);
-          char* newBuffer = nullptr;
+          size_t new_capacity = static_cast< size_t >(INITIAL_CAPACITY * GROW_FACTOR);
+          char* new_buffer = nullptr;
           try
           {
-            newBuffer = new char[newCapacity];
+            new_buffer = new char[new_capacity];
           }
           catch (const std::bad_alloc&)
           {
-            delete[] currentWord;
+            delete[] current_word;
             throw;
           }
 
-          std::memcpy(newBuffer, currentWord, wordSize);
-          delete[] currentWord;
-          currentWord = newBuffer;
+          std::memcpy(new_buffer, current_word, word_size);
+          delete[] current_word;
+          current_word = new_buffer;
         }
 
-        currentWord[wordSize++] = c;
-        currentWord[wordSize] = '\0';
+        current_word[word_size++] = c;
+        current_word[word_size] = '\0';
       }
       else
       {
-        finishWord();
+        finish_word();
       }
     }
 
-    finishWord();
+    finish_word();
 
-    if (wordCount == 0)
+    if (word_count == 0)
     {
       delete[] words;
       return nullptr;
     }
 
-    char** resizedWords = new char*[wordCount];
-    for (size_t i = 0; i < wordCount; ++i)
+    char** resized_words = new char*[word_count];
+    for (size_t i = 0; i < word_count; ++i)
     {
-      resizedWords[i] = words[i];
+      resized_words[i] = words[i];
     }
     delete[] words;
 
-    return resizedWords;
+    return resized_words;
   }
 
-  void resizeCharArray(char*& array, size_t& capacity, size_t requiredSize)
+  void resize_char_array(char*& array, size_t& capacity,
+    size_t required_size)
   {
     const double GROW_FACTOR = 1.5;
-    size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
+    size_t new_capacity = static_cast< size_t >(capacity * GROW_FACTOR);
     
-    if (newCapacity <= capacity)
+    if (new_capacity <= capacity)
     {
-      newCapacity = capacity + 1;
+      new_capacity = capacity + 1;
     }
     
-    while (newCapacity < requiredSize)
+    while (new_capacity < required_size)
     {
-      newCapacity = static_cast< size_t >(newCapacity * GROW_FACTOR);
+      new_capacity = static_cast< size_t >(new_capacity * GROW_FACTOR);
     }
 
-    char* newArray = nullptr;
+    char* new_array = nullptr;
     try
     {
-      newArray = new char[newCapacity];
+      new_array = new char[new_capacity];
     }
     catch (const std::bad_alloc&)
     {
@@ -135,9 +136,9 @@ namespace karpenko
       throw;
     }
 
-    std::memcpy(newArray, array, capacity);
+    std::memcpy(new_array, array, capacity);
     delete[] array;
-    array = newArray;
-    capacity = newCapacity;
+    array = new_array;
+    capacity = new_capacity;
   }
 }
