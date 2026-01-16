@@ -6,8 +6,59 @@ namespace karpenko
 {
   const size_t ALPHABET_SIZE = 26;
   const size_t ALPHABET_RESULT_SIZE = 27;
+  const size_t INITIAL_CAPACITY = 16;
+  const double GROW_FACTOR = 1.5;
 
-  void uniTwo(const char* str1, size_t len1, const char* str2, size_t len2, char* result, size_t resultSize)
+  bool isWordChar(char ch)
+  {
+    return !std::isspace(static_cast< unsigned char >(ch));
+  }
+
+  char* readStringWithAmortization(std::istream& in, size_t& size,
+    bool (*checkChar)(char))
+  {
+    size_t capacity = INITIAL_CAPACITY;
+    char* buffer = new char[capacity];
+
+    size = 0;
+    char c;
+
+    while (in.get(c) && checkChar(c))
+    {
+      if (size >= capacity - 1)
+      {
+        size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
+        if (newCapacity <= capacity)
+        {
+          newCapacity = capacity + 1;
+        }
+
+        char* newBuffer = nullptr;
+        try
+        {
+          newBuffer = new char[newCapacity];
+        }
+        catch (const std::bad_alloc&)
+        {
+          delete[] buffer;
+          throw;
+        }
+
+        std::memcpy(newBuffer, buffer, size);
+        delete[] buffer;
+        buffer = newBuffer;
+        capacity = newCapacity;
+      }
+
+      buffer[size++] = c;
+    }
+
+    buffer[size] = '\0';
+    return buffer;
+  }
+
+  void uniTwo(const char* str1, size_t len1, const char* str2, size_t len2,
+    char* result, size_t resultSize)
   {
     if (result == nullptr || resultSize == 0)
     {
@@ -75,65 +126,27 @@ namespace karpenko
     }
     result[resultIndex] = '\0';
   }
-
-  char* myGetline(std::istream& in, size_t& size)
-  {
-    const size_t INITIAL_CAPACITY = 16;
-    const size_t GROW_FACTOR = 2;
-
-    size_t capacity = INITIAL_CAPACITY;
-    char* buffer = new char[capacity];
-
-    size = 0;
-    char c;
-
-    while (in.get(c) && c != '\n')
-    {
-      if (size >= capacity - 1)
-      {
-        size_t newCapacity = capacity * GROW_FACTOR;
-        char* newBuffer = nullptr;
-
-        try
-        {
-          newBuffer = new char[newCapacity];
-        }
-        catch (const std::bad_alloc&)
-        {
-          delete[] buffer;
-          throw;
-        }
-        std::memcpy(newBuffer, buffer, size);
-        delete[] buffer;
-        buffer = newBuffer;
-        capacity = newCapacity;
-      }
-
-      buffer[size++] = c;
-    }
-
-    buffer[size] = '\0';
-    return buffer;
-  }
 }
 
 int main()
 {
-  if (std::cin.peek() == EOF)
+  size_t line1Length = 0;
+  char* line1 = nullptr;
+
+  try
   {
-    std::cerr << "Error: no input provided\n";
+    line1 = karpenko::readStringWithAmortization(std::cin,
+      line1Length, karpenko::isWordChar);
+  }
+  catch (const std::bad_alloc&)
+  {
+    std::cerr << "Error: cannot allocate memory for input\n";
     return 1;
   }
 
-  size_t line1Length = 0;
-  char* line1 = karpenko::myGetline(std::cin, line1Length);
-
-  if (!line1 || (line1Length == 0 && line1[0] == '\0'))
+  if (line1Length == 0 || line1[0] == '\0')
   {
-    if (line1)
-    {
-      delete[] line1;
-    }
+    delete[] line1;
     std::cerr << "Error: empty input\n";
     return 1;
   }
@@ -141,21 +154,19 @@ int main()
   const char line2[] = "def_";
   const size_t line2Length = sizeof(line2) - 1;
 
-  const size_t result1Size = line1Length + line2Length;
+  const size_t result1Size = line1Length + line2Length + 1;
 
   char* result1 = nullptr;
   char* result2 = nullptr;
 
   try
   {
-    result1 = new char[result1Size + 1];
-    result1[result1Size] = '\0';
-
-    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1, result1Size + 1);
-    std::cout << result1 << '\n';
-
+    result1 = new char[result1Size];
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
-    result2[karpenko::ALPHABET_RESULT_SIZE - 1] = '\0';
+
+    karpenko::uniTwo(line1, line1Length, line2, line2Length,
+      result1, result1Size);
+    std::cout << result1 << '\n';
 
     karpenko::shrSym(line1, result2);
     std::cout << result2 << '\n';
@@ -169,7 +180,7 @@ int main()
     delete[] line1;
     delete[] result1;
     delete[] result2;
-    std::cerr << "Error: cannot allocate memory for result\n";
+    std::cerr << "Error: cannot allocate memory for results\n";
     return 1;
   }
 
