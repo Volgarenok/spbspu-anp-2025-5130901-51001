@@ -23,7 +23,6 @@ namespace karpenko
         {
           newCapacity = capacity + 1;
         }
-        
         char* newBuffer = nullptr;
         try
         {
@@ -39,10 +38,8 @@ namespace karpenko
         buffer = newBuffer;
         capacity = newCapacity;
       }
-      
       buffer[size++] = c;
     }
-    
     buffer[size] = '\0';
     return buffer;
   }
