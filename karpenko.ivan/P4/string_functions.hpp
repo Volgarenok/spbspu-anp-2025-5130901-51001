@@ -1,6 +1,8 @@
 #ifndef STRING_FUNCTIONS_HPP
 #define STRING_FUNCTIONS_HPP
 
+#include <iostream>
+#include <cstddef>
 namespace karpenko
 {
   extern const size_t ALPHABET_SIZE;

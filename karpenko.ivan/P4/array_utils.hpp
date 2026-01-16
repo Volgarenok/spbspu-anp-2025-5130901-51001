@@ -2,7 +2,7 @@
 #define ARRAY_UTILS_HPP
 
 #include <iostream>
-
+#include <cstddef>
 namespace karpenko
 {
   bool is_word_char(char ch);
