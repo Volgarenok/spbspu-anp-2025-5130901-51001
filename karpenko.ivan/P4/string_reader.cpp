@@ -5,8 +5,7 @@
 
 namespace karpenko
 {
-  char* readStringWithAmortization(std::istream& in, size_t& size,
-    bool (*checkChar)(char))
+  char* readStringWithAmortization(std::istream& in, size_t& size, bool (*checkChar)(char))
   {
     const size_t INITIAL_CAPACITY = 16;
     const double GROW_FACTOR = 1.5;
