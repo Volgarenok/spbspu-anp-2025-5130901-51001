@@ -6,8 +6,13 @@ namespace kitserov
   char* getline(std::istream& in, size_t& size);
   void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
-  const size_t alphabetSize = 26;
   int hasSameChars(const char* str1, const char* str2);
+  
+  char* getlineAmortized(std::istream& in, size_t& size, size_t& capacity);
+  char** readWords(std::istream& in, size_t& wordCount, int (*checkChar)(int) = nullptr);
+  const size_t alphabetSize = 26;
+  const size_t initial_capacity = 8;
+  const double expansion = 2;
 }
 
 int kitserov::hasSameChars(const char* str1, const char* str2)
@@ -74,15 +79,17 @@ char* kitserov::getline(std::istream& in, size_t& size)
   if (!data) {
     return nullptr;
   }
-  size_t capacity = 1;
+  size_t capacity = initial_capacity;
   char letter;
   size = 0;
   in >> letter;
   while (!(in.fail()) && letter != '\n') {
-    if (size == capacity) {
-      char* temp = reinterpret_cast< char* >(malloc(capacity * 2 + 1));
+    if (size + 1 >= capacity) {
+      size_t new_capacity = static_cast< size_t >(capacity * expansion + 1);
+      char* temp = reinterpret_cast< char* >(malloc(new_capacity));
       if (!temp) {
         free(data);
+        size = 0;
         if (isSkipws) {
           in >> std::skipws;
         }
@@ -91,9 +98,9 @@ char* kitserov::getline(std::istream& in, size_t& size)
       for (size_t j = 0; j < capacity; j++) {
         temp[j] = data[j];
       }
-      capacity *= 2;
       free(data);
       data = temp;
+      capacity = new_capacity;
     }
     data[size] = letter;
     size++;
@@ -106,6 +113,8 @@ char* kitserov::getline(std::istream& in, size_t& size)
   }
   return data;
 }
+
+
 
 int main()
 {
