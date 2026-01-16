@@ -30,8 +30,7 @@ void kitserov::missLetters(const char* source, char* destination)
 {
   size_t dstIndex = 0;
   const char* alphavit = "abcdefghijklmnopqrstuvwxyz";
-  const size_t alphavitSize = alphabetSize;
-  for (size_t j = 0; j < alphavitSize; ++j) {
+  for (size_t j = 0; alphavit[j] != '\0'; ++j) {
     unsigned char alphavitChar = static_cast< unsigned char >(alphavit[j]);
     bool charInData = false;
     size_t i = 0;
