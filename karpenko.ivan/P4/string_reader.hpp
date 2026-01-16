@@ -6,8 +6,7 @@
 
 namespace karpenko
 {
-  char* readStringWithAmortization(std::istream& in, size_t& size,
-    bool (*checkChar)(char));
+  char* readStringWithAmortization(std::istream& in, size_t& size, bool (*checkChar)(char));
 }
 
 #endif
