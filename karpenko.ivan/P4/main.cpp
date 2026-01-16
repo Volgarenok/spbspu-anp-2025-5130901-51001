@@ -3,16 +3,17 @@
 #include "string_functions.hpp"
 #include <iostream>
 #include <cstring>
+#include <cstddef>
 
 int main()
 {
-  size_t line1Length = 0;
+  size_t line1_length = 0;
   char* line1 = nullptr;
 
   try
   {
-    line1 = karpenko::readStringWithAmortization(std::cin,
-      line1Length, karpenko::isWordChar);
+    line1 = karpenko::read_string_with_amortization(std::cin,
+      line1_length, karpenko::is_word_char);
   }
   catch (const std::bad_alloc&)
   {
@@ -20,7 +21,7 @@ int main()
     return 1;
   }
 
-  if (line1Length == 0 || line1[0] == '\0')
+  if (line1_length == 0 || line1[0] == '\0')
   {
     delete[] line1;
     std::cerr << "Error: empty input\n";
@@ -28,44 +29,44 @@ int main()
   }
 
   const char line2[] = "def_";
-  const size_t line2Length = sizeof(line2) - 1;
+  const size_t line2_length = sizeof(line2) - 1;
 
-  const size_t result1Size = line1Length + line2Length + 1;
+  const size_t result1_size = line1_length + line2_length + 1;
 
   char* result1 = nullptr;
   char* result2 = nullptr;
 
   try
   {
-    result1 = new char[result1Size];
+    result1 = new char[result1_size];
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
 
-    karpenko::uniTwo(line1, line1Length, line2, line2Length,
-      result1, result1Size);
+    karpenko::uni_two(line1, line1_length, line2, line2_length,
+      result1, result1_size);
     std::cout << result1 << '\n';
 
-    karpenko::shrSym(line1, result2);
+    karpenko::shr_sym(line1, result2);
     std::cout << result2 << '\n';
 
-    size_t wordCount = 0;
+    size_t word_count = 0;
     std::cin.clear();
     std::cin.seekg(0);
 
-    char** words = karpenko::readWords(std::cin, wordCount);
+    char** words = karpenko::read_words(std::cin, word_count);
 
     if (words != nullptr)
     {
-      for (size_t i = 0; i < wordCount; ++i)
+      for (size_t i = 0; i < word_count; ++i)
       {
-        karpenko::uniTwo(words[i], std::strlen(words[i]), line2,
-          line2Length, result1, result1Size);
+        karpenko::uni_two(words[i], std::strlen(words[i]), line2,
+          line2_length, result1, result1_size);
         std::cout << result1 << '\n';
 
-        karpenko::shrSym(words[i], result2);
+        karpenko::shr_sym(words[i], result2);
         std::cout << result2 << '\n';
       }
 
-      for (size_t i = 0; i < wordCount; ++i)
+      for (size_t i = 0; i < word_count; ++i)
       {
         delete[] words[i];
       }
