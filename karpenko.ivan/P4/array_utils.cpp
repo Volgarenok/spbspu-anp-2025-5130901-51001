@@ -13,8 +13,7 @@ namespace karpenko
   char** readWords(std::istream& in, size_t& wordCount)
   {
     const size_t MAX_WORDS = 100;
-    const size_t INITIAL_CAPACITY = 16;
-    const double GROW_FACTOR = 1.5;
+    const size_t MAX_WORD_LENGTH = 256;
 
     char** words = new char*[MAX_WORDS];
 
@@ -22,14 +21,15 @@ namespace karpenko
     char c;
     bool inWord = false;
     size_t wordSize = 0;
-    char* currentWord = nullptr;
-
+    char* currentWord = new char[MAX_WORD_LENGTH];
+    
     auto finishWord = [&]()
     {
       if (inWord && wordSize > 0)
       {
         if (wordCount >= MAX_WORDS)
         {
+          delete[] currentWord;
           for (size_t i = 0; i < wordCount; ++i)
           {
             delete[] words[i];
@@ -38,11 +38,15 @@ namespace karpenko
           std::cerr << "Error: too many words\n";
           std::exit(1);
         }
-        words[wordCount] = currentWord;
+
+        char* wordCopy = new char[wordSize + 1];
+        std::memcpy(wordCopy, currentWord, wordSize);
+        wordCopy[wordSize] = '\0';
+        
+        words[wordCount] = wordCopy;
         wordCount++;
         inWord = false;
         wordSize = 0;
-        currentWord = nullptr;
       }
     };
 
@@ -59,31 +63,22 @@ namespace karpenko
         if (!inWord)
         {
           inWord = true;
-          currentWord = new char[INITIAL_CAPACITY];
           wordSize = 0;
         }
 
-        if (wordSize >= INITIAL_CAPACITY - 1)
+        if (wordSize >= MAX_WORD_LENGTH - 1)
         {
-          size_t newCapacity = static_cast< size_t >(INITIAL_CAPACITY * GROW_FACTOR);
-          char* newBuffer = nullptr;
-          try
-          {
-            newBuffer = new char[newCapacity];
-          }
-          catch (const std::bad_alloc&)
-          {
-            delete[] currentWord;
-            throw;
-          }
-
-          std::memcpy(newBuffer, currentWord, wordSize);
           delete[] currentWord;
-          currentWord = newBuffer;
+          for (size_t i = 0; i < wordCount; ++i)
+          {
+            delete[] words[i];
+          }
+          delete[] words;
+          std::cerr << "Error: word too long\n";
+          std::exit(1);
         }
 
         currentWord[wordSize++] = c;
-        currentWord[wordSize] = '\0';
       }
       else
       {
@@ -92,6 +87,7 @@ namespace karpenko
     }
 
     finishWord();
+    delete[] currentWord;
 
     if (wordCount == 0)
     {
