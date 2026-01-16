@@ -170,8 +170,34 @@ char** kitserov::readWords(std::istream& in, size_t& wordCount, int (*checkChar)
   }
   size_t wordsCapacity = initialWordsCapacity;
   wordCount = 0;
-  
+  bool wasSkipws = std::ios::fmtflags & std::ios_base::skipws;
+  if (!wasSkipws) {
+      in >> std::skipws;
+  }
+  while (true) {
+    size_t wordSize = 0;
+    char* word = kitserov::getWord(in, wordSize);)
+    if (!word || wordSize == 0) {
+      if (word) {
+      	free(word);
+      }
+      break;
+    }
+    
+  }
 }
+
+void kitserov::freeWords(char** words, size_t count)
+{
+  if (!words) {
+  	return;
+  }
+  for (size_t i = 0; i < count; ++i) {
+    free(words[i]);
+  }
+  free(words);
+}
+
 
 int main()
 {
