@@ -104,8 +104,7 @@ namespace karpenko
     return resizedWords;
   }
 
-  void resizeCharArray(char*& array, size_t& capacity,
-    size_t requiredSize)
+  void resizeCharArray(char*& array, size_t& capacity, size_t requiredSize)
   {
     const double GROW_FACTOR = 1.5;
     size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
