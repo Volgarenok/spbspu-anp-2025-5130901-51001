@@ -173,7 +173,6 @@ char* kitserov::getWord(std::istream& in, size_t& size)
     in >> std::skipws;
   }
   return data;
-
 }
 
 char** kitserov::readWords(std::istream& in, size_t& wordCount, int (*checkChar)(int))
@@ -251,14 +250,13 @@ char** kitserov::readWords(std::istream& in, size_t& wordCount, int (*checkChar)
 void kitserov::freeWords(char** words, size_t count)
 {
   if (!words) {
-  	return;
+    return;
   }
   for (size_t i = 0; i < count; ++i) {
     free(words[i]);
   }
   free(words);
 }
-
 
 int main()
 {
