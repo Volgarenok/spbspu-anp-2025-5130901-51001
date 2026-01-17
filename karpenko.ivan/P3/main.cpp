@@ -270,14 +270,8 @@ int main(int argc, char *argv[])
     {
       delete[] inputMatrix;
     }
-    if (spiralMatrix)
-    {
-      delete[] spiralMatrix;
-    }
-    if (smoothedMatrix)
-    {
-      delete[] smoothedMatrix;
-    }
+    delete[] spiralMatrix;
+    delete[] smoothedMatrix;
     return 2;
   }
 
@@ -289,14 +283,9 @@ int main(int argc, char *argv[])
   karpenko::transformMatrixSpiral(rows, cols, spiralMatrix);
   karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
 
-  if (num == 1)
-  {
-    karpenko::writeMatrix(outputStream, spiralMatrix, rows, cols);
-  }
-  else
-  {
-    karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
-  }
+  karpenko::writeMatrix(outputStream, spiralMatrix, rows, cols);
+  outputStream << "\n";
+  karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
 
   if (!outputStream)
   {
@@ -317,7 +306,7 @@ int main(int argc, char *argv[])
   delete[] spiralMatrix;
   delete[] smoothedMatrix;
 
-  std::cout << (num == 1 ? "Spiral transformation completed successfully" : "Matrix smoothing completed successfully") << "\n";
+  std::cout << "Both matrix operations completed successfully\n";
 
   return 0;
 }
