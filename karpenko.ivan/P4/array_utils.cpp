@@ -1,4 +1,5 @@
 #include "array_utils.hpp"
+#include "string_reader.hpp"
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -8,84 +9,78 @@ bool karpenko::isWordChar(char ch)
   return !std::isspace(static_cast< unsigned char >(ch));
 }
 
+bool karpenko::isSpaceChar(char ch)
+{
+  return std::isspace(static_cast< unsigned char >(ch));
+}
+
 char** karpenko::readWords(std::istream& in, size_t& wordCount)
 {
-  const size_t MAX_WORDS = 100;
-  const size_t MAX_WORD_LENGTH = 256;
+  const size_t INITIAL_CAPACITY = 16;
+  const double GROW_FACTOR = 1.5;
 
-  char** words = new char*[MAX_WORDS];
-
+  size_t capacity = INITIAL_CAPACITY;
+  char** words = new char*[capacity];
   wordCount = 0;
-  char c;
-  bool inWord = false;
-  size_t wordSize = 0;
-  char* currentWord = new char[MAX_WORD_LENGTH];
 
-  auto finishWord = [&]()
+  size_t lineLength = 0;
+  char* line = readStringWithAmortization(in, lineLength, isWordChar);
+  
+  if (line == nullptr || lineLength == 0)
   {
-    if (inWord && wordSize > 0)
+    delete[] words;
+    return nullptr;
+  }
+
+  size_t pos = 0;
+  while (pos < lineLength)
+  {
+    while (pos < lineLength && isSpaceChar(line[pos]))
     {
-      if (wordCount >= MAX_WORDS)
-      {
-        delete[] currentWord;
-        for (size_t i = 0; i < wordCount; ++i)
-        {
-          delete[] words[i];
-        }
-        delete[] words;
-        std::cerr << "Error: too many words\n";
-        std::exit(1);
-      }
-
-      char* wordCopy = new char[wordSize + 1];
-      std::memcpy(wordCopy, currentWord, wordSize);
-      wordCopy[wordSize] = '\0';
-
-      words[wordCount] = wordCopy;
-      wordCount++;
-      inWord = false;ё
-      wordSize = 0;
+      pos++;
     }
-  };
 
-  while (in.get(c))
-  {
-    if (c == '\n')
+    if (pos >= lineLength)
     {
-      finishWord();
       break;
     }
 
-    if (isWordChar(c))
-    {
-      if (!inWord)
-      {
-        inWord = true;
-        wordSize = 0;
-      }
+    size_t wordStart = pos;
 
-      if (wordSize >= MAX_WORD_LENGTH - 1)
+    while (pos < lineLength && !isSpaceChar(line[pos]))
+    {
+      pos++;
+    }
+    
+    size_t wordLength = pos - wordStart;
+    
+    if (wordLength > 0)
+    {
+      char* word = new char[wordLength + 1];
+      std::memcpy(word, line + wordStart, wordLength);
+      word[wordLength] = '\0';
+
+      if (wordCount >= capacity)
       {
-        delete[] currentWord;
+        size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
+        char** newWords = new char*[newCapacity];
+        
         for (size_t i = 0; i < wordCount; ++i)
         {
-          delete[] words[i];
+          newWords[i] = words[i];
         }
+        
         delete[] words;
-        std::cerr << "Error: word too long\n";
-        std::exit(1);
+        words = newWords;
+        capacity = newCapacity;
       }
-
-      currentWord[wordSize++] = c;
-    }
-    else
-    {
-      finishWord();
+      
+      words[wordCount] = word;
+      wordCount++;
     }
   }
 
-  finishWord();
-  delete[] currentWord;
+  delete[] line;
 
   if (wordCount == 0)
   {
