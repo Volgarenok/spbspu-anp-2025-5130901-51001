@@ -18,31 +18,20 @@ void karpenko::uniTwo(const char* str1, size_t len1, const char* str2, size_t le
 
   for (size_t i = 0; i < maxLen; ++i)
   {
-    if (i < len1 && resultIndex < resultSize - 1)
+    if (i < len1)
     {
       result[resultIndex++] = str1[i];
     }
-    if (i < len2 && resultIndex < resultSize - 1)
+    if (i < len2)
     {
       result[resultIndex++] = str2[i];
     }
   }
 
-  if (len1 > len2)
+  if (resultIndex >= resultSize)
   {
-    for (size_t i = len2; i < len1 && resultIndex < resultSize - 1; ++i)
-    {
-      result[resultIndex++] = str1[i];
-    }
+    resultIndex = resultSize - 1;
   }
-  else if (len2 > len1)
-  {
-    for (size_t i = len1; i < len2 && resultIndex < resultSize - 1; ++i)
-    {
-      result[resultIndex++] = str2[i];
-    }
-  }
-
   result[resultIndex] = '\0';
 }
 
