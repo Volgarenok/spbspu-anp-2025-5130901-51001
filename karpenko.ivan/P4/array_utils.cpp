@@ -29,6 +29,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   if (line == nullptr || lineLength == 0)
   {
     delete[] words;
+    delete[] line;
     return nullptr;
   }
 
