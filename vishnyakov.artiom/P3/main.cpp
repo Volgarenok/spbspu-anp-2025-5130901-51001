@@ -70,7 +70,7 @@ int vishnyakov::biggiestDiagonal(const int *matrix, size_t row, size_t column)
   {
     sum = matrix[i];
     k = i + column + 1;
-    while (k % column !=0 && k < row * column)
+    while (k % column != 0 && k < row * column)
     {
       sum += matrix[k];
       k += column + 1;
@@ -84,7 +84,7 @@ int vishnyakov::biggiestDiagonal(const int *matrix, size_t row, size_t column)
   {
     sum = matrix[j];
     k = j + column + 1;
-    while (k % column !=0 && k < row * column)
+    while (k % column != 0 && k < row * column)
     {
       sum += matrix[k];
       k += column + 1;
