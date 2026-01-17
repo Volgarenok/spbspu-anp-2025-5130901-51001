@@ -130,7 +130,6 @@ int main(int argc, char *argv[])
   karpenko::transformMatrixSpiral(rows, cols, spiralMatrix);
   karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
 
-  // Выводим оба результата
   karpenko::writeMatrix(outputStream, spiralMatrix, rows, cols);
   outputStream << "\n";
   karpenko::writeMatrix(outputStream, smoothedMatrix, rows, cols);
