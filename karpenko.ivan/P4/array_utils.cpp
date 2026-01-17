@@ -23,61 +23,44 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   char** words = new char*[capacity];
   wordCount = 0;
 
-  size_t lineLength = 0;
-  char* line = karpenko::readStringWithAmortization(in, lineLength, karpenko::isWordChar);
-
-  if (line == nullptr || lineLength == 0)
+  while (true)
   {
-    delete[] words;
-    delete[] line;
-    return nullptr;
-  }
+    char c;
+    while (in.get(c) && isSpaceChar(c))
+    {}
 
-  size_t pos = 0;
-  while (pos < lineLength)
-  {
-    while (pos < lineLength && karpenko::isSpaceChar(line[pos]))
-    {
-      pos++;
-    }
-
-    if (pos >= lineLength)
+    if (!in)
     {
       break;
     }
 
-    size_t wordStart = pos;
+    in.putback(c);
 
-    while (pos < lineLength && !karpenko::isSpaceChar(line[pos]))
+    size_t wordLength = 0;
+    char* word = readStringWithAmortization(in, wordLength, isWordChar);
+    
+    if (word == nullptr || wordLength == 0)
     {
-      pos++;
+      delete[] word;
+      break;
     }
-    size_t wordLength = pos - wordStart;
 
-    if (wordLength > 0)
+    if (wordCount >= capacity)
     {
-      char* word = new char[wordLength + 1];
-      std::memcpy(word, line + wordStart, wordLength);
-      word[wordLength] = '\0';
-
-      if (wordCount >= capacity)
+      size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
+      char** newWords = new char*[newCapacity];
+      for (size_t i = 0; i < wordCount; ++i)
       {
-        size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
-        char** newWords = new char*[newCapacity];
-        for (size_t i = 0; i < wordCount; ++i)
-        {
-          newWords[i] = words[i];
-        }
-        delete[] words;
-        words = newWords;
-        capacity = newCapacity;
+        newWords[i] = words[i];
       }
-      words[wordCount] = word;
-      wordCount++;
+      delete[] words;
+      words = newWords;
+      capacity = newCapacity;
     }
+    
+    words[wordCount] = word;
+    wordCount++;
   }
-
-  delete[] line;
 
   if (wordCount == 0)
   {
