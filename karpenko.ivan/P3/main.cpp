@@ -162,8 +162,8 @@ int main(int argc, char *argv[])
 {
   if (argc != 4)
   {
-    std::cerr << "Usage: " << (argc > 0 ? argv[0] : "program") << " operation input output\n";
-    std::cerr << "  operation: 1 for array of fixed size, 2 for dynamic array\n";
+    std::cerr << "Usage: " << (argc > 0 ? argv[0] : "program") << " num input output\n";
+    std::cerr << "  num: 1 for array of fixed size, 2 for dynamic array\n";
     return 1;
   }
 
@@ -173,8 +173,8 @@ int main(int argc, char *argv[])
     return 1;
   }
 
-  int operation = std::atoi(argv[1]);
-  if (operation != 1 && operation != 2)
+  int num = std::atoi(argv[1]);
+  if (num != 1 && num != 2)
   {
     std::cerr << "Error: First parameter must be 1 or 2\n";
     return 1;
@@ -227,18 +227,10 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  int *inputMatrix = nullptr;
+  int fixedSizeMatrix[karpenko::kMaxSize] = {0};
+  int *inputMatrix = fixedSizeMatrix;
 
-  if (operation == 1)
-  {
-    if (totalElements > karpenko::kMaxSize)
-    {
-      std::cerr << "Error: Matrix too large for fixed-size array\n";
-      return 2;
-    }
-    inputMatrix = new int[totalElements];
-  }
-  else
+  if (num == 2)
   {
     try
     {
@@ -256,7 +248,10 @@ int main(int argc, char *argv[])
   if (readCount != totalElements)
   {
     std::cerr << "Error: Not enough data\n";
-    delete[] inputMatrix;
+    if (num == 2)
+    {
+      delete[] inputMatrix;
+    }
     return 2;
   }
 
@@ -271,7 +266,10 @@ int main(int argc, char *argv[])
   catch (const std::bad_alloc&)
   {
     std::cerr << "Error: Memory allocation failed for processing\n";
-    delete[] inputMatrix;
+    if (num == 2)
+    {
+      delete[] inputMatrix;
+    }
     if (spiralMatrix)
     {
       delete[] spiralMatrix;
@@ -291,7 +289,7 @@ int main(int argc, char *argv[])
   karpenko::transformMatrixSpiral(rows, cols, spiralMatrix);
   karpenko::createSmoothedMatrix(rows, cols, inputMatrix, smoothedMatrix);
 
-  if (operation == 1)
+  if (num == 1)
   {
     karpenko::writeMatrix(outputStream, spiralMatrix, rows, cols);
   }
@@ -303,17 +301,23 @@ int main(int argc, char *argv[])
   if (!outputStream)
   {
     std::cerr << "Error: Failed to write matrix to output file\n";
-    delete[] inputMatrix;
+    if (num == 2)
+    {
+      delete[] inputMatrix;
+    }
     delete[] spiralMatrix;
     delete[] smoothedMatrix;
     return 2;
   }
 
-  delete[] inputMatrix;
+  if (num == 2)
+  {
+    delete[] inputMatrix;
+  }
   delete[] spiralMatrix;
   delete[] smoothedMatrix;
 
-  std::cout << (operation == 1 ? "Spiral transformation completed successfully" : "Matrix smoothing completed successfully") << "\n";
+  std::cout << (num == 1 ? "Spiral transformation completed successfully" : "Matrix smoothing completed successfully") << "\n";
 
   return 0;
 }
