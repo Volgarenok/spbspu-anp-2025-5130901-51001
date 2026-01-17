@@ -24,7 +24,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   wordCount = 0;
 
   size_t lineLength = 0;
-  char* line = readStringWithAmortization(in, lineLength, isWordChar);
+  char* line = karpenko::readStringWithAmortization(in, lineLength, karpenko::isWordChar);
 
   if (line == nullptr || lineLength == 0)
   {
@@ -35,7 +35,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   size_t pos = 0;
   while (pos < lineLength)
   {
-    while (pos < lineLength && isSpaceChar(line[pos]))
+    while (pos < lineLength && karpenko::isSpaceChar(line[pos]))
     {
       pos++;
     }
@@ -47,7 +47,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
 
     size_t wordStart = pos;
 
-    while (pos < lineLength && !isSpaceChar(line[pos]))
+    while (pos < lineLength && !karpenko::isSpaceChar(line[pos]))
     {
       pos++;
     }
