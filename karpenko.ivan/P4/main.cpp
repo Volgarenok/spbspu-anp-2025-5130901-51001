@@ -39,7 +39,9 @@ int main()
   try
   {
     result1 = new char[result1Size];
+    result1[0] = '\0';
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
+    result2[0] = '\0';
 
     karpenko::uniTwo(line1, line1Length, line2, line2Length,
       result1, result1Size);
