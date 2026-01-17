@@ -25,7 +25,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
 
   size_t lineLength = 0;
   char* line = readStringWithAmortization(in, lineLength, isWordChar);
-  
+
   if (line == nullptr || lineLength == 0)
   {
     delete[] words;
@@ -52,7 +52,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
       pos++;
     }
     size_t wordLength = pos - wordStart;
-    
+
     if (wordLength > 0)
     {
       char* word = new char[wordLength + 1];
