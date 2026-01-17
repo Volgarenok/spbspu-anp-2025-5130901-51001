@@ -51,7 +51,6 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
     {
       pos++;
     }
-    
     size_t wordLength = pos - wordStart;
     
     if (wordLength > 0)
@@ -64,17 +63,14 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
       {
         size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
         char** newWords = new char*[newCapacity];
-        
         for (size_t i = 0; i < wordCount; ++i)
         {
           newWords[i] = words[i];
         }
-        
         delete[] words;
         words = newWords;
         capacity = newCapacity;
       }
-      
       words[wordCount] = word;
       wordCount++;
     }
