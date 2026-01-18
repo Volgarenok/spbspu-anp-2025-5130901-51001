@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cmath>
 
-namespace draw
+namespace shaykhraziev
 {
   struct point_t
   {
@@ -32,9 +32,6 @@ namespace draw
 
   struct Rectangle : Shape
   {
-    point_t center;
-    double width, height;
-
     double getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(point_t to) override;
@@ -43,15 +40,14 @@ namespace draw
 
     explicit Rectangle(point_t a, point_t b);
     explicit Rectangle(rectangle_t r);
+
+  private:
+    point_t center;
+    double width, height;
   };
 
   struct Polygon : Shape
   {
-    point_t* points;
-    size_t size;
-    point_t center;
-    double area;
-
     double getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(point_t to) override;
@@ -59,13 +55,16 @@ namespace draw
     void scale(double coef) override;
 
     explicit Polygon(point_t* a, size_t size);
+
+  private:
+    point_t* points;
+    size_t size;
+    point_t center;
+    double area;
   };
 
   struct Concave : Shape
   {
-    point_t points[4];
-    point_t center;
-
     double getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(point_t to) override;
@@ -73,6 +72,10 @@ namespace draw
     void scale(double coef) override;
 
     explicit Concave(const point_t* a, size_t size);
+
+  private:
+    point_t points[4];
+    point_t center;
   };
 
   void scaleRelative(Shape& shp, point_t pt, double coef);
@@ -83,27 +86,27 @@ namespace draw
   double euclidDist(point_t d1, point_t d2);
 }
 
-bool draw::operator==(const point_t lhs, const point_t rhs)
+bool shaykhraziev::operator==(const point_t lhs, const point_t rhs)
 {
   return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
-bool draw::operator!=(const point_t lhs, const point_t rhs)
+bool shaykhraziev::operator!=(const point_t lhs, const point_t rhs)
 {
   return !(rhs == lhs);
 }
 
-bool draw::operator==(const rectangle_t& lhs, const rectangle_t& rhs)
+bool shaykhraziev::operator==(const rectangle_t& lhs, const rectangle_t& rhs)
 {
   return lhs.width == rhs.width && lhs.height == rhs.height && lhs.pos == rhs.pos;
 }
 
-bool draw::operator!=(const rectangle_t& lhs, const rectangle_t& rhs)
+bool shaykhraziev::operator!=(const rectangle_t& lhs, const rectangle_t& rhs)
 {
   return !(rhs == lhs);
 }
 
-draw::Rectangle::Rectangle(point_t a, point_t b) :
+shaykhraziev::Rectangle::Rectangle(point_t a, point_t b) :
   center()
 {
   center = {a.x + (b.x - a.x) / 2, a.y + (b.y - a.y) / 2};
@@ -111,40 +114,40 @@ draw::Rectangle::Rectangle(point_t a, point_t b) :
   height = b.y - a.y;
 }
 
-draw::Rectangle::Rectangle(rectangle_t r) :
+shaykhraziev::Rectangle::Rectangle(rectangle_t r) :
   center(r.pos),
   width(r.width),
   height(r.height)
 {}
 
-double draw::Rectangle::getArea() const
+double shaykhraziev::Rectangle::getArea() const
 {
   return width * height;
 }
 
-draw::rectangle_t draw::Rectangle::getFrameRect() const
+shaykhraziev::rectangle_t shaykhraziev::Rectangle::getFrameRect() const
 {
   return {width, height, center};
 }
 
-void draw::Rectangle::move(point_t to)
+void shaykhraziev::Rectangle::move(point_t to)
 {
   center = to;
 }
 
-void draw::Rectangle::move(double dx, double dy)
+void shaykhraziev::Rectangle::move(double dx, double dy)
 {
   center.x += dx;
   center.y += dy;
 }
 
-void draw::Rectangle::scale(double coef)
+void shaykhraziev::Rectangle::scale(double coef)
 {
   width *= coef;
   height *= coef;
 }
 
-void draw::scaleRelative(Shape& shp, point_t pt, double coef)
+void shaykhraziev::scaleRelative(Shape& shp, point_t pt, double coef)
 {
   if (coef == 1) {
     return;
@@ -158,7 +161,7 @@ void draw::scaleRelative(Shape& shp, point_t pt, double coef)
   shp.move({x, y});
 }
 
-draw::rectangle_t draw::getAllShapesFrameRect(Shape** shps, size_t size)
+shaykhraziev::rectangle_t shaykhraziev::getAllShapesFrameRect(Shape** shps, size_t size)
 {
   if (size == 0) {
     return {0, 0, {0, 0}};
@@ -185,14 +188,14 @@ draw::rectangle_t draw::getAllShapesFrameRect(Shape** shps, size_t size)
   return {width, height, c};
 }
 
-void draw::removeArray(Shape** shps, size_t size)
+void shaykhraziev::removeArray(Shape** shps, size_t size)
 {
   for (size_t i = 0; i < size; i++) {
     delete shps[i];
   }
 }
 
-void draw::outputParams(std::ostream& out, Shape** shps, size_t size)
+void shaykhraziev::outputParams(std::ostream& out, Shape** shps, size_t size)
 {
   double area = 0;
 
@@ -212,7 +215,7 @@ void draw::outputParams(std::ostream& out, Shape** shps, size_t size)
   out << "(" << all.pos.x << ", " << all.pos.y << ") " << all.width << " " << all.height << "\n";
 }
 
-draw::Polygon::Polygon(point_t* a, size_t size) :
+shaykhraziev::Polygon::Polygon(point_t* a, size_t size) :
   points(a),
   size(size),
   center({0, 0})
@@ -257,12 +260,12 @@ draw::Polygon::Polygon(point_t* a, size_t size) :
   center = {x, y};
 }
 
-double draw::Polygon::getArea() const
+double shaykhraziev::Polygon::getArea() const
 {
   return area;
 }
 
-draw::rectangle_t draw::Polygon::getFrameRect() const
+shaykhraziev::rectangle_t shaykhraziev::Polygon::getFrameRect() const
 {
   double minx = points[0].x;
   double miny = points[0].y;
@@ -283,7 +286,7 @@ draw::rectangle_t draw::Polygon::getFrameRect() const
   return {width, height, p};
 }
 
-void draw::Polygon::move(double dx, double dy)
+void shaykhraziev::Polygon::move(double dx, double dy)
 {
   for (size_t i = 0; i < size; i++) {
     points[i].x += dx;
@@ -291,14 +294,14 @@ void draw::Polygon::move(double dx, double dy)
   }
 }
 
-void draw::Polygon::move(point_t to)
+void shaykhraziev::Polygon::move(point_t to)
 {
   double dx = to.x - center.x;
   double dy = to.y - center.y;
   move(dx, dy);
 }
 
-void draw::Polygon::scale(double coef)
+void shaykhraziev::Polygon::scale(double coef)
 {
   area *= coef * coef;
 
@@ -308,7 +311,7 @@ void draw::Polygon::scale(double coef)
   }
 }
 
-double draw::distToLine(point_t d1, point_t d2, point_t m)
+double shaykhraziev::distToLine(point_t d1, point_t d2, point_t m)
 {
   double A = d1.y - d2.y;
   double B = d2.x - d1.x;
@@ -317,7 +320,7 @@ double draw::distToLine(point_t d1, point_t d2, point_t m)
   return (A * m.x + B * m.y + C) / sqrt(A * A + B * B);
 }
 
-draw::Concave::Concave(const point_t* a, size_t size) :
+shaykhraziev::Concave::Concave(const point_t* a, size_t size) :
   points(),
   center()
 {
@@ -354,12 +357,12 @@ draw::Concave::Concave(const point_t* a, size_t size) :
   }
 }
 
-double draw::euclidDist(point_t d1, point_t d2)
+double shaykhraziev::euclidDist(point_t d1, point_t d2)
 {
   return sqrt((d1.x - d2.x) * (d1.x - d2.x) + (d1.y - d2.y) * (d1.y - d2.y));
 }
 
-double draw::Concave::getArea() const
+double shaykhraziev::Concave::getArea() const
 {
   double d1 = euclidDist(points[0], points[2]);
   double d2 = euclidDist(points[1], points[3]);
@@ -373,7 +376,7 @@ double draw::Concave::getArea() const
   return 0.5 * d1 * d2 * sina;
 }
 
-draw::rectangle_t draw::Concave::getFrameRect() const
+shaykhraziev::rectangle_t shaykhraziev::Concave::getFrameRect() const
 {
   double minx = points[0].x;
   double miny = points[0].y;
@@ -394,7 +397,7 @@ draw::rectangle_t draw::Concave::getFrameRect() const
   return {width, height, p};
 }
 
-void draw::Concave::move(double dx, double dy)
+void shaykhraziev::Concave::move(double dx, double dy)
 {
   for (size_t i = 0; i < 4; i++) {
     points[i].x += dx;
@@ -405,14 +408,14 @@ void draw::Concave::move(double dx, double dy)
   center.y += dy;
 }
 
-void draw::Concave::move(point_t to)
+void shaykhraziev::Concave::move(point_t to)
 {
   double dx = to.x - center.x;
   double dy = to.y - center.y;
   move(dx, dy);
 }
 
-void draw::Concave::scale(double coef)
+void shaykhraziev::Concave::scale(double coef)
 {
   for (size_t i = 0; i < 4; i++) {
     points[i].x = center.x + (points[i].x - center.x) * coef;
@@ -422,7 +425,7 @@ void draw::Concave::scale(double coef)
 
 int main()
 {
-  using namespace draw;
+  using namespace shaykhraziev;
 
   int err = 0;
   size_t shp_cnt = 4;
@@ -438,8 +441,7 @@ int main()
     point_t pts2[] = {{0, 5}, {5, 1}, {1, 0}, {2, 2}};
     shps[3] = new Concave(pts2, 4);
   } catch (...) {
-    std::cerr << "memalloc error"
-              << "\n";
+    std::cerr << "memalloc error" << "\n";
     err = 1;
   }
 
@@ -456,8 +458,7 @@ int main()
       }
       outputParams(std::cout, shps, shp_cnt);
     } else {
-      std::cerr << "bad input"
-                << "\n";
+      std::cerr << "bad input" << "\n";
       err = 1;
     }
   }
