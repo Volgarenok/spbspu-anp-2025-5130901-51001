@@ -1,9 +1,9 @@
-#include "string_reader.hpp"
-#include "array_utils.hpp"
-#include "string_functions.hpp"
 #include <iostream>
 #include <cstring>
 #include <cstddef>
+#include "string_reader.hpp"
+#include "array_utils.hpp"
+#include "string_functions.hpp"
 
 int main()
 {
