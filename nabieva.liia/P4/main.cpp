@@ -2,7 +2,8 @@
 #include <cstring>
 #include <cctype>
 
-int formAllLetterString(char* input, char* result, size_t maxResultSize) {
+int formAllLetterString(char* input, char* result, size_t maxResultSize) 
+{
 	unsigned char letters[26] = { 0 };
 	for (size_t i = 0; i < strlen(input); ++i) {
 		unsigned char c = static_cast<unsigned char>(input[i]);
@@ -35,7 +36,8 @@ int formAllLetterString(char* input, char* result, size_t maxResultSize) {
 	return pos;
 }
 
-int mergeString(char* input, char* result, size_t maxResultSize) {
+int mergeString(char* input, char* result, size_t maxResultSize) 
+{
 	const char* secondString = "def ";
 	if (strlen(input) + strlen(secondString) > maxResultSize) {
 		return -1;
