@@ -1,9 +1,9 @@
-#include "array_utils.hpp"
-#include "matrix_transformations.hpp"
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <memory>
+#include "array_utils.hpp"
+#include "matrix_transformations.hpp"
 
 int main(int argc, char *argv[])
 {
