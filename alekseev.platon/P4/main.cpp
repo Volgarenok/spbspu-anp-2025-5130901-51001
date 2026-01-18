@@ -6,8 +6,10 @@ namespace alekseev
 {
   int containsChar(const char* s, char c)
   {
-    for (; *s != '\0'; ++s) {
-      if (*s == c) {
+    for (; *s != '\0'; ++s)
+    {
+      if (*s == c)
+      {
         return 1;
       }
     }
@@ -19,22 +21,29 @@ namespace alekseev
     const std::ios_base::fmtflags oldFlags = in.flags();
     const bool hadSkipws = (oldFlags & std::ios_base::skipws) != 0;
 
-    if (hadSkipws) {
+    if (hadSkipws)
+    {
       in >> std::noskipws;
     }
 
-    try {
+    char* buf = nullptr;
+
+    try
+    {
       size_t cap = 16;
-      char* buf = new char[cap];
+      buf = new char[cap];
       size = 0;
 
       char c = '\0';
-      while ((in >> c) && c != '\n') {
-        if (size + 1 >= cap) {
+      while ((in >> c) && c != '\n')
+      {
+        if (size + 1 >= cap)
+        {
           const size_t newCap = cap * 2;
           char* newBuf = new char[newCap];
 
-          for (size_t i = 0; i < size; ++i) {
+          for (size_t i = 0; i < size; ++i)
+          {
             newBuf[i] = buf[i];
           }
 
@@ -45,7 +54,8 @@ namespace alekseev
         buf[size++] = c;
       }
 
-      if (in.fail() && !in.eof()) {
+      if (in.fail() && !in.eof())
+      {
         delete[] buf;
         in.flags(oldFlags);
         size = 0;
@@ -56,7 +66,9 @@ namespace alekseev
       in.flags(oldFlags);
       return buf;
     }
-    catch (...) {
+    catch (...)
+    {
+      delete[] buf;
       in.flags(oldFlags);
       size = 0;
       throw;
@@ -68,9 +80,11 @@ namespace alekseev
     const char* vowels = "aeiouAEIOU";
     size_t i = 0;
 
-    for (; *s != '\0'; ++s) {
+    for (; *s != '\0'; ++s)
+    {
       const char c = *s;
-      if (!containsChar(vowels, c)) {
+      if (!containsChar(vowels, c))
+      {
         d[i++] = c;
       }
     }
@@ -83,9 +97,11 @@ namespace alekseev
   {
     size_t i = 0;
 
-    for (; *s != '\0'; ++s) {
+    for (; *s != '\0'; ++s)
+    {
       const char c = *s;
-      if (!containsChar(exc, c)) {
+      if (!containsChar(exc, c))
+      {
         d[i++] = c;
       }
     }
@@ -103,17 +119,23 @@ int main()
   size_t size1 = 0;
   char* input1 = nullptr;
 
-  try {
+  try
+  {
     input1 = getline(std::cin, size1);
-  } catch (const std::bad_alloc&) {
+  }
+  catch (const std::bad_alloc&)
+  {
     std::cerr << "Error: cannot allocate memory\n";
     return 1;
-  } catch (const std::logic_error& e) {
+  }
+  catch (const std::logic_error& e)
+  {
     std::cerr << e.what() << "\n";
     return 1;
   }
 
-  if (size1 == 0) {
+  if (size1 == 0)
+  {
     std::cerr << "Error: empty input\n";
     delete[] input1;
     return 1;
@@ -124,13 +146,16 @@ int main()
   char* result1 = nullptr;
   char* result2 = nullptr;
 
-  try {
+  try
+  {
     result1 = new char[size1 + 1];
     result1[size1] = '\0';
 
     result2 = new char[size1 + 1];
     result2[size1] = '\0';
-  } catch (const std::bad_alloc&) {
+  }
+  catch (const std::bad_alloc&)
+  {
     std::cerr << "Error: cannot allocate memory\n";
     delete[] result1;
     delete[] result2;
