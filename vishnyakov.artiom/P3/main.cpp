@@ -5,7 +5,7 @@ namespace vishnyakov
   void spiralReduction(int *matrix, size_t row, size_t column);
   int biggiestDiagonal(const int *matrix, size_t row, size_t column);
   size_t move(size_t type, size_t column, size_t start);
-  size_t isIn(size_t *array, size_t value, size_t size);
+  bool isIn(const size_t *array, size_t value, size_t size);
 }
 size_t vishnyakov::move(size_t type, size_t column, size_t start)
 {
@@ -26,16 +26,16 @@ size_t vishnyakov::move(size_t type, size_t column, size_t start)
   }
   return start;
 }
-size_t vishnyakov::isIn(size_t *array, size_t value, size_t size)
+bool vishnyakov::isIn(const size_t *array, size_t value, size_t size)
 {
   for (size_t i = 0; i < size; ++i)
   {
     if (value == array[i])
     {
-      return 1;
+      return true;
     }
   }
-  return 0;
+  return false;
 }
 void vishnyakov::spiralReduction(int *matrix, size_t row, size_t column)
 {
