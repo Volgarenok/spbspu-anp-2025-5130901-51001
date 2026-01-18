@@ -13,7 +13,7 @@ int formAllLetterString(char* input, char* result, size_t maxResultSize) {
 			}
 		}
 	}
-	const char* secondString = "def_ghk";
+	const char* secondString = "def ghk";
 	for (size_t i = 0; i < strlen(secondString); ++i) {
 		unsigned char c = static_cast<unsigned char>(secondString[i]);
 		if (std::isalpha(c)) {
@@ -30,6 +30,25 @@ int formAllLetterString(char* input, char* result, size_t maxResultSize) {
 				return -1;
 			}
 			result[pos++] = static_cast<char>('a' + i);
+		}
+	}
+	return pos;
+}
+
+int mergeString(char* input, char* result, size_t maxResultSize) {
+	const char* secondString = "def ";
+	if (strlen(input) + strlen(secondString) > maxResultSize) {
+		return -1;
+	}
+	size_t pos = 0;
+	for (size_t i = 0; i < strlen(input) + strlen(secondString); ++i) {
+		if (i < strlen(input)) {
+			result[pos] = input[i];
+			pos++;
+		}
+		if (i < strlen(secondString)) {
+			result[pos] = secondString[i];
+			pos++;
 		}
 	}
 	return pos;
@@ -70,8 +89,19 @@ int main()
 		delete[] result;
 		return 1;
 	}
-	mergeString(input, result, MAX_RESULT_SIZE);
-
+	std::cout << "\n";
+	resultSize = mergeString(input, result, MAX_RESULT_SIZE);
+	if (resultSize != -1) {
+		for (size_t i = 0; i < static_cast<size_t>(resultSize); i++) {
+			std::cout << result[i];
+		}
+	}
+	else {
+		std::cerr << "too long string\n";
+		delete[] input;
+		delete[] result;
+		return 1;
+	}
 	delete[] input;
 	delete[] result;
 	return 0;
