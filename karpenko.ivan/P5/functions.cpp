@@ -6,6 +6,11 @@
 void karpenko::scaleShapes(Shape** shapes, size_t count,
     const point_t& point, double coefficient)
 {
+  if (coefficient <= 0.0)
+  {
+    throw std::invalid_argument("Scaling coefficient must be positive");
+  }
+
   for (size_t i = 0; i < count; ++i)
   {
     rectangle_t frame = shapes[i]->getFrameRect();
@@ -13,7 +18,7 @@ void karpenko::scaleShapes(Shape** shapes, size_t count,
     double dy = frame.pos.y - point.y;
 
     shapes[i]->move(point);
-    shapes[i]->scale(coefficient);
+    shapes[i]->unsafeScale(coefficient);
 
     double scaled_dx = -dx * coefficient;
     double scaled_dy = -dy * coefficient;
@@ -82,11 +87,6 @@ void karpenko::printAllInfo(const Shape* const* shapes, size_t count, const std:
     std::cout << "    Height: " << frame.height << "\n";
 
     totalArea += area;
-
-    if (i < count - 1)
-    {
-      std::cout << "\n";
-    }
   }
 
   std::cout << "\nTotal area: " << totalArea << "\n";
