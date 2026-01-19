@@ -63,24 +63,34 @@ void karpenko::ComplexQuad::moveVertices(double dx, double dy) noexcept
 karpenko::point_t karpenko::ComplexQuad::getCenter() const noexcept
 {
   const double epsilon = 1e-9;
-  double denominator = (vertexA_.x - vertexC_.x) * (vertexB_.y - vertexD_.y)
-                     - (vertexA_.y - vertexC_.y) * (vertexB_.x - vertexD_.x);
+  
+  double ac_x = vertexA_.x - vertexC_.x;
+  double ac_y = vertexA_.y - vertexC_.y;
+  double bd_x = vertexB_.x - vertexD_.x;
+  double bd_y = vertexB_.y - vertexD_.y;
+  
+  double denominator = ac_x * bd_y - ac_y * bd_x;
 
   if (std::fabs(denominator) < epsilon)
   {
-    return {
-      (vertexA_.x + vertexB_.x + vertexC_.x + vertexD_.x) / 4.0,
-      (vertexA_.y + vertexB_.y + vertexC_.y + vertexD_.y) / 4.0
-    };
+    double sumX = vertexA_.x + vertexB_.x + vertexC_.x + vertexD_.x;
+    double sumY = vertexA_.y + vertexB_.y + vertexC_.y + vertexD_.y;
+    return {sumX / 4.0, sumY / 4.0};
   }
   else
   {
-    double t = ((vertexA_.x - vertexB_.x) * (vertexB_.y - vertexD_.y)
-    - (vertexA_.y - vertexB_.y) * (vertexB_.x - vertexD_.x)) / denominator;
+    double ab_x = vertexA_.x - vertexB_.x;
+    double ab_y = vertexA_.y - vertexB_.y;
+    
+    double numerator = ab_x * bd_y - ab_y * bd_x;
+    double t = numerator / denominator;
 
+    double cx = vertexC_.x - vertexA_.x;
+    double cy = vertexC_.y - vertexA_.y;
+    
     return {
-      vertexA_.x + t * (vertexC_.x - vertexA_.x),
-      vertexA_.y + t * (vertexC_.y - vertexA_.y)
+      vertexA_.x + t * cx,
+      vertexA_.y + t * cy
     };
   }
 }
@@ -96,9 +106,11 @@ void karpenko::ComplexQuad::doScale(double coefficient)
 {
   point_t center = getCenter();
   auto scaleVertex = [&center, coefficient](const point_t& vertex) {
+    double dx = vertex.x - center.x;
+    double dy = vertex.y - center.y;
     return point_t{
-      center.x + (vertex.x - center.x) * coefficient,
-      center.y + (vertex.y - center.y) * coefficient
+      center.x + dx * coefficient,
+      center.y + dy * coefficient
     };
   };
   vertexA_ = scaleVertex(vertexA_);

@@ -11,8 +11,13 @@ karpenko::Triangle::Triangle(const point_t& a, const point_t& b, const point_t& 
 
 double karpenko::Triangle::getArea() const noexcept
 {
-  double part1 = (vertexB_.x - vertexA_.x) * (vertexC_.y - vertexA_.y);
-  double part2 = (vertexC_.x - vertexA_.x) * (vertexB_.y - vertexA_.y);
+  double bx_ax = vertexB_.x - vertexA_.x;
+  double cy_ay = vertexC_.y - vertexA_.y;
+  double cx_ax = vertexC_.x - vertexA_.x;
+  double by_ay = vertexB_.y - vertexA_.y;
+  
+  double part1 = bx_ax * cy_ay;
+  double part2 = cx_ax * by_ay;
   return 0.5 * std::fabs(part1 - part2);
 }
 
@@ -25,12 +30,13 @@ karpenko::rectangle_t karpenko::Triangle::getFrameRect() const noexcept
 
   double width = maxX - minX;
   double height = maxY - minY;
-  point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-
+  double centerX = (minX + maxX) / 2.0;
+  double centerY = (minY + maxY) / 2.0;
+  
   rectangle_t frame;
   frame.width = width;
   frame.height = height;
-  frame.pos = center;
+  frame.pos = {centerX, centerY};
   return frame;
 }
 
@@ -59,17 +65,18 @@ void karpenko::Triangle::moveVertices(double dx, double dy) noexcept
 
 karpenko::point_t karpenko::Triangle::getCenter() const noexcept
 {
-  return {
-    (vertexA_.x + vertexB_.x + vertexC_.x) / 3.0,
-    (vertexA_.y + vertexB_.y + vertexC_.y) / 3.0
-  };
+  double sumX = vertexA_.x + vertexB_.x + vertexC_.x;
+  double sumY = vertexA_.y + vertexB_.y + vertexC_.y;
+  return {sumX / 3.0, sumY / 3.0};
 }
 
 karpenko::point_t karpenko::Triangle::getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept
 {
+  double dx = vertex.x - center.x;
+  double dy = vertex.y - center.y;
   return {
-    center.x + (vertex.x - center.x) * coefficient,
-    center.y + (vertex.y - center.y) * coefficient
+    center.x + dx * coefficient,
+    center.y + dy * coefficient
   };
 }
 

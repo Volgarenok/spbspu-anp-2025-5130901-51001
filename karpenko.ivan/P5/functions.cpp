@@ -13,7 +13,10 @@ void karpenko::scaleShapes(Shape** shapes, size_t count, const point_t& point, d
 
     shapes[i]->move(point);
     shapes[i]->scale(coefficient);
-    shapes[i]->move(-dx * coefficient, -dy * coefficient);
+    
+    double scaled_dx = -dx * coefficient;
+    double scaled_dy = -dy * coefficient;
+    shapes[i]->move(scaled_dx, scaled_dy);
   }
 }
 
@@ -26,18 +29,24 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
   }
 
   rectangle_t firstFrame = shapes[0]->getFrameRect();
-  double left = firstFrame.pos.x - firstFrame.width / 2.0;
-  double right = firstFrame.pos.x + firstFrame.width / 2.0;
-  double bottom = firstFrame.pos.y - firstFrame.height / 2.0;
-  double top = firstFrame.pos.y + firstFrame.height / 2.0;
+  double halfWidth = firstFrame.width / 2.0;
+  double halfHeight = firstFrame.height / 2.0;
+  
+  double left = firstFrame.pos.x - halfWidth;
+  double right = firstFrame.pos.x + halfWidth;
+  double bottom = firstFrame.pos.y - halfHeight;
+  double top = firstFrame.pos.y + halfHeight;
 
   for (size_t i = 1; i < count; ++i)
   {
     rectangle_t frame = shapes[i]->getFrameRect();
-    double currentLeft = frame.pos.x - frame.width / 2.0;
-    double currentRight = frame.pos.x + frame.width / 2.0;
-    double currentBottom = frame.pos.y - frame.height / 2.0;
-    double currentTop = frame.pos.y + frame.height / 2.0;
+    double currentHalfWidth = frame.width / 2.0;
+    double currentHalfHeight = frame.height / 2.0;
+    
+    double currentLeft = frame.pos.x - currentHalfWidth;
+    double currentRight = frame.pos.x + currentHalfWidth;
+    double currentBottom = frame.pos.y - currentHalfHeight;
+    double currentTop = frame.pos.y + currentHalfHeight;
 
     left = std::min(left, currentLeft);
     right = std::max(right, currentRight);
@@ -47,19 +56,21 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
 
   double width = right - left;
   double height = top - bottom;
-  point_t center = {(left + right) / 2.0, (bottom + top) / 2.0};
-
+  double centerX = (left + right) / 2.0;
+  double centerY = (bottom + top) / 2.0;
+  
   rectangle_t result;
   result.width = width;
   result.height = height;
-  result.pos = center;
+  result.pos = {centerX, centerY};
   return result;
 }
 
 void karpenko::printShapeInfo(const Shape* shape, size_t index)
 {
   std::cout << "Shape " << index + 1 << ":\n";
-  std::cout << "  Area: " << std::fixed << std::setprecision(2) << shape->getArea() << "\n";
+  double area = shape->getArea();
+  std::cout << "  Area: " << std::fixed << std::setprecision(2) << area << "\n";
 
   rectangle_t frame = shape->getFrameRect();
   std::cout << "  Frame Rect:\n";
