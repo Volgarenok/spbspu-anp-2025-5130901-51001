@@ -13,9 +13,9 @@ namespace karpenko
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void scale(double coefficient) override;
 
   private:
+    void doScale(double coefficient) override;
     point_t getCenter() const noexcept;
     double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
     point_t vertexA_;

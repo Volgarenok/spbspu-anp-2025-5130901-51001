@@ -96,12 +96,8 @@ namespace karpenko
     return 0.5 * std::fabs(part1 - part2);
   }
 
-  void ComplexQuad::scale(double coefficient)
+  void ComplexQuad::doScale(double coefficient)
   {
-    if (coefficient <= 0.0)
-    {
-      throw std::invalid_argument("Scaling coefficient must be positive");
-    }
     point_t center = getCenter();
     auto scaleVertex = [&center, coefficient](const point_t& vertex) {
       return point_t{

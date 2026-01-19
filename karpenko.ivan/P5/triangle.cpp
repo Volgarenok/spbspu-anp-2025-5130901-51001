@@ -75,12 +75,8 @@ namespace karpenko
     };
   }
 
-  void Triangle::scale(double coefficient)
+  void Triangle::doScale(double coefficient)
   {
-    if (coefficient <= 0.0)
-    {
-      throw std::invalid_argument("Scaling coefficient must be positive");
-    }
     point_t center = getCenter();
     vertexA_ = getScaledVertex(vertexA_, center, coefficient);
     vertexB_ = getScaledVertex(vertexB_, center, coefficient);

@@ -18,14 +18,25 @@ namespace karpenko
     point_t pos;
   };
 
-  struct Shape
+  class Shape
   {
+  public:
     virtual ~Shape() noexcept = default;
     virtual double getArea() const noexcept = 0;
     virtual rectangle_t getFrameRect() const noexcept = 0;
     virtual void move(const point_t& point) noexcept = 0;
     virtual void move(double dx, double dy) noexcept = 0;
-    virtual void scale(double coefficient) = 0;
+    void scale(double coefficient)
+    {
+      if (coefficient <= 0.0)
+      {
+        throw std::invalid_argument("Scaling coefficient must be positive");
+      }
+      doScale(coefficient);
+    }
+
+  private:
+    virtual void doScale(double coefficient) = 0;
   };
 }
 

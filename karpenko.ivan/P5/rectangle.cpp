@@ -34,12 +34,8 @@ namespace karpenko
     center_.y += dy;
   }
 
-  void Rectangle::scale(double coefficient)
+  void Rectangle::doScale(double coefficient)
   {
-    if (coefficient <= 0.0)
-    {
-      throw std::invalid_argument("Scaling coefficient must be positive");
-    }
     width_ *= coefficient;
     height_ *= coefficient;
   }
