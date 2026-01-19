@@ -36,8 +36,8 @@ int main()
   rectangle_t overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), SHAPE_COUNT);
   printOverallFrameRect(overallFrame);
 
-  point_t scalePoint;
-  double coefficient;
+  point_t scalePoint = {0.0, 0.0};
+  double coefficient = 1.0;
 
   std::cout << "\nEnter scaling point (x y): ";
   if (!(std::cin >> scalePoint.x >> scalePoint.y))
