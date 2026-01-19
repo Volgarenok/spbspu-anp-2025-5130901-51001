@@ -84,11 +84,6 @@ double karpenko::printAllShapesInfo(const Shape* const* shapes, size_t count, co
   {
     printShapeInfo(shapes[i], i);
     totalArea += shapes[i]->getArea();
-
-    if (i < count - 1)
-    {
-      std::cout << "\n";
-    }
   }
   return totalArea;
 }
