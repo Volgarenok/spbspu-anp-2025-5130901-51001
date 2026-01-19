@@ -16,12 +16,12 @@ namespace karpenko
     void unsafeScale(double coefficient) override;
 
   private:
-    void moveVertices(double dx, double dy) noexcept;
-    point_t getCenter() const noexcept;
-    point_t getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept;
     point_t vertexA_;
     point_t vertexB_;
     point_t vertexC_;
+    void moveVertices(double dx, double dy) noexcept;
+    point_t getCenter() const noexcept;
+    point_t getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept;
   };
 }
 
