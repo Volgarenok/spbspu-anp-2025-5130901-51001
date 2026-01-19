@@ -13,9 +13,9 @@ namespace karpenko
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
+    void unsafeScale(double coefficient) override;
 
   private:
-    void doScale(double coefficient) override;
     void moveVertices(double dx, double dy) noexcept;
     point_t getCenter() const noexcept;
     point_t getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept;

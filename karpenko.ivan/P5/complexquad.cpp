@@ -105,7 +105,7 @@ karpenko::point_t karpenko::ComplexQuad::getScaledVertex(const point_t& vertex, 
   return point_t{center.x + dx * coefficient, center.y + dy * coefficient};
 }
 
-void karpenko::ComplexQuad::doScale(double coefficient)
+void karpenko::ComplexQuad::unsafeScale(double coefficient)
 {
   point_t center = getCenter();
   vertexA_ = getScaledVertex(vertexA_, center, coefficient);

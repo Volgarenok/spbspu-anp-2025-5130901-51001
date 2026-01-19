@@ -75,7 +75,7 @@ karpenko::point_t karpenko::Triangle::getScaledVertex(const point_t& vertex, con
   return {scaledX, scaledY};
 }
 
-void karpenko::Triangle::doScale(double coefficient)
+void karpenko::Triangle::unsafeScale(double coefficient)
 {
   point_t center = getCenter();
   vertexA_ = getScaledVertex(vertexA_, center, coefficient);

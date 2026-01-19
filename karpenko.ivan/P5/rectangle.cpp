@@ -28,7 +28,7 @@ void karpenko::Rectangle::move(double dx, double dy) noexcept
   center_.y += dy;
 }
 
-void karpenko::Rectangle::doScale(double coefficient)
+void karpenko::Rectangle::unsafeScale(double coefficient)
 {
   width_ *= coefficient;
   height_ *= coefficient;

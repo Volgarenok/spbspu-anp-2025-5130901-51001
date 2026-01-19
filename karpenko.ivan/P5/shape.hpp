@@ -32,11 +32,11 @@ namespace karpenko
       {
         throw std::invalid_argument("Scaling coefficient must be positive");
       }
-      doScale(coefficient);
+      unsafeScale(coefficient);
     }
+    
+    virtual void unsafeScale(double coefficient) = 0;
 
-  private:
-    virtual void doScale(double coefficient) = 0;
   };
 }
 
