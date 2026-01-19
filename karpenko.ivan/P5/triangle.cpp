@@ -33,11 +33,7 @@ karpenko::rectangle_t karpenko::Triangle::getFrameRect() const noexcept
   double centerX = (minX + maxX) / 2.0;
   double centerY = (minY + maxY) / 2.0;
   
-  rectangle_t frame;
-  frame.width = width;
-  frame.height = height;
-  frame.pos = {centerX, centerY};
-  return frame;
+  return {width, height, {centerX, centerY}};
 }
 
 void karpenko::Triangle::move(const point_t& point) noexcept
@@ -74,10 +70,7 @@ karpenko::point_t karpenko::Triangle::getScaledVertex(const point_t& vertex, con
 {
   double dx = vertex.x - center.x;
   double dy = vertex.y - center.y;
-  return {
-    center.x + dx * coefficient,
-    center.y + dy * coefficient
-  };
+  return {center.x + dx * coefficient, center.y + dy * coefficient};
 }
 
 void karpenko::Triangle::doScale(double coefficient)

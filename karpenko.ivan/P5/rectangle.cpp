@@ -14,11 +14,7 @@ double karpenko::Rectangle::getArea() const noexcept
 
 karpenko::rectangle_t karpenko::Rectangle::getFrameRect() const noexcept
 {
-  rectangle_t frame;
-  frame.width = width_;
-  frame.height = height_;
-  frame.pos = center_;
-  return frame;
+  return {width_, height_, center_};
 }
 
 void karpenko::Rectangle::move(const point_t& point) noexcept

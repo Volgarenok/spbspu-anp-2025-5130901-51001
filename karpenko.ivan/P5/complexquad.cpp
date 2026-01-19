@@ -26,13 +26,10 @@ karpenko::rectangle_t karpenko::ComplexQuad::getFrameRect() const noexcept
 
   double width = maxX - minX;
   double height = maxY - minY;
-  point_t center = {(minX + maxX) / 2.0, (minY + maxY) / 2.0};
-
-  rectangle_t frame;
-  frame.width = width;
-  frame.height = height;
-  frame.pos = center;
-  return frame;
+  double centerX = (minX + maxX) / 2.0;
+  double centerY = (minY + maxY) / 2.0;
+  
+  return {width, height, {centerX, centerY}};
 }
 
 void karpenko::ComplexQuad::move(const point_t& point) noexcept
@@ -88,10 +85,7 @@ karpenko::point_t karpenko::ComplexQuad::getCenter() const noexcept
     double cx = vertexC_.x - vertexA_.x;
     double cy = vertexC_.y - vertexA_.y;
     
-    return {
-      vertexA_.x + t * cx,
-      vertexA_.y + t * cy
-    };
+    return {vertexA_.x + t * cx, vertexA_.y + t * cy};
   }
 }
 
@@ -108,10 +102,7 @@ void karpenko::ComplexQuad::doScale(double coefficient)
   auto scaleVertex = [&center, coefficient](const point_t& vertex) {
     double dx = vertex.x - center.x;
     double dy = vertex.y - center.y;
-    return point_t{
-      center.x + dx * coefficient,
-      center.y + dy * coefficient
-    };
+    return point_t{center.x + dx * coefficient, center.y + dy * coefficient};
   };
   vertexA_ = scaleVertex(vertexA_);
   vertexB_ = scaleVertex(vertexB_);
