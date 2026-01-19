@@ -34,7 +34,7 @@ namespace karpenko
       }
       unsafeScale(coefficient);
     }
-    
+
     virtual void unsafeScale(double coefficient) = 0;
 
   };
