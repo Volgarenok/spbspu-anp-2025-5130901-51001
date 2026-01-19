@@ -98,16 +98,18 @@ double karpenko::ComplexQuad::triangleArea(const point_t& a, const point_t& b, c
   return 0.5 * std::fabs(part1 - part2);
 }
 
+karpenko::point_t karpenko::ComplexQuad::getScaledVertex(const point_t& vertex, const point_t& center, double coefficient) const noexcept
+{
+  double dx = vertex.x - center.x;
+  double dy = vertex.y - center.y;
+  return point_t{center.x + dx * coefficient, center.y + dy * coefficient};
+}
+
 void karpenko::ComplexQuad::doScale(double coefficient)
 {
   point_t center = getCenter();
-  auto scaleVertex = [&center, coefficient](const point_t& vertex) {
-    double dx = vertex.x - center.x;
-    double dy = vertex.y - center.y;
-    return point_t{center.x + dx * coefficient, center.y + dy * coefficient};
-  };
-  vertexA_ = scaleVertex(vertexA_);
-  vertexB_ = scaleVertex(vertexB_);
-  vertexC_ = scaleVertex(vertexC_);
-  vertexD_ = scaleVertex(vertexD_);
+  vertexA_ = getScaledVertex(vertexA_, center, coefficient);
+  vertexB_ = getScaledVertex(vertexB_, center, coefficient);
+  vertexC_ = getScaledVertex(vertexC_, center, coefficient);
+  vertexD_ = getScaledVertex(vertexD_, center, coefficient);
 }
