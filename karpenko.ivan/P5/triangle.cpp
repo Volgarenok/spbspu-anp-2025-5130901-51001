@@ -70,7 +70,9 @@ karpenko::point_t karpenko::Triangle::getScaledVertex(const point_t& vertex, con
 {
   double dx = vertex.x - center.x;
   double dy = vertex.y - center.y;
-  return {center.x + dx * coefficient, center.y + dy * coefficient};
+  double scaledX = center.x + dx * coefficient;
+  double scaledY = center.y + dy * coefficient;
+  return {scaledX, scaledY};
 }
 
 void karpenko::Triangle::doScale(double coefficient)

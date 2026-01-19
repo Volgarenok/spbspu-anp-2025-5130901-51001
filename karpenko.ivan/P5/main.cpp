@@ -30,10 +30,10 @@ int main()
     return 1;
   }
 
-  double totalArea = printAllShapesInfo(const_cast< const Shape** >(shapes), SHAPE_COUNT, "Before scaling");
+  double totalArea = printAllShapesInfo(shapes, SHAPE_COUNT, "Before scaling");
   std::cout << "\nTotal area: " << totalArea << "\n";
 
-  rectangle_t overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), SHAPE_COUNT);
+  rectangle_t overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
   printOverallFrameRect(overallFrame);
 
   point_t scalePoint = {0.0, 0.0};
@@ -75,10 +75,10 @@ int main()
     return 1;
   }
 
-  totalArea = printAllShapesInfo(const_cast< const Shape** >(shapes), SHAPE_COUNT, "After scaling");
+  totalArea = printAllShapesInfo(shapes, SHAPE_COUNT, "After scaling");
   std::cout << "\nTotal area: " << totalArea << "\n";
 
-  overallFrame = getOverallFrameRect(const_cast< const Shape** >(shapes), SHAPE_COUNT);
+  overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
   printOverallFrameRect(overallFrame);
 
   for (size_t i = 0; i < SHAPE_COUNT; ++i)

@@ -85,7 +85,9 @@ karpenko::point_t karpenko::ComplexQuad::getCenter() const noexcept
     double cx = vertexC_.x - vertexA_.x;
     double cy = vertexC_.y - vertexA_.y;
     
-    return {vertexA_.x + t * cx, vertexA_.y + t * cy};
+    double centerX = vertexA_.x + t * cx;
+    double centerY = vertexA_.y + t * cy;
+    return {centerX, centerY};
   }
 }
 
