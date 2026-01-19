@@ -66,7 +66,7 @@ namespace alekseev
       in.flags(oldFlags);
       return buf;
     }
-    catch (...)
+    catch (const std::bad_alloc&)
     {
       delete[] buf;
       in.flags(oldFlags);
