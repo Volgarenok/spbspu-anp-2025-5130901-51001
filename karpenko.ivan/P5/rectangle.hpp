@@ -5,7 +5,7 @@
 
 namespace karpenko
 {
-  class Rectangle final : public Shape
+  class Rectangle final: public Shape
   {
   public:
     Rectangle(double width, double height, const point_t& center) noexcept;

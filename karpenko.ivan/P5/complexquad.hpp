@@ -5,7 +5,7 @@
 
 namespace karpenko
 {
-  class ComplexQuad final : public Shape
+  class ComplexQuad final: public Shape
   {
   public:
     ComplexQuad(const point_t& a, const point_t& b, const point_t& c, const point_t& d) noexcept;
