@@ -58,7 +58,7 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
   double height = top - bottom;
   double centerX = (left + right) / 2.0;
   double centerY = (bottom + top) / 2.0;
-  
+
   return {width, height, {centerX, centerY}};
 }
 
