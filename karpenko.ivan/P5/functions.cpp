@@ -3,7 +3,8 @@
 #include <iomanip>
 #include <algorithm>
 
-void karpenko::scaleShapes(Shape** shapes, size_t count, const point_t& point, double coefficient)
+void karpenko::scaleShapes(Shape** shapes, size_t count,
+    const point_t& point, double coefficient)
 {
   for (size_t i = 0; i < count; ++i)
   {
@@ -20,7 +21,8 @@ void karpenko::scaleShapes(Shape** shapes, size_t count, const point_t& point, d
   }
 }
 
-karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, size_t count)
+karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes,
+    size_t count)
 {
   const rectangle_t emptyFrame = {0.0, 0.0, {0.0, 0.0}};
   if (count == 0)
@@ -62,36 +64,36 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
   return {width, height, {centerX, centerY}};
 }
 
-void karpenko::printShapeInfo(const Shape* shape, size_t index)
-{
-  std::cout << "Shape " << index + 1 << ":\n";
-  double area = shape->getArea();
-  std::cout << "  Area: " << std::fixed << std::setprecision(2) << area << "\n";
-
-  rectangle_t frame = shape->getFrameRect();
-  std::cout << "  Frame Rect:\n";
-  std::cout << "    Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
-  std::cout << "    Width: " << frame.width << "\n";
-  std::cout << "    Height: " << frame.height << "\n";
-}
-
-double karpenko::printAllShapesInfo(const Shape* const* shapes, size_t count, const std::string& title)
+void karpenko::printAllInfo(const Shape* const* shapes, size_t count, const std::string& title)
 {
   std::cout << "\n" << title << ":\n";
 
   double totalArea = 0.0;
   for (size_t i = 0; i < count; ++i)
   {
-    printShapeInfo(shapes[i], i);
-    totalArea += shapes[i]->getArea();
-  }
-  return totalArea;
-}
+    std::cout << "Shape " << i + 1 << ":\n";
+    double area = shapes[i]->getArea();
+    std::cout << "  Area: " << std::fixed << std::setprecision(2) << area << "\n";
 
-void karpenko::printOverallFrameRect(const rectangle_t& frame)
-{
+    rectangle_t frame = shapes[i]->getFrameRect();
+    std::cout << "  Frame Rect:\n";
+    std::cout << "    Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
+    std::cout << "    Width: " << frame.width << "\n";
+    std::cout << "    Height: " << frame.height << "\n";
+
+    totalArea += area;
+
+    if (i < count - 1)
+    {
+      std::cout << "\n";
+    }
+  }
+
+  std::cout << "\nTotal area: " << totalArea << "\n";
+
+  rectangle_t overallFrame = getOverallFrameRect(shapes, count);
   std::cout << "\nOverall Frame Rect:\n";
-  std::cout << "  Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
-  std::cout << "  Width: " << frame.width << "\n";
-  std::cout << "  Height: " << frame.height << "\n";
+  std::cout << "  Center: (" << overallFrame.pos.x << ", " << overallFrame.pos.y << ")\n";
+  std::cout << "  Width: " << overallFrame.width << "\n";
+  std::cout << "  Height: " << overallFrame.height << "\n";
 }

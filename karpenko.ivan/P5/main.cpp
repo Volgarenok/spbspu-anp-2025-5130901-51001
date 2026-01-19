@@ -30,11 +30,7 @@ int main()
     return 1;
   }
 
-  double totalArea = printAllShapesInfo(shapes, SHAPE_COUNT, "Before scaling");
-  std::cout << "\nTotal area: " << totalArea << "\n";
-
-  rectangle_t overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
-  printOverallFrameRect(overallFrame);
+  printAllInfo(shapes, SHAPE_COUNT, "Before scaling");
 
   point_t scalePoint = {0.0, 0.0};
   double coefficient = 1.0;
@@ -75,11 +71,7 @@ int main()
     return 1;
   }
 
-  totalArea = printAllShapesInfo(shapes, SHAPE_COUNT, "After scaling");
-  std::cout << "\nTotal area: " << totalArea << "\n";
-
-  overallFrame = getOverallFrameRect(shapes, SHAPE_COUNT);
-  printOverallFrameRect(overallFrame);
+  printAllInfo(shapes, SHAPE_COUNT, "After scaling");
 
   for (size_t i = 0; i < SHAPE_COUNT; ++i)
   {
