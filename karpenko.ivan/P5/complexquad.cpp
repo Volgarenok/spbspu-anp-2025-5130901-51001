@@ -42,17 +42,15 @@ namespace karpenko
     point_t center = getCenter();
     double dx = point.x - center.x;
     double dy = point.y - center.y;
-    vertexA_.x += dx;
-    vertexA_.y += dy;
-    vertexB_.x += dx;
-    vertexB_.y += dy;
-    vertexC_.x += dx;
-    vertexC_.y += dy;
-    vertexD_.x += dx;
-    vertexD_.y += dy;
+    moveVertices(dx, dy);
   }
 
   void ComplexQuad::move(double dx, double dy) noexcept
+  {
+    moveVertices(dx, dy);
+  }
+
+  void ComplexQuad::moveVertices(double dx, double dy) noexcept
   {
     vertexA_.x += dx;
     vertexA_.y += dy;

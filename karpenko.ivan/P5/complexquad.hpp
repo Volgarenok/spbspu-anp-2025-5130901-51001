@@ -16,6 +16,7 @@ namespace karpenko
 
   private:
     void doScale(double coefficient) override;
+    void moveVertices(double dx, double dy) noexcept;
     point_t getCenter() const noexcept;
     double triangleArea(const point_t& a, const point_t& b, const point_t& c) const noexcept;
     point_t vertexA_;

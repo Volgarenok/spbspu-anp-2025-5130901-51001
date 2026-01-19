@@ -41,15 +41,15 @@ namespace karpenko
     point_t center = getCenter();
     double dx = point.x - center.x;
     double dy = point.y - center.y;
-    vertexA_.x += dx;
-    vertexA_.y += dy;
-    vertexB_.x += dx;
-    vertexB_.y += dy;
-    vertexC_.x += dx;
-    vertexC_.y += dy;
+    moveVertices(dx, dy);
   }
 
   void Triangle::move(double dx, double dy) noexcept
+  {
+    moveVertices(dx, dy);
+  }
+
+  void Triangle::moveVertices(double dx, double dy) noexcept
   {
     vertexA_.x += dx;
     vertexA_.y += dy;
