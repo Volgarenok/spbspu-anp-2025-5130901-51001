@@ -11,12 +11,12 @@ namespace draw
     double y;
   };
 
-  bool operator==(point_t lhs, point_t rhs)
+  bool operator==(const point_t &lhs, const point_t &rhs)
   {
     return lhs.x == rhs.x && lhs.y == rhs.y;
   }
 
-  bool operator!=(point_t lhs, point_t rhs)
+  bool operator!=(const point_t &lhs, const point_t &rhs)
   {
     return !(lhs == rhs);
   }
