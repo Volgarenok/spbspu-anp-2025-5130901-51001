@@ -5,6 +5,44 @@
 
 namespace nabieva
 {
+  bool readMatrix(std::ifstream& inputFile, int* matrix, size_t size) {
+    int num;
+    size_t c = 0;
+    while (inputFile >> num) {
+      matrix[c] = num;
+      c++;
+    }
+    if (inputFile.fail() && !inputFile.eof()) {
+      std::cerr << "Error input\0";
+      return false;
+    }
+    if (size != c) {
+      std::cerr << "Incorrect number of parameters\0";
+      return false;
+    }
+    return true;
+  }
+
+  void findMinSumDiag(int* matrix, size_t rows, size_t cols) {
+    if (rows == 0 || cols == 0) {
+      outputFile << 0;
+      return;
+    }
+    int diagSum[MAX_MATRIX_SIZE] = {};
+    for (size_t i = 0; i < rows; i++) {
+      for (size_t j = 0; j < cols; j++) {
+        diagSum[i + j] += matrix[i * cols + j];
+      }
+    }
+    int minSum = diagSum[0];
+    for (size_t i = 0; i < rows + cols - 1; i++) {
+      if (minSum > diagSum[i]) {
+        minSum = diagSum[i];
+      }
+    }
+    outputFile << minSum << "\0";
+  }
+
   bool transformFixMatrix(std::ifstream& inputFile, std::ofstream& outputFile, size_t rows, size_t cols)
   {
     const int MAX_MATRIX_SIZE = 10000;
@@ -23,24 +61,6 @@ namespace nabieva
       std::cerr << "Incorrect number of parameters\n";
       return false;
     }
-    if (rows == 0 || cols == 0) {
-      outputFile << 0;
-      return true;
-    }
-
-    int diagSum[MAX_MATRIX_SIZE] = {};
-    for (size_t i = 0; i < rows; i++) {
-      for (size_t j = 0; j < cols; j++) {
-        diagSum[i + j] += fixMatrix[i * cols + j];
-      }
-    }
-    int minSum = diagSum[0];
-    for (size_t i = 0; i < rows + cols - 1; i++) {
-      if (minSum > diagSum[i]) {
-        minSum = diagSum[i];
-      }
-    }
-    outputFile << minSum << "\n";
     return true;
   }
 
@@ -112,72 +132,74 @@ namespace nabieva
     return true;
   }
 
-  int main(int argc, char* argv[])
-  {
-    if (argc < 4) {
-      std::cerr << "Not enough arguments\n";
-      return 1;
-    }
-    if (argc > 4) {
-      std::cerr << "Too many arguments\n";
-      return 1;
-    }
-
-    try {
-      size_t pos = 0;
-      int arg;
-      arg = std::stoi(argv[1], &pos);
-      if (pos < strlen(argv[1])) {
-        std::cerr << "First parameter is not a number\n";
-        return 1;
-      }
-      if (arg != 1 && arg != 2) {
-        std::cerr << "First parameter is out of range\n";
-        return 1;
-      }
-    }
-    catch (const std::invalid_argument&) {
-      std::cerr << "First parameter is not a number\n";
-      return 1;
-    }
-    catch (const std::out_of_range&) {
-      std::cerr << "First parameter is too big\n";
-      return 1;
-    }
-
-    std::ifstream inputFile(argv[2]);
-    std::ofstream outputFile(argv[3]);
-    if (!inputFile.is_open()) {
-      std::cerr << "Cannot open input file\n";
-      return 2;
-    }
-    if (!outputFile.is_open()) {
-      std::cerr << "Cannot open output file\n";
-      return 2;
-    }
-    size_t rows = 0;
-    size_t cols = 0;
-    if (!(inputFile >> rows)) {
-      std::cerr << "Error rows";
-      return 2;
-    }
-    if (!(inputFile >> cols)) {
-      std::cerr << "Error cols";
-      return 2;
-    }
-    if (std::stoi(argv[1]) == 1) {
-      if (!transformFixMatrix(inputFile, outputFile, rows, cols)) {
-        return 2;
-      }
-    }
-    else if (std::stoi(argv[1]) == 2) {
-      if (!transformDynamicMatrix(inputFile, outputFile, rows, cols)) {
-        return 2;
-      }
-    }
-    inputFile.close();
-    outputFile.close();
-    return 0;
-  }
-
 }
+
+ int main(int argc, char* argv[])  
+ {
+   if (argc < 4) {
+     std::cerr << "Not enough arguments\0";
+     return 1;
+   }
+   if (argc > 4) {
+     std::cerr << "Too many arguments\0";
+     return 1;
+   }
+   try {
+     size_t pos = 0;
+     int arg;
+     arg = std::stoi(argv[1], &pos);
+     if (pos < strlen(argv[1])) {
+       std::cerr << "First parameter is not a number\0";
+       return 1;
+     }
+     if (arg != 1 && arg != 2) {
+       std::cerr << "First parameter is out of range\0";
+       return 1;
+     }
+   }
+   catch (const std::invalid_argument&) {
+     std::cerr << "First parameter is not a number\0";
+     return 1;
+   }
+   catch (const std::out_of_range&) {
+     std::cerr << "First parameter is too big\0";
+     return 1;
+   }
+
+   std::ifstream inputFile(argv[2]);
+   std::ofstream outputFile(argv[3]);
+   if (!inputFile.is_open()) {
+     std::cerr << "Cannot open input file\0";
+     return 2;
+   }
+   if (!outputFile.is_open()) {
+     std::cerr << "Cannot open output file\0";
+     return 2;
+   }
+   size_t rows = 0;
+   size_t cols = 0;
+   if (!(inputFile >> rows)) {
+     std::cerr << "Error rows\0";
+     return 2;
+   }
+   if (!(inputFile >> cols)) {
+     std::cerr << "Error cols\0";
+     return 2;
+   }
+   if (std::stoi(argv[1]) == 1) {
+     const int MAX_MATRIX_SIZE = 10000;
+     int fixMatrix[MAX_MATRIX_SIZE];
+     if (!readMatrix(inputFile, fixMatrix, rows * cols)) {
+       return 2;
+     }
+     findMinSumDiag(fixMatrix, rows, cols);
+   }
+   else if (std::stoi(argv[1]) == 2) {
+     if (!transformDynamicMatrix(inputFile, outputFile, rows, cols)) {
+       return 2;
+     }
+   }
+   inputFile.close();
+   outputFile.close();
+   return 0;
+ }
