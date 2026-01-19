@@ -23,11 +23,12 @@ namespace nabieva
     return true;
   }
 
-  void findMinSumDiag(int* matrix, size_t rows, size_t cols) {
+  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
     if (rows == 0 || cols == 0) {
       outputFile << 0;
       return;
     }
+    const size_t MAX_MATRIX_SIZE = 10000;
     int diagSum[MAX_MATRIX_SIZE] = {};
     for (size_t i = 0; i < rows; i++) {
       for (size_t j = 0; j < cols; j++) {
@@ -41,27 +42,6 @@ namespace nabieva
       }
     }
     outputFile << minSum << "\0";
-  }
-
-  bool transformFixMatrix(std::ifstream& inputFile, std::ofstream& outputFile, size_t rows, size_t cols)
-  {
-    const int MAX_MATRIX_SIZE = 10000;
-    int num;
-    int fixMatrix[MAX_MATRIX_SIZE];
-    size_t c = 0;
-    while (inputFile >> num) {
-      fixMatrix[c] = num;
-      c++;
-    }
-    if (inputFile.fail() && !inputFile.eof()) {
-      std::cerr << "Error input\n";
-      return false;
-    }
-    if (rows * cols != c) {
-      std::cerr << "Incorrect number of parameters\n";
-      return false;
-    }
-    return true;
   }
 
   bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile, size_t rows, size_t cols)
@@ -136,6 +116,7 @@ namespace nabieva
 
  int main(int argc, char* argv[])  
  {
+   using namespace nabieva;
    if (argc < 4) {
      std::cerr << "Not enough arguments\0";
      return 1;
@@ -187,12 +168,12 @@ namespace nabieva
      return 2;
    }
    if (std::stoi(argv[1]) == 1) {
-     const int MAX_MATRIX_SIZE = 10000;
+     const size_t MAX_MATRIX_SIZE = 10000;
      int fixMatrix[MAX_MATRIX_SIZE];
      if (!readMatrix(inputFile, fixMatrix, rows * cols)) {
        return 2;
      }
-     findMinSumDiag(fixMatrix, rows, cols);
+     findMinSumDiag(outputFile, fixMatrix, rows, cols);
    }
    else if (std::stoi(argv[1]) == 2) {
      if (!transformDynamicMatrix(inputFile, outputFile, rows, cols)) {
