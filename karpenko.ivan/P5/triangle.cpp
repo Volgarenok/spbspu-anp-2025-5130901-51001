@@ -15,7 +15,7 @@ double karpenko::Triangle::getArea() const noexcept
   double cy_ay = vertexC_.y - vertexA_.y;
   double cx_ax = vertexC_.x - vertexA_.x;
   double by_ay = vertexB_.y - vertexA_.y;
-  
+
   double part1 = bx_ax * cy_ay;
   double part2 = cx_ax * by_ay;
   return 0.5 * std::fabs(part1 - part2);
@@ -32,7 +32,7 @@ karpenko::rectangle_t karpenko::Triangle::getFrameRect() const noexcept
   double height = maxY - minY;
   double centerX = (minX + maxX) / 2.0;
   double centerY = (minY + maxY) / 2.0;
-  
+
   return {width, height, {centerX, centerY}};
 }
 

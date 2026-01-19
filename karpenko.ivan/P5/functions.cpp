@@ -13,7 +13,7 @@ void karpenko::scaleShapes(Shape** shapes, size_t count, const point_t& point, d
 
     shapes[i]->move(point);
     shapes[i]->scale(coefficient);
-    
+
     double scaled_dx = -dx * coefficient;
     double scaled_dy = -dy * coefficient;
     shapes[i]->move(scaled_dx, scaled_dy);
@@ -31,7 +31,7 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
   rectangle_t firstFrame = shapes[0]->getFrameRect();
   double halfWidth = firstFrame.width / 2.0;
   double halfHeight = firstFrame.height / 2.0;
-  
+
   double left = firstFrame.pos.x - halfWidth;
   double right = firstFrame.pos.x + halfWidth;
   double bottom = firstFrame.pos.y - halfHeight;
@@ -42,7 +42,7 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
     rectangle_t frame = shapes[i]->getFrameRect();
     double currentHalfWidth = frame.width / 2.0;
     double currentHalfHeight = frame.height / 2.0;
-    
+
     double currentLeft = frame.pos.x - currentHalfWidth;
     double currentRight = frame.pos.x + currentHalfWidth;
     double currentBottom = frame.pos.y - currentHalfHeight;

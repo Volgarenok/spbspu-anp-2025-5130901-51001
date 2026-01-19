@@ -28,7 +28,7 @@ karpenko::rectangle_t karpenko::ComplexQuad::getFrameRect() const noexcept
   double height = maxY - minY;
   double centerX = (minX + maxX) / 2.0;
   double centerY = (minY + maxY) / 2.0;
-  
+
   return {width, height, {centerX, centerY}};
 }
 
@@ -60,12 +60,12 @@ void karpenko::ComplexQuad::moveVertices(double dx, double dy) noexcept
 karpenko::point_t karpenko::ComplexQuad::getCenter() const noexcept
 {
   const double epsilon = 1e-9;
-  
+
   double ac_x = vertexA_.x - vertexC_.x;
   double ac_y = vertexA_.y - vertexC_.y;
   double bd_x = vertexB_.x - vertexD_.x;
   double bd_y = vertexB_.y - vertexD_.y;
-  
+
   double denominator = ac_x * bd_y - ac_y * bd_x;
 
   if (std::fabs(denominator) < epsilon)
@@ -78,13 +78,13 @@ karpenko::point_t karpenko::ComplexQuad::getCenter() const noexcept
   {
     double ab_x = vertexA_.x - vertexB_.x;
     double ab_y = vertexA_.y - vertexB_.y;
-    
+
     double numerator = ab_x * bd_y - ab_y * bd_x;
     double t = numerator / denominator;
 
     double cx = vertexC_.x - vertexA_.x;
     double cy = vertexC_.y - vertexA_.y;
-    
+
     double centerX = vertexA_.x + t * cx;
     double centerY = vertexA_.y + t * cy;
     return {centerX, centerY};
