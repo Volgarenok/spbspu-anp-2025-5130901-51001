@@ -1,42 +1,39 @@
 #include "rectangle.hpp"
 #include <stdexcept>
 
-namespace karpenko
+karpenko::Rectangle::Rectangle(double width, double height, const point_t& center) noexcept:
+  width_(width),
+  height_(height),
+  center_(center)
+{}
+
+double karpenko::Rectangle::getArea() const noexcept
 {
-  Rectangle::Rectangle(double width, double height, const point_t& center) noexcept:
-    width_(width),
-    height_(height),
-    center_(center)
-  {}
+  return width_ * height_;
+}
 
-  double Rectangle::getArea() const noexcept
-  {
-    return width_ * height_;
-  }
+karpenko::rectangle_t karpenko::Rectangle::getFrameRect() const noexcept
+{
+  rectangle_t frame;
+  frame.width = width_;
+  frame.height = height_;
+  frame.pos = center_;
+  return frame;
+}
 
-  rectangle_t Rectangle::getFrameRect() const noexcept
-  {
-    rectangle_t frame;
-    frame.width = width_;
-    frame.height = height_;
-    frame.pos = center_;
-    return frame;
-  }
+void karpenko::Rectangle::move(const point_t& point) noexcept
+{
+  center_ = point;
+}
 
-  void Rectangle::move(const point_t& point) noexcept
-  {
-    center_ = point;
-  }
+void karpenko::Rectangle::move(double dx, double dy) noexcept
+{
+  center_.x += dx;
+  center_.y += dy;
+}
 
-  void Rectangle::move(double dx, double dy) noexcept
-  {
-    center_.x += dx;
-    center_.y += dy;
-  }
-
-  void Rectangle::doScale(double coefficient)
-  {
-    width_ *= coefficient;
-    height_ *= coefficient;
-  }
+void karpenko::Rectangle::doScale(double coefficient)
+{
+  width_ *= coefficient;
+  height_ *= coefficient;
 }
