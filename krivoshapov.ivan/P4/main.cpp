@@ -60,60 +60,45 @@ namespace krivoshapov
 
     return 0;
   }
-}
 
-char *readString(std::istream &in, size_t &size, size_t &capacity)
-{
-  const size_t INIT_CAPACITY = 128;
-  char *buffer = nullptr;
-
-  try
+  char *readString(std::istream &in, size_t &size, size_t &capacity)
   {
+    const size_t INIT_CAPACITY = 128;
+    char *buffer = nullptr;
+
     buffer = new char[INIT_CAPACITY]();
-  }
-  catch (const std::bad_alloc &)
-  {
-    return nullptr;
-  }
 
-  capacity = INIT_CAPACITY;
-  size = 0;
-  char ch;
+    capacity = INIT_CAPACITY;
+    size = 0;
+    char ch = 0;
 
-  while (in.get(ch) && ch != '\n')
-  {
-    if (size + 1 >= capacity)
+    while (in.get(ch) && ch != '\n')
     {
-      size_t newCapacity = capacity * 2;
-      char *newBuf = nullptr;
+      if (size + 1 >= capacity)
+      {
+        size_t newCapacity = capacity * 2;
+        char *newBuf = nullptr;
 
-      try
-      {
         newBuf = new char[newCapacity]();
-      }
-      catch (const std::bad_alloc &)
-      {
+        std::memcpy(newBuf, buffer, size);
         delete[] buffer;
-        return nullptr;
+        buffer = newBuf;
+        capacity = newCapacity;
       }
-      std::memcpy(newBuf, buffer, size);
-      delete[] buffer;
-      buffer = newBuf;
-      capacity = newCapacity;
+
+      buffer[size] = ch;
+      ++size;
     }
 
-    buffer[size] = ch;
-    ++size;
-  }
+    if (in.bad())
+    {
+      delete[] buffer;
+      throw std::runtime_error("Input stream error");
+    }
 
-  if (in.bad())
-  {
-    delete[] buffer;
-    return nullptr;
+    buffer[size] = '\0';
+    return buffer;
   }
-
-  buffer[size] = '\0';
-  return buffer;
 }
 
 int main()
@@ -121,9 +106,19 @@ int main()
   size_t size = 0;
   size_t capacity = 0;
 
-  char *inBuf = readString(std::cin, size, capacity);
-  if (inBuf == nullptr)
+  char *inBuf = nullptr;
+  try
   {
+    inBuf = krivoshapov::readString(std::cin, size, capacity);
+  }
+  catch (const std::bad_alloc &)
+  {
+    std::cerr << "Memory allocation failed\n";
+    return 1;
+  }
+  catch (const std::exception &e)
+  {
+    std::cerr << "Error: " << e.what() << "\n";
     return 1;
   }
 
@@ -135,6 +130,7 @@ int main()
   catch (const std::bad_alloc &)
   {
     delete[] inBuf;
+    std::cerr << "Memory allocation failed\n";
     return 1;
   }
 
