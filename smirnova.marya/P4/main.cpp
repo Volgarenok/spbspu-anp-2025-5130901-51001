@@ -181,6 +181,7 @@ int main()
   if (!words || countWords == 0) {
     if (words) {
       free(words);
+      std::cerr << "Memory allocation failed or nothing entered\n";
       return 1;
     }
   }
