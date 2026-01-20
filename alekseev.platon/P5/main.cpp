@@ -415,10 +415,6 @@ int main()
     std::cerr << "init error: " << e.what() << "\n";
     alekseev::removeArray(shapes, shape_count);
     return 2;
-  } catch (...) {
-    std::cerr << "init error\n";
-    alekseev::removeArray(shapes, shape_count);
-    return 2;
   }
 
   alekseev::outputParams(std::cout, shapes, shape_count);
@@ -447,10 +443,6 @@ int main()
     alekseev::outputParams(std::cout, shapes, shape_count);
   } catch (const std::exception &e) {
     std::cerr << "scale error: " << e.what() << "\n";
-    alekseev::removeArray(shapes, shape_count);
-    return 2;
-  } catch (...) {
-    std::cerr << "scale error\n";
     alekseev::removeArray(shapes, shape_count);
     return 2;
   }
