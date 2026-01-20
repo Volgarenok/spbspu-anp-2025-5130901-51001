@@ -10,11 +10,11 @@ namespace vishnyakov
 
 bool vishnyakov::isIn(char *str, char letter)
 {
-  for(size_t i = 0; str[i] != '\0'; ++i)
+  for (size_t i = 0; str[i] != '\0'; ++i)
   {
     if (str[i] == letter)
     {
-        return 1;
+      return 1;
     }
   }
   return 0;
@@ -34,11 +34,11 @@ char *vishnyakov::getline(std::istream &input, size_t &size)
 
   size_t capacity = 16;
 
-  char* line = reinterpret_cast<char*>(malloc(sizeof(char) * capacity));
+  char *line = reinterpret_cast< char* >(malloc(sizeof(char) * capacity));
 
   if (!line)
   {
-    throw std::bad_alloc();
+    return nullptr;
   }
 
   if (is_flag)
@@ -46,7 +46,7 @@ char *vishnyakov::getline(std::istream &input, size_t &size)
     input >> std::noskipws;
   }
 
-  char sym;
+  char sym = ' ';
 
   while (!(input >> sym).fail() && sym != '\n')
   {
@@ -63,7 +63,7 @@ char *vishnyakov::getline(std::istream &input, size_t &size)
         {
           input >> std::skipws;
         }
-        throw std::bad_alloc();
+        return nullptr;
       }
 
       vishnyakov::copy(line, tmp_line, size);
@@ -88,7 +88,7 @@ char *vishnyakov::getline(std::istream &input, size_t &size)
     throw std::logic_error("Input failed");
   }
 
-  line[size] = 0;
+  line[size] = '\0';
   return line;
 }
 
@@ -96,7 +96,8 @@ size_t vishnyakov::amountOfLatLetters(char *str)
 {
   size_t result = 0;
   const char *lowercase_lat_alphabet = "abcdefghijklmnopqrstuvwxyz";
-  for(size_t i = 0; i < 26; ++i)
+  const size_t size_of_alphabet = 26;
+  for (size_t i = 0; i < size_of_alphabet; ++i)
   {
     result += vishnyakov::isIn(str, lowercase_lat_alphabet[i]);
   }
@@ -105,7 +106,7 @@ size_t vishnyakov::amountOfLatLetters(char *str)
 
  void vishnyakov::uppercaseToLowercase(char *str)
 {
-  for(size_t i = 0; str[i] != '\0'; i++)
+  for (size_t i = 0; str[i] != '\0'; i++)
   {
     if (std::isalpha(str[i]))
     {
@@ -118,16 +119,11 @@ int main()
 {
   using namespace vishnyakov;
   size_t size = 0;
-  char* line = nullptr;
+  char *line = nullptr;
 
   try
   {
     line = getline(std::cin, size);
-  }
-  catch (const std::bad_alloc& e)
-  {
-    std::cerr << e.what() << '\n';
-    return 1;
   }
   catch (const std::logic_error& e)
   {
@@ -137,7 +133,7 @@ int main()
 
   uppercaseToLowercase(line);
   std::cout << amountOfLatLetters(line) << '\n';
-  std:: cout << line << '\n';
+  std::cout << line << '\n';
 
   free(line);
   return 0;
