@@ -20,29 +20,29 @@ namespace kitserov
     virtual rectangle_t getFrameRect() const noexcept = 0;
     virtual void move(float dx, float dy) noexcept = 0;
     virtual void move(const point_t& p) noexcept = 0;
-    virtual void scale(float k) = 0;
+    virtual void scale(float k) = 0 noexcept = 0;
   };
 
   struct Rectangle final: Shape
   {
-    Rectangle(point_t p, float w, float h);
+    Rectangle(point_t p, float w, float h) noexcept;
     float getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(float dx, float dy) noexcept override;
     void move(const point_t& p) noexcept override;
-    void scale(float k) override;
+    void scale(float k) noexcept override;
   private:
     rectangle_t rect_;
   };
 
   struct Xquare final: Shape
   {
-    Xquare(point_t p, float s);
+    Xquare(point_t p, float s) noexcept;
     float getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(float dx, float dy) noexcept override;
     void move(const point_t& p) noexcept override;
-    void scale(float k) override;
+    void scale(float k) noexcept override;
   private:
     point_t centre_;
     float side_;
@@ -51,25 +51,25 @@ namespace kitserov
   struct Polygon final: Shape
   {
     Polygon(point_t* vertices, size_t vertexCount);
-    ~Polygon();
+    ~Polygon() noexcept;
     float getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(float dx, float dy) noexcept override;
     void move(const point_t& p) noexcept override;
-    void scale(float k) override;
+    void scale(float k) noexcept override;
   private:
     point_t* vertices_;
     size_t vertexCount_;
     point_t center_;
   };
 
-  rectangle_t frame(const point_t* pts, size_t s);
-  void frameOutput(std::ostream& os, const rectangle_t& fr);
-  void shapeOutput(std::ostream& os, const Shape* sh, const char* name);
-  void printAllInfo(std::ostream& os, const Shape* const* shapes, const char* const* names, size_t count);
+  rectangle_t frame(const point_t* pts, size_t s) noexcept;
+  void frameOutput(std::ostream& os, const rectangle_t& fr) noexcept;
+  void shapeOutput(std::ostream& os, const Shape* sh, const char* name) noexcept;
+  void printAllInfo(std::ostream& os, const Shape* const* shapes, const char* const* names, size_t count) noexcept;
   void scalePoint(Shape* sh, const point_t& p, float k);
-  rectangle_t getOverallFrame(const Shape* const* shapes, size_t count);
-  point_t calculateCentroid(const point_t* vertices, size_t count);
+  rectangle_t getOverallFrame(const Shape* const* shapes, size_t count) noexcept;
+  point_t calculateCentroid(const point_t* vertices, size_t count) noexcept;
 }
 
 int main()
