@@ -74,12 +74,6 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
     in.putback(c);
   }
 
-  if (wordCount == 0)
-  {
-    delete[] words;
-    return nullptr;
-  }
-
   char** resizedWords = new char*[wordCount];
   for (size_t i = 0; i < wordCount; ++i)
   {
