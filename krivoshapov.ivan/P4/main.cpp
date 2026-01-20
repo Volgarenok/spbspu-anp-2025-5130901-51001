@@ -4,43 +4,9 @@
 
 namespace krivoshapov
 {
-  char *rmvVow(const char *src, char *dst, size_t dstSz)
+  bool isWhitespace(char c)
   {
-    if (src == nullptr || dst == nullptr || dstSz == 0)
-    {
-      if (dst != nullptr && dstSz > 0)
-      {
-        dst[0] = '\0';
-      }
-      return dst;
-    }
-
-    const char vowels[] = "aeiouyAEIOUY";
-    size_t writeIdx = 0;
-
-    for (size_t readIdx = 0; src[readIdx] != '\0'; ++readIdx)
-    {
-      int isVowel = 0;
-      char currentChar = src[readIdx];
-
-      for (size_t i = 0; vowels[i] != '\0'; ++i)
-      {
-        if (currentChar == vowels[i])
-        {
-          isVowel = 1;
-          break;
-        }
-      }
-
-      if (!isVowel)
-      {
-        dst[writeIdx] = currentChar;
-        ++writeIdx;
-      }
-    }
-
-    dst[writeIdx] = '\0';
-    return dst;
+    return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
   }
 
   int seqSym(const char *str, size_t len)
@@ -49,7 +15,6 @@ namespace krivoshapov
     {
       return 0;
     }
-
     for (size_t i = 0; i < len - 1; ++i)
     {
       if (str[i] == str[i + 1])
@@ -57,59 +22,118 @@ namespace krivoshapov
         return 1;
       }
     }
-
     return 0;
   }
 
-  char *readString(std::istream &in, size_t &size, size_t &capacity)
+  char **readWords(std::istream &in, size_t &wordCount)
   {
-    const size_t INIT_CAPACITY = 128;
-    char *buffer = nullptr;
+    const size_t MAX_WORDS = 1000;
+    const size_t MAX_WORD_LEN = 256;
 
-    buffer = new char[INIT_CAPACITY]();
+    char **words = new char *[MAX_WORDS];
+    for (size_t i = 0; i < MAX_WORDS; ++i)
+    {
+      words[i] = nullptr;
+    }
 
-    capacity = INIT_CAPACITY;
-    size = 0;
+    wordCount = 0;
+    char buffer[MAX_WORD_LEN];
+    size_t bufIdx = 0;
     char ch = 0;
 
-    while (in.get(ch) && ch != '\n')
+    while (in.get(ch))
     {
-      if (size + 1 >= capacity)
+      if (isWhitespace(ch))
       {
-        size_t newCapacity = capacity * 2;
-        char *newBuf = nullptr;
+        // Конец слова
+        if (bufIdx > 0)
+        {
+          buffer[bufIdx] = '\0';
 
-        newBuf = new char[newCapacity]();
-        std::memcpy(newBuf, buffer, size);
-        delete[] buffer;
-        buffer = newBuf;
-        capacity = newCapacity;
+          // Выделяем память только для нужного размера слова
+          words[wordCount] = new char[bufIdx + 1];
+          std::strcpy(words[wordCount], buffer);
+          ++wordCount;
+          bufIdx = 0;
+
+          if (wordCount >= MAX_WORDS)
+          {
+            break;
+          }
+        }
       }
+      else
+      {
+        // Символ слова
+        if (bufIdx < MAX_WORD_LEN - 1)
+        {
+          buffer[bufIdx] = ch;
+          ++bufIdx;
+        }
+      }
+    }
 
-      buffer[size] = ch;
-      ++size;
+    // Последнее слово, если есть
+    if (bufIdx > 0 && wordCount < MAX_WORDS)
+    {
+      buffer[bufIdx] = '\0';
+      words[wordCount] = new char[bufIdx + 1];
+      std::strcpy(words[wordCount], buffer);
+      ++wordCount;
     }
 
     if (in.bad())
     {
-      delete[] buffer;
+      for (size_t i = 0; i < wordCount; ++i)
+      {
+        delete[] words[i];
+      }
+      delete[] words;
       throw std::runtime_error("Input stream error");
     }
 
-    buffer[size] = '\0';
-    return buffer;
+    return words;
+  }
+
+  // Применение функции проверки ко всем словам
+  void processAllWords(char **words, size_t wordCount, int (*checkFunc)(const char *, size_t))
+  {
+    for (size_t i = 0; i < wordCount; ++i)
+    {
+      size_t len = std::strlen(words[i]);
+      int result = checkFunc(words[i], len);
+      std::cout << result;
+      if (i < wordCount - 1)
+      {
+        std::cout << " ";
+      }
+    }
+    std::cout << "\n";
+  }
+
+  // Освобождение памяти
+  void freeWords(char **words, size_t wordCount)
+  {
+    if (words == nullptr)
+    {
+      return;
+    }
+    for (size_t i = 0; i < wordCount; ++i)
+    {
+      delete[] words[i];
+    }
+    delete[] words;
   }
 }
 
 int main()
 {
-  size_t size = 0;
-  size_t capacity = 0;
+  size_t wordCount = 0;
+  char **words = nullptr;
 
-  char *inBuf = nullptr;
   try
   {
-    inBuf = krivoshapov::readString(std::cin, size, capacity);
+    words = krivoshapov::readWords(std::cin, wordCount);
   }
   catch (const std::bad_alloc &)
   {
@@ -122,25 +146,16 @@ int main()
     return 1;
   }
 
-  char *resBuf = nullptr;
-  try
+  if (wordCount == 0)
   {
-    resBuf = new char[capacity]();
-  }
-  catch (const std::bad_alloc &)
-  {
-    delete[] inBuf;
-    std::cerr << "Memory allocation failed\n";
-    return 1;
+    std::cout << "\n";
+    krivoshapov::freeWords(words, wordCount);
+    return 0;
   }
 
-  krivoshapov::rmvVow(inBuf, resBuf, capacity);
-  std::cout << resBuf << "\n";
+  // Применяем функцию проверки ко всем словам
+  krivoshapov::processAllWords(words, wordCount, krivoshapov::seqSym);
 
-  int seqRes = krivoshapov::seqSym(inBuf, size);
-  std::cout << seqRes << "\n";
-
-  delete[] inBuf;
-  delete[] resBuf;
+  krivoshapov::freeWords(words, wordCount);
   return 0;
 }
