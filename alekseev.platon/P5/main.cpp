@@ -50,13 +50,12 @@ namespace alekseev
     void move(const point_t &to) override;
     void move(double dx, double dy) override;
 
-  protected:
-    void doScale(double coef) override;
-
   private:
     point_t center_;
     double width_;
     double height_;
+
+    void doScale(double coef) override;
   };
 
   class Square final: public Shape
@@ -70,12 +69,11 @@ namespace alekseev
     void move(const point_t &to) override;
     void move(double dx, double dy) override;
 
-  protected:
-    void doScale(double coef) override;
-
   private:
     point_t center_;
     double side_;
+
+    void doScale(double coef) override;
   };
 
   class Xquare final: public Shape
@@ -89,12 +87,11 @@ namespace alekseev
     void move(const point_t &to) override;
     void move(double dx, double dy) override;
 
-  protected:
-    void doScale(double coef) override;
-
   private:
     point_t center_;
     double diagonal_;
+
+    void doScale(double coef) override;
   };
 
   void scaleRelative(Shape &shp, const point_t &about, double coef);
