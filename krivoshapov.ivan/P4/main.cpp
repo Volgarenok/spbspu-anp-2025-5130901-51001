@@ -45,12 +45,10 @@ namespace krivoshapov
     {
       if (isWhitespace(ch))
       {
-        // Конец слова
         if (bufIdx > 0)
         {
           buffer[bufIdx] = '\0';
 
-          // Выделяем память только для нужного размера слова
           words[wordCount] = new char[bufIdx + 1];
           std::strcpy(words[wordCount], buffer);
           ++wordCount;
@@ -64,7 +62,6 @@ namespace krivoshapov
       }
       else
       {
-        // Символ слова
         if (bufIdx < MAX_WORD_LEN - 1)
         {
           buffer[bufIdx] = ch;
@@ -73,7 +70,6 @@ namespace krivoshapov
       }
     }
 
-    // Последнее слово, если есть
     if (bufIdx > 0 && wordCount < MAX_WORDS)
     {
       buffer[bufIdx] = '\0';
@@ -94,8 +90,6 @@ namespace krivoshapov
 
     return words;
   }
-
-  // Применение функции проверки ко всем словам
   void processAllWords(char **words, size_t wordCount, int (*checkFunc)(const char *, size_t))
   {
     for (size_t i = 0; i < wordCount; ++i)
@@ -111,7 +105,6 @@ namespace krivoshapov
     std::cout << "\n";
   }
 
-  // Освобождение памяти
   void freeWords(char **words, size_t wordCount)
   {
     if (words == nullptr)
@@ -153,7 +146,6 @@ int main()
     return 0;
   }
 
-  // Применяем функцию проверки ко всем словам
   krivoshapov::processAllWords(words, wordCount, krivoshapov::seqSym);
 
   krivoshapov::freeWords(words, wordCount);
