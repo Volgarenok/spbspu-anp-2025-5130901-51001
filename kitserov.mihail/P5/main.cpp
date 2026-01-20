@@ -159,10 +159,7 @@ void kitserov::Rectangle::move(const point_t& p) noexcept
 
 void kitserov::Rectangle::scale(float k)
 {
-  if (k <= 0) {
-    throw std::logic_error("bad ratio");
-  }
-  rect_.width *= k;
+  rect_.width *= k;	
   rect_.height *= k;
 }
 
@@ -194,9 +191,6 @@ void kitserov::Xquare::move(const point_t& p) noexcept
 
 void kitserov::Xquare::scale(float k)
 {
-  if (k <= 0) {
-    throw std::logic_error("bad ratio");
-  }
   side_ *= k;
 }
 
@@ -271,10 +265,6 @@ void kitserov::Polygon::move(const point_t& p) noexcept
 
 void kitserov::Polygon::scale(float k)
 {
-  if (k <= 0) {
-    throw std::logic_error("bad ratio");
-  }
-
   for (size_t i = 0; i < vertexCount_; ++i) {
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
     vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
@@ -336,6 +326,9 @@ void kitserov::shapeOutput(std::ostream& os, const Shape* sh, const char* name)
 
 void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
 {
+  if (k <= 0) {
+    throw std::logic_error("bad ratio");
+  }
   rectangle_t fr = sh->getFrameRect();
   float dx = p.x - fr.pos.x;
   float dy = p.y - fr.pos.y;
