@@ -238,7 +238,7 @@ int main()
     total_amount_of_lat_latters += amountOfLatLetters(words[i]);
   }
   std::cout << '\n' << total_amount_of_lat_latters << '\n';
-  
+
   for (size_t i = 0; i < size; ++i)
   {
     free(words[i]);
@@ -247,5 +247,4 @@ int main()
 
   return 0;
 }
-
 
