@@ -91,11 +91,6 @@ int main()
     return 2;
   }
 
-  float totalAreaPrevious = 0.0;
-  for (size_t i = 0; i < count; i++) {
-    totalAreaPrevious += shapes[i]->getArea();
-  }
-
   std::cout << "BEFORE SCALING\n";
   printAllInfo(std::cout, shapes, shapeNames, count);
 
