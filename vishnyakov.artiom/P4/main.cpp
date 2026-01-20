@@ -92,7 +92,7 @@ char *vishnyakov::getLine(std::istream &input, size_t &size)
   {
     free(line);
     size = 0;
-    throw std::logic_error("Input failed");
+    return nullptr;
   }
 
   line[size] = '\0';
