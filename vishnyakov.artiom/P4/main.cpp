@@ -5,7 +5,9 @@ namespace vishnyakov
   void uppercaseToLowercase(char *str);
   bool isIn(char *str, char letter);
   void copy(const char *a, char *b, size_t l);
-  char *getline(std::istream &input, size_t &size);
+  bool isSpace(char letter);
+  char *getLine(std::istream &input, size_t &size);
+  char **getWords(std::istream &input, size_t &size, bool (*isSpace)(char));
 }
 
 bool vishnyakov::isIn(char *str, char letter)
@@ -28,7 +30,12 @@ void vishnyakov::copy(const char *a, char *b, size_t l)
   }
 }
 
-char *vishnyakov::getline(std::istream &input, size_t &size)
+bool vishnyakov::isSpace(char letter)
+{
+  return std::isspace(static_cast< unsigned char >(letter));
+}
+
+char *vishnyakov::getLine(std::istream &input, size_t &size)
 {
   bool is_flag = input.flags() & std::ios_base::skipws;
 
@@ -66,7 +73,7 @@ char *vishnyakov::getline(std::istream &input, size_t &size)
         return nullptr;
       }
 
-      vishnyakov::copy(line, tmp_line, size);
+      copy(line, tmp_line, size);
       free(line);
       capacity = new_capacity;
       line = tmp_line;
@@ -90,6 +97,101 @@ char *vishnyakov::getline(std::istream &input, size_t &size)
 
   line[size] = '\0';
   return line;
+}
+
+char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(char))
+{
+  size = 0;
+  size_t len = 0;
+  char *line = getLine(input, len);
+
+  if (!line || len == 0)
+  {
+    free(line);
+    return nullptr;
+  }
+
+  size_t capacity = 10;
+  char **words = reinterpret_cast< char** >(malloc(sizeof(char*) * capacity));
+
+  if (!words)
+  {
+    free(line);
+    return nullptr;
+  }
+
+  size_t count = 0, i = 0;
+  while(i < len)
+  {
+
+    while(i < len && isSpace(line[i]))
+    {
+      ++i;
+    }
+
+    if (i >= len)
+    {
+      break;
+    }
+
+    size_t start = i;
+    while (i < len && !isSpace(line[i]))
+    {
+      ++i;
+    }
+
+    size_t len_of_word = i - start;
+    char *word = reinterpret_cast< char* >(malloc(len_of_word + 1));
+
+    if (!word)
+    {
+      for (size_t j = 0; j < count; ++j)
+      {
+        free(words[j]);
+      }
+      free(line);
+      free(words);
+      return nullptr;
+    }
+
+    for (size_t j = 0; j < len_of_word; ++j)
+    {
+      word[j] = line[start + j];
+    }
+
+    word[len_of_word] = '\0';
+    words[count] = word;
+    count++;
+
+    if (count == capacity)
+    {
+      size_t new_capacity = capacity * 2;
+      char **tmp_words = reinterpret_cast< char** >(malloc(new_capacity * sizeof(char*)));
+
+      if(!tmp_words)
+      {
+        for (size_t j = 0; j < count; ++j)
+        {
+          free(words[j]);
+        }
+        free(line);
+        free(words);
+        return nullptr;
+      }
+
+      for (size_t j = 0; j < count; ++j)
+      {
+        tmp_words[j] = words[j];
+      }
+      free(words);
+      words = tmp_words;
+      capacity = new_capacity;
+    }
+  }
+
+  size = count;
+  free(line);
+  return words;
 }
 
 size_t vishnyakov::amountOfLatLetters(char *str)
@@ -118,24 +220,31 @@ size_t vishnyakov::amountOfLatLetters(char *str)
 int main()
 {
   using namespace vishnyakov;
-  size_t size = 0;
-  char *line = nullptr;
 
-  try
+  size_t size = 0;
+  char **words = getWords(std::cin, size, isSpace);
+
+  if (!words || size == 0)
   {
-    line = getline(std::cin, size);
-  }
-  catch (const std::logic_error& e)
-  {
-    std::cerr << e.what() << '\n';
+    free(words);
     return 1;
   }
 
-  uppercaseToLowercase(line);
-  std::cout << amountOfLatLetters(line) << '\n';
-  std::cout << line << '\n';
+  size_t total_amount_of_lat_latters = 0;
+  for(size_t i = 0; i < size; ++i)
+  {
+    uppercaseToLowercase(words[i]);
+    std::cout << words[i] << ' ';
+    total_amount_of_lat_latters += amountOfLatLetters(words[i]);
+  }
+  std::cout << '\n' << total_amount_of_lat_latters << '\n';
+  
+  for (size_t i = 0; i < size; ++i)
+  {
+    free(words[i]);
+  }
+  free(words);
 
-  free(line);
   return 0;
 }
 
