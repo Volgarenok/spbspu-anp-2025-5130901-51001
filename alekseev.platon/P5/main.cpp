@@ -332,7 +332,7 @@ void alekseev::scaleRelative(Shape &shp, const point_t &about, double coef)
   const double new_x = about.x + (old_center.x - about.x) * coef;
   const double new_y = about.y + (old_center.y - about.y) * coef;
   const point_t new_center = {new_x, new_y};
-  shp.scale(coef);
+  shp.scaleUnchecked(coef);
   shp.move(new_center);
 }
 
