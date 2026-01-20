@@ -179,12 +179,10 @@ int main()
   char **words = smirnova::getWords(std::cin, countWords, checkSpace);
 
   if (!words)) {
-    std::cerr << "Memory allocation failed\n";
     return 1;
   }
   if (countWords == 0) {
     free(words);
-    std::cerr << "Nothing entered\n";
     return 1;
   }
   const char *defaultStr = "8default7";
