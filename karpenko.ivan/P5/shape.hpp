@@ -26,15 +26,7 @@ namespace karpenko
     virtual rectangle_t getFrameRect() const noexcept = 0;
     virtual void move(const point_t& point) noexcept = 0;
     virtual void move(double dx, double dy) noexcept = 0;
-    void scale(double coefficient)
-    {
-      if (coefficient <= 0.0)
-      {
-        throw std::invalid_argument("Scaling coefficient must be positive");
-      }
-      unsafeScale(coefficient);
-    }
-
+    void scale(double coefficient);
     virtual void unsafeScale(double coefficient) = 0;
 
   };
