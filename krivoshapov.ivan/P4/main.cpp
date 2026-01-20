@@ -48,7 +48,6 @@ namespace krivoshapov
         if (bufIdx > 0)
         {
           buffer[bufIdx] = '\0';
-
           words[wordCount] = new char[bufIdx + 1];
           std::strcpy(words[wordCount], buffer);
           ++wordCount;
@@ -90,6 +89,7 @@ namespace krivoshapov
 
     return words;
   }
+
   void processAllWords(char **words, size_t wordCount, int (*checkFunc)(const char *, size_t))
   {
     for (size_t i = 0; i < wordCount; ++i)
@@ -141,9 +141,9 @@ int main()
 
   if (wordCount == 0)
   {
-    std::cout << "\n";
+    std::cerr << "Empty input\n";
     krivoshapov::freeWords(words, wordCount);
-    return 0;
+    return 2;
   }
 
   krivoshapov::processAllWords(words, wordCount, krivoshapov::seqSym);
