@@ -60,6 +60,22 @@ char **smirnova::getWords(std::istream &in, size_t &size,
       word[l] = line[start + l];
     }
     word[wordLen] = '\0';
+    if (countWords == cap) {
+      size_t newCap = cap * 2;
+      char **newWords = reinterpret_cast< char** >(malloc(newCap * sizeof(char*)));
+      if (!newWords) {
+        free(word);
+        for (size_t k = 0; k < countWords; ++k) {
+          free(words);
+          free(line);
+          return nullptr;
+        }
+      }
+      std::memcpy(newWords, words, countWords * sizeof(char*));
+      free(words);
+      words = newWords;
+      cap = newCap;
+    }
     words[countWords++] = word;
   }
   size = countWords;
@@ -163,7 +179,6 @@ int main()
   char **words = smirnova::getWords(std::cin, countWords, checkSpace);
 
   if (!words || countWords == 0) {
-    std::cerr << "\nMemory allocation failed or nothing entered\n";
     if (words) {
       free(words);
       return 1;
