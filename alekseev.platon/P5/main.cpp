@@ -42,7 +42,7 @@ namespace alekseev
   class Rectangle final: public Shape
   {
   public:
-    Rectangle(point_t a, point_t b);
+    Rectangle(const point_t &a, const point_t &b);
     explicit Rectangle(const rectangle_t &r);
 
     double getArea() const override;
@@ -62,7 +62,7 @@ namespace alekseev
   class Square final: public Shape
   {
   public:
-    Square(point_t center, double side);
+    Square(const point_t &center, double side);
     explicit Square(const rectangle_t &r);
 
     double getArea() const override;
@@ -81,7 +81,7 @@ namespace alekseev
   class Xquare final: public Shape
   {
   public:
-    Xquare(point_t center, double diagonal);
+    Xquare(const point_t &center, double diagonal);
     explicit Xquare(const rectangle_t &r);
 
     double getArea() const override;
@@ -124,7 +124,25 @@ bool alekseev::operator!=(const rectangle_t &lhs, const rectangle_t &rhs)
   return !(lhs == rhs);
 }
 
-alekseev::Rectangle::Rectangle(point_t a, point_t b):
+void alekseev::Shape::scale(double coef)
+{
+  if (!std::isfinite(coef) || coef <= 0.0)
+  {
+    throw std::invalid_argument("scale: bad coef");
+  }
+  if (coef == 1.0)
+  {
+    return;
+  }
+  doScale(coef);
+}
+
+void alekseev::Shape::scaleUnchecked(double coef)
+{
+  doScale(coef);
+}
+
+alekseev::Rectangle::Rectangle(const point_t &a, const point_t &b):
   center_({(a.x + b.x) / 2.0, (a.y + b.y) / 2.0}),
   width_(std::abs(b.x - a.x)),
   height_(std::abs(b.y - a.y))
@@ -183,7 +201,7 @@ void alekseev::Rectangle::doScale(double coef)
   height_ *= coef;
 }
 
-alekseev::Square::Square(point_t center, double side):
+alekseev::Square::Square(const point_t &center, double side):
   center_(center),
   side_(side)
 {
@@ -242,7 +260,7 @@ void alekseev::Square::doScale(double coef)
   side_ *= coef;
 }
 
-alekseev::Xquare::Xquare(point_t center, double diagonal):
+alekseev::Xquare::Xquare(const point_t &center, double diagonal):
   center_(center),
   diagonal_(diagonal)
 {
@@ -306,7 +324,8 @@ void alekseev::scaleRelative(Shape &shp, const point_t &about, double coef)
   if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
     throw std::invalid_argument("scaleRelative: bad point");
   }
-  if (!std::isfinite(coef) || coef <= 0.0) {
+  if (!std::isfinite(coef) || coef <= 0.0)
+  {
     throw std::invalid_argument("scaleRelative: bad coef");
   }
   if (coef == 1.0) {
