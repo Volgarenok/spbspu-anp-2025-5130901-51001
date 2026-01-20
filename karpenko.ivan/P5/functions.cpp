@@ -26,8 +26,7 @@ void karpenko::scaleShapes(Shape** shapes, size_t count,
   }
 }
 
-karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes,
-    size_t count)
+karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, size_t count)
 {
   const rectangle_t emptyFrame = {0.0, 0.0, {0.0, 0.0}};
   if (count == 0)
