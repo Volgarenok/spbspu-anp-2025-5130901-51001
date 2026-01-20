@@ -105,7 +105,12 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   size_t len = 0;
   char *line = getLine(input, len);
 
-  if (!line || len == 0)
+  if (!line)
+  {
+    return nullptr;
+  }
+
+  if (size == 0)
   {
     free(line);
     return nullptr;
@@ -224,7 +229,12 @@ int main()
   size_t size = 0;
   char **words = getWords(std::cin, size, isSpace);
 
-  if (!words || size == 0)
+  if (!words)
+  {
+    return 1;
+  }
+
+  if (size == 0)
   {
     free(words);
     return 1;
