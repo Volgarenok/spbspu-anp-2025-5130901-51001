@@ -178,7 +178,7 @@ int main()
   size_t countWords = 0;
   char **words = smirnova::getWords(std::cin, countWords, checkSpace);
 
-  if (!words)) {
+  if (!words) {
     return 1;
   }
   if (countWords == 0) {
