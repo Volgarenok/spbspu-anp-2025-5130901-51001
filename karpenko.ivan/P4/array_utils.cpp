@@ -93,15 +93,7 @@ char* karpenko::resizeCharArray(const char* array, size_t oldCapacity, size_t re
     newCapacity = static_cast< size_t >(newCapacity * GROW_FACTOR);
   }
 
-  char* newArray = nullptr;
-  try
-  {
-    newArray = new char[newCapacity];
-  }
-  catch (const std::bad_alloc&)
-  {
-    throw;
-  }
+  char* newArray = new char[newCapacity];
 
   if (array != nullptr)
   {
