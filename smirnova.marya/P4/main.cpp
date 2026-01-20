@@ -26,8 +26,8 @@ char **smirnova::getWords(std::istream &in, size_t &size,
     free(line);
     return nullptr;
   }
-  const size_t MAX_WORDS = 100;
-  char **words = reinterpret_cast<char**>(malloc(MAX_WORDS  * sizeof(char*)));
+  size_t cap = 10;
+  char **words = reinterpret_cast<char**>(malloc(cap  * sizeof(char*)));
   if (!words) {
     free(line);
     return nullptr;
@@ -58,12 +58,7 @@ char **smirnova::getWords(std::istream &in, size_t &size,
       word[i] = line[start + i];
     }
     word[wordLen] = '\0';
-    if (countWords < MAX_WORDS) {
-      words[countWords++] = word;
-    }
-    else {
-      free(word);
-    }
+    words[countWords++] = word;
   }
   size = countWords;
   free(line);
@@ -81,7 +76,7 @@ char *smirnova::getLine(std::istream &in, size_t &size) {
 
   char *str = reinterpret_cast<char*>(malloc(capacity));
   if (!str) {
-    return 0;
+    return nullptr;
   }
 
   char ch = '\0';
@@ -157,58 +152,10 @@ void smirnova::appendDigits(const char *a, const char *b, char *result) {
 }
 
 int main() {
-  std::cout << "\n-----------------------------------------------------\n";
-  std::cout << "Enter the line for the main task:\n";
-  char *lines[2] = {nullptr, nullptr};
-  size_t lengths[2] = {0, 0};
-
-  char *line = smirnova::getLine(std::cin, lengths[0]);
-  std::cout << "-----------------------------------------------------";
-
-  if (!line || (lengths[0] == 0 && !std::cin)) {
-    std::cerr << "\nNo input provided or memory allocation failed\n";
-    free(line);
-    return 1;
-  }
-
-  lines[0] = line;
-
-  lines[1] = reinterpret_cast<char*>(malloc(10));
-  if (!lines[1]) {
-    std::cerr << "\nMemory allocation failed\n";
-    free(lines[0]);
-    return 0;
-  }
-  std::strcpy(lines[1], "default12");
-  lengths[1] = 9;
-
-  int result1 = smirnova::compareStrings(lines[0], lines[1]);
-  std::cout << "\nStrings:\n" << lines[0] << "\n" << lines[1] << "\n";
-  std::cout << "-----------------------------------------------------";
-  std::cout << "\nResult 1: " << result1 << "\n";
-
-  size_t maxLen = lengths[0] + lengths[1] + 1;
-  char *result2 = reinterpret_cast<char*>(malloc(maxLen + 1));
-  if (!result2) {
-    std::cerr << "\nMemory allocation failed\n";
-    free(lines[0]);
-    free(lines[1]);
-    return 1;
-  }
-
-  smirnova::appendDigits(lines[0], lines[1], result2);
-  std::cout << "Result 2: " << result2 << "\n";
-
-  free(result2);
-  free(lines[0]);
-  free(lines[1]);
-
-  std::cout << "\n-----------------------------------------------------\n";
-  std::cout << "Enter the line for the additional task:" << "\n";
+  std::cout << "\nEnter the line:\n";
 
   size_t countWords = 0;
   char **words = smirnova::getWords(std::cin, countWords, checkSpace);
-  std::cout << "-----------------------------------------------------";
 
   if (!words || countWords == 0) {
     std::cerr << "\nMemory allocation failed or nothing entered\n";
@@ -220,24 +167,23 @@ int main() {
   const char *defaultStr = "8default7";
 
   for (size_t i = 0; i < countWords; i++) {
-    std::cout << "\nWords:\n" << words[i] << "\n" << defaultStr << "\n";
+    std::cout << "\n\nWords:\n" << words[i] << "\n" << defaultStr << "\n";
 
-    int result3 = smirnova::compareStrings(words[i], defaultStr);
-    std::cout << "-----------------------------------------------------";
-    std::cout << "\nResult3: " << result3 << "\n";
+    int result1 = smirnova::compareStrings(words[i], defaultStr);
+    std::cout << "\nResult1: " << result1 << "\n";
 
     size_t maxLen = strlen(words[i]) + strlen(defaultStr) + 1;
-    char *result4 = reinterpret_cast<char*>(malloc(maxLen + 1));
-    if (!result4) {
+    char *result2 = reinterpret_cast<char*>(malloc(maxLen + 1));
+    if (!result2) {
       for (size_t i = 0; i < countWords; i++) {
         free(words[i]);
       }
       free(words);
       return 1;
     } else {
-      smirnova::appendDigits(words[i], defaultStr, result4);
-      std::cout << "Result4: " << result4 << "\n";
-      free(result4);
+      smirnova::appendDigits(words[i], defaultStr, result2);
+      std::cout << "Result2: " << result2 << "\n";
+      free(result2);
     }
   }
   std::cout << "\n";
