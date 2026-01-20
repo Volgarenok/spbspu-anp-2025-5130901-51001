@@ -16,77 +16,57 @@ bool checkSpace(char ch) {
 
 char **smirnova::getWords(std::istream &in, size_t &size,
                           bool (*checkSpace)(char)) {
+  size = 0;
+  size_t lineLen = 0;
+  char *line = getLine(in, lineLen);
+  if (!line) {
+    return nullptr;
+  }
+  if (lineLen == 0) {
+    free(line);
+    return nullptr;
+  }
   const size_t MAX_WORDS = 100;
-  const size_t INITIAL_BUF = 16;
-  char *buffer = reinterpret_cast<char*>(malloc(INITIAL_BUF));
-  if (!buffer) {
-    return nullptr;
-  }
-  size_t bufCap = INITIAL_BUF;
-  size_t bufLen = 0;
-  char **words = reinterpret_cast<char **>(malloc(MAX_WORDS * sizeof(char *)));
+  char **words = reinterpret_cast<char**>(malloc(MAX_WORDS  * sizeof(char*)));
   if (!words) {
-    free(buffer);
+    free(line);
     return nullptr;
   }
-  size_t countWords = 0;
-  char ch;
-  bool inWord = false;
-  while (in.get(ch) && ch != '\n') {
-    if (checkSpace(ch)) {
-      if (inWord && bufLen > 0) {
-        char *word = reinterpret_cast<char*>(malloc(bufLen + 1));
-        if (!word) {
-          free(buffer);
-          return nullptr;
-        }
-        for (size_t i = 0; i < bufLen; i++) {
-          word[i] = buffer[i];
-        }
-        word[bufLen] = '\0';
-
-        if (countWords < MAX_WORDS) {
-          words[countWords++] = word;
-        } else {
-          free(word);
-        }
-        bufLen = 0;
-        inWord = false;
-      }
-    } else {
-      if (bufLen + 1 >= bufCap) {
-        size_t newCap = bufCap * 2;
-        char *newBuffer = reinterpret_cast<char*>(malloc(newCap));
-        if (!newBuffer) {
-          free(buffer);
-          return nullptr;
-        }
-        for (size_t i = 0; i < bufLen; i++) {
-          newBuffer[i] = buffer[i];
-        }
-        free(buffer);
-        buffer = newBuffer;
-        bufCap = newCap;
-      }
-      buffer[bufLen++] = ch;
-      inWord = true;
+  size_t countWords = 0, i = 0;
+  while (i < lineLen) {
+    while (i < lineLen && checkSpace(line[i])) {
+      i++;
     }
-  }
-  if (inWord && bufLen > 0 && (countWords < MAX_WORDS)) {
-    char *word = reinterpret_cast<char*>(malloc(bufLen + 1));
+    if (i >= lineLen) {
+      break;
+    }
+    size_t start = i;
+    while (i < lineLen && !checkSpace(line[i])) {
+      i++;
+    }
+    size_t wordLen = i - start;
+    char *word = reinterpret_cast<char*>(malloc(wordLen + 10));
     if (!word) {
-      free(buffer);
-      return nullptr;
-    } else {
-      for (size_t i = 0; i < bufLen; i++) {
-        word[i] = buffer[i];
+      for (size_t j = 0; j < countWords; j++) {
+        free(words[j]);
       }
-      word[bufLen] = '\0';
+      free(words);
+      free(line);
+      return nullptr;
+    }
+    for (size_t i = 0; i < wordLen; ++i) {
+      word[i] = line[start + i];
+    }
+    word[wordLen] = '\0';
+    if (countWords < MAX_WORDS) {
       words[countWords++] = word;
     }
+    else {
+      free(word);
+    }
   }
-  free(buffer);
   size = countWords;
+  free(line);
   return words;
 }
 
@@ -226,7 +206,7 @@ int main() {
   std::cout << "\n-----------------------------------------------------\n";
   std::cout << "Enter the line for the additional task:" << "\n";
 
-  /* size_t countWords = 0;
+  size_t countWords = 0;
   char **words = smirnova::getWords(std::cin, countWords, checkSpace);
   std::cout << "-----------------------------------------------------";
 
@@ -265,7 +245,7 @@ int main() {
   for (size_t i = 0; i < countWords; i++) {
     free(words[i]);
   }
-  free(words); */
+  free(words);
 
   return 0;
 }
