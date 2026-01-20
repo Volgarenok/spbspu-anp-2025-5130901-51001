@@ -7,10 +7,7 @@ namespace kitserov
   void removeLetters(const char* source, char* destination);
   void missLetters(const char* source, char* destination);
   int hasSameChars(const char* str1, const char* str2);
-
-  char* getlineAmortized(std::istream& in, size_t& size, size_t& capacity);
   char* getWord(std::istream& in, size_t& size);
-  int isLetter(int c);
   char** readWords(std::istream& in, size_t& wordCount, int (*checkChar)(int) = nullptr);
   void freeWords(char** words, size_t count);
 
@@ -71,12 +68,6 @@ void kitserov::removeLetters(const char* source, char* destination)
     srcIndex++;
   }
   destination[dstIndex] = '\0';
-}
-
-int kitserov::isLetter(int c)
-{
-  unsigned char uc = static_cast< unsigned char >(c);
-  return (uc >= 'A' && uc <= 'Z') || (uc >= 'a' && uc <= 'z');
 }
 
 char* kitserov::getline(std::istream& in, size_t& size, size_t capacity)
@@ -195,10 +186,7 @@ char** kitserov::readWords(std::istream& in, size_t& wordCount, int (*checkChar)
   }
   size_t wordsCapacity = initialWordsCapacity;
   wordCount = 0;
-  int (*checkFunc)(int) = checkChar;
-  if (!checkFunc) {
-    checkFunc = [](int) -> int { return 1; };
-  }
+  checkChar = [](int) -> int { return 1; };
   size_t start = 0;
   size_t i = 0;
   while (i <= lineSize) {
@@ -208,7 +196,7 @@ char** kitserov::readWords(std::istream& in, size_t& wordCount, int (*checkChar)
         bool validWord = true;
         for (size_t j = start; j < i; ++j) {
           unsigned char c = static_cast< unsigned char >(line[j]);
-          if (checkFunc(c) == 0) {
+          if (checkChar(c) == 0) {
             validWord = false;
             break;
           }
