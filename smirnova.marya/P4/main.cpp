@@ -47,7 +47,7 @@ char **smirnova::getWords(std::istream &in, size_t &size,
       i++;
     }
     size_t wordLen = i - start;
-    char *word = reinterpret_cast< char* >(malloc(wordLen + 10));
+    char *word = reinterpret_cast< char* >(malloc(wordLen + 1));
     if (!word) {
       for (size_t j = 0; j < countWords; j++) {
         free(words[j]);
@@ -56,8 +56,8 @@ char **smirnova::getWords(std::istream &in, size_t &size,
       free(line);
       return nullptr;
     }
-    for (size_t i = 0; i < wordLen; ++i) {
-      word[i] = line[start + i];
+    for (size_t l = 0; l < wordLen; ++l) {
+      word[l] = line[start + l];
     }
     word[wordLen] = '\0';
     words[countWords++] = word;
