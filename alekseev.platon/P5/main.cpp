@@ -404,8 +404,6 @@ void alekseev::removeArray(Shape **shps, size_t size)
 
 int main()
 {
-  int err = 0;
-
   const size_t shape_count = 6;
   alekseev::Shape *shapes[shape_count] = {};
 
@@ -426,35 +424,40 @@ int main()
     return 2;
   }
 
-  if (err == 0) {
+  alekseev::outputParams(std::cout, shapes, shape_count);
+
+  alekseev::point_t about = {0.0, 0.0};
+  double coef = 0.0;
+
+  if (!(std::cin >> about.x >> about.y >> coef)) {
+    std::cerr << "bad input\n";
+    alekseev::removeArray(shapes, shape_count);
+    return 1;
+  }
+  if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
+    std::cerr << "bad input\n";
+    alekseev::removeArray(shapes, shape_count);
+    return 1;
+  }
+  if (!std::isfinite(coef) || coef <= 0.0) {
+    std::cerr << "bad scale coef\n";
+    alekseev::removeArray(shapes, shape_count);
+    return 1;
+  }
+
+  try {
+    alekseev::scaleAllRelative(shapes, shape_count, about, coef);
     alekseev::outputParams(std::cout, shapes, shape_count);
-
-    alekseev::point_t about = {0.0, 0.0};
-    double coef = 0.0;
-
-    if (!(std::cin >> about.x >> about.y >> coef)) {
-      std::cerr << "bad input\n";
-      err = 1;
-    } else if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
-      std::cerr << "bad input\n";
-      err = 1;
-    } else if (!std::isfinite(coef) || coef <= 0.0) {
-      std::cerr << "bad scale coef\n";
-      err = 1;
-    } else {
-      try {
-        alekseev::scaleAllRelative(shapes, shape_count, about, coef);
-        alekseev::outputParams(std::cout, shapes, shape_count);
-      } catch (const std::exception &e) {
-        std::cerr << "scale error: " << e.what() << "\n";
-        err = 2;
-      } catch (...) {
-        std::cerr << "scale error\n";
-        err = 2;
-      }
-    }
+  } catch (const std::exception &e) {
+    std::cerr << "scale error: " << e.what() << "\n";
+    alekseev::removeArray(shapes, shape_count);
+    return 2;
+  } catch (...) {
+    std::cerr << "scale error\n";
+    alekseev::removeArray(shapes, shape_count);
+    return 2;
   }
 
   alekseev::removeArray(shapes, shape_count);
-  return err;
+  return 0;
 }
