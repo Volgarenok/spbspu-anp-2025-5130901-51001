@@ -13,7 +13,7 @@ namespace karpenko
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void unsafeScale(double coefficient) override;
+    void unsafeScale(double coefficient) noexcept override;
 
   private:
     point_t vertexA_;
