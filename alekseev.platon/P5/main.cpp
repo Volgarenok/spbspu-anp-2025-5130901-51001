@@ -26,10 +26,10 @@ namespace alekseev
 
   struct Shape
   {
-    virtual double getArea() const = 0;
-    virtual rectangle_t getFrameRect() const = 0;
     virtual ~Shape() = default;
 
+    virtual double getArea() const = 0;
+    virtual rectangle_t getFrameRect() const = 0;
     void scale(double coef);
     void scaleUnchecked(double coef);
     virtual void move(const point_t &to) = 0;
