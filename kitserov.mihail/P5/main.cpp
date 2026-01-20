@@ -159,7 +159,7 @@ void kitserov::Rectangle::move(const point_t& p) noexcept
 
 void kitserov::Rectangle::scale(float k)
 {
-  rect_.width *= k;	
+  rect_.width *= k;
   rect_.height *= k;
 }
 
@@ -202,6 +202,9 @@ kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount):
   if (vertexCount < 3) {
     delete[] vertices_;
     throw std::logic_error("Polygon must have at least 3 vertices");
+  }
+  for (size_t i = 0; i < vertexCount; ++i) {
+    vertices_[i] = vertices[i];
   }
 }
 
