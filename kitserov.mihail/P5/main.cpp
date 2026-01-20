@@ -69,6 +69,7 @@ namespace kitserov
   void printAllInfo(std::ostream& os, const Shape* const* shapes, const char* const* names, size_t count);
   void scalePoint(Shape* sh, const point_t& p, float k);
   rectangle_t getOverallFrame(const Shape* const* shapes, size_t count);
+  point_t calculateCentroid(const point_t* vertices, size_t count);
 }
 
 int main()
@@ -165,7 +166,7 @@ void kitserov::Rectangle::scale(float k)
   rect_.height *= k;
 }
 
-kitserov::Xquare::Xquare(point_t p, float s) :
+kitserov::Xquare::Xquare(point_t p, float s):
   centre_(p),
   side_(s)
 {}
@@ -199,26 +200,15 @@ void kitserov::Xquare::scale(float k)
   side_ *= k;
 }
 
-kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount) :
+kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount):
   vertices_(new point_t[vertexCount]),
-  vertexCount_(vertexCount)
+  vertexCount_(vertexCount),
+  center_(calculateCentroid(vertices, vertexCount))
 {
   if (vertexCount < 3) {
     delete[] vertices_;
     throw std::logic_error("Polygon must have at least 3 vertices");
   }
-
-  for (size_t i = 0; i < vertexCount; ++i) {
-    vertices_[i] = vertices[i];
-  }
-
-  float sumX = 0;
-  float sumY = 0;
-  for (size_t i = 0; i < vertexCount_; ++i) {
-    sumX += vertices_[i].x;
-    sumY += vertices_[i].y;
-  }
-  center_ = {sumX / vertexCount_, sumY / vertexCount_};
 }
 
 kitserov::Polygon::~Polygon()
@@ -289,6 +279,20 @@ void kitserov::Polygon::scale(float k)
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
     vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
   }
+}
+
+kitserov::point_t kitserov::calculateCentroid(const point_t* vertices, size_t count)
+{
+  if (vertices == nullptr || count == 0) {
+    return {0.0, 0.0};
+  }
+  float sumX = 0.0;
+  float sumY = 0.0;
+  for (size_t i = 0; i < count; ++i) {
+    sumX += vertices[i].x;
+    sumY += vertices[i].y;
+  }
+  return {sumX / static_cast< float >(count), sumY / static_cast< float >(count)};
 }
 
 kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
