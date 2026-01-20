@@ -165,55 +165,6 @@ void kitserov::Rectangle::scale(float k)
   rect_.height *= k;
 }
 
-kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
-{
-  float minx = pts[0].x;
-  float miny = pts[0].y;
-  float maxx = pts[0].x;
-  float maxy = pts[0].y;
-
-  for (size_t i = 0; i < s; ++i) {
-    minx = std::min(minx, pts[i].x);
-    miny = std::min(miny, pts[i].y);
-    maxx = std::max(maxx, pts[i].x);
-    maxy = std::max(maxy, pts[i].y);
-  }
-
-  float width = maxx - minx;
-  float height = maxy - miny;
-  float centerX = minx + width / 2;
-  float centerY = miny + height / 2;
-
-  return rectangle_t{width, height, {centerX, centerY}};
-}
-
-void kitserov::frameOutput(std::ostream& os, const rectangle_t& fr)
-{
-  float left = fr.pos.x - fr.width / 2;
-  float top = fr.pos.y + fr.height / 2;
-  float right = fr.pos.x + fr.width / 2;
-  float bottom = fr.pos.y - fr.height / 2;
-  os << "Frame (leftTop " << left << ", " << top
-     << " rightBot " << right << ", " << bottom << ")\n";
-}
-
-void kitserov::shapeOutput(std::ostream& os, const Shape* sh, const char* name)
-{
-  rectangle_t frameRect = sh->getFrameRect();
-  os << name << ": area = " << sh->getArea() << "\n";
-  frameOutput(os, frameRect);
-}
-
-void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
-{
-  rectangle_t fr = sh->getFrameRect();
-  float dx = p.x - fr.pos.x;
-  float dy = p.y - fr.pos.y;
-  sh->move(dx, dy);
-  sh->scale(k);
-  sh->move(-dx * k, -dy * k);
-}
-
 kitserov::Xquare::Xquare(point_t p, float s) :
   centre_(p),
   side_(s)
@@ -338,6 +289,55 @@ void kitserov::Polygon::scale(float k)
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
     vertices_[i].y = center_.y + (vertices_[i].y - center_.y) * k;
   }
+}
+
+kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
+{
+  float minx = pts[0].x;
+  float miny = pts[0].y;
+  float maxx = pts[0].x;
+  float maxy = pts[0].y;
+
+  for (size_t i = 0; i < s; ++i) {
+    minx = std::min(minx, pts[i].x);
+    miny = std::min(miny, pts[i].y);
+    maxx = std::max(maxx, pts[i].x);
+    maxy = std::max(maxy, pts[i].y);
+  }
+
+  float width = maxx - minx;
+  float height = maxy - miny;
+  float centerX = minx + width / 2;
+  float centerY = miny + height / 2;
+
+  return rectangle_t{width, height, {centerX, centerY}};
+}
+
+void kitserov::frameOutput(std::ostream& os, const rectangle_t& fr)
+{
+  float left = fr.pos.x - fr.width / 2;
+  float top = fr.pos.y + fr.height / 2;
+  float right = fr.pos.x + fr.width / 2;
+  float bottom = fr.pos.y - fr.height / 2;
+  os << "Frame (leftTop " << left << ", " << top
+     << " rightBot " << right << ", " << bottom << ")\n";
+}
+
+void kitserov::shapeOutput(std::ostream& os, const Shape* sh, const char* name)
+{
+  rectangle_t frameRect = sh->getFrameRect();
+  os << name << ": area = " << sh->getArea() << "\n";
+  frameOutput(os, frameRect);
+}
+
+void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
+{
+  rectangle_t fr = sh->getFrameRect();
+  float dx = p.x - fr.pos.x;
+  float dy = p.y - fr.pos.y;
+  sh->move(dx, dy);
+  sh->scale(k);
+  sh->move(-dx * k, -dy * k);
 }
 
 kitserov::rectangle_t kitserov::getOverallFrame(const Shape* const* shapes, size_t count)
