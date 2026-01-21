@@ -22,4 +22,51 @@ namespace gordejchik
     }
     return true;
   }
+  
+  void transformMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
+      if (rows == 0 || cols == 0) {
+        outputFile << rows << " " << cols << "\n";
+        return;
+      }
+      ptrdiff_t top = 0;
+      ptrdiff_t bottom = rows - 1;
+      ptrdiff_t left = 0;
+      ptrdiff_t right = cols - 1;
+      int value = 1;
+      while (top <= bottom && left <= right) {
+        if (top <= bottom) {
+          for (size_t j = left; static_cast<int>(j) <= right; j++) {
+            matrix[bottom * cols + j] += value;
+            value++;
+          }
+          bottom--;
+        }
+        if (left <= right) {
+          for (size_t i = bottom; static_cast<int>(i) >= top; i--) {
+            matrix[i * cols + right] += value;
+            value++;
+          }
+          right--;
+        }
+        if (top <= bottom) {
+          for (size_t j = right; static_cast<int>(j) >= left; j--) {
+            matrix[top * cols + j] += value;
+            value++;
+          }
+          top++;
+        }
+        if (left <= right) {
+          for (size_t i = top; static_cast<int>(i) <= bottom; i++) {
+            matrix[i * cols + left] += value;
+            value++;
+          }
+          left++;
+        }
+      }
+      outputFile << rows << " " << cols << " ";
+      for (size_t i = 0; i < rows * cols - 1; i++) {
+        outputFile << matrix[i] << " ";
+      }
+      outputFile << matrix[rows * cols - 1] << "\n";
+    }
 }
