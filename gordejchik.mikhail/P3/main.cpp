@@ -68,7 +68,7 @@ namespace gordejchik
       }
       outputFile << matrix[rows * cols - 1] << "\n";
     }
-    
+
   void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
       if (rows == 0 || cols == 0) {
         outputFile << 0 << "\n";
@@ -161,10 +161,10 @@ int main(int argc, char* argv[]) {
      }
      int* original = new int[rows * cols];
      std::memcpy(original, dynamicMatrix, rows * cols * sizeof(int));
-     
+
      transformMatrix(outputFile, dynamicMatrix, rows, cols);
      findMinSumDiag(outputFile, original, rows, cols);
-     
+
      delete[] original;
      delete[] dynamicMatrix;
    }
