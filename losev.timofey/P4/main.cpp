@@ -9,7 +9,8 @@ namespace losev {
   int hasRep(const char * src);
 }
 
-int main() {
+int main()
+{
   namespace los = losev;
   size_t str_size = 10;
   size_t actual_len = 0;
@@ -36,7 +37,8 @@ int main() {
   return 0;
 }
 
-char * losev::getline(std::istream & in, size_t & capacity, size_t & actual_size) {
+char * losev::getline(std::istream & in, size_t & capacity, size_t & actual_size)
+{
   capacity = 10;
   char * str = reinterpret_cast< char* >(malloc(capacity * sizeof(char)));
   if (!str) {
@@ -78,7 +80,8 @@ char * losev::getline(std::istream & in, size_t & capacity, size_t & actual_size
   return str;
 }
 
-char * losev::latRmv(const char * src, char * dest) {
+char * losev::latRmv(const char * src, char * dest)
+{
   size_t j = 0;
   for (size_t i = 0; src[i] != '\0'; i++) {
     if (!isalpha(src[i])) {
@@ -89,7 +92,8 @@ char * losev::latRmv(const char * src, char * dest) {
   return dest;
 }
 
-int losev::hasRep(const char * src) {
+int losev::hasRep(const char * src)
+{
   const char * ptr = src + 1;
   for (; *src != '\0'; src++) {
     ptr = src + 1;
