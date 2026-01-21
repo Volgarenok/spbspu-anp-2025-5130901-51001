@@ -69,8 +69,7 @@ namespace gordejchik
       outputFile << matrix[rows * cols - 1] << "\n";
     }
     
-  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) 
-  {
+  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
       if (rows == 0 || cols == 0) {
         outputFile << 0 << "\n";
         return;
@@ -91,8 +90,7 @@ namespace gordejchik
       outputFile << minSum << "\n";
     }
 }
-int main(int argc, char* argv[])
- {
+int main(int argc, char* argv[]) {
    using namespace gordejchik;
    if (argc < 4) {
      std::cerr << "Not enough arguments\0";
