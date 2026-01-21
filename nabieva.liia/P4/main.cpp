@@ -2,62 +2,66 @@
 #include <cstring>
 #include <cctype>
 
-int formAllLetterString(char* input, char* result, size_t maxResultSize) 
+namespace nabieva 
 {
-	unsigned char letters[26] = { 0 };
-	for (size_t i = 0; i < strlen(input); ++i) {
-		unsigned char c = static_cast<unsigned char>(input[i]);
-		if (std::isalpha(c)) {
-			c = std::tolower(c);
-			if (c >= 'a' && c <= 'z') {
-				letters[c - 'a'] = 1;
+	int formAllLetterString(char* input, char* result, size_t maxResultSize)
+	{
+		unsigned char letters[26] = { 0 };
+		for (size_t i = 0; i < strlen(input); ++i) {
+			unsigned char c = static_cast<unsigned char>(input[i]);
+			if (std::isalpha(c)) {
+				c = std::tolower(c);
+				if (c >= 'a' && c <= 'z') {
+					letters[c - 'a'] = 1;
+				}
 			}
 		}
-	}
-	const char* secondString = "def ghk";
-	for (size_t i = 0; i < strlen(secondString); ++i) {
-		unsigned char c = static_cast<unsigned char>(secondString[i]);
-		if (std::isalpha(c)) {
-			c = std::tolower(c);
-			if (c >= 'a' && c <= 'z') {
-				letters[c - 'a'] = 1;
+		const char* secondString = "def ghk";
+		for (size_t i = 0; i < strlen(secondString); ++i) {
+			unsigned char c = static_cast<unsigned char>(secondString[i]);
+			if (std::isalpha(c)) {
+				c = std::tolower(c);
+				if (c >= 'a' && c <= 'z') {
+					letters[c - 'a'] = 1;
+				}
 			}
 		}
-	}
-	size_t pos = 0;
-	for (int i = 0; i < 26; ++i) {
-		if (letters[i]) {
-			if (pos >= maxResultSize) {
-				return -1;
+		size_t pos = 0;
+		for (int i = 0; i < 26; ++i) {
+			if (letters[i]) {
+				if (pos >= maxResultSize) {
+					return -1;
+				}
+				result[pos++] = static_cast<char>('a' + i);
 			}
-			result[pos++] = static_cast<char>('a' + i);
 		}
+		return pos;
 	}
-	return pos;
-}
 
-int mergeString(char* input, char* result, size_t maxResultSize) 
-{
-	const char* secondString = "def ";
-	if (strlen(input) + strlen(secondString) > maxResultSize) {
-		return -1;
-	}
-	size_t pos = 0;
-	for (size_t i = 0; i < strlen(input) + strlen(secondString); ++i) {
-		if (i < strlen(input)) {
-			result[pos] = input[i];
-			pos++;
+	int mergeString(char* input, char* result, size_t maxResultSize)
+	{
+		const char* secondString = "def ";
+		if (strlen(input) + strlen(secondString) > maxResultSize) {
+			return -1;
 		}
-		if (i < strlen(secondString)) {
-			result[pos] = secondString[i];
-			pos++;
+		size_t pos = 0;
+		for (size_t i = 0; i < strlen(input) + strlen(secondString); ++i) {
+			if (i < strlen(input)) {
+				result[pos] = input[i];
+				pos++;
+			}
+			if (i < strlen(secondString)) {
+				result[pos] = secondString[i];
+				pos++;
+			}
 		}
+		return pos;
 	}
-	return pos;
 }
 
 int main()
 {
+	using namespace nabieva;
 	size_t MAX_INPUT_SIZE = 1024;
 	size_t MAX_RESULT_SIZE = 2048;
 	char* input = new char[MAX_INPUT_SIZE];
