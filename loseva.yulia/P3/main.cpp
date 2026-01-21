@@ -6,7 +6,7 @@
 #include <exception>
 
 namespace loseva {
-  bool is_local_maximum(size_t row, size_t col, size_t rows, size_t cols, const int* matrix) {
+  bool is_local_maximum(size_t row, size_t col, size_t /* rows*/, size_t cols, const int* matrix) {
     int current = matrix[row * cols + col];
     bool is_greater = true;
     for (int i = -1; i <= 1; ++i) {
