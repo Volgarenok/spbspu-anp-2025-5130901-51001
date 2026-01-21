@@ -2,6 +2,13 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+<<<<<<< HEAD
+=======
+#include <istream>
+
+#include "getLine.hpp"
+#include "getWords.hpp"
+>>>>>>> smirnova.marya/P4
 
 namespace smirnova
 {
@@ -15,6 +22,7 @@ bool checkSpace(char ch) {
   return std::isspace(static_cast< unsigned char >(ch));
 }
 
+<<<<<<< HEAD
 char **smirnova::getWords(std::istream &in, size_t &size,
   bool (*checkSpace)(char))
 {
@@ -135,6 +143,9 @@ char *smirnova::getLine(std::istream &in, size_t &size)
   size = length;
   return result;
 }
+=======
+
+>>>>>>> smirnova.marya/P4
 
 int smirnova::compareStrings(const char *a, const char *b)
 {
