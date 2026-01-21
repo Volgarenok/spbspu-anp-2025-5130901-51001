@@ -73,7 +73,7 @@ namespace smirnova
   {
     return makeFrameRect(width_, height_, center_);
   }
-  void Rectangle::move(const point_t &p) noexcept 
+  void Rectangle::move(const point_t &p) noexcept
   {
     moveToPoint(center_, p);
   }
