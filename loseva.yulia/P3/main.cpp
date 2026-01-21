@@ -25,7 +25,7 @@ namespace loseva
   }
   int max_secondary_diagonal_sum(size_t rows, size_t cols, const int* matrix)
   {
-    if (rows == 0 || cols == 0) return 0; 
+    if (rows == 0 || cols == 0) return 0;
     int maxSum = 0;
     bool firstSumSet = false;
     int n = static_cast<int>(std::min(rows, cols));
@@ -80,7 +80,7 @@ namespace loseva
     if (input >> extra) {
       delete[] matrix;
       matrix = nullptr;
-      return -4; 
+      return -4;
     }
     return 0;
   }
