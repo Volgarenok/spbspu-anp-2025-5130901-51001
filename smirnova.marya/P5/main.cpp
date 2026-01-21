@@ -283,7 +283,6 @@ int main()
     shapes[i]->scale(k);
     shapes[i]->move(-dx, -dy);
   }
-
   std::cout << "\nAfter scaling:\n";
   getResult(shapes, names);
   return 0;
