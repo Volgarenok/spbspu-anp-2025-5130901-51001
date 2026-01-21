@@ -11,7 +11,9 @@ namespace loseva {
     bool isGreater = true;
     for (int i = -1; i <= 1; ++i) {
       for (int j = -1; j <= 1; ++j) {
-        if (i == 0 && j == 0) continue;
+        if (i == 0 && j == 0) {
+           continue;
+        }
         if (matrix[(row + i) * cols + (col + j)] >= current) {
           isGreater = false;
         }
@@ -20,7 +22,9 @@ namespace loseva {
     return isGreater;
   }
   int countLocalMaximums(size_t rows, size_t cols, const int* matrix) {
-    if (rows < 3 || cols < 3) return 0;
+    if (rows < 3 || cols < 3) {
+       return 0;
+    }
     int count = 0;
     for (size_t i = 1; i < rows - 1; ++i) {
       for (size_t j = 1; j < cols - 1; ++j) {
@@ -32,7 +36,9 @@ namespace loseva {
     return count;
   }
   int maxSecondaryDiagonalSum(size_t rows, size_t cols, const int* matrix) {
-    if (rows == 0 || cols == 0) return 0;
+    if (rows == 0 || cols == 0) {
+       return 0;
+      }
     int maxSum = 0;
     bool sumInitialized = false;
     int r = static_cast<int>(rows);
@@ -58,7 +64,9 @@ namespace loseva {
   }
   bool tryReadMatrix(std::istream& in, int* matrix, size_t count) {
     for (size_t i = 0; i < count; ++i) {
-      if (!(in >> matrix[i])) return false;
+      if (!(in >> matrix[i])) {
+        return false;
+      }
     }
     char extra;
     bool hasNoTail = !(in >> extra);
@@ -94,7 +102,9 @@ int main(int argc, char* argv[]) {
   }
   if (r == 0 || c == 0) {
     std::ofstream output(argv[3]);
-    if (!output) return 1;
+    if (!output) {
+      return 1;
+    }
     output << 0 << "\n";
     return 0;
   }
@@ -107,7 +117,9 @@ int main(int argc, char* argv[]) {
       return 2;
     }
     int stackArr[LIMIT];
-    if (!loseva::tryReadMatrix(input, stackArr, total)) return 2;
+    if (!loseva::tryReadMatrix(input, stackArr, total)) {
+      return 2;
+    }
     resTask3 = loseva::countLocalMaximums(r, c, stackArr);
     resTask13 = loseva::maxSecondaryDiagonalSum(r, c, stackArr);
   } else {
