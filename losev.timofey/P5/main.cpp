@@ -1,5 +1,6 @@
 #include<iostream>
 namespace losev {
+  float const Pi = 3.1415;
   struct point_t {
     double x, y;
   };
@@ -10,168 +11,184 @@ namespace losev {
   class Shape {
   public:
     virtual ~Shape() = default;
-    virtual double getArea() const = 0;
-    virtual rectangle_t getFrameRect() const = 0;
-    virtual void move(const point_t & point) = 0;
-    virtual void move(double dx, double dy) = 0;
+    virtual double getArea() const noexcept = 0;
+    virtual rectangle_t getFrameRect() const noexcept = 0;
+    virtual void move(const point_t& point) noexcept = 0;
+    virtual void move(double dx, double dy) noexcept = 0;
     virtual void scale(double coef) = 0;
   };
-  class Rectangle : public Shape {
-  private:
-    rectangle_t Rect;
+  class Rectangle final: public Shape {
   public:
-    Rectangle(double width, double height, const point_t& center) {
-      if (width <= 0 || height <= 0) {
-        throw std::invalid_argument("Width and height must be positive");
-      }
-      Rect.width = width;
-      Rect.height = height;
-      Rect.pos = center;
-    }
-    Rectangle(const rectangle_t& rect) {
-      if (rect.width <= 0 || rect.height <= 0) {
-        throw std::invalid_argument("Width and height must be positive");
-      }
-      Rect = rect;
-    }
-    double getArea() const override
-    {
-      return Rect.width * Rect.height;
-    }
-    rectangle_t getFrameRect() const override
-    {
-      return Rect;
-    }
-    void move(const point_t & point) override
-    {
-      Rect.pos = point;
-    }
-    void move(double dx, double dy) override
-    {
-      Rect.pos.x += dx;
-      Rect.pos.y += dy;
-    }
-    void scale(double coef) override
-    {
-      if (coef <= 0) {
-        throw std::invalid_argument("Scale coefficient must be positive");
-      }
-      Rect.width *= coef;
-      Rect.height *= coef;
-    }
+    Rectangle(double width, double height, const point_t& center);
+    Rectangle(const rectangle_t& rect);
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(const point_t& point) noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void scale(double coef) override;
+  private:
+    rectangle_t rect_;
   };
-  class Circle : public Shape
+  class Circle final: public Shape
   {
-  private:
-    point_t Center;
-    double Radius;
   public:
-    Circle(const point_t & center, double radius) {
-      if (radius <= 0) {
-        throw std::invalid_argument("Radius must be positive");
-      }
-      Center = center;
-      Radius = radius;
-    }
-    Circle(double x, double y, double radius) {
-      if (radius <= 0) {
-        throw std::invalid_argument("Radius must be positive");
-      }
-      Center.x = x;
-      Center.y = y;
-      Radius = radius;
-    }
-    double getArea() const override {
-      return 3.1415 * Radius * Radius;
-    }
-    rectangle_t getFrameRect() const override {
-      rectangle_t frameRect;
-      frameRect.width = 2.0 * Radius;
-      frameRect.height = 2.0 * Radius;
-      frameRect.pos = Center;
-      return frameRect;
-    }
-    void move(const point_t & point) override {
-      Center = point;
-    }
-    void move(double dx, double dy) override {
-      Center.x += dx;
-      Center.y += dy;
-    }
-    void scale(double coef) override {
-      if (coef <= 0) {
-        throw std::invalid_argument("Scale coefficient must be positive");
-      }
-      Radius *= coef;
-    }
+    Circle(const point_t& center, double radius);
+    Circle(double x, double y, double radius);
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(const point_t& point) noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void scale(double coef) override;
+  private:
+    point_t center_;
+    double radius_;
   };
-  class Ring : public Shape
+  class Ring final: public Shape
   {
-  private:
-    point_t Center;
-    double outerRadius;
-    double innerRadius;
   public:
-    Ring(const point_t& center, double outerR, double innerR) {
-      if (outerR <= 0 || innerR <= 0) {
-        throw std::invalid_argument("Radii must be positive");
-      }
-      if (innerR >= outerR) {
-        throw std::invalid_argument("Inner radius must be less than outer radius");
-      }
-      Center = center;
-      outerRadius = outerR;
-      innerRadius = innerR;
-    }
-    Ring(double x, double y, double outerR, double innerR) {
-      if (outerR <= 0 || innerR <= 0) {
-        throw std::invalid_argument("Radii must be positive");
-      }
-      if (innerR >= outerR) {
-        throw std::invalid_argument("Inner radius must be less than outer radius");
-      }
-      Center.x = x;
-      Center.y = y;
-      outerRadius = outerR;
-      innerRadius = innerR;
-    }
-    double getArea() const override {
-      return 3.1415 * (outerRadius * outerRadius - innerRadius * innerRadius);
-    }
-    rectangle_t getFrameRect() const override {
-      rectangle_t frameRect;
-      frameRect.width = 2.0 * outerRadius;
-      frameRect.height = 2.0 * outerRadius;
-      frameRect.pos = Center;
-      return frameRect;
-    }
-    void move(const point_t& point) override {
-      Center = point;
-    }
-    void move(double dx, double dy) override {
-      Center.x += dx;
-      Center.y += dy;
-    }
-    void scale(double coef) override {
-      if (coef <= 0) {
-        throw std::invalid_argument("Scale coefficient must be positive");
-      }
-      outerRadius *= coef;
-      innerRadius *= coef;
-    }
-    point_t getCenter() const {
-      return Center;
-    }
-    double getOuterRadius() const {
-      return outerRadius;
-    }
-    double getInnerRadius() const {
-      return innerRadius;
-    }
+    Ring(const point_t& center, double outerR, double innerR);
+    Ring(double x, double y, double outerR, double innerR);
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(const point_t& point) noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void scale(double coef) override;
+  private:
+    point_t center_;
+    double outerRadius_;
+    double innerRadius_;
   };
-  void scaleFromPoint(Shape& shape, const losev::point_t& point, double coef);
-  rectangle_t getOverallFrameRect(Shape** shapes, size_t count);
-  void printShapesInfo(Shape** shapes, size_t count);
+  void scaleFromPoint(Shape& shape, const point_t& point, double coef);
+  rectangle_t getOverallFrameRect(Shape* const* shapes, size_t count);
+  void printShapesInfo(Shape* const* shapes, size_t count);
+}
+losev::Rectangle::Rectangle(double width, double height, const point_t& center):
+ rect_{width, height, center} {
+  if (width <= 0 || height <= 0) {
+    throw std::invalid_argument("Width and height must be positive");
+  }
+}
+losev::Rectangle::Rectangle(const rectangle_t& rect):
+ rect_(rect) {
+  if (rect.width <= 0 || rect.height <= 0) {
+    throw std::invalid_argument("Width and height must be positive");
+  }
+}
+double losev::Rectangle::getArea() const noexcept
+{
+  return rect_.width * rect_.height;
+}
+losev::rectangle_t losev::Rectangle::getFrameRect() const noexcept
+{
+  return rect_;
+}
+void losev::Rectangle::move(const point_t& point) noexcept
+{
+  rect_.pos = point;
+}
+void losev::Rectangle::move(double dx, double dy) noexcept
+{
+  rect_.pos.x += dx;
+  rect_.pos.y += dy;
+}
+void losev::Rectangle::scale(double coef)
+{
+  if (coef <= 0) {
+    throw std::invalid_argument("Scale coefficient must be positive");
+  }
+  rect_.width *= coef;
+  rect_.height *= coef;
+}
+losev::Circle::Circle(const point_t& center, double radius):
+ center_(center), radius_(radius)
+{
+  if (radius <= 0) {
+    throw std::invalid_argument("Radius must be positive");
+  }
+}
+losev::Circle::Circle(double x, double y, double radius):
+ center_{x, y}, radius_(radius)
+{
+  if (radius <= 0) {
+    throw std::invalid_argument("Radius must be positive");
+  }
+}
+double losev::Circle::getArea() const noexcept
+{
+  return losev::Pi * radius_ * radius_;
+}
+losev::rectangle_t losev::Circle::getFrameRect() const noexcept
+{
+  rectangle_t frameRect;
+  frameRect.width = 2.0 * radius_;
+  frameRect.height = 2.0 * radius_;
+  frameRect.pos = center_;
+  return frameRect;
+}
+void losev::Circle::move(const point_t& point) noexcept
+{
+  center_ = point;
+}
+void losev::Circle::move(double dx, double dy) noexcept
+{
+  center_.x += dx;
+  center_.y += dy;
+}
+void losev::Circle::scale(double coef)
+{
+  if (coef <= 0) {
+    throw std::invalid_argument("Scale coefficient must be positive");
+  }
+  radius_ *= coef;
+}
+losev::Ring::Ring(const point_t& center, double outerR, double innerR): 
+ center_(center), outerRadius_(outerR), innerRadius_(innerR)
+{
+  if (outerR <= 0 || innerR <= 0) {
+    throw std::invalid_argument("Radii must be positive");
+  }
+  if (innerR >= outerR) {
+    throw std::invalid_argument("Inner radius must be less than outer radius");
+  }
+}
+losev::Ring::Ring(double x, double y, double outerR, double innerR):
+ center_{x, y}, outerRadius_(outerR), innerRadius_(innerR)
+{
+  if (outerR <= 0 || innerR <= 0) {
+    throw std::invalid_argument("Radii must be positive");
+  }
+  if (innerR >= outerR) {
+    throw std::invalid_argument("Inner radius must be less than outer radius");
+  }
+}
+double losev::Ring::getArea() const noexcept
+{
+  return 3.1415 * (outerRadius_ * outerRadius_ - innerRadius_ * innerRadius_);
+}
+losev::rectangle_t losev::Ring::getFrameRect() const noexcept
+{
+  rectangle_t frameRect;
+  frameRect.width = 2.0 * outerRadius_;
+  frameRect.height = 2.0 * outerRadius_;
+  frameRect.pos = center_;
+  return frameRect;
+}
+void losev::Ring::move(const point_t& point) noexcept
+{
+  center_ = point;
+}
+void losev::Ring::move(double dx, double dy) noexcept
+{
+  center_.x += dx;
+  center_.y += dy;
+}
+void losev::Ring::scale(double coef)
+{
+  if (coef <= 0) {
+    throw std::invalid_argument("Scale coefficient must be positive");
+  }
+  outerRadius_ *= coef;
+  innerRadius_ *= coef;
 }
 int main()
 {
@@ -186,8 +203,8 @@ int main()
     shapes[5] = new Ring(-2.0, -2.0, 2.5, 0.5);
     std::cout << "=== BEFORE scaling ===\n";
     printShapesInfo(shapes, 6);
-    point_t scalePoint;
-    double scaleCoef;
+    point_t scalePoint = {0.0, 0.0};;
+    double scaleCoef = 1.0;
     std::cout << "\n=== Scaling parameters input ===\n";
     std::cout << "Enter scaling point coordinates (x y): ";
     if (!(std::cin >> scalePoint.x >> scalePoint.y)) {
@@ -233,8 +250,10 @@ int main()
   }
   return 0;
 }
-void losev::scaleFromPoint(Shape& shape, const losev::point_t& point, double coef) {
-losev::rectangle_t frame = shape.getFrameRect();
+
+void losev::scaleFromPoint(Shape& shape, const point_t& point, double coef)
+{
+  losev::rectangle_t frame = shape.getFrameRect();
   losev::point_t center = frame.pos;
   double dx = point.x - center.x;
   double dy = point.y - center.y;
@@ -242,34 +261,26 @@ losev::rectangle_t frame = shape.getFrameRect();
   shape.scale(coef);
   shape.move(-dx * coef, -dy * coef);
 }
-losev::rectangle_t losev::getOverallFrameRect(Shape** shapes, size_t count) {
+losev::rectangle_t losev::getOverallFrameRect(Shape* const* shapes, size_t count)
+{
   if (count == 0) {
-    losev::rectangle_t emptyRect = {0, 0, {0, 0}};
-    return emptyRect;
+    return {0, 0, {0, 0}};
   }
-  losev::rectangle_t first = shapes[0]->getFrameRect();
+  rectangle_t first = shapes[0]->getFrameRect();
   double minX = first.pos.x - first.width / 2;
   double maxX = first.pos.x + first.width / 2;
   double minY = first.pos.y - first.height / 2;
   double maxY = first.pos.y + first.height / 2;
   for (size_t i = 1; i < count; ++i) {
-    losev::rectangle_t rect = shapes[i]->getFrameRect();
+    rectangle_t rect = shapes[i]->getFrameRect();
     double left = rect.pos.x - rect.width / 2;
     double right = rect.pos.x + rect.width / 2;
     double bottom = rect.pos.y - rect.height / 2;
     double top = rect.pos.y + rect.height / 2;
-    if (left < minX) {
-      minX = left;
-    }
-    if (right > maxX) {
-      maxX = right;
-    }
-    if (bottom < minY) {
-      minY = bottom;
-    }
-    if (top > maxY) {
-      maxY = top;
-    }
+    minX = std::min(minX, left);
+    maxX = std::max(maxX, right);
+    minY = std::min(minY, bottom);
+    maxY = std::max(maxY, top);
   }
   losev::rectangle_t overall;
   overall.width = maxX - minX;
@@ -278,7 +289,8 @@ losev::rectangle_t losev::getOverallFrameRect(Shape** shapes, size_t count) {
   overall.pos.y = (minY + maxY) / 2;
   return overall;
 }
-void losev::printShapesInfo(losev::Shape** shapes, size_t count) {
+void losev::printShapesInfo(Shape* const* shapes, size_t count)
+{
   double totalArea = 0.0;
   for (size_t i = 0; i < count; ++i) {
     double area = shapes[i]->getArea();
