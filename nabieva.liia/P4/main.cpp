@@ -35,6 +35,7 @@ namespace nabieva
 				result[pos++] = static_cast<char>('a' + i);
 			}
 		}
+		result[pos++] = "\0";
 		return pos;
 	}
 
@@ -51,10 +52,10 @@ namespace nabieva
 				pos++;
 			}
 			if (i < strlen(secondString)) {
-				result[pos] = secondString[i];
-				pos++;
+				result[pos++] = secondString[i];
 			}
 		}
+		result[pos++] = "\0";
 		return pos;
 	}
 }
