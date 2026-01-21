@@ -141,7 +141,7 @@ void losev::Circle::scale(double coef)
   }
   radius_ *= coef;
 }
-losev::Ring::Ring(const point_t& center, double outerR, double innerR): 
+losev::Ring::Ring(const point_t& center, double outerR, double innerR):
  center_(center), outerRadius_(outerR), innerRadius_(innerR)
 {
   if (outerR <= 0 || innerR <= 0) {
