@@ -69,4 +69,25 @@ namespace gordejchik
       }
       outputFile << matrix[rows * cols - 1] << "\n";
     }
+    
+  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
+      if (rows == 0 || cols == 0) {
+        outputFile << 0 << "\n";
+        return;
+      }
+      const size_t MAX_MATRIX_SIZE = 10000;
+      int diagSum[MAX_MATRIX_SIZE] = {};
+      for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < cols; j++) {
+          diagSum[i + j] += matrix[i * cols + j];
+        }
+      }
+      int minSum = diagSum[0];
+      for (size_t i = 0; i < rows + cols - 1; i++) {
+        if (minSum > diagSum[i]) {
+          minSum = diagSum[i];
+        }
+      }
+      outputFile << minSum << "\n";
+    }
 }
