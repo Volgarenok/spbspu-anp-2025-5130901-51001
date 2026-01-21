@@ -157,10 +157,12 @@ namespace nabieva
    else if (std::stoi(argv[1]) == 2) {
      int* dynamicMatrix = new int[rows * cols];
      if (!readMatrix(inputFile, dynamicMatrix, rows * cols)) {
+       delete[] dynamicMatrix;
        return 2;
      }
      findMinSumDiag(outputFile, dynamicMatrix, rows, cols);
      transformSpiralMatrix(outputFile, dynamicMatrix, rows, cols);
+     delete[] dynamicMatrix;
    }
    inputFile.close();
    outputFile.close();
