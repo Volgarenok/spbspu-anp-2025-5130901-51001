@@ -92,7 +92,7 @@ namespace nabieva
   }
 }
 
- int main(int argc, char* argv[])  
+ int main(int argc, char* argv[])
  {
    using namespace nabieva;
    if (argc < 4) {
