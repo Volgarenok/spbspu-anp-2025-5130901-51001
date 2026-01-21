@@ -2,6 +2,10 @@
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <istream>
+
+#include "getLine.hpp"
+#include "getWords.hpp"
 
 namespace smirnova
 {
@@ -15,126 +19,7 @@ bool checkSpace(char ch) {
   return std::isspace(static_cast< unsigned char >(ch));
 }
 
-char **smirnova::getWords(std::istream &in, size_t &size,
-  bool (*checkSpace)(char))
-{
-  size = 0;
-  size_t lineLen = 0;
-  char *line = getLine(in, lineLen);
-  if (!line) {
-    return nullptr;
-  }
-  if (lineLen == 0) {
-    free(line);
-    return nullptr;
-  }
-  size_t cap = 10;
-  char **words = reinterpret_cast< char** >(malloc(cap  * sizeof(char*)));
-  if (!words) {
-    free(line);
-    return nullptr;
-  }
-  size_t countWords = 0, i = 0;
-  while (i < lineLen) {
-    while (i < lineLen && checkSpace(line[i])) {
-      i++;
-    }
-    if (i >= lineLen) {
-      break;
-    }
-    size_t start = i;
-    while (i < lineLen && !checkSpace(line[i])) {
-      i++;
-    }
-    size_t wordLen = i - start;
-    char *word = reinterpret_cast< char* >(malloc(wordLen + 1));
-    if (!word) {
-      for (size_t j = 0; j < countWords; j++) {
-        free(words[j]);
-      }
-      free(words);
-      free(line);
-      return nullptr;
-    }
-    for (size_t l = 0; l < wordLen; ++l) {
-      word[l] = line[start + l];
-    }
-    word[wordLen] = '\0';
-    if (countWords == cap) {
-      size_t newCap = cap * 2;
-      char **newWords = reinterpret_cast< char** >(malloc(newCap * sizeof(char*)));
-      if (!newWords) {
-        free(word);
-        for (size_t k = 0; k < countWords; ++k) {
-          free(words);
-          free(line);
-          return nullptr;
-        }
-      }
-      std::memcpy(newWords, words, countWords * sizeof(char*));
-      free(words);
-      words = newWords;
-      cap = newCap;
-    }
-    words[countWords++] = word;
-  }
-  size = countWords;
-  free(line);
-  return words;
-}
 
-char *smirnova::getLine(std::istream &in, size_t &size)
-{
-  bool is_skipws = in.flags() & std::ios_base::skipws;
-  if (is_skipws) {
-    in >> std::noskipws;
-  }
-  size_t capacity = 16;
-  size_t length = 0;
-
-  char *str = reinterpret_cast< char* >(malloc(capacity));
-  if (!str) {
-    return nullptr;
-  }
-
-  char ch = '\0';
-  while (in.get(ch) && ch != '\n') {
-    if (length + 1 >= capacity) {
-      size_t newCapacity = capacity * 2;
-      char *buffer = reinterpret_cast< char* >(malloc(newCapacity));
-      if (!buffer) {
-        free(str);
-        return 0;
-      }
-      for (size_t i = 0; i < length; i++) {
-        buffer[i] = str[i];
-      }
-      free(str);
-      str = buffer;
-      capacity = newCapacity;
-    }
-    str[length++] = ch;
-  }
-
-  if (is_skipws) {
-    in >> std::skipws;
-  }
-
-  char *result = reinterpret_cast< char* >(malloc(length + 1));
-  if (!result) {
-    free(str);
-    return 0;
-  }
-
-  for (size_t i = 0; i < length; i++) {
-    result[i] = str[i];
-  }
-  result[length] = '\0';
-
-  free(str);
-  size = length;
-  return result;
-}
 
 int smirnova::compareStrings(const char *a, const char *b)
 {
