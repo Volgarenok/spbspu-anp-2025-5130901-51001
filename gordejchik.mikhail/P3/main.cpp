@@ -22,7 +22,6 @@ namespace gordejchik
     }
     return true;
   }
-  
   void transformMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
       if (rows == 0 || cols == 0) {
         outputFile << rows << " " << cols << "\n";
@@ -70,7 +69,8 @@ namespace gordejchik
       outputFile << matrix[rows * cols - 1] << "\n";
     }
     
-  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
+  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) 
+  {
       if (rows == 0 || cols == 0) {
         outputFile << 0 << "\n";
         return;
@@ -152,7 +152,6 @@ int main(int argc, char* argv[])
      }
      int original[MAX_MATRIX_SIZE];
      std::memcpy(original, fixMatrix, rows * cols * sizeof(int));
-     
      transformMatrix(outputFile, fixMatrix, rows, cols);
      findMinSumDiag(outputFile, original, rows, cols);
    }
