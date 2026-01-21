@@ -11,9 +11,7 @@ namespace loseva {
     bool is_greater = true;
     for (int i = -1; i <= 1; ++i) {
       for (int j = -1; j <= 1; ++j) {
-        if (i == 0 && j == 0) {
-          continue;
-        }
+        if (i == 0 && j == 0) continue;
         if (matrix[(row + i) * cols + (col + j)] >= current) {
           is_greater = false;
         }
@@ -22,9 +20,7 @@ namespace loseva {
     return is_greater;
   }
   int count_local_maximums(size_t rows, size_t cols, const int* matrix) {
-    if (rows < 3 || cols < 3) {
-      return 0;
-    }
+    if (rows < 3 || cols < 3) return 0;
     int count = 0;
     for (size_t i = 1; i < rows - 1; ++i) {
       for (size_t j = 1; j < cols - 1; ++j) {
@@ -62,9 +58,7 @@ namespace loseva {
   }
   bool try_read_matrix(std::istream& in, int* matrix, size_t count) {
     for (size_t i = 0; i < count; ++i) {
-      if (!(in >> matrix[i])) {
-        return false;
-      }
+      if (!(in >> matrix[i])) return false;
     }
     char extra;
     bool has_no_tail = !(in >> extra);
@@ -83,8 +77,8 @@ int main(int argc, char* argv[]) {
     std::cerr << "Error: Mode must be a number\n";
     return 1;
   }
-  bool is_mode_in_range = (mode == 1 || mode == 2);
-  if (!is_mode_in_range) {
+  bool is_mode_valid = (mode == 1 || mode == 2);
+  if (!is_mode_valid) {
     std::cerr << "Error: First parameter must be 1 or 2\n";
     return 1;
   }
@@ -100,6 +94,7 @@ int main(int argc, char* argv[]) {
   }
   if (r == 0 || c == 0) {
     std::ofstream output(argv[3]);
+    if (!output) return 1;
     output << 0 << "\n";
     return 0;
   }
@@ -112,10 +107,7 @@ int main(int argc, char* argv[]) {
       return 2;
     }
     int stack_arr[LIMIT];
-    if (!loseva::try_read_matrix(input, stack_arr, total)) {
-      std::cerr << "Error: Invalid data in file\n";
-      return 2;
-    }
+    if (!loseva::try_read_matrix(input, stack_arr, total)) return 2;
     res_task3 = loseva::count_local_maximums(r, c, stack_arr);
     res_task13 = loseva::max_secondary_diagonal_sum(r, c, stack_arr);
   } else {
@@ -128,7 +120,6 @@ int main(int argc, char* argv[]) {
     }
     if (!loseva::try_read_matrix(input, heap_arr, total)) {
       delete[] heap_arr;
-      std::cerr << "Error: Invalid data in file\n";
       return 2;
     }
     res_task3 = loseva::count_local_maximums(r, c, heap_arr);
