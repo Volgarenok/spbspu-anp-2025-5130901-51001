@@ -4,109 +4,161 @@
 #include <new>
 namespace loseva
 {
-  char* mergeStrings(const char* first, const char* second, size_t first_len, size_t second_len);
-  char* readInputLine(std::istream& input_stream, size_t& total_length);
-  void extractLatins(const char* str1, const char* str2, char* output_buffer, size_t buffer_capacity);
-  void removeLatins(const char* source, char* output_buffer, size_t buffer_capacity);
-  struct ArrayGuard {
+  const size_t LATIN_ALPHABET_SIZE = 26;
+  char* mergeStrings(const char* first, const char* second, size_t firstLen, size_t secondLen);
+  char* readInputLine(std::istream& inputStream, size_t& totalLength);
+  void extractUniqueLatins(const char* first, const char* second, char* output, size_t capacity);
+  void removeAllLatins(const char* source, char* output, size_t capacity);
+  struct ArrayGuard
+  {
     char* data;
     ArrayGuard(char* p) : data(p) {}
-    ~ArrayGuard() { delete[] data; }
-  };
-}
-char* loseva::mergeStrings(const char* first, const char* second, size_t first_len, size_t second_len)
-{
-  char* combined = new char[first_len + second_len];
-  if (first) {
-    for (size_t i = 0; i < first_len; ++i) combined[i] = first[i];
+    ~ArrayGuard()
+    {
+      delete[] data;
+    }
   }
-  if (second) {
-    for (size_t i = 0; i < second_len; ++i) combined[first_len + i] = second[i];
+}
+char* loseva::mergeStrings(const char* first, const char* second, size_t firstLen, size_t secondLen)
+{
+  char* combined = new char[firstLen + secondLen];
+  if (first)
+  {
+    for (size_t i = 0; i < firstLen; ++i)
+    {
+      combined[i] = first[i];
+    }
+  }
+  if (second)
+  {
+    for (size_t i = 0; i < secondLen; ++i)
+    {
+      combined[firstLen + i] = second[i];
+    }
   }
   return combined;
 }
-char* loseva::readInputLine(std::istream& input_stream, size_t& total_length)
+char* loseva::readInputLine(std::istream& inputStream, size_t& totalLength)
 {
-  const size_t chunk_size = 10;
-  char* full_string = nullptr;
-  total_length = 0;
-  char* current_chunk = new char[chunk_size];
-  ArrayGuard chunk_guard(current_chunk);
-  input_stream >> std::noskipws;
-  char current_char;
-  size_t chunk_index = 0;
-  while ((input_stream >> current_char) && current_char != '\n') {
-    if (chunk_index == chunk_size) {
-      char* temp = mergeStrings(full_string, current_chunk, total_length, chunk_size);
-      delete[] full_string;
-      full_string = temp;
-      total_length += chunk_size;
-      chunk_index = 0;
+  const size_t chunkCapacity = 10;
+  char* accumulatedString = nullptr;
+  totalLength = 0;
+  char* currentChunk = new char[chunkCapacity];
+  ArrayGuard chunkGuard(currentChunk);
+  inputStream >> std::noskipws;
+  char currentChar;
+  size_t chunkUsage = 0;
+  while ((inputStream >> currentChar) && (currentChar != '\n'))
+  {
+    if (chunkUsage == chunkCapacity)
+    {
+      char* expanded = mergeStrings(accumulatedString, currentChunk, totalLength, chunkCapacity);
+      delete[] accumulatedString;
+      accumulatedString = expanded;
+      totalLength += chunkCapacity;
+      chunkUsage = 0;
     }
-    current_chunk[chunk_index++] = current_char;
+    currentChunk[chunkUsage] = currentChar;
+    chunkUsage++;
   }
-  char* final_string = new char[total_length + chunk_index + 1];
-  if (full_string) {
-    for (size_t i = 0; i < total_length; ++i) final_string[i] = full_string[i];
+  char* finalString = new char[totalLength + chunkUsage + 1];
+  if (accumulatedString)
+  {
+    for (size_t i = 0; i < totalLength; ++i)
+    {
+      finalString[i] = accumulatedString[i];
+    }
   }
-  for (size_t i = 0; i < chunk_index; ++i) final_string[total_length + i] = current_chunk[i];
-  total_length += chunk_index;
-  final_string[total_length] = '\0';
-  delete[] full_string;
-  return final_string;
+  for (size_t i = 0; i < chunkUsage; ++i)
+  {
+    finalString[totalLength + i] = currentChunk[i];
+  }
+  totalLength += chunkUsage;
+  finalString[totalLength] = '\0';
+  delete[] accumulatedString;
+  return finalString;
 }
-void loseva::extractLatins(const char* str1, const char* str2, char* output_buffer, size_t buffer_capacity)
+void loseva::extractUniqueLatins(const char* first, const char* second, char* output, size_t capacity)
 {
-  bool latin_present[26] = {false};
-  size_t write_pos = 0;
-  auto mark_latins = [&](const char* s) {
-    for (size_t i = 0; s[i] != '\0'; ++i) {
-      if (std::isalpha(static_cast<unsigned char>(s[i]))) {
-        latin_present[std::tolower(static_cast<unsigned char>(s[i])) - 'a'] = true;
+  bool foundLetters[LATIN_ALPHABET_SIZE] = {false};
+  size_t writePos = 0;
+  auto markLatins = [&](const char* str)
+  {
+    if (!str)
+    {
+      return;
+    }
+    for (size_t i = 0; str[i] != '\0'; ++i)
+    {
+      if (std::isalpha(static_cast<unsigned char>(str[i])))
+      {
+        foundLetters[std::tolower(static_cast<unsigned char>(str[i])) - 'a'] = true;
       }
     }
-  };
-  mark_latins(str1);
-  mark_latins(str2);
-  for (int i = 0; i < 26; ++i) {
-    if (latin_present[i]) {
-      if (write_pos + 1 >= buffer_capacity) throw std::bad_alloc();
-      output_buffer[write_pos++] = static_cast<char>('a' + i);
+  }
+  markLatins(first);
+  markLatins(second);
+  for (size_t i = 0; i < LATIN_ALPHABET_SIZE; ++i)
+  {
+    if (foundLetters[i])
+    {
+      if (writePos + 1 >= capacity)
+      {
+        throw std::bad_alloc();
+      }
+      output[writePos] = static_cast<char>('a' + i);
+      writePos++;
     }
   }
-  output_buffer[write_pos] = '\0';
+  output[writePos] = '\0';
 }
-void loseva::removeLatins(const char* source, char* output_buffer, size_t buffer_capacity)
+void loseva::removeAllLatins(const char* source, char* output, size_t capacity)
 {
-  size_t write_pos = 0;
-  for (size_t i = 0; source[i] != '\0'; ++i) {
-    if (!std::isalpha(static_cast<unsigned char>(source[i]))) {
-      if (write_pos + 1 >= buffer_capacity) throw std::bad_alloc();
-      output_buffer[write_pos++] = source[i];
+  if (!source)
+  {
+    if (capacity > 0)
+    {
+      output[0] = '\0';
+    }
+    return;
+  }
+  size_t writePos = 0;
+  for (size_t i = 0; source[i] != '\0'; ++i)
+  {
+    if (!std::isalpha(static_cast<unsigned char>(source[i])))
+    {
+      if (writePos + 1 >= capacity)
+      {
+        throw std::bad_alloc();
+      }
+      output[writePos] = source[i];
+      writePos++;
     }
   }
-  output_buffer[write_pos] = '\0';
+  output[writePos] = '\0';
 }
 int main()
 {
-  char* user_input = nullptr;
-  char* non_latin_string = nullptr;
-  try {
-    size_t input_length = 0;
-    user_input = loseva::readInputLine(std::cin, input_length);
-    char unique_latins[27];
-    non_latin_string = new char[input_length + 1];
-    loseva::extractLatins(user_input, "defghk", unique_latins, sizeof(unique_latins));
-    std::cout << "Unique latins: " << unique_latins << "\n";
-    loseva::removeLatins(user_input, non_latin_string, input_length + 1);
-    std::cout << "Filtered string: " << non_latin_string << "\n";
-    delete[] user_input;
-    delete[] non_latin_string;
+  char* inputData = nullptr;
+  char* filteredData = nullptr;
+  try
+  {
+    size_t length = 0;
+    inputData = loseva::readInputLine(std::cin, length);
+    char uniqueChars[loseva::LATIN_ALPHABET_SIZE + 1];
+    filteredData = new char[length + 1];
+    loseva::extractUniqueLatins(inputData, "defghk", uniqueChars, sizeof(uniqueChars));
+    std::cout << uniqueChars << "\n";
+    loseva::removeAllLatins(inputData, filteredData, length + 1);
+    std::cout << filteredData << "\n";
+    delete[] inputData;
+    delete[] filteredData;
   }
-  catch (const std::bad_alloc&) {
-    delete[] user_input;
-    delete[] non_latin_string;
-    std::cerr << "Error: Memory limit exceeded or buffer overflow.\n";
+  catch (const std::bad_alloc&)
+  {
+    delete[] inputData;
+    delete[] filteredData;
+    std::cerr << "Memory allocation error\n";
     return 1;
   }
   return 0;
