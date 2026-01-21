@@ -20,7 +20,7 @@ namespace kitserov
     virtual rectangle_t getFrameRect() const noexcept = 0;
     virtual void move(float dx, float dy) noexcept = 0;
     virtual void move(const point_t& p) noexcept = 0;
-    virtual void scale(float k) = 0 noexcept = 0;
+    virtual void scale(float k) noexcept = 0;
   };
 
   struct Rectangle final: Shape
@@ -132,7 +132,7 @@ int main()
   return 0;
 }
 
-kitserov::Rectangle::Rectangle(point_t p, float w, float h):
+kitserov::Rectangle::Rectangle(point_t p, float w, float h) noexcept:
   rect_{w, h, p}
 {}
 
@@ -157,13 +157,13 @@ void kitserov::Rectangle::move(const point_t& p) noexcept
   rect_.pos = p;
 }
 
-void kitserov::Rectangle::scale(float k)
+void kitserov::Rectangle::scale(float k) noexcept
 {
   rect_.width *= k;
   rect_.height *= k;
 }
 
-kitserov::Xquare::Xquare(point_t p, float s):
+kitserov::Xquare::Xquare(point_t p, float s) noexcept:
   centre_(p),
   side_(s)
 {}
@@ -189,7 +189,7 @@ void kitserov::Xquare::move(const point_t& p) noexcept
   centre_ = p;
 }
 
-void kitserov::Xquare::scale(float k)
+void kitserov::Xquare::scale(float k) noexcept
 {
   side_ *= k;
 }
@@ -266,7 +266,7 @@ void kitserov::Polygon::move(const point_t& p) noexcept
   move(dx, dy);
 }
 
-void kitserov::Polygon::scale(float k)
+void kitserov::Polygon::scale(float k) noexcept
 {
   for (size_t i = 0; i < vertexCount_; ++i) {
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;
@@ -274,7 +274,7 @@ void kitserov::Polygon::scale(float k)
   }
 }
 
-kitserov::point_t kitserov::calculateCentroid(const point_t* vertices, size_t count)
+kitserov::point_t kitserov::calculateCentroid(const point_t* vertices, size_t count) noexcept
 {
   if (vertices == nullptr || count == 0) {
     return {0.0, 0.0};
@@ -288,7 +288,7 @@ kitserov::point_t kitserov::calculateCentroid(const point_t* vertices, size_t co
   return {sumX / static_cast< float >(count), sumY / static_cast< float >(count)};
 }
 
-kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
+kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s) noexcept
 {
   float minx = pts[0].x;
   float miny = pts[0].y;
@@ -310,7 +310,7 @@ kitserov::rectangle_t kitserov::frame(const point_t* pts, size_t s)
   return rectangle_t{width, height, {centerX, centerY}};
 }
 
-void kitserov::frameOutput(std::ostream& os, const rectangle_t& fr)
+void kitserov::frameOutput(std::ostream& os, const rectangle_t& fr) noexcept
 {
   float left = fr.pos.x - fr.width / 2;
   float top = fr.pos.y + fr.height / 2;
@@ -320,7 +320,7 @@ void kitserov::frameOutput(std::ostream& os, const rectangle_t& fr)
      << " rightBot " << right << ", " << bottom << ")\n";
 }
 
-void kitserov::shapeOutput(std::ostream& os, const Shape* sh, const char* name)
+void kitserov::shapeOutput(std::ostream& os, const Shape* sh, const char* name) noexcept
 {
   rectangle_t frameRect = sh->getFrameRect();
   os << name << ": area = " << sh->getArea() << "\n";
@@ -340,7 +340,7 @@ void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
   sh->move(-dx * k, -dy * k);
 }
 
-kitserov::rectangle_t kitserov::getOverallFrame(const Shape* const* shapes, size_t count)
+kitserov::rectangle_t kitserov::getOverallFrame(const Shape* const* shapes, size_t count) noexcept
 {
   rectangle_t firstFrame = shapes[0]->getFrameRect();
   float minX = firstFrame.pos.x - firstFrame.width / 2;
@@ -368,7 +368,7 @@ kitserov::rectangle_t kitserov::getOverallFrame(const Shape* const* shapes, size
   return {width, height, {centerX, centerY}};
 }
 
-void kitserov::printAllInfo(std::ostream& os, const Shape* const* shapes, const char* const* names, size_t count)
+void kitserov::printAllInfo(std::ostream& os, const Shape* const* shapes, const char* const* names, size_t count) noexcept
 {
   for (size_t i = 0; i < count; ++i) {
     if (shapes[i] != nullptr) {
