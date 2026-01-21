@@ -91,3 +91,87 @@ namespace gordejchik
       outputFile << minSum << "\n";
     }
 }
+int main(int argc, char* argv[])
+ {
+   using namespace gordejchik;
+   if (argc < 4) {
+     std::cerr << "Not enough arguments\0";
+     return 1;
+   }
+   if (argc > 4) {
+     std::cerr << "Too many arguments\0";
+     return 1;
+   }
+   try {
+     size_t pos = 0;
+     int arg;
+     arg = std::stoi(argv[1], &pos);
+     if (pos < strlen(argv[1])) {
+       std::cerr << "First parameter is not a number\0";
+       return 1;
+     }
+     if (arg != 1 && arg != 2) {
+       std::cerr << "First parameter is out of range\0";
+       return 1;
+     }
+   }
+   catch (const std::invalid_argument&) {
+     std::cerr << "First parameter is not a number\0";
+     return 1;
+   }
+   catch (const std::out_of_range&) {
+     std::cerr << "First parameter is too big\0";
+     return 1;
+   }
+
+   std::ifstream inputFile(argv[2]);
+   std::ofstream outputFile(argv[3]);
+   if (!inputFile.is_open()) {
+     std::cerr << "Cannot open input file\0";
+     return 2;
+   }
+   if (!outputFile.is_open()) {
+     std::cerr << "Cannot open output file\0";
+     return 2;
+   }
+   size_t rows = 0;
+   size_t cols = 0;
+   if (!(inputFile >> rows)) {
+     std::cerr << "Error rows\0";
+     return 2;
+   }
+   if (!(inputFile >> cols)) {
+     std::cerr << "Error cols\0";
+     return 2;
+   }
+   if (std::stoi(argv[1]) == 1) {
+     const size_t MAX_MATRIX_SIZE = 10000;
+     int fixMatrix[MAX_MATRIX_SIZE];
+     if (!readMatrix(inputFile, fixMatrix, rows * cols)) {
+       return 2;
+     }
+     int original[MAX_MATRIX_SIZE];
+     std::memcpy(original, fixMatrix, rows * cols * sizeof(int));
+     
+     transformMatrix(outputFile, fixMatrix, rows, cols);
+     findMinSumDiag(outputFile, original, rows, cols);
+   }
+   else if (std::stoi(argv[1]) == 2) {
+     int* dynamicMatrix = new int[rows * cols];
+     if (!readMatrix(inputFile, dynamicMatrix, rows * cols)) {
+       delete[] dynamicMatrix;
+       return 2;
+     }
+     int* original = new int[rows * cols];
+     std::memcpy(original, dynamicMatrix, rows * cols * sizeof(int));
+     
+     transformMatrix(outputFile, dynamicMatrix, rows, cols);
+     findMinSumDiag(outputFile, original, rows, cols);
+     
+     delete[] original;
+     delete[] dynamicMatrix;
+   }
+   inputFile.close();
+   outputFile.close();
+   return 0;
+}
