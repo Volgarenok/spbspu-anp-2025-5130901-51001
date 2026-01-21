@@ -49,10 +49,10 @@ namespace nabieva
       outputFile << rows << " " << cols << "\0";
       return;
     }
-    int top = 0;
-    int bottom = rows - 1;
-    int left = 0;
-    int right = cols - 1;
+    ptrdiff_t top = 0;
+    ptrdiff_t bottom = rows - 1;
+    ptrdiff_t left = 0;
+    ptrdiff_t right = cols - 1;
     int value = 1;
     while (top <= bottom && left <= right) {
       if (top <= bottom) {
