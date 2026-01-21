@@ -2,7 +2,7 @@
 #include <istream>
 #include <cctype>
 #include <new>
-
+#include <memory>
 namespace loseva
 {
   char* mergeStrings(const char* a, const char* b, size_t as, size_t bs);
@@ -12,7 +12,7 @@ namespace loseva
 }
 char* loseva::mergeStrings(const char* a, const char* b, size_t as, size_t bs)
 {
-   char* result = new char[as + bs];
+  char* result = new char[as + bs];
   if (a) {
     for (size_t i = 0; i < as; i++) result[i] = a[i];
   }
@@ -30,32 +30,25 @@ char* loseva::readInputLine(std::istream& in, size_t& size)
   in >> std::noskipws;
   char val;
   size_t i = 0;
-  try {
-    while ((in >> val) && val != '\n') {
-      batch[i++] = val;
-      if (i == batchsize) {
-        char* t = mergeStrings(result, batch, size, batchsize);
-        delete[] result;
-        result = t;
-        size += batchsize;
-        i = 0;
-      }
+  while ((in >> val) && val != '\n') {
+    if (i == batchsize) {
+      delete[] result;
+      result = t;
+      size += batchsize;
+      i = 0;
     }
-    char* final_res = new char[size + i + 1];
-    if (result) {
-      for (size_t j = 0; j < size; ++j) final_res[j] = result[j];
-    }
-    for (size_t j = 0; j < i; ++j) final_res[size + j] = batch[j];
-        size += i;
-    final_res[size] = '\0';
-    delete[] result;
-    delete[] batch;
-    return final_res;
-  } catch (const std::bad_alloc&) {
-    delete[] result;
-    delete[] batch;
-    throw; 
+    batch[i++] = val;
   }
+  char* final_res = new char[size + i + 1];
+  if (result) {
+    for (size_t j = 0; j < size; ++j) final_res[j] = result[j];
+  }
+  for (size_t j = 0; j < i; ++j) final_res[size + j] = batch[j];
+  size += i;
+  final_res[size] = '\0';
+  delete[] result;
+  delete[] batch;
+  return final_res;
 }
 char* loseva::lat_two(const char* str1, const char* str2, char* result, size_t result_size)
 {
@@ -93,24 +86,15 @@ char* loseva::lat_rmv(const char* src, char* result, size_t result_size)
 }
 int main()
 {
-  char* input = nullptr;
-  char* result2 = nullptr;
   size_t size = 0;
-  try {
-    input = loseva::readInputLine(std::cin, size);
-    char result1[27];
-    result2 = new char[size + 1];
-    if (loseva::lat_two(input, "defghk", result1, sizeof(result1))) {
-      std::cout << result1 << "\n";
-    }
-    if (loseva::lat_rmv(input, result2, size + 1)) {
-      std::cout << result2 << "\n";
-    }
-  } catch (const std::bad_alloc&) {
-    std::cerr << "bad alloc\n";
-    delete[] input;
-    delete[] result2;
-    return 1;
+  char* input = loseva::readInputLine(std::cin, size);
+  char result1[27];
+  char* result2 = new char[size + 1];
+  if (loseva::lat_two(input, "defghk", result1, sizeof(result1))) {
+    std::cout << result1 << "\n";
+  }
+  if (loseva::lat_rmv(input, result2, size + 1)) {
+    std::cout << result2 << "\n";
   }
   delete[] input;
   delete[] result2;
