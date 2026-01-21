@@ -41,32 +41,13 @@ namespace nabieva
         minSum = diagSum[i];
       }
     }
-    outputFile << minSum << "\0";
+    outputFile << minSum << "\n";
   }
 
-  bool transformDynamicMatrix(std::ifstream& inputFile, std::ofstream& outputFile, size_t rows, size_t cols)
-  {
-    int num;
-    int* dynamicMatrix = new int[rows * cols];
-    size_t c = 0;
-    while (inputFile >> num) {
-      dynamicMatrix[c] = num;
-      c++;
-    }
-    if (rows * cols != c) {
-      delete[] dynamicMatrix;
-      std::cerr << "Incorrect number of parameters\n";
-      return false;
-    }
-    if (inputFile.fail() && !inputFile.eof()) {
-      delete[] dynamicMatrix;
-      std::cerr << "Error input\n";
-      return false;
-    }
+  void transformSpiralMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
     if (rows == 0 || cols == 0) {
       outputFile << rows << " " << cols << "\n";
-      delete[] dynamicMatrix;
-      return true;
+      return;
     }
     int top = 0;
     int bottom = rows - 1;
@@ -76,28 +57,28 @@ namespace nabieva
     while (top <= bottom && left <= right) {
       if (top <= bottom) {
         for (size_t j = left; static_cast<int>(j) <= right; j++) {
-          dynamicMatrix[bottom * cols + j] += value;
+          matrix[bottom * cols + j] += value;
           value++;
         }
         bottom--;
       }
       if (left <= right) {
         for (size_t i = bottom; static_cast<int>(i) >= top; i--) {
-          dynamicMatrix[i * cols + right] += value;
+          matrix[i * cols + right] += value;
           value++;
         }
         right--;
       }
       if (top <= bottom) {
         for (size_t j = right; static_cast<int>(j) >= left; j--) {
-          dynamicMatrix[top * cols + j] += value;
+          matrix[top * cols + j] += value;
           value++;
         }
         top++;
       }
       if (left <= right) {
         for (size_t i = top; static_cast<int>(i) <= bottom; i++) {
-          dynamicMatrix[i * cols + left] += value;
+          matrix[i * cols + left] += value;
           value++;
         }
         left++;
@@ -105,13 +86,10 @@ namespace nabieva
     }
     outputFile << rows << " " << cols << " ";
     for (size_t i = 0; i < rows * cols - 1; i++) {
-      outputFile << dynamicMatrix[i] << " ";
+      outputFile << matrix[i] << " ";
     }
-    outputFile << dynamicMatrix[rows * cols - 1] << "\n";
-    delete[] dynamicMatrix;
-    return true;
+    outputFile << matrix[rows * cols - 1] << "\0";
   }
-
 }
 
  int main(int argc, char* argv[])  
@@ -174,11 +152,15 @@ namespace nabieva
        return 2;
      }
      findMinSumDiag(outputFile, fixMatrix, rows, cols);
+     transformSpiralMatrix(outputFile, fixMatrix, rows, cols);
    }
    else if (std::stoi(argv[1]) == 2) {
-     if (!transformDynamicMatrix(inputFile, outputFile, rows, cols)) {
+     int* dynamicMatrix = new int[rows * cols];
+     if (!readMatrix(inputFile, dynamicMatrix, rows * cols)) {
        return 2;
      }
+     findMinSumDiag(outputFile, dynamicMatrix, rows, cols);
+     transformSpiralMatrix(outputFile, dynamicMatrix, rows, cols);
    }
    inputFile.close();
    outputFile.close();
