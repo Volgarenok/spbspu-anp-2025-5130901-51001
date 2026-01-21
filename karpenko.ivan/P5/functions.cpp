@@ -68,6 +68,14 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
   return {width, height, {centerX, centerY}};
 }
 
+void printFrameRectInfo(const karpenko::rectangle_t& frame, const std::string& prefix = "")
+{
+  std::cout << prefix << "Frame Rect:\n";
+  std::cout << prefix << "  Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
+  std::cout << prefix << "  Width: " << frame.width << "\n";
+  std::cout << prefix << "  Height: " << frame.height << "\n";
+}
+
 void karpenko::printAllInfo(const Shape* const* shapes, size_t count, const std::string& title)
 {
   std::cout << "\n" << title << ":\n";
@@ -79,20 +87,12 @@ void karpenko::printAllInfo(const Shape* const* shapes, size_t count, const std:
     double area = shapes[i]->getArea();
     std::cout << "  Area: " << std::fixed << std::setprecision(2) << area << "\n";
 
-    rectangle_t frame = shapes[i]->getFrameRect();
-    std::cout << "  Frame Rect:\n";
-    std::cout << "    Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
-    std::cout << "    Width: " << frame.width << "\n";
-    std::cout << "    Height: " << frame.height << "\n";
 
     totalArea += area;
   }
 
-  std::cout << "\nTotal area: " << totalArea << "\n";
+  std::cout << "\nTotal area: " << std::fixed << std::setprecision(2) << totalArea << "\n";
 
   rectangle_t overallFrame = getOverallFrameRect(shapes, count);
-  std::cout << "\nOverall Frame Rect:\n";
-  std::cout << "  Center: (" << overallFrame.pos.x << ", " << overallFrame.pos.y << ")\n";
-  std::cout << "  Width: " << overallFrame.width << "\n";
-  std::cout << "  Height: " << overallFrame.height << "\n";
+  printFrameRectInfo(overallFrame, "");
 }
