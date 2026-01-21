@@ -19,7 +19,7 @@ namespace smirnova
     virtual void move(double dx, double dy) noexcept = 0;
     virtual void scale(double k) noexcept = 0;
   };
-  
+ 
 }
 
 #endif
