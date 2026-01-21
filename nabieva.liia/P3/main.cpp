@@ -25,7 +25,7 @@ namespace nabieva
 
   void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
     if (rows == 0 || cols == 0) {
-      outputFile << 0;
+      outputFile << 0 << "\n";
       return;
     }
     const size_t MAX_MATRIX_SIZE = 10000;
@@ -46,7 +46,7 @@ namespace nabieva
 
   void transformSpiralMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
     if (rows == 0 || cols == 0) {
-      outputFile << rows << " " << cols << "\n";
+      outputFile << rows << " " << cols << "\0";
       return;
     }
     int top = 0;
