@@ -55,7 +55,7 @@ int main()
 
     char** words = karpenko::readWords(std::cin, wordCount);
 
-    if (words != nullptr)
+    if (words != nullptr && wordCount > 0)
     {
       for (size_t i = 0; i < wordCount; ++i)
       {
@@ -70,6 +70,10 @@ int main()
       {
         delete[] words[i];
       }
+      delete[] words;
+    }
+    else if (words != nullptr)
+    {
       delete[] words;
     }
 
