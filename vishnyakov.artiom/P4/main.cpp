@@ -157,6 +157,8 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
         words = tmp_words;
         capacity_for_words = new_capacity_for_words;
         capacity = 8;
+        free(line);
+        line = reinterpret_cast< char* >(malloc(sizeof(char) * capacity));
       }
 
       if (sym == '\n')
