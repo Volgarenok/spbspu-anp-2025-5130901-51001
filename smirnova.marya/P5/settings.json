@@ -1,30 +1,6 @@
-{
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "prettier.singleQuote": true,
-    "prettier.trailingComma": "all",
-    "prettier.tabWidth": 2,
-    "prettier.useTabs": false,
-    "prettier.printWidth": 100,
-    "editor.tabSize": 2,
-    "editor.wordWrap": "on",
-    "editor.wordWrapColumn": 100,
-    "@azure.argTenant": "",
-    "chat.emptyState.history.enabled": false,
-    "editor.inlineSuggest.enabled": false,
-    "workbench.editor.empty.hint": "hidden",
-    "claudeCode.preferredLocation": "panel",
-    "git.autofetch": true,
-    "editor.dimInactiveRegions": true,
-    "C_Cpp.dimInactiveRegions": true,
-    "workbench.colorCustomizations": {
-        "editorInactiveForeground": "#888888"
-    },
-    "editor.insertSpaces": true,
-    "[cpp]": {
-        "editor.tabSize": 2,
-        "editor.insertSpaces": true,
-        "editor.defaultFormatter": "ms-vscode.cpptools"
-    },
-    "editor.detectIndentation": false,
-    "editor.autoIndent": "none"
-}
+BasedOnStyle: LLVM
+IndentWidth: 4       # один уровень = 4 пробела
+UseTab: Never
+BreakBeforeBraces: Allman
+AllowShortIfStatementsOnASingleLine: false
+ColumnLimit: 100
