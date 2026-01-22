@@ -102,15 +102,6 @@ namespace nabieva
      std::cerr << "First parameter is out of range\n";
      return 1;
    }
-   catch (const std::invalid_argument&) {
-     std::cerr << "First parameter is not a number\n";
-     return 1;
-   }
-   catch (const std::out_of_range&) {
-     std::cerr << "First parameter is too big\n";
-     return 1;
-   }
-
    std::ifstream inputFile(argv[2]);
    std::ofstream outputFile(argv[3]);
    if (!inputFile.is_open()) {
