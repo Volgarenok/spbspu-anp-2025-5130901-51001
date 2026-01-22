@@ -53,7 +53,7 @@ namespace petrenko
     return col - replay_col;
   }
 
-  int fillMatrix(std::ifstream &in, int *matrix, size_t row, size_t col)
+  size_t fillMatrix(std::ifstream &in, int *matrix, size_t row, size_t col)
   {
     size_t err = 0;
     for (size_t i = 0; i < row * col; ++i)
@@ -69,7 +69,7 @@ namespace petrenko
 
   void needRemove(int *matrix, size_t parm)
   {
-    if (parm == 2)
+    if (parm == 2 && matrix != nullptr)
     {
       delete [] matrix;
     }
@@ -121,9 +121,9 @@ int main(int argc, char **argv)
   }
 
   int *matrix = nullptr;
+  int matrixa[10000];
   if (first_parm == 1)
   {
-    int matrixa[10000];
     matrix = matrixa;
   }
   else
