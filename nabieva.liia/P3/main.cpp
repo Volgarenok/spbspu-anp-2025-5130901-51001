@@ -19,11 +19,11 @@ namespace nabieva
     return c;
   }
 
-  void findMinSumDiag(std::ofstream& outputFile, const int* matrix, size_t rows, size_t cols)
+  int findMinSumDiag(std::ofstream& outputFile, const int* matrix, size_t rows, size_t cols)
   {
+    int minSum = 0;
     if (rows == 0 || cols == 0) {
-      outputFile << 0 << "\n";
-      return;
+      return minSum;
     }
     const size_t MAX_MATRIX_SIZE = 10000;
     int diagSum[MAX_MATRIX_SIZE] = {};
@@ -32,13 +32,13 @@ namespace nabieva
         diagSum[i + j] += matrix[i * cols + j];
       }
     }
-    int minSum = diagSum[0];
+    minSum = diagSum[0];
     for (size_t i = 0; i < rows + cols - 1; i++) {
       if (minSum > diagSum[i]) {
         minSum = diagSum[i];
       }
     }
-    outputFile << minSum << "\n";
+    return minSum;
   }
 
   void transformSpiralMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols)
@@ -154,7 +154,7 @@ namespace nabieva
        std::cerr << "Incorrect number of parameters\n";
        return 2;
      }
-     findMinSumDiag(outputFile, fixMatrix, rows, cols);
+     outputFile << findMinSumDiag(outputFile, fixMatrix, rows, cols) << "\n";
      transformSpiralMatrix(outputFile, fixMatrix, rows, cols);
    }
    else if (std::stoi(argv[1]) == 2) {
@@ -169,7 +169,7 @@ namespace nabieva
        std::cerr << "Incorrect number of parameters\n";
        return 2;
      }
-     findMinSumDiag(outputFile, dynamicMatrix, rows, cols);
+     outputFile << findMinSumDiag(outputFile, dynamicMatrix, rows, cols) << "\n";
      transformSpiralMatrix(outputFile, dynamicMatrix, rows, cols);
      delete[] dynamicMatrix;
    }
