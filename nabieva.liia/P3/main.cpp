@@ -13,7 +13,7 @@ namespace nabieva
       matrix[c] = num;
       c++;
     }
-    if (inputFile.fail() && !inputFile.eof()) {
+    if (c > 0 && inputFile.fail() && !inputFile.eof()) {
       throw std::runtime_error("Error input\n");
     }
     return c;
