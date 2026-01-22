@@ -317,14 +317,14 @@ shaykhraziev::Concave::Concave(const point_t* a, size_t size):
   double d0 = distToLine(a[1], a[3], a[0]);
   double d2 = distToLine(a[1], a[3], a[2]);
 
-  if ((d1 == 0.0 && d3 == 0.0) || round(d1 / abs(d1)) == round(d3 / abs(d3))) {
-    if (abs(d1) < abs(d3)) {
+  if ((d1 == 0.0 && d3 == 0.0) || round(d1 / std::abs(d1)) == round(d3 / std::abs(d3))) {
+    if (std::abs(d1) < std::abs(d3)) {
       center_ = a[1];
     } else {
       center_ = a[3];
     }
-  } else if ((d0 == 0.0 && d2 == 0.0) || round(d0 / abs(d0)) == round(d2 / abs(d2))) {
-    if (abs(d0) < abs(d2)) {
+  } else if ((d0 == 0.0 && d2 == 0.0) || round(d0 / std::abs(d0)) == round(d2 / std::abs(d2))) {
+    if (std::abs(d0) < std::abs(d2)) {
       center_ = a[0];
     } else {
       center_ = a[2];
@@ -340,7 +340,7 @@ shaykhraziev::Concave::Concave(const point_t* a, size_t size):
 
 double shaykhraziev::euclidDist(point_t d1, point_t d2)
 {
-  return sqrt((d1.x - d2.x) * (d1.x - d2.x) + (d1.y - d2.y) * (d1.y - d2.y));
+  return std::sqrt((d1.x - d2.x) * (d1.x - d2.x) + (d1.y - d2.y) * (d1.y - d2.y));
 }
 
 double shaykhraziev::calcPolygonArea(const point_t* pts, size_t size)
@@ -404,8 +404,8 @@ double shaykhraziev::Concave::getArea() const
   double xx = (points_[0].x - points_[2].x) * (points_[1].x - points_[3].x);
   double yy = (points_[0].y - points_[2].y) * (points_[1].y - points_[3].y);
 
-  double cosa = abs(xx + yy) / (d1 * d2);
-  double sina = sqrt(1 - cosa * cosa);
+  double cosa = std::abs(xx + yy) / (d1 * d2);
+  double sina = std::sqrt(1 - cosa * cosa);
 
   return 0.5 * d1 * d2 * sina;
 }
