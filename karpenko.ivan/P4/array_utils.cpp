@@ -83,28 +83,3 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
 
   return resizedWords;
 }
-
-char* karpenko::resizeCharArray(const char* array, size_t oldCapacity, size_t requiredSize, size_t& newCapacity)
-{
-  const double GROW_FACTOR = 1.5;
-  newCapacity = static_cast< size_t >(oldCapacity * GROW_FACTOR);
-
-  if (newCapacity <= oldCapacity)
-  {
-    newCapacity = oldCapacity + 1;
-  }
-
-  while (newCapacity < requiredSize)
-  {
-    newCapacity = static_cast< size_t >(newCapacity * GROW_FACTOR);
-  }
-
-  char* newArray = new char[newCapacity];
-
-  if (array != nullptr)
-  {
-    std::memcpy(newArray, array, oldCapacity);
-  }
-
-  return newArray;
-}
