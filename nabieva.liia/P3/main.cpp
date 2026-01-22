@@ -56,28 +56,28 @@ namespace nabieva
     int value = 1;
     while (top <= bottom && left <= right) {
       if (top <= bottom) {
-        for (size_t j = left; static_cast<int>(j) <= right; j++) {
+        for (size_t j = left; static_cast<ptrdiff_t>(j) <= right; j++) {
           matrix[bottom * cols + j] += value;
           value++;
         }
         bottom--;
       }
       if (left <= right) {
-        for (size_t i = bottom; static_cast<int>(i) >= top; i--) {
+        for (size_t i = bottom; static_cast<ptrdiff_t>(i) >= top; i--) {
           matrix[i * cols + right] += value;
           value++;
         }
         right--;
       }
       if (top <= bottom) {
-        for (size_t j = right; static_cast<int>(j) >= left; j--) {
+        for (size_t j = right; static_cast<ptrdiff_t>(j) >= left; j--) {
           matrix[top * cols + j] += value;
           value++;
         }
         top++;
       }
       if (left <= right) {
-        for (size_t i = top; static_cast<int>(i) <= bottom; i++) {
+        for (size_t i = top; static_cast<ptrdiff_t>(i) <= bottom; i++) {
           matrix[i * cols + left] += value;
           value++;
         }
