@@ -43,35 +43,35 @@ namespace nabieva
 
   void transformSpiralMatrix(int* matrix, size_t rows, size_t cols)
   {
-    ptrdiff_t top = 0;
-    ptrdiff_t bottom = rows - 1;
-    ptrdiff_t left = 0;
-    ptrdiff_t right = cols - 1;
+    size_t top = 0;
+    size_t bottom = rows - 1;
+    size_t left = 0;
+    size_t right = cols - 1;
     int value = 1;
     while (top <= bottom && left <= right) {
       if (top <= bottom) {
-        for (size_t j = left; static_cast<ptrdiff_t>(j) <= right; j++) {
+        for (size_t j = left; j <= right; j++) {
           matrix[bottom * cols + j] += value;
           value++;
         }
         bottom--;
       }
       if (left <= right) {
-        for (size_t i = bottom; static_cast<ptrdiff_t>(i) >= top; i--) {
+        for (size_t i = bottom; i != static_cast<size_t>(-1) && i >= top; i--) {
           matrix[i * cols + right] += value;
           value++;
         }
         right--;
       }
       if (top <= bottom) {
-        for (size_t j = right; static_cast<ptrdiff_t>(j) >= left; j--) {
+        for (size_t j = right; j != static_cast<size_t>(-1) && j >= left; j--) {
           matrix[top * cols + j] += value;
           value++;
         }
         top++;
       }
       if (left <= right) {
-        for (size_t i = top; static_cast<ptrdiff_t>(i) <= bottom; i++) {
+        for (size_t i = top; i <= bottom; i++) {
           matrix[i * cols + left] += value;
           value++;
         }
