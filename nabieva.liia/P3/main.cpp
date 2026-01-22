@@ -153,9 +153,9 @@ namespace nabieva
    }
    outputFile << rows << " " << cols << " ";
    for (size_t i = 0; i < rows * cols - 1; i++) {
-     outputFile << fixMatrix[i] << " ";
+     outputFile << matrix[i] << " ";
    }
-   outputFile << fixMatrix[rows * cols - 1] << "\n";
+   outputFile << matrix[rows * cols - 1] << "\n";
    if (needCleanup) delete[] matrix;
    return 0;
  }
