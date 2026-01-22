@@ -28,8 +28,17 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   const double GROW_FACTOR = 1.5;
 
   size_t capacity = INITIAL_CAPACITY;
-  char** words = new char*[capacity];
+  char** words = nullptr;
   wordCount = 0;
+
+  try
+  {
+    words = new char*[capacity];
+  }
+  catch (const std::bad_alloc&)
+  {
+    return nullptr;
+  }
 
   char c;
 
@@ -44,7 +53,21 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   while (in.peek() != EOF && in.peek() != '\n')
   {
     size_t wordLength = 0;
-    char* word = readStringWithAmortization(in, wordLength, isWordChar);
+    char* word = nullptr;
+    
+    try
+    {
+      word = readStringWithAmortization(in, wordLength, isWordChar);
+    }
+    catch (const std::bad_alloc&)
+    {
+      for (size_t i = 0; i < wordCount; ++i)
+      {
+        delete[] words[i];
+      }
+      delete[] words;
+      return nullptr;
+    }
 
     if (wordLength == 0)
     {
@@ -55,7 +78,23 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
     if (wordCount >= capacity)
     {
       size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
-      char** newWords = new char*[newCapacity];
+      char** newWords = nullptr;
+      
+      try
+      {
+        newWords = new char*[newCapacity];
+      }
+      catch (const std::bad_alloc&)
+      {
+        delete[] word;
+        for (size_t i = 0; i < wordCount; ++i)
+        {
+          delete[] words[i];
+        }
+        delete[] words;
+        return nullptr;
+      }
+      
       for (size_t i = 0; i < wordCount; ++i)
       {
         newWords[i] = words[i];
@@ -76,7 +115,22 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
     in.putback(c);
   }
 
-  char** resizedWords = new char*[wordCount];
+  char** resizedWords = nullptr;
+  
+  try
+  {
+    resizedWords = new char*[wordCount];
+  }
+  catch (const std::bad_alloc&)
+  {
+    for (size_t i = 0; i < wordCount; ++i)
+    {
+      delete[] words[i];
+    }
+    delete[] words;
+    return nullptr;
+  }
+  
   for (size_t i = 0; i < wordCount; ++i)
   {
     resizedWords[i] = words[i];
