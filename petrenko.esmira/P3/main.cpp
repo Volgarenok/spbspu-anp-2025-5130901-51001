@@ -56,10 +56,6 @@ namespace petrenko
   int fillMatrix(std::ifstream &in, int *matrix, size_t row, size_t col)
   {
     size_t err = 0;
-    if (matrix == nullptr)
-    { 
-      return 0;
-    }
     for (size_t i = 0; i < row * col; ++i)
     {
       if (!(in >> *matrix))
@@ -141,7 +137,9 @@ int main(int argc, char **argv)
     petrenko::needRemove(matrix, first_parm);
     return 2;
   }
-  std::ofstream(name_output) << std::boolalpha << petrenko::checkTriangular(matrix, row, col) << ' ' << petrenko::checkIdentic(matrix, row, col);
+  bool trian = petrenko::checkTriangular(matrix, row, col);
+  size_t ident = petrenko::checkIdentic(matrix, row, col);
+  std::ofstream(name_output) << std::boolalpha << trian << ' ' << ident;
   petrenko::needRemove(matrix, first_parm);
   return 0;
 }
