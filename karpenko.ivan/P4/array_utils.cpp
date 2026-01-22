@@ -18,7 +18,7 @@ bool karpenko::skipSpaces(std::istream& in, char& c)
 {
   while (in.get(c) && isSpaceChar(c) && c != '\n')
   {}
-  
+
   return !(!in || c == '\n');
 }
 
@@ -54,7 +54,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   {
     size_t wordLength = 0;
     char* word = nullptr;
-    
+
     try
     {
       word = readStringWithAmortization(in, wordLength, isWordChar);
@@ -79,7 +79,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
     {
       size_t newCapacity = static_cast< size_t >(capacity * GROW_FACTOR);
       char** newWords = nullptr;
-      
+
       try
       {
         newWords = new char*[newCapacity];
@@ -94,7 +94,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
         delete[] words;
         return nullptr;
       }
-      
+
       for (size_t i = 0; i < wordCount; ++i)
       {
         newWords[i] = words[i];
@@ -116,7 +116,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
   }
 
   char** resizedWords = nullptr;
-  
+
   try
   {
     resizedWords = new char*[wordCount];
@@ -130,7 +130,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
     delete[] words;
     return nullptr;
   }
-  
+
   for (size_t i = 0; i < wordCount; ++i)
   {
     resizedWords[i] = words[i];
