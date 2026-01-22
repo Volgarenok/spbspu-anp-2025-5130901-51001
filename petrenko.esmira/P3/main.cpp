@@ -56,6 +56,10 @@ namespace petrenko
   int fillMatrix(std::ifstream &in, int *matrix, size_t row, size_t col)
   {
     size_t err = 0;
+    if (matrix == nullptr)
+    { 
+      return 0;
+    }
     for (size_t i = 0; i < row * col; ++i)
     {
       if (!(in >> *matrix))
@@ -102,7 +106,7 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  int first_parm = atoi(argv[1]);
+  int first_parm = num;
   char *name_output = argv[3];
   std::ifstream input(argv[2]);
 
@@ -120,23 +124,24 @@ int main(int argc, char **argv)
     return 2;
   }
 
+  int *matrix = nullptr;
   if (first_parm == 1)
   {
-    int matrix[10000];
+    int matrixa[10000];
+    matrix = matrixa;
   }
   else
   {
-    int *matrix = new int[row * col];
+    matrix = new int[row * col];
   }
 
   if (petrenko::fillMatrix(input, matrix, row, col) != (row * col))
   {
-    std::cerr << "Error no matrix element2" << '\n';
+    std::cerr << "Error no matrix element" << '\n';
     petrenko::needRemove(matrix, first_parm);
     return 2;
   }
-  std::ofstream(name_output) << std::boolalpha << petrenko::checkTriangular(matrix, row, col);
-  std::ofstream(name_output) << petrenko::checkIdentic(matrix, row, col);
+  std::ofstream(name_output) << std::boolalpha << petrenko::checkTriangular(matrix, row, col) << ' ' << petrenko::checkIdentic(matrix, row, col);
   petrenko::needRemove(matrix, first_parm);
   return 0;
 }
