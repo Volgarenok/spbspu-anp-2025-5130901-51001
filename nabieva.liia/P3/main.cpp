@@ -13,11 +13,11 @@ namespace nabieva
       c++;
     }
     if (inputFile.fail() && !inputFile.eof()) {
-      std::cerr << "Error input\0";
+      std::cerr << "Error input\n";
       return false;
     }
     if (size != c) {
-      std::cerr << "Incorrect number of parameters\0";
+      std::cerr << "Incorrect number of parameters\n";
       return false;
     }
     return true;
@@ -46,7 +46,7 @@ namespace nabieva
 
   void transformSpiralMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
     if (rows == 0 || cols == 0) {
-      outputFile << rows << " " << cols << "\0";
+      outputFile << rows << " " << cols << "\n";
       return;
     }
     ptrdiff_t top = 0;
@@ -88,7 +88,7 @@ namespace nabieva
     for (size_t i = 0; i < rows * cols - 1; i++) {
       outputFile << matrix[i] << " ";
     }
-    outputFile << matrix[rows * cols - 1] << "\0";
+    outputFile << matrix[rows * cols - 1] << "\n";
   }
 }
 
@@ -96,52 +96,52 @@ namespace nabieva
  {
    using namespace nabieva;
    if (argc < 4) {
-     std::cerr << "Not enough arguments\0";
+     std::cerr << "Not enough arguments\n";
      return 1;
    }
    if (argc > 4) {
-     std::cerr << "Too many arguments\0";
+     std::cerr << "Too many arguments\n";
      return 1;
    }
    try {
      size_t pos = 0;
      int arg = std::stoi(argv[1], &pos);
      if (pos < strlen(argv[1])) {
-       std::cerr << "First parameter is not a number\0";
+       std::cerr << "First parameter is not a number\n";
        return 1;
      }
      if (arg != 1 && arg != 2) {
-       std::cerr << "First parameter is out of range\0";
+       std::cerr << "First parameter is out of range\n";
        return 1;
      }
    }
    catch (const std::invalid_argument&) {
-     std::cerr << "First parameter is not a number\0";
+     std::cerr << "First parameter is not a number\n";
      return 1;
    }
    catch (const std::out_of_range&) {
-     std::cerr << "First parameter is too big\0";
+     std::cerr << "First parameter is too big\n";
      return 1;
    }
 
    std::ifstream inputFile(argv[2]);
    std::ofstream outputFile(argv[3]);
    if (!inputFile.is_open()) {
-     std::cerr << "Cannot open input file\0";
+     std::cerr << "Cannot open input file\n";
      return 2;
    }
    if (!outputFile.is_open()) {
-     std::cerr << "Cannot open output file\0";
+     std::cerr << "Cannot open output file\n";
      return 2;
    }
    size_t rows = 0;
    size_t cols = 0;
    if (!(inputFile >> rows)) {
-     std::cerr << "Error rows\0";
+     std::cerr << "Error rows\n";
      return 2;
    }
    if (!(inputFile >> cols)) {
-     std::cerr << "Error cols\0";
+     std::cerr << "Error cols\n";
      return 2;
    }
    if (std::stoi(argv[1]) == 1) {
