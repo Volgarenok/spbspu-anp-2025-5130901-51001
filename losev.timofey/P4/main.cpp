@@ -4,8 +4,8 @@
 #include <cctype>
 
 namespace losev {
-  char * getline(std::istream & in, size_t & capacity, size_t & actual_size);
-  char * latRmv(const char * src, char * dest);
+  char* getline(std::istream & in, size_t & capacity, size_t & actual_size);
+  char* latRmv(const char * src, char * dest);
   int hasRep(const char * src);
 }
 
@@ -24,7 +24,7 @@ int main()
     free(str);
     return 1;
   }
-  char * strForFirstEx = reinterpret_cast< char* >(malloc((str_size +1) * sizeof(char)));
+  char* strForFirstEx = reinterpret_cast< char* >(malloc((str_size + 1) * sizeof(char)));
   if (!strForFirstEx) {
     std::cerr << "Memory allocation failed\n";
     free(str);
@@ -82,7 +82,7 @@ char * losev::latRmv(const char * src, char * dest)
 {
   size_t j = 0;
   for (size_t i = 0; src[i] != '\0'; i++) {
-    if (!isalpha(src[i])) {
+    if (!std::isalpha(src[i])) {
       dest[j++] = src[i];
     }
   }
