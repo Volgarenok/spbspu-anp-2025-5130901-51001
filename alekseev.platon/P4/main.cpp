@@ -1,157 +1,176 @@
 #include <iostream>
-#include <cctype>
-#include <iomanip>
+#include <stdexcept>
+#include <new>
 
-namespace alekseev {
-  char* getline(std::istream& in, size_t& size) {
-    bool is_skipws = in.flags() & std::ios_base::skipws;
-    if (is_skipws) {
+namespace alekseev
+{
+  int containsChar(const char* s, char c)
+  {
+    for (; *s != '\0'; ++s)
+    {
+      if (*s == c)
+      {
+        return 1;
+      }
+    }
+    return 0;
+  }
+
+  char* getline(std::istream& in, size_t& size)
+  {
+    const std::ios_base::fmtflags oldFlags = in.flags();
+    const bool hadSkipws = (oldFlags & std::ios_base::skipws) != 0;
+
+    if (hadSkipws)
+    {
       in >> std::noskipws;
     }
 
-    size_t cap = 16;
     char* buf = nullptr;
 
-    try {
+    try
+    {
+      size_t cap = 16;
       buf = new char[cap];
-    }
-    catch (const std::bad_alloc& e) {
-      std::cerr << e.what() << "\n";
-      if (is_skipws) {
-        in >> std::skipws;
-      }
       size = 0;
-      return nullptr;
-    }
 
-    size = 0;
-    char c;
+      char c = '\0';
+      while ((in >> c) && c != '\n')
+      {
+        if (size + 1 >= cap)
+        {
+          const size_t newCap = cap * 2;
+          char* newBuf = new char[newCap];
 
-    try {
-      while (in >> c && c != '\n') {
-        if (size + 1 >= cap) {
-          cap *= 2;
-          char* new_buf = new char[cap];
-
-          for (size_t i = 0; i < size; ++i) {
-            new_buf[i] = buf[i];
+          for (size_t i = 0; i < size; ++i)
+          {
+            newBuf[i] = buf[i];
           }
 
           delete[] buf;
-          buf = new_buf;
+          buf = newBuf;
+          cap = newCap;
         }
         buf[size++] = c;
       }
+
+      if (in.fail() && !in.eof())
+      {
+        delete[] buf;
+        in.flags(oldFlags);
+        size = 0;
+        throw std::logic_error("input failed");
+      }
+
+      buf[size] = '\0';
+      in.flags(oldFlags);
+      return buf;
     }
-    catch (const std::bad_alloc& e) {
-      std::cerr << e.what() << "\n";
+    catch (const std::bad_alloc&)
+    {
       delete[] buf;
-      if (is_skipws) {
-        in >> std::skipws;
-      }
+      in.flags(oldFlags);
       size = 0;
-      return nullptr;
+      throw;
     }
-
-    buf[size] = '\0';
-
-    if (is_skipws) {
-      in >> std::skipws;
-    }
-
-    return buf;
   }
 
-  size_t remove_vow(const char* s, char* d, size_t d_size) {
+  size_t removeVowels(const char* s, char* d)
+  {
+    const char* vowels = "aeiouAEIOU";
     size_t i = 0;
-    for (; *s != '\0' && i < d_size - 1; ++s) {
-      char c = *s;
-      if (!(c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
-          c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U')) {
+
+    for (; *s != '\0'; ++s)
+    {
+      const char c = *s;
+      if (!containsChar(vowels, c))
+      {
         d[i++] = c;
       }
     }
+
     d[i] = '\0';
     return i;
   }
 
-  size_t exc_chars(const char* s, const char* exc, char* d, size_t d_size) {
+  size_t excludeChars(const char* s, const char* exc, char* d)
+  {
     size_t i = 0;
-    for (; *s != '\0' && i < d_size - 1; ++s) {
-      char c = *s;
-      const char* ex = exc;
-      int found = 0;
 
-      for (; *ex != '\0'; ++ex) {
-        if (c == *ex) {
-          found = 1;
-          break;
-        }
-      }
-
-      if (!found) {
+    for (; *s != '\0'; ++s)
+    {
+      const char c = *s;
+      if (!containsChar(exc, c))
+      {
         d[i++] = c;
       }
     }
+
     d[i] = '\0';
     return i;
   }
+
 }
 
-int main() {
+int main()
+{
   using namespace alekseev;
 
-  std::cout << "enter first string fot var 15 and 18: ";
   size_t size1 = 0;
-  char* input1 = getline(std::cin, size1);
+  char* input1 = nullptr;
 
-  if (!input1 || size1 == 0) {
+  try
+  {
+    input1 = getline(std::cin, size1);
+  }
+  catch (const std::bad_alloc&)
+  {
+    std::cerr << "Error: cannot allocate memory\n";
+    return 1;
+  }
+  catch (const std::logic_error& e)
+  {
+    std::cerr << e.what() << "\n";
+    return 1;
+  }
+
+  if (size1 == 0)
+  {
     std::cerr << "Error: empty input\n";
-      if (input1) delete[] input1;
-        return 1;
-    }
-
-  std::cout << "enter second string for var 15: ";
-  size_t size2 = 0;
-  char* input2 = getline(std::cin, size2);
-
-  if (!input2) {
     delete[] input1;
     return 1;
   }
+
+  const char* second = "abc";
 
   char* result1 = nullptr;
-  try {
-    result1 = new char[size1 + 1];
-  }
-  catch (const std::bad_alloc& e) {
-    std::cerr << e.what() << "\n";
-    delete[] input1;
-    delete[] input2;
-    return 1;
-  }
-
-  remove_vow(input1, result1, size1 + 1);
-  std::cout << "var 18: " << result1 << "\n";
-  delete[] result1;
-
   char* result2 = nullptr;
-  try {
+
+  try
+  {
+    result1 = new char[size1 + 1];
+    result1[size1] = '\0';
+
     result2 = new char[size1 + 1];
+    result2[size1] = '\0';
   }
-  catch (const std::bad_alloc& e) {
-    std::cerr <<  e.what() << "\n";
+  catch (const std::bad_alloc&)
+  {
+    std::cerr << "Error: cannot allocate memory\n";
+    delete[] result1;
+    delete[] result2;
     delete[] input1;
-    delete[] input2;
     return 1;
   }
 
-  exc_chars(input1, input2, result2, size1 + 1);
-  std::cout << "var 15: " << result2 << "\n";
+  removeVowels(input1, result1);
+  std::cout << result1 << "\n";
+
+  excludeChars(input1, second, result2);
+  std::cout << result2 << "\n";
 
   delete[] result2;
+  delete[] result1;
   delete[] input1;
-  delete[] input2;
-
   return 0;
 }
