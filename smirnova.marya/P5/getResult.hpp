@@ -3,9 +3,8 @@
 
 #include "shape.hpp"
 
-namespace smirnova
-{
-  void getResult(Shape *shapes[], const char *names[3]);
+namespace smirnova {
+void getResult(Shape *shapes[], const char *names[3]);
 }
 
 #endif
