@@ -14,6 +14,14 @@ bool karpenko::isSpaceChar(char ch)
   return std::isspace(static_cast< unsigned char >(ch));
 }
 
+bool karpenko::skipSpaces(std::istream& in, char& c)
+{
+  while (in.get(c) && isSpaceChar(c) && c != '\n')
+  {}
+  
+  return !(!in || c == '\n');
+}
+
 char** karpenko::readWords(std::istream& in, size_t& wordCount)
 {
   const size_t INITIAL_CAPACITY = 16;
@@ -25,10 +33,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
 
   char c;
 
-  while (in.get(c) && isSpaceChar(c) && c != '\n')
-  {}
-
-  if (!in || c == '\n')
+  if (!skipSpaces(in, c))
   {
     delete[] words;
     return nullptr;
@@ -63,10 +68,7 @@ char** karpenko::readWords(std::istream& in, size_t& wordCount)
     words[wordCount] = word;
     wordCount++;
 
-    while (in.get(c) && isSpaceChar(c) && c != '\n')
-    {}
-
-    if (!in || c == '\n')
+    if (!skipSpaces(in, c))
     {
       break;
     }

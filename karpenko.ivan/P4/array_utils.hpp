@@ -8,6 +8,7 @@ namespace karpenko
 {
   bool isWordChar(char ch);
   bool isSpaceChar(char ch);
+  bool skipSpaces(std::istream& in, char& c);
   char** readWords(std::istream& in, size_t& wordCount);
 }
 
