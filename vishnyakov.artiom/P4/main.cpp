@@ -126,10 +126,10 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   }
 
   size_t count = 0, i = 0;
-  while(i < len)
+  while (i < len)
   {
 
-    while(i < len && isSpace(line[i]))
+    while (i < len && isSpace(line[i]))
     {
       ++i;
     }
@@ -240,14 +240,12 @@ int main()
     return 1;
   }
 
-  size_t total_amount_of_lat_latters = 0;
   for(size_t i = 0; i < size; ++i)
   {
     uppercaseToLowercase(words[i]);
     std::cout << words[i] << ' ';
-    total_amount_of_lat_latters += amountOfLatLetters(words[i]);
+    std::cout << amountOfLatLetters(words[i]) << '\n';
   }
-  std::cout << '\n' << total_amount_of_lat_latters << '\n';
 
   for (size_t i = 0; i < size; ++i)
   {
