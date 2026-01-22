@@ -19,7 +19,7 @@ namespace nabieva
     return c;
   }
 
-  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols)
+  void findMinSumDiag(std::ofstream& outputFile, const int* matrix, size_t rows, size_t cols)
   {
     if (rows == 0 || cols == 0) {
       outputFile << 0 << "\n";
