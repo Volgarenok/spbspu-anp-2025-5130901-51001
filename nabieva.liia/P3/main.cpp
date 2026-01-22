@@ -5,7 +5,8 @@
 
 namespace nabieva
 {
-  bool readMatrix(std::ifstream& inputFile, int* matrix, size_t size) {
+  bool readMatrix(std::ifstream& inputFile, int* matrix, size_t size)
+  {
     int num = 0;
     size_t c = 0;
     while (inputFile >> num) {
@@ -23,7 +24,8 @@ namespace nabieva
     return true;
   }
 
-  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
+  void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols)
+  {
     if (rows == 0 || cols == 0) {
       outputFile << 0 << "\n";
       return;
@@ -44,7 +46,8 @@ namespace nabieva
     outputFile << minSum << "\n";
   }
 
-  void transformSpiralMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols) {
+  void transformSpiralMatrix(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols)
+  {
     if (rows == 0 || cols == 0) {
       outputFile << rows << " " << cols << "\n";
       return;
