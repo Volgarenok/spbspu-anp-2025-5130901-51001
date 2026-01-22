@@ -33,11 +33,6 @@ namespace shaykhraziev
 
   struct Rectangle final: Shape
   {
-  private:
-    point_t center_;
-    double width_, height_;
-
-  public:
     explicit Rectangle(point_t a, point_t b);
     explicit Rectangle(rectangle_t r);
 
@@ -46,16 +41,14 @@ namespace shaykhraziev
     void move(point_t to) override;
     void move(double dx, double dy) override;
     void scale(double coef) override;
+
+  private:
+    point_t center_;
+    double width_, height_;
   };
 
   struct Polygon final: Shape
   {
-  private:
-    point_t* points_;
-    size_t size_;
-    point_t center_;
-
-  public:
     explicit Polygon(const point_t* a, size_t size);
     Polygon(const Polygon&) = delete;
     Polygon(Polygon&&) = delete;
@@ -69,15 +62,15 @@ namespace shaykhraziev
     void move(point_t to) override;
     void move(double dx, double dy) override;
     void scale(double coef) override;
+
+  private:
+    point_t* points_;
+    size_t size_;
+    point_t center_;
   };
 
   struct Concave final: Shape
   {
-  private:
-    point_t points_[4];
-    point_t center_;
-
-  public:
     explicit Concave(const point_t* a, size_t size);
 
     double getArea() const override;
@@ -85,6 +78,10 @@ namespace shaykhraziev
     void move(point_t to) override;
     void move(double dx, double dy) override;
     void scale(double coef) override;
+
+  private:
+    point_t points_[4];
+    point_t center_;
   };
 
   void scaleRelative(Shape& shp, point_t pt, double coef);
