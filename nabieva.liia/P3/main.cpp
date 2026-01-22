@@ -134,8 +134,11 @@ namespace nabieva
      needCleanup = true;
    }
    size_t inputSize = 0;
-   if (!(inputSize = readMatrix(inputFile, matrix))) {
-     std::cerr << "Error input\n";
+   try {
+     inputSize = readMatrix(inputFile, matrix);
+   }
+   catch (const std::runtime_error& e) {
+     std::cerr << e.what();
      if (needCleanup) delete[] matrix;
      return 2;
    }
