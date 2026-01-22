@@ -31,57 +31,60 @@ namespace shaykhraziev
     virtual void scale(double coef) = 0;
   };
 
-  struct Rectangle: Shape
+  struct Rectangle final: Shape
   {
-    double getArea() const override;
-    rectangle_t getFrameRect() const override;
-    void move(point_t to) override;
-    void move(double dx, double dy) override;
-    void scale(double coef) override;
+  private:
+    point_t center_;
+    double width_, height_;
 
+  public:
     explicit Rectangle(point_t a, point_t b);
     explicit Rectangle(rectangle_t r);
 
-  private:
-    point_t center;
-    double width, height;
-  };
-
-  struct Polygon: Shape
-  {
     double getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(point_t to) override;
     void move(double dx, double dy) override;
     void scale(double coef) override;
+  };
 
+  struct Polygon final: Shape
+  {
+  private:
+    point_t* points_;
+    size_t size_;
+    point_t center_;
+
+  public:
     explicit Polygon(const point_t* a, size_t size);
     Polygon(const Polygon&) = delete;
-    Polygon& operator=(const Polygon&) = delete;
     Polygon(Polygon&&) = delete;
-    Polygon& operator=(Polygon&&) = delete;
     ~Polygon() override;
 
-  private:
-    point_t* points;
-    size_t size;
-    point_t center;
-    double area;
-  };
+    Polygon& operator=(const Polygon&) = delete;
+    Polygon& operator=(Polygon&&) = delete;
 
-  struct Concave: Shape
-  {
     double getArea() const override;
     rectangle_t getFrameRect() const override;
     void move(point_t to) override;
     void move(double dx, double dy) override;
     void scale(double coef) override;
+  };
 
+  struct Concave final: Shape
+  {
+  private:
+    point_t points_[4];
+    point_t center_;
+
+  public:
     explicit Concave(const point_t* a, size_t size);
 
-  private:
-    point_t points[4];
-    point_t center;
+    double getArea() const override;
+    rectangle_t getFrameRect() const override;
+    void move(point_t to) override;
+    void move(double dx, double dy) override;
+    void scale(double coef) override;
   };
 
   void scaleRelative(Shape& shp, point_t pt, double coef);
@@ -115,44 +118,42 @@ bool shaykhraziev::operator!=(const rectangle_t& lhs, const rectangle_t& rhs)
 }
 
 shaykhraziev::Rectangle::Rectangle(point_t a, point_t b):
-  center()
-{
-  center = {a.x + (b.x - a.x) / 2, a.y + (b.y - a.y) / 2};
-  width = b.x - a.x;
-  height = b.y - a.y;
-}
+  center_({a.x + (b.x - a.x) / 2, a.y + (b.y - a.y) / 2}),
+  width_(b.x - a.x),
+  height_(b.y - a.y)
+{}
 
 shaykhraziev::Rectangle::Rectangle(rectangle_t r):
-  center(r.pos),
-  width(r.width),
-  height(r.height)
+  center_(r.pos),
+  width_(r.width),
+  height_(r.height)
 {}
 
 double shaykhraziev::Rectangle::getArea() const
 {
-  return width * height;
+  return width_ * height_;
 }
 
 shaykhraziev::rectangle_t shaykhraziev::Rectangle::getFrameRect() const
 {
-  return {width, height, center};
+  return {width_, height_, center_};
 }
 
 void shaykhraziev::Rectangle::move(point_t to)
 {
-  center = to;
+  center_ = to;
 }
 
 void shaykhraziev::Rectangle::move(double dx, double dy)
 {
-  center.x += dx;
-  center.y += dy;
+  center_.x += dx;
+  center_.y += dy;
 }
 
 void shaykhraziev::Rectangle::scale(double coef)
 {
-  width *= coef;
-  height *= coef;
+  width_ *= coef;
+  height_ *= coef;
 }
 
 void shaykhraziev::scaleRelative(Shape& shp, point_t pt, double coef)
@@ -224,38 +225,36 @@ void shaykhraziev::outputParams(std::ostream& out, Shape** shps, size_t size)
 }
 
 shaykhraziev::Polygon::Polygon(const point_t* a, size_t size):
-  points(nullptr),
-  size(size),
-  center(calcPolygonCentroid(a, size)),
-  area(calcPolygonArea(a, size))
+  points_(new point_t[size]),
+  size_(size),
+  center_(calcPolygonCentroid(a, size))
 {
   if (a == nullptr || size == 0) {
     throw std::invalid_argument("Invalid size");
   }
 
-  points = new point_t[size];
   for (size_t i = 0; i < size; ++i) {
-    points[i] = a[i];
+    points_[i] = a[i];
   }
 }
 
 double shaykhraziev::Polygon::getArea() const
 {
-  return area;
+  return calcPolygonArea(points_, size_);
 }
 
 shaykhraziev::rectangle_t shaykhraziev::Polygon::getFrameRect() const
 {
-  double minx = points[0].x;
-  double miny = points[0].y;
-  double maxx = points[0].x;
-  double maxy = points[0].y;
+  double minx = points_[0].x;
+  double miny = points_[0].y;
+  double maxx = points_[0].x;
+  double maxy = points_[0].y;
 
-  for (size_t i = 1; i < size; i++) {
-    minx = std::min(minx, points[i].x);
-    miny = std::min(miny, points[i].y);
-    maxx = std::max(maxx, points[i].x);
-    maxy = std::max(maxy, points[i].y);
+  for (size_t i = 1; i < size_; i++) {
+    minx = std::min(minx, points_[i].x);
+    miny = std::min(miny, points_[i].y);
+    maxx = std::max(maxx, points_[i].x);
+    maxy = std::max(maxy, points_[i].y);
   }
 
   double width = maxx - minx;
@@ -267,35 +266,33 @@ shaykhraziev::rectangle_t shaykhraziev::Polygon::getFrameRect() const
 
 void shaykhraziev::Polygon::move(double dx, double dy)
 {
-  for (size_t i = 0; i < size; i++) {
-    points[i].x += dx;
-    points[i].y += dy;
+  for (size_t i = 0; i < size_; i++) {
+    points_[i].x += dx;
+    points_[i].y += dy;
   }
 
-  center.x += dx;
-  center.y += dy;
+  center_.x += dx;
+  center_.y += dy;
 }
 
 void shaykhraziev::Polygon::move(point_t to)
 {
-  double dx = to.x - center.x;
-  double dy = to.y - center.y;
+  double dx = to.x - center_.x;
+  double dy = to.y - center_.y;
   move(dx, dy);
 }
 
 void shaykhraziev::Polygon::scale(double coef)
 {
-  area *= coef * coef;
-
-  for (size_t i = 0; i < size; ++i) {
-    points[i].x = center.x + (points[i].x - center.x) * coef;
-    points[i].y = center.y + (points[i].y - center.y) * coef;
+  for (size_t i = 0; i < size_; ++i) {
+    points_[i].x = center_.x + (points_[i].x - center_.x) * coef;
+    points_[i].y = center_.y + (points_[i].y - center_.y) * coef;
   }
 }
 
 shaykhraziev::Polygon::~Polygon()
 {
-  delete[] points;
+  delete[] points_;
 }
 
 double shaykhraziev::distToLine(point_t d1, point_t d2, point_t m)
@@ -304,43 +301,40 @@ double shaykhraziev::distToLine(point_t d1, point_t d2, point_t m)
   double B = d2.x - d1.x;
   double C = d1.x * d2.y - d1.y * d2.x;
 
-  return (A * m.x + B * m.y + C) / sqrt(A * A + B * B);
+  return (A * m.x + B * m.y + C) / std::sqrt(A * A + B * B);
 }
 
 shaykhraziev::Concave::Concave(const point_t* a, size_t size):
-  points(),
-  center()
+  points_(),
+  center_()
 {
   if (size != 4) {
     throw std::invalid_argument("Must have four vertices");
   }
 
-  // 0 - 2
   double d1 = distToLine(a[0], a[2], a[1]);
   double d3 = distToLine(a[0], a[2], a[3]);
-
-  // 1 - 3
   double d0 = distToLine(a[1], a[3], a[0]);
   double d2 = distToLine(a[1], a[3], a[2]);
 
   if ((d1 == 0.0 && d3 == 0.0) || round(d1 / abs(d1)) == round(d3 / abs(d3))) {
     if (abs(d1) < abs(d3)) {
-      center = a[1];
+      center_ = a[1];
     } else {
-      center = a[3];
+      center_ = a[3];
     }
   } else if ((d0 == 0.0 && d2 == 0.0) || round(d0 / abs(d0)) == round(d2 / abs(d2))) {
     if (abs(d0) < abs(d2)) {
-      center = a[0];
+      center_ = a[0];
     } else {
-      center = a[2];
+      center_ = a[2];
     }
   } else {
     throw std::invalid_argument("No such concave");
   }
 
   for (size_t i = 0; i < size; i++) {
-    points[i] = a[i];
+    points_[i] = a[i];
   }
 }
 
@@ -404,11 +398,11 @@ shaykhraziev::point_t shaykhraziev::calcPolygonCentroid(const point_t* pts, size
 
 double shaykhraziev::Concave::getArea() const
 {
-  double d1 = euclidDist(points[0], points[2]);
-  double d2 = euclidDist(points[1], points[3]);
+  double d1 = euclidDist(points_[0], points_[2]);
+  double d2 = euclidDist(points_[1], points_[3]);
 
-  double xx = (points[0].x - points[2].x) * (points[1].x - points[3].x);
-  double yy = (points[0].y - points[2].y) * (points[1].y - points[3].y);
+  double xx = (points_[0].x - points_[2].x) * (points_[1].x - points_[3].x);
+  double yy = (points_[0].y - points_[2].y) * (points_[1].y - points_[3].y);
 
   double cosa = abs(xx + yy) / (d1 * d2);
   double sina = sqrt(1 - cosa * cosa);
@@ -418,16 +412,16 @@ double shaykhraziev::Concave::getArea() const
 
 shaykhraziev::rectangle_t shaykhraziev::Concave::getFrameRect() const
 {
-  double minx = points[0].x;
-  double miny = points[0].y;
-  double maxx = points[0].x;
-  double maxy = points[0].y;
+  double minx = points_[0].x;
+  double miny = points_[0].y;
+  double maxx = points_[0].x;
+  double maxy = points_[0].y;
 
   for (size_t i = 1; i < 4; i++) {
-    minx = std::min(minx, points[i].x);
-    miny = std::min(miny, points[i].y);
-    maxx = std::max(maxx, points[i].x);
-    maxy = std::max(maxy, points[i].y);
+    minx = std::min(minx, points_[i].x);
+    miny = std::min(miny, points_[i].y);
+    maxx = std::max(maxx, points_[i].x);
+    maxy = std::max(maxy, points_[i].y);
   }
 
   double width = maxx - minx;
@@ -440,26 +434,26 @@ shaykhraziev::rectangle_t shaykhraziev::Concave::getFrameRect() const
 void shaykhraziev::Concave::move(double dx, double dy)
 {
   for (size_t i = 0; i < 4; i++) {
-    points[i].x += dx;
-    points[i].y += dy;
+    points_[i].x += dx;
+    points_[i].y += dy;
   }
 
-  center.x += dx;
-  center.y += dy;
+  center_.x += dx;
+  center_.y += dy;
 }
 
 void shaykhraziev::Concave::move(point_t to)
 {
-  double dx = to.x - center.x;
-  double dy = to.y - center.y;
+  double dx = to.x - center_.x;
+  double dy = to.y - center_.y;
   move(dx, dy);
 }
 
 void shaykhraziev::Concave::scale(double coef)
 {
   for (size_t i = 0; i < 4; i++) {
-    points[i].x = center.x + (points[i].x - center.x) * coef;
-    points[i].y = center.y + (points[i].y - center.y) * coef;
+    points_[i].x = center_.x + (points_[i].x - center_.x) * coef;
+    points_[i].y = center_.y + (points_[i].y - center_.y) * coef;
   }
 }
 
