@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
   }
 
   std::ifstream input(argv[2]);
-  if (!input.is_open()) 
+  if (!input.is_open())
   {
     std::cerr << "Cannot open input file\n";
     return 2;
@@ -111,10 +111,10 @@ int main(int argc, char* argv[])
   {
     matrix = new int[0];
   }
-  else 
+  else
   {
     matrix = new int[rows * cols];
-    for (size_t i = 0; i < rows * cols; i++) 
+    for (size_t i = 0; i < rows * cols; i++)
     {
       input >> matrix[i];
       if (input.fail())
@@ -126,7 +126,7 @@ int main(int argc, char* argv[])
     }
     size_t result = 0;
     if (num == 1)
-    { 
+    {
       result = loseva::maxDiagonalSum(rows, cols, matrix);
     }
     else
