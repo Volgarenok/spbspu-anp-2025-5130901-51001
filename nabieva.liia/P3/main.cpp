@@ -19,7 +19,7 @@ namespace nabieva
     return c;
   }
 
-  int findMinSumDiag(std::ofstream& outputFile, const int* matrix, size_t rows, size_t cols)
+  int findMinSumDiag(const int* matrix, size_t rows, size_t cols)
   {
     int minSum = 0;
     if (rows == 0 || cols == 0) {
@@ -154,7 +154,7 @@ namespace nabieva
        std::cerr << "Incorrect number of parameters\n";
        return 2;
      }
-     outputFile << findMinSumDiag(outputFile, fixMatrix, rows, cols) << "\n";
+     outputFile << findMinSumDiag(fixMatrix, rows, cols) << "\n";
      transformSpiralMatrix(outputFile, fixMatrix, rows, cols);
    }
    else if (std::stoi(argv[1]) == 2) {
@@ -169,7 +169,7 @@ namespace nabieva
        std::cerr << "Incorrect number of parameters\n";
        return 2;
      }
-     outputFile << findMinSumDiag(outputFile, dynamicMatrix, rows, cols) << "\n";
+     outputFile << findMinSumDiag(dynamicMatrix, rows, cols) << "\n";
      transformSpiralMatrix(outputFile, dynamicMatrix, rows, cols);
      delete[] dynamicMatrix;
    }
