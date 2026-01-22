@@ -1,4 +1,5 @@
-#include<iostream>
+#include <iostream>
+
 namespace losev {
   float const Pi = 3.1415;
   struct point_t {
@@ -190,6 +191,7 @@ void losev::Ring::scale(double coef)
   outerRadius_ *= coef;
   innerRadius_ *= coef;
 }
+
 int main()
 {
   using namespace losev;
