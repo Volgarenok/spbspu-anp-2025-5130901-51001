@@ -52,3 +52,4 @@ int main()
   getResult(shapes, names);
   return 0;
 }
+
