@@ -318,16 +318,6 @@ void alekseev::Xquare::doScale(double coef)
 
 void alekseev::scaleRelative(Shape &shp, const point_t &about, double coef)
 {
-  if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
-    throw std::invalid_argument("scaleRelative: bad point");
-  }
-  if (!std::isfinite(coef) || coef <= 0.0)
-  {
-    throw std::invalid_argument("scaleRelative: bad coef");
-  }
-  if (coef == 1.0) {
-    return;
-  }
   const point_t old_center = shp.getFrameRect().pos;
   const double new_x = about.x + (old_center.x - about.x) * coef;
   const double new_y = about.y + (old_center.y - about.y) * coef;
@@ -338,6 +328,15 @@ void alekseev::scaleRelative(Shape &shp, const point_t &about, double coef)
 
 void alekseev::scaleAllRelative(Shape *const *shps, size_t size, const point_t &about, double coef)
 {
+  if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
+    throw std::invalid_argument("scaleRelative: bad point");
+  }
+  if (!std::isfinite(coef) || coef <= 0.0) {
+    throw std::invalid_argument("scaleRelative: bad coef");
+  }
+  if (coef == 1.0) {
+    return;
+  }
   for (size_t i = 0; i < size; ++i) {
     scaleRelative(*shps[i], about, coef);
   }
@@ -424,16 +423,6 @@ int main()
 
   if (!(std::cin >> about.x >> about.y >> coef)) {
     std::cerr << "bad input\n";
-    alekseev::removeArray(shapes, shape_count);
-    return 1;
-  }
-  if (!std::isfinite(about.x) || !std::isfinite(about.y)) {
-    std::cerr << "bad input\n";
-    alekseev::removeArray(shapes, shape_count);
-    return 1;
-  }
-  if (!std::isfinite(coef) || coef <= 0.0) {
-    std::cerr << "bad scale coef\n";
     alekseev::removeArray(shapes, shape_count);
     return 1;
   }
