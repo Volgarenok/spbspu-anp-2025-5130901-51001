@@ -1,4 +1,4 @@
-#include "afterScaling.hpp"
+#include "Afterscaling.hpp"
 #include <iostream>
 
 #include "frameRect.hpp"
