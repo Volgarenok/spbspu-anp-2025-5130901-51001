@@ -112,7 +112,7 @@ int main(int argc, char **argv)
     return 2;
   }
 
-  size_t row, col;
+  size_t row = 0, col = 0;
   input >> row >> col;
   if (input.fail())
   {
