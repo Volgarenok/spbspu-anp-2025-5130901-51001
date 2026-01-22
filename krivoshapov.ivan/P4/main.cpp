@@ -1,12 +1,13 @@
 #include <iostream>
 #include <istream>
 #include <cstring>
+#include <cctype>
 
 namespace krivoshapov
 {
-  bool isWhitespace(char c)
+  bool isDelimiter(char c)
   {
-    return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+    return std::isspace(static_cast<unsigned char>(c));
   }
 
   int seqSym(const char *str, size_t len)
@@ -15,7 +16,8 @@ namespace krivoshapov
     {
       return 0;
     }
-    for (size_t i = 0; i < len - 1; ++i)
+
+    for (size_t i = 0; i + 1 < len; ++i)
     {
       if (str[i] == str[i + 1])
       {
@@ -25,84 +27,79 @@ namespace krivoshapov
     return 0;
   }
 
-  char **readWords(std::istream &in, size_t &wordCount)
+  char *readToken(std::istream &in, bool (*isDelim)(char))
   {
-    const size_t MAX_WORDS = 1000;
-    const size_t MAX_WORD_LEN = 256;
+    size_t capacity = 16;
+    size_t size = 0;
+    char *buffer = new char[capacity];
 
-    char **words = new char *[MAX_WORDS];
-    for (size_t i = 0; i < MAX_WORDS; ++i)
-    {
-      words[i] = nullptr;
-    }
-
-    wordCount = 0;
-    char buffer[MAX_WORD_LEN];
-    size_t bufIdx = 0;
-    char ch = 0;
-
+    char ch;
     while (in.get(ch))
     {
-      if (isWhitespace(ch))
+      if (isDelim(ch))
       {
-        if (bufIdx > 0)
+        if (size > 0)
         {
-          buffer[bufIdx] = '\0';
-          words[wordCount] = new char[bufIdx + 1];
-          std::strcpy(words[wordCount], buffer);
-          ++wordCount;
-          bufIdx = 0;
-
-          if (wordCount >= MAX_WORDS)
-          {
-            break;
-          }
+          break;
+        }
+        else
+        {
+          continue;
         }
       }
-      else
+
+      if (size + 1 >= capacity)
       {
-        if (bufIdx < MAX_WORD_LEN - 1)
+        capacity *= 2;
+        char *temp = new char[capacity];
+        std::memcpy(temp, buffer, size);
+        delete[] buffer;
+        buffer = temp;
+      }
+
+      buffer[size++] = ch;
+    }
+
+    if (size == 0)
+    {
+      delete[] buffer;
+      return nullptr;
+    }
+
+    buffer[size] = '\0';
+    return buffer;
+  }
+
+  char **readWords(std::istream &in, size_t &wordCount, bool (*isDelim)(char))
+  {
+    size_t capacity = 8;
+    wordCount = 0;
+    char **words = new char *[capacity];
+
+    while (true)
+    {
+      char *word = readToken(in, isDelim);
+      if (word == nullptr)
+      {
+        break;
+      }
+
+      if (wordCount == capacity)
+      {
+        capacity *= 2;
+        char **temp = new char *[capacity];
+        for (size_t i = 0; i < wordCount; ++i)
         {
-          buffer[bufIdx] = ch;
-          ++bufIdx;
+          temp[i] = words[i];
         }
+        delete[] words;
+        words = temp;
       }
-    }
 
-    if (bufIdx > 0 && wordCount < MAX_WORDS)
-    {
-      buffer[bufIdx] = '\0';
-      words[wordCount] = new char[bufIdx + 1];
-      std::strcpy(words[wordCount], buffer);
-      ++wordCount;
-    }
-
-    if (in.bad())
-    {
-      for (size_t i = 0; i < wordCount; ++i)
-      {
-        delete[] words[i];
-      }
-      delete[] words;
-      throw std::runtime_error("Input stream error");
+      words[wordCount++] = word;
     }
 
     return words;
-  }
-
-  void processAllWords(char **words, size_t wordCount, int (*checkFunc)(const char *, size_t))
-  {
-    for (size_t i = 0; i < wordCount; ++i)
-    {
-      size_t len = std::strlen(words[i]);
-      int result = checkFunc(words[i], len);
-      std::cout << result;
-      if (i < wordCount - 1)
-      {
-        std::cout << " ";
-      }
-    }
-    std::cout << "\n";
   }
 
   void freeWords(char **words, size_t wordCount)
@@ -111,6 +108,7 @@ namespace krivoshapov
     {
       return;
     }
+
     for (size_t i = 0; i < wordCount; ++i)
     {
       delete[] words[i];
@@ -126,27 +124,35 @@ int main()
 
   try
   {
-    words = krivoshapov::readWords(std::cin, wordCount);
+    words = krivoshapov::readWords(
+        std::cin,
+        wordCount,
+        krivoshapov::isDelimiter);
   }
   catch (const std::bad_alloc &)
   {
     std::cerr << "Memory allocation failed\n";
     return 1;
   }
-  catch (const std::exception &e)
-  {
-    std::cerr << "Error: " << e.what() << "\n";
-    return 1;
-  }
 
   if (wordCount == 0)
   {
-    std::cerr << "Empty input\n";
     krivoshapov::freeWords(words, wordCount);
+    std::cerr << "Empty input\n";
     return 2;
   }
 
-  krivoshapov::processAllWords(words, wordCount, krivoshapov::seqSym);
+  for (size_t i = 0; i < wordCount; ++i)
+  {
+    size_t len = std::strlen(words[i]);
+    int res = krivoshapov::seqSym(words[i], len);
+    std::cout << res;
+    if (i + 1 < wordCount)
+    {
+      std::cout << " ";
+    }
+  }
+  std::cout << "\n";
 
   krivoshapov::freeWords(words, wordCount);
   return 0;
