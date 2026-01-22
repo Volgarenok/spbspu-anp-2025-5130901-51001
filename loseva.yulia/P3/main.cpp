@@ -25,7 +25,7 @@ namespace loseva {
     if (rows < 3 || cols < 3) {
        return 0;
     }
-    int count = 0;
+    size_t count = 0;
     for (size_t i = 1; i < rows - 1; ++i) {
       for (size_t j = 1; j < cols - 1; ++j) {
         if (isLocalMaximum(i, j, rows, cols, matrix)) {
@@ -37,8 +37,8 @@ namespace loseva {
   }
   int maxSecondaryDiagonalSum(size_t rows, size_t cols, const int* matrix) {
     if (rows == 0 || cols == 0) {
-       return 0;
-      }
+      return 0;
+    }
     int maxSum = 0;
     bool sumInitialized = false;
     int r = static_cast<int>(rows);
@@ -122,13 +122,13 @@ int main(int argc, char* argv[]) {
     }
     resTask3 = loseva::countLocalMaximums(r, c, stackArr);
     resTask13 = loseva::maxSecondaryDiagonalSum(r, c, stackArr);
-  } else {
+    } else {
     int* heapArr = nullptr;
     try {
-        heapArr = new int[total];
+      heapArr = new int[total];
     } catch (const std::bad_alloc& e) {
-        std::cerr << "Error: Memory allocation failed\n";
-        return 2;
+      std::cerr << "Error: Memory allocation failed\n";
+      return 2;
     }
     if (!loseva::tryReadMatrix(input, heapArr, total)) {
       delete[] heapArr;
