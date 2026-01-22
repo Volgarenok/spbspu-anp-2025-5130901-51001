@@ -95,7 +95,7 @@ namespace nabieva
    try {
      size_t pos = 0;
      int arg = std::stoi(argv[1], &pos);
-     if (pos < strlen(argv[1])) {
+     if (pos < std::strlen(argv[1])) {
        std::cerr << "First parameter is not a number\n";
        return 1;
      }
