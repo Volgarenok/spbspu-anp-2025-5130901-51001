@@ -229,6 +229,7 @@ shaykhraziev::Polygon::Polygon(const point_t* a, size_t size):
   center_(calcPolygonCentroid(a, size))
 {
   if (a == nullptr || size == 0) {
+    delete[] points_;
     throw std::invalid_argument("Invalid size");
   }
 
