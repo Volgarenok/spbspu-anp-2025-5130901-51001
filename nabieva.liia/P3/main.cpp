@@ -92,17 +92,15 @@ namespace nabieva
      std::cerr << "Too many arguments\n";
      return 1;
    }
-   try {
-     size_t pos = 0;
-     int arg = std::stoi(argv[1], &pos);
-     if (pos < std::strlen(argv[1])) {
-       std::cerr << "First parameter is not a number\n";
-       return 1;
-     }
-     if (arg != 1 && arg != 2) {
-       std::cerr << "First parameter is out of range\n";
-       return 1;
-     }
+   size_t pos = 0;
+   int arg = std::stoi(argv[1], &pos);
+   if (pos < std::strlen(argv[1])) {
+     std::cerr << "First parameter is not a number\n";
+     return 1;
+   }
+   if (arg != 1 && arg != 2) {
+     std::cerr << "First parameter is out of range\n";
+     return 1;
    }
    catch (const std::invalid_argument&) {
      std::cerr << "First parameter is not a number\n";
@@ -133,7 +131,7 @@ namespace nabieva
      std::cerr << "Error cols\n";
      return 2;
    }
-   if (std::stoi(argv[1]) == 1) {
+   if (arg == 1) {
      const size_t MAX_MATRIX_SIZE = 10000;
      int fixMatrix[MAX_MATRIX_SIZE];
      size_t inputSize = 0;
@@ -157,7 +155,7 @@ namespace nabieva
      }
      outputFile << fixMatrix[rows * cols - 1] << "\n";
    }
-   else if (std::stoi(argv[1]) == 2) {
+   else if (arg == 2) {
      int* dynamicMatrix = new int[rows * cols];
      size_t inputSize = 0;
      if (!(inputSize = readMatrix(inputFile, dynamicMatrix))) {
