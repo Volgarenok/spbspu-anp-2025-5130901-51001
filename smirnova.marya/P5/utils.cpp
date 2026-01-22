@@ -22,4 +22,5 @@ namespace smirnova
   {
     return {(a.x + b.x + c.x) / 3.0, (a.y + b.y + c.y) / 3.0};
   }
-} // namespace smirnova
+}
+

@@ -24,4 +24,5 @@ namespace smirnova
               << ", height = " << totalFrame.height << ", center = (" << totalFrame.pos.x << ", "
               << totalFrame.pos.y << ")\n";
   }
-} // namespace smirnova
+}
+

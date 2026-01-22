@@ -25,4 +25,5 @@ namespace smirnova
     }
     return total;
   }
-} // namespace smirnova
+}
+

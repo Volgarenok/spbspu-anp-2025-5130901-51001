@@ -26,4 +26,5 @@ namespace smirnova
     width_ *= k;
     height_ *= k;
   }
-} // namespace smirnova
+}
+

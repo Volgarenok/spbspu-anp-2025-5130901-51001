@@ -17,4 +17,4 @@ namespace smirnova
   void Square::move(const point_t &p) noexcept { moveToPoint(center_, p); }
   void Square::move(double dx, double dy) noexcept { moveCenter(center_, dx, dy); }
   void Square::scale(double k) noexcept { side_ *= k; }
-} // namespace smirnova
+}

@@ -18,6 +18,6 @@ namespace smirnova
   private:
     point_t a_, b_, c_;
   };
-} // namespace smirnova
+}
 
 #endif

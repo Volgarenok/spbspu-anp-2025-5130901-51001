@@ -23,6 +23,6 @@ namespace smirnova
     virtual void scale(double k) noexcept = 0;
   };
 
-} // namespace smirnova
+}
 
 #endif

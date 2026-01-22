@@ -19,6 +19,7 @@ namespace smirnova
     double width_, height_;
     point_t center_;
   };
-} // namespace smirnova
+}
 
 #endif
+

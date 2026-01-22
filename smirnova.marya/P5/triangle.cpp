@@ -59,4 +59,4 @@ namespace smirnova
     c_.x = center.x + (c_.x - center.x) * k;
     c_.y = center.y + (c_.y - center.y) * k;
   }
-} // namespace smirnova
+} 
