@@ -122,55 +122,41 @@ namespace nabieva
      std::cerr << "Error cols\n";
      return 2;
    }
+   const std::size_t MAX_MATRIX_SIZE = 10000;
+   int fixMatrix[MAX_MATRIX_SIZE];
+   int* matrix = nullptr;
+   bool needCleanup = false;
    if (arg == 1) {
-     const size_t MAX_MATRIX_SIZE = 10000;
-     int fixMatrix[MAX_MATRIX_SIZE];
-     size_t inputSize = 0;
-     if (!(inputSize = readMatrix(inputFile, fixMatrix))) {
-       std::cerr << "Error input\n";
-       return 2;
-     }
-     if (cols * rows != inputSize) {
-       std::cerr << "Incorrect number of parameters\n";
-       return 2;
-     }
-     outputFile << findMinSumDiag(fixMatrix, rows, cols) << "\n";
-     transformSpiralMatrix(fixMatrix, rows, cols);
-     if (rows == 0 || cols == 0) {
-       outputFile << rows << " " << cols << "\n";
-       return 0;
-     }
-     outputFile << rows << " " << cols << " ";
-     for (size_t i = 0; i < rows * cols - 1; i++) {
-       outputFile << fixMatrix[i] << " ";
-     }
-     outputFile << fixMatrix[rows * cols - 1] << "\n";
+     matrix = fixMatrix;
    }
-   else if (arg == 2) {
-     int* dynamicMatrix = new int[rows * cols];
-     size_t inputSize = 0;
-     if (!(inputSize = readMatrix(inputFile, dynamicMatrix))) {
-       std::cerr << "Error input\n";
-       delete[] dynamicMatrix;
-       return 2;
-     }
-     if (cols * rows != inputSize) {
-       std::cerr << "Incorrect number of parameters\n";
-       return 2;
-     }
-     outputFile << findMinSumDiag(dynamicMatrix, rows, cols) << "\n";
-     transformSpiralMatrix(dynamicMatrix, rows, cols);
-     if (rows == 0 || cols == 0) {
-       outputFile << rows << " " << cols << "\n";
-       return 0;
-     }
-     outputFile << rows << " " << cols << " ";
-     for (size_t i = 0; i < rows * cols - 1; i++) {
-       outputFile << dynamicMatrix[i] << " ";
-     }
-     outputFile << dynamicMatrix[rows * cols - 1] << "\n";
-     delete[] dynamicMatrix;
+   else {
+     matrix = new int[rows * cols];
+     needCleanup = true;
    }
+   size_t inputSize = 0;
+   if (!(inputSize = readMatrix(inputFile, matrix))) {
+     std::cerr << "Error input\n";
+     if (needCleanup) delete[] matrix;
+     return 2;
+   }
+   if (cols * rows != inputSize) {
+     std::cerr << "Incorrect number of parameters\n";
+     if (needCleanup) delete[] matrix;
+     return 2;
+   }
+   outputFile << findMinSumDiag(matrix, rows, cols) << "\n";
+   transformSpiralMatrix(matrix, rows, cols);
+   if (rows == 0 || cols == 0) {
+     outputFile << rows << " " << cols << "\n";
+     if (needCleanup) delete[] matrix;
+     return 0;
+   }
+   outputFile << rows << " " << cols << " ";
+   for (size_t i = 0; i < rows * cols - 1; i++) {
+     outputFile << fixMatrix[i] << " ";
+   }
+   outputFile << fixMatrix[rows * cols - 1] << "\n";
+   if (needCleanup) delete[] matrix;
    inputFile.close();
    outputFile.close();
    return 0;
