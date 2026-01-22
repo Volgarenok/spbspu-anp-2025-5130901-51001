@@ -3,54 +3,55 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
-#include <exception>
 
 namespace loseva {
-  bool isLocalMaximum(size_t row, size_t col, size_t /* rows*/, size_t cols, const int* matrix) {
+  bool isLocalMaximum(size_t row, size_t col, size_t cols, const int* matrix) {
     int current = matrix[row * cols + col];
-    bool isGreater = true;
     for (int i = -1; i <= 1; ++i) {
       for (int j = -1; j <= 1; ++j) {
         if (i == 0 && j == 0) {
-           continue;
+          continue;
         }
         if (matrix[(row + i) * cols + (col + j)] >= current) {
-          isGreater = false;
+          return false;
         }
       }
     }
-    return isGreater;
+    return true;
   }
+
   int countLocalMaximums(size_t rows, size_t cols, const int* matrix) {
     if (rows < 3 || cols < 3) {
-       return 0;
+      return 0;
     }
-    size_t count = 0;
+    int count = 0;
     for (size_t i = 1; i < rows - 1; ++i) {
       for (size_t j = 1; j < cols - 1; ++j) {
-        if (isLocalMaximum(i, j, rows, cols, matrix)) {
+        if (isLocalMaximum(i, j, cols, matrix)) {
           count++;
         }
       }
     }
     return count;
   }
+
   int maxSecondaryDiagonalSum(size_t rows, size_t cols, const int* matrix) {
     if (rows == 0 || cols == 0) {
       return 0;
     }
     int maxSum = 0;
     bool sumInitialized = false;
-    int r = static_cast<int>(rows);
-    int c = static_cast<int>(cols);
-    for (int k = 0; k <= (r + c - 2); ++k) {
+
+    for (size_t k = 0; k <= (rows + cols - 2); ++k) {
       int currentDiagSum = 0;
       bool hasElements = false;
-      for (int i = 0; i < r; ++i) {
-        int j = k - i;
-        if (j >= 0 && j < c) {
-          currentDiagSum += matrix[i * cols + j];
-          hasElements = true;
+      for (size_t i = 0; i < rows; ++i) {
+        if (k >= i) {
+          size_t j = k - i;
+          if (j < cols) {
+            currentDiagSum += matrix[i * cols + j];
+            hasElements = true;
+          }
         }
       }
       if (hasElements) {
@@ -62,6 +63,7 @@ namespace loseva {
     }
     return maxSum;
   }
+
   bool tryReadMatrix(std::istream& in, int* matrix, size_t count) {
     for (size_t i = 0; i < count; ++i) {
       if (!(in >> matrix[i])) {
@@ -69,47 +71,52 @@ namespace loseva {
       }
     }
     char extra;
-    bool hasNoTail = !(in >> extra);
-    return hasNoTail;
+    return !(in >> extra);
   }
 }
+
 int main(int argc, char* argv[]) {
   if (argc != 4) {
     std::cerr << "Error: Wrong number of arguments\n";
     return 1;
   }
+
   long mode = 0;
   try {
-    mode = std::stoi(argv[1]);
-  } catch (const std::exception& e) {
+    mode = std::stol(argv[1]);
+  } catch (...) {
     std::cerr << "Error: Mode must be a number\n";
     return 1;
   }
-  bool isModeValid = (mode == 1 || mode == 2);
-  if (!isModeValid) {
+
+  if (mode != 1 && mode != 2) {
     std::cerr << "Error: First parameter must be 1 or 2\n";
     return 1;
   }
+
   std::ifstream input(argv[2]);
   if (!input) {
     std::cerr << "Error: Cannot open input file\n";
     return 2;
   }
+
   size_t r = 0, c = 0;
   if (!(input >> r >> c)) {
-    std::cerr << "Error: Invalid file or empty\n";
+    std::cerr << "Error: Invalid file format\n";
     return 2;
   }
+
   if (r == 0 || c == 0) {
     std::ofstream output(argv[3]);
-    if (!output) {
-      return 1;
+    if (output) {
+      output << "0 0\n";
     }
-    output << 0 << "\n";
     return 0;
   }
+
   size_t total = r * c;
   int resTask3 = 0, resTask13 = 0;
+
   if (mode == 1) {
     const size_t LIMIT = 10000;
     if (total > LIMIT) {
@@ -122,14 +129,15 @@ int main(int argc, char* argv[]) {
     }
     resTask3 = loseva::countLocalMaximums(r, c, stackArr);
     resTask13 = loseva::maxSecondaryDiagonalSum(r, c, stackArr);
-    } else {
+  } else {
     int* heapArr = nullptr;
     try {
       heapArr = new int[total];
-    } catch (const std::bad_alloc& e) {
+    } catch (const std::bad_alloc&) {
       std::cerr << "Error: Memory allocation failed\n";
       return 2;
     }
+
     if (!loseva::tryReadMatrix(input, heapArr, total)) {
       delete[] heapArr;
       return 2;
@@ -138,11 +146,13 @@ int main(int argc, char* argv[]) {
     resTask13 = loseva::maxSecondaryDiagonalSum(r, c, heapArr);
     delete[] heapArr;
   }
+
   std::ofstream output(argv[3]);
   if (!output) {
     std::cerr << "Error: Cannot open output file\n";
     return 1;
   }
   output << resTask3 << " " << resTask13 << "\n";
+
   return 0;
 }
