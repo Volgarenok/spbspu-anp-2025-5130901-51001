@@ -3,8 +3,7 @@
 #include <iomanip>
 #include <algorithm>
 
-void karpenko::scaleShapes(Shape** shapes, size_t count,
-    const point_t& point, double coefficient)
+void karpenko::scaleShapes(Shape** shapes, size_t count, const point_t& point, double coefficient)
 {
   if (coefficient <= 0.0)
   {
@@ -86,8 +85,6 @@ void karpenko::printAllInfo(const Shape* const* shapes, size_t count, const std:
     std::cout << "Shape " << i + 1 << ":\n";
     double area = shapes[i]->getArea();
     std::cout << "  Area: " << std::fixed << std::setprecision(2) << area << "\n";
-
-
     totalArea += area;
   }
 

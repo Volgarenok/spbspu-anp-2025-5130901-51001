@@ -67,7 +67,7 @@ karpenko::point_t karpenko::Triangle::getCenter() const noexcept
 }
 
 karpenko::point_t karpenko::Triangle::getScaledVertex(const point_t& vertex,
-    const point_t& center, double coefficient) const noexcept
+  const point_t& center, double coefficient) const noexcept
 {
   double dx = vertex.x - center.x;
   double dy = vertex.y - center.y;

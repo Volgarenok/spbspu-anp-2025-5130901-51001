@@ -99,7 +99,7 @@ double karpenko::ComplexQuad::triangleArea(const point_t& a, const point_t& b, c
 }
 
 karpenko::point_t karpenko::ComplexQuad::getScaledVertex(const point_t& vertex,
-    const point_t& center, double coefficient) const noexcept
+  const point_t& center, double coefficient) const noexcept
 {
   double dx = vertex.x - center.x;
   double dy = vertex.y - center.y;
