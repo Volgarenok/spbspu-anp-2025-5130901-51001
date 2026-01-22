@@ -231,9 +231,8 @@ int main()
   {
     uppercaseToLowercase(words[i]);
     std::cout << words[i] << ' ';
-    total_amount_of_lat_latters += amountOfLatLetters(words[i]);
+    std::cout << amountOfLatLetters(words[i]) << '\n';
   }
-  std::cout << '\n' << total_amount_of_lat_latters << '\n';
 
   for (size_t i = 0; i < size; ++i)
   {
