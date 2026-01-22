@@ -8,12 +8,11 @@ namespace kitserov
   void missLetters(const char* source, char* destination);
   int hasSameChars(const char* str1, const char* str2);
   char* getWord(std::istream& in, size_t& size);
-  char** readWords(std::istream& in, size_t& wordCount, int (*checkChar)(int) = nullptr);
   void freeWords(char** words, size_t count);
 
-  const size_t alphabetSize = 26;
-  const size_t initialCapacity = 8;
-  const double expansion = 2;
+  constexpr size_t alphabetSize = 26;
+  constexpr size_t initialCapacity = 8;
+  constexpr double expansion = 2;
 }
 
 int kitserov::hasSameChars(const char* str1, const char* str2)
@@ -164,75 +163,6 @@ char* kitserov::getWord(std::istream& in, size_t& size)
     in >> std::skipws;
   }
   return data;
-}
-
-char** kitserov::readWords(std::istream& in, size_t& wordCount, int (*checkChar)(int))
-{
-  size_t lineSize = 0;
-  char* line = kitserov::getline(in, lineSize, initialCapacity);
-  if (!line || lineSize == 0) {
-    if (line) {
-      free(line);
-    }
-    wordCount = 0;
-    return nullptr;
-  }
-  const size_t initialWordsCapacity = 8;
-  char** words = reinterpret_cast< char** >(malloc(initialWordsCapacity * sizeof(char*)));
-  if (!words) {
-    free(line);
-    wordCount = 0;
-    return nullptr;
-  }
-  size_t wordsCapacity = initialWordsCapacity;
-  wordCount = 0;
-  checkChar = [](int) -> int { return 1; };
-  size_t start = 0;
-  size_t i = 0;
-  while (i <= lineSize) {
-    if (i == lineSize || line[i] == ' ') {
-      if (start < i) {
-        size_t wordLen = i - start;
-        bool validWord = true;
-        for (size_t j = start; j < i; ++j) {
-          unsigned char c = static_cast< unsigned char >(line[j]);
-          if (checkChar(c) == 0) {
-            validWord = false;
-            break;
-          }
-        }
-        if (validWord) {
-          char* word = reinterpret_cast< char* >(malloc(wordLen + 1));
-          if (word) {
-            for (size_t j = 0; j < wordLen; ++j) {
-              word[j] = line[start + j];
-            }
-            word[wordLen] = '\0';
-            if (wordCount >= wordsCapacity) {
-              size_t newCapacity = wordsCapacity * expansion;
-              char** temp = reinterpret_cast< char** >(realloc(words, newCapacity * sizeof(char*)));
-              if (!temp) {
-                free(word);
-                break;
-              }
-              words = temp;
-              wordsCapacity = newCapacity;
-            }
-            words[wordCount] = word;
-            wordCount++;
-          }
-        }
-      }
-      start = i + 1;
-    }
-    i++;
-  }
-  free(line);
-  if (wordCount == 0) {
-    free(words);
-    return nullptr;
-  }
-  return words;
 }
 
 void kitserov::freeWords(char** words, size_t count)
