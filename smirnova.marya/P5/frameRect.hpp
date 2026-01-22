@@ -4,8 +4,9 @@
 
 #include "shape.hpp"
 
-namespace smirnova {
-rectangle_t getTotalFrameRect(Shape *shapes[], size_t count) noexcept;
+namespace smirnova
+{
+  rectangle_t getTotalFrameRect(const Shape *shapes[], const size_t count) noexcept;
 }
 
 #endif
