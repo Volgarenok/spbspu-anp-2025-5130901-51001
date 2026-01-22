@@ -6,7 +6,7 @@
 namespace vishnyakov
 {
   struct Rectangle final: Shape {
-    Rectangle(double w, double h, point_t c);
+    Rectangle(double w, double h, point_t c) noexcept;
     rectangle_t getFrameRect() const noexcept override;
     double getArea() const noexcept override;
     void move(double dx, double dy) noexcept override;

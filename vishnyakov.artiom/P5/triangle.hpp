@@ -8,7 +8,7 @@
 namespace vishnyakov
 {
   struct Triangle final: Shape {
-    Triangle(point_t a, point_t b, point_t c);
+    Triangle(point_t a, point_t b, point_t c) noexcept;
     rectangle_t getFrameRect() const noexcept override;
     double getArea() const noexcept override;
     void move(double dx, double dy) noexcept override;

@@ -1,6 +1,6 @@
 #include "concave.hpp"
 
-vishnyakov::Concave::Concave(point_t a, point_t b, point_t c, point_t d):
+vishnyakov::Concave::Concave(point_t a, point_t b, point_t c, point_t d) noexcept:
   spot1_{a},
   spot2_{b},
   spot3_{c},

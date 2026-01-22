@@ -7,7 +7,7 @@
 namespace vishnyakov
 {
   struct Concave final: Shape{
-    Concave(point_t a, point_t b, point_t c, point_t d);
+    Concave(point_t a, point_t b, point_t c, point_t d) noexcept;
     rectangle_t getFrameRect() const noexcept override;
     double getArea() const noexcept override;
     void move(double dx, double dy) noexcept override;
