@@ -5,7 +5,7 @@
 
 namespace nabieva
 {
-  bool readMatrix(std::ifstream& inputFile, int* matrix, size_t size)
+  size_t readMatrix(std::ifstream& inputFile, int* matrix)
   {
     int num = 0;
     size_t c = 0;
@@ -14,14 +14,9 @@ namespace nabieva
       c++;
     }
     if (inputFile.fail() && !inputFile.eof()) {
-      std::cerr << "Error input\n";
-      return false;
+      throw std::runtime_error("Error input\n");
     }
-    if (size != c) {
-      std::cerr << "Incorrect number of parameters\n";
-      return false;
-    }
-    return true;
+    return c;
   }
 
   void findMinSumDiag(std::ofstream& outputFile, int* matrix, size_t rows, size_t cols)
@@ -150,7 +145,13 @@ namespace nabieva
    if (std::stoi(argv[1]) == 1) {
      const size_t MAX_MATRIX_SIZE = 10000;
      int fixMatrix[MAX_MATRIX_SIZE];
-     if (!readMatrix(inputFile, fixMatrix, rows * cols)) {
+     size_t inputSize = 0;
+     if (!(inputSize = readMatrix(inputFile, fixMatrix))) {
+       std::cerr << "Error input\n";
+       return 2;
+     }
+     if (cols * rows != inputSize) {
+       std::cerr << "Incorrect number of parameters\n";
        return 2;
      }
      findMinSumDiag(outputFile, fixMatrix, rows, cols);
@@ -158,8 +159,14 @@ namespace nabieva
    }
    else if (std::stoi(argv[1]) == 2) {
      int* dynamicMatrix = new int[rows * cols];
-     if (!readMatrix(inputFile, dynamicMatrix, rows * cols)) {
+     size_t inputSize = 0;
+     if (!(inputSize = readMatrix(inputFile, dynamicMatrix))) {
+       std::cerr << "Error input\n";
        delete[] dynamicMatrix;
+       return 2;
+     }
+     if (cols * rows != inputSize) {
+       std::cerr << "Incorrect number of parameters\n";
        return 2;
      }
      findMinSumDiag(outputFile, dynamicMatrix, rows, cols);
