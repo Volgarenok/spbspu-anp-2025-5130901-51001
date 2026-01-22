@@ -8,7 +8,7 @@ int main()
 {
   using namespace vishnyakov;
 
-  size_t amount_of_shapes = 3;
+  const size_t amount_of_shapes = 3;
   Shape *Shapes[amount_of_shapes] = {};
 
   try
