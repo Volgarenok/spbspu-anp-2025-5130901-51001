@@ -343,7 +343,7 @@ void alekseev::scaleAllRelative(Shape *const *shps, size_t size, const point_t &
   }
 }
 
-rectangle_t alekseev::getAllShapesFrameRect(const Shape *const *shps, size_t size)
+alekseev::rectangle_t alekseev::getAllShapesFrameRect(const Shape *const *shps, size_t size)
 {
   if (size == 0) {
     return {0.0, 0.0, {0.0, 0.0}};
