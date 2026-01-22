@@ -15,7 +15,7 @@ namespace vishnyakov
   private:
     double width_, height_;
     point_t center_;
-  };   
+  };
 }
 
 #endif
