@@ -1,7 +1,7 @@
-#include<iostream>
-#include<iomanip>
-#include<stdlib.h>
-#include<cctype>
+#include <iostream>
+#include <iomanip>
+#include <stdlib.h>
+#include <cctype>
 
 namespace losev {
   char * getline(std::istream & in, size_t & capacity, size_t & actual_size);
@@ -24,7 +24,7 @@ int main()
     free(str);
     return 1;
   }
-  char * strForFirstEx = reinterpret_cast< char* >(malloc(str_size * sizeof(char)));
+  char * strForFirstEx = reinterpret_cast< char* >(malloc((str_size +1) * sizeof(char)));
   if (!strForFirstEx) {
     std::cerr << "Memory allocation failed\n";
     free(str);
@@ -49,7 +49,8 @@ char * losev::getline(std::istream & in, size_t & capacity, size_t & actual_size
   if (is_skips) {
     in >> std::noskipws;
   }
-  while (in) {
+  char ch;
+  while (in >> ch && ch != '\n') {
     if (actual_size >= (capacity - 1)) {
       size_t new_capacity = capacity + 10;
       char * str_new = reinterpret_cast< char* >(malloc(new_capacity * sizeof(char)));
@@ -67,10 +68,7 @@ char * losev::getline(std::istream & in, size_t & capacity, size_t & actual_size
       str = str_new;
       capacity = new_capacity;
     }
-    in >> str[actual_size];
-    if (in.fail()) {
-      break;
-    }
+    str[actual_size] = ch;
     actual_size++;
   }
   str[actual_size] = '\0';
