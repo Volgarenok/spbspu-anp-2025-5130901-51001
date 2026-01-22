@@ -169,6 +169,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   if (size == 0 && !input)
   {
     free(line);
+    free(words);
     size = 0;
 
     return nullptr;
