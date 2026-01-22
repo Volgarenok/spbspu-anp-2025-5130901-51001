@@ -55,7 +55,11 @@ namespace shaykhraziev
     void move(double dx, double dy) override;
     void scale(double coef) override;
 
-    explicit Polygon(point_t* a, size_t size);
+    explicit Polygon(const point_t* a, size_t size);
+    Polygon(const Polygon&) = delete;
+    Polygon& operator=(const Polygon&) = delete;
+    Polygon(Polygon&&) = delete;
+    Polygon& operator=(Polygon&&) = delete;
     ~Polygon() override;
 
   private:
@@ -219,15 +223,23 @@ void shaykhraziev::outputParams(std::ostream& out, Shape** shps, size_t size)
   out << "(" << all.pos.x << ", " << all.pos.y << ") " << all.width << " " << all.height << "\n";
 }
 
-shaykhraziev::Polygon::Polygon(point_t* a, size_t size):
-  points(a),
+shaykhraziev::Polygon::Polygon(const point_t* a, size_t size):
+  points(nullptr),
   size(size),
   center(calcPolygonCentroid(a, size)),
   area(calcPolygonArea(a, size))
 {
-  if (size == 0 || a == nullptr) {
+  if (a == nullptr || size == 0) {
     throw std::invalid_argument("Invalid size");
   }
+
+  points = new point_t[size];
+  for (size_t i = 0; i < size; ++i) {
+    points[i] = a[i];
+  }
+  //
+  // center = calcPolygonCentroid(points, size);
+  // area = calcPolygonArea(points, size);
 }
 
 double shaykhraziev::Polygon::getArea() const
