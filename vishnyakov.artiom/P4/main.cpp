@@ -64,7 +64,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
 
   char sym = ' ';
 
-  while (!(input >> sym).fail() && sym != '\n')
+  while (!(input >> sym).fail())
   {
     if (len + 1 >= capacity)
     {
@@ -109,6 +109,8 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
         free(line);
         free(words);
 
+        size = 0;
+
         return nullptr;
       }
 
@@ -121,7 +123,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
       words[size++] = word;
       len = 0;
 
-      if (size == capacity)
+      if (size == capacity_for_words)
       {
         size_t new_capacity_for_words = capacity_for_words * 2;
         char **tmp_words = reinterpret_cast< char** >(malloc(new_capacity_for_words * sizeof(char*)));
@@ -141,17 +143,25 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
           free(line);
           free(words);
 
+          size = 0;
+
           return nullptr;
         }
 
-      for (size_t j = 0; j < size; ++j)
-      {
-        tmp_words[j] = words[j];
+        for (size_t j = 0; j < size; ++j)
+        {
+          tmp_words[j] = words[j];
+        }
+
+        free(words);
+        words = tmp_words;
+        capacity_for_words = new_capacity_for_words;
+        capacity = 8;
       }
 
-      free(words);
-      words = tmp_words;
-      capacity_for_words = new_capacity_for_words;
+      if (sym == '\n')
+      {
+        break;
       }
     }
 
@@ -170,6 +180,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   {
     free(line);
     free(words);
+
     size = 0;
 
     return nullptr;
@@ -177,8 +188,6 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
 
   return words;
 }
-
-
 
 size_t vishnyakov::amountOfLatLetters(char *str)
 {
