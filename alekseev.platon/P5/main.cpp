@@ -11,8 +11,8 @@ namespace alekseev
     double y;
   };
 
-  bool operator==(const point_t &lhs, const point_t &rhs);
-  bool operator!=(const point_t &lhs, const point_t &rhs);
+  bool operator==(const point_t &lhs, const point_t &rhs) noexcept;
+  bool operator!=(const point_t &lhs, const point_t &rhs) noexcept;
 
   struct rectangle_t
   {
@@ -21,15 +21,15 @@ namespace alekseev
     point_t pos;
   };
 
-  bool operator==(const rectangle_t &lhs, const rectangle_t &rhs);
-  bool operator!=(const rectangle_t &lhs, const rectangle_t &rhs);
+  bool operator==(const rectangle_t &lhs, const rectangle_t &rhs) noexcept;
+  bool operator!=(const rectangle_t &lhs, const rectangle_t &rhs) noexcept;
 
   struct Shape
   {
     virtual ~Shape() = default;
 
-    virtual double getArea() const = 0;
-    virtual rectangle_t getFrameRect() const = 0;
+    virtual double getArea() const noexcept = 0;
+    virtual rectangle_t getFrameRect() const noexcept = 0;
     void scale(double coef);
     void scaleUnchecked(double coef);
     virtual void move(const point_t &to) = 0;
@@ -45,8 +45,8 @@ namespace alekseev
     Rectangle(const point_t &a, const point_t &b);
     explicit Rectangle(const rectangle_t &r);
 
-    double getArea() const override;
-    rectangle_t getFrameRect() const override;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
     void move(const point_t &to) override;
     void move(double dx, double dy) override;
 
@@ -64,8 +64,8 @@ namespace alekseev
     Square(const point_t &center, double side);
     explicit Square(const rectangle_t &r);
 
-    double getArea() const override;
-    rectangle_t getFrameRect() const override;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
     void move(const point_t &to) override;
     void move(double dx, double dy) override;
 
@@ -82,8 +82,8 @@ namespace alekseev
     Xquare(const point_t &center, double diagonal);
     explicit Xquare(const rectangle_t &r);
 
-    double getArea() const override;
-    rectangle_t getFrameRect() const override;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
     void move(const point_t &to) override;
     void move(double dx, double dy) override;
 
@@ -101,22 +101,22 @@ namespace alekseev
   void removeArray(Shape **shps, size_t size);
 }
 
-bool alekseev::operator==(const point_t &lhs, const point_t &rhs)
+bool alekseev::operator==(const point_t &lhs, const point_t &rhs) noexcept
 {
   return lhs.x == rhs.x && lhs.y == rhs.y;
 }
 
-bool alekseev::operator!=(const point_t &lhs, const point_t &rhs)
+bool alekseev::operator!=(const point_t &lhs, const point_t &rhs) noexcept
 {
   return !(lhs == rhs);
 }
 
-bool alekseev::operator==(const rectangle_t &lhs, const rectangle_t &rhs)
+bool alekseev::operator==(const rectangle_t &lhs, const rectangle_t &rhs) noexcept
 {
   return lhs.width == rhs.width && lhs.height == rhs.height && lhs.pos == rhs.pos;
 }
 
-bool alekseev::operator!=(const rectangle_t &lhs, const rectangle_t &rhs)
+bool alekseev::operator!=(const rectangle_t &lhs, const rectangle_t &rhs) noexcept
 {
   return !(lhs == rhs);
 }
@@ -165,12 +165,12 @@ alekseev::Rectangle::Rectangle(const rectangle_t &r):
   }
 }
 
-double alekseev::Rectangle::getArea() const
+double alekseev::Rectangle::getArea() const noexcept
 {
   return width_ * height_;
 }
 
-alekseev::rectangle_t alekseev::Rectangle::getFrameRect() const
+alekseev::rectangle_t alekseev::Rectangle::getFrameRect() const noexcept
 {
   return {width_, height_, center_};
 }
@@ -225,12 +225,12 @@ alekseev::Square::Square(const rectangle_t &r):
   }
 }
 
-double alekseev::Square::getArea() const
+double alekseev::Square::getArea() const noexcept
 {
   return side_ * side_;
 }
 
-alekseev::rectangle_t alekseev::Square::getFrameRect() const
+alekseev::rectangle_t alekseev::Square::getFrameRect() const noexcept
 {
   return {side_, side_, center_};
 }
@@ -284,12 +284,12 @@ alekseev::Xquare::Xquare(const rectangle_t &r):
   }
 }
 
-double alekseev::Xquare::getArea() const
+double alekseev::Xquare::getArea() const noexcept
 {
   return (diagonal_ * diagonal_) / 2.0;
 }
 
-alekseev::rectangle_t alekseev::Xquare::getFrameRect() const
+alekseev::rectangle_t alekseev::Xquare::getFrameRect() const noexcept
 {
   return {diagonal_, diagonal_, center_};
 }
