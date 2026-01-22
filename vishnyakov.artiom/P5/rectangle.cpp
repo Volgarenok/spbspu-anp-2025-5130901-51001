@@ -21,7 +21,7 @@ void vishnyakov::Rectangle::move(double dx, double dy) noexcept
   movePoint(center_, dx, dy);
 }
 
-void vishnyakov::Rectangle::move(const point_t newPos) noexcept
+void vishnyakov::Rectangle::move(point_t newPos) noexcept
 {
   center_ = newPos;
 }

@@ -46,7 +46,7 @@ void vishnyakov::Triangle::move(double dx, double dy) noexcept
   movePoint(center_, dx, dy);
 }
 
-void vishnyakov::Triangle::move(const point_t newPos) noexcept
+void vishnyakov::Triangle::move(point_t newPos) noexcept
 {
   double dx = newPos.x - center_.x;
   double dy = newPos.y - center_.y;

@@ -1,5 +1,8 @@
 #include <iostream>
-#include "geom.hpp"
+#include "rectangle.hpp"
+#include "concave.hpp"
+#include "triangle.hpp"
+#include "functions.hpp"
 
 int main()
 {
@@ -51,9 +54,13 @@ int main()
 
     outputInformation(Shapes, amount_of_shapes);
   }
-  catch(const std::bad_alloc&)
+  catch (const std::bad_alloc&)
   {
     std::cerr << "Memory allocation failed\n";
+    for (size_t i = 0; i < amount_of_shapes; ++i)
+    {
+      delete Shapes[i];
+    }
     return 2;
   }
 
@@ -64,7 +71,4 @@ int main()
 
   return 0;
 }
-
-
-
 
