@@ -67,7 +67,7 @@ namespace petrenko
     return row * col - err;
   }
 
-  void needRemove(int *matrix, size_t parm)
+  void needRemove(const int *matrix, size_t parm)
   {
     if (parm == 2 && matrix != nullptr)
     {
