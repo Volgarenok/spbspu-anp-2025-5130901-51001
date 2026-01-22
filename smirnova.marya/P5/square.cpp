@@ -6,13 +6,18 @@
 
 namespace smirnova
 {
-  Square::Square(const double side, const point_t &center): side_(side),
+  Square::Square(double side,
+    const point_t &center): 
+    side_(side),
     center_(center) {
     if (side <= 0.0)
       throw std::invalid_argument("Side must be positive");
   }
 
-  double Square::getArea() const noexcept { return side_ * side_; }
+  double Square::getArea() const noexcept
+  {
+    return side_ * side_;
+  }
   rectangle_t Square::getFrameRect() const noexcept {
     return makeFrameRect(side_, side_, center_);
   }
@@ -20,11 +25,11 @@ namespace smirnova
   {
     moveToPoint(center_, p);
   }
-  void Square::move(const double dx, const double dy) noexcept
+  void Square::move(double dx, double dy) noexcept
   {
     moveCenter(center_, dx, dy);
   }
-  void Square::scale(const double k) noexcept
+  void Square::scale(double k) noexcept
   {
     side_ *= k;
   }

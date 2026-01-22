@@ -7,9 +7,9 @@
 
 namespace smirnova
 {
-  Triangle::Triangle(const point_t a,
-    const point_t b,
-      const point_t c)
+  Triangle::Triangle(point_t a,
+    point_t b,
+      point_t c)
     : a_(a),
       b_(b),
       c_(c)
@@ -47,14 +47,14 @@ namespace smirnova
     move(dx, dy);
   }
 
-  void Triangle::move(const double dx, const double dy) noexcept
+  void Triangle::move(double dx, double dy) noexcept
   {
     moveCenter(a_, dx, dy);
     moveCenter(b_, dx, dy);
     moveCenter(c_, dx, dy);
   }
 
-  void Triangle::scale(const double k) noexcept
+  void Triangle::scale(double k) noexcept
   {
     point_t center = getCentroid(a_, b_, c_);
     a_.x = center.x + (a_.x - center.x) * k;

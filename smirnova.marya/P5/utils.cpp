@@ -5,7 +5,7 @@
 
 namespace smirnova
 {
-  void moveCenter(point_t &center, const double dx, const double dy)
+  void moveCenter(point_t &center, double dx, double dy)
   {
     center.x += dx;
     center.y += dy;
