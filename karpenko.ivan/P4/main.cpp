@@ -43,8 +43,7 @@ int main()
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
     result2[karpenko::ALPHABET_RESULT_SIZE - 1] = '\0';
 
-    karpenko::uniTwo(line1, line1Length, line2, line2Length,
-      result1, result1Size);
+    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1);
     std::cout << result1 << '\n';
 
     karpenko::shrSym(line1, result2);
@@ -60,7 +59,7 @@ int main()
     {
       for (size_t i = 0; i < wordCount; ++i)
       {
-        karpenko::uniTwo(words[i], std::strlen(words[i]), line2, line2Length, result1, result1Size);
+        karpenko::uniTwo(words[i], std::strlen(words[i]), line2, line2Length, result1);
         std::cout << result1 << '\n';
 
         karpenko::shrSym(words[i], result2);
