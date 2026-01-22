@@ -148,12 +148,12 @@ namespace nabieva
      return 2;
    }
    outputFile << findMinSumDiag(matrix, rows, cols) << "\n";
-   transformSpiralMatrix(matrix, rows, cols);
    if (rows == 0 || cols == 0) {
      outputFile << rows << " " << cols << "\n";
      if (needCleanup) delete[] matrix;
      return 0;
    }
+   transformSpiralMatrix(matrix, rows, cols);
    outputFile << rows << " " << cols << " ";
    for (size_t i = 0; i < rows * cols - 1; i++) {
      outputFile << matrix[i] << " ";
