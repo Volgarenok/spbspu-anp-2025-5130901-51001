@@ -69,7 +69,7 @@ void vishnyakov::outputInformation(const Shape *const *shapes, size_t size)
   outputFrameRectInfo(getFullFrameRect(shapes, size));
 }
 
-void vishnyakov::outputFrameRectInfo(const rectangle_t frame)
+void vishnyakov::outputFrameRectInfo(rectangle_t frame)
 {
   std::cout << "  FrameRect: center = {" << frame.pos.x << ", " << frame.pos.y;
   std::cout << "}; width = " << frame.width << "; height = " << frame.height << '\n';

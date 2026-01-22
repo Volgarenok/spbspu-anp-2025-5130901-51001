@@ -9,7 +9,7 @@ namespace vishnyakov
   rectangle_t getFullFrameRect(const Shape *const *shapes, size_t size);
   void scaleAllShapes(Shape **shapes, size_t size, point_t point, double coefficient);
   void outputInformation(const Shape *const *shapes, size_t size);
-  void outputFrameRectInfo(const rectangle_t frame);
+  void outputFrameRectInfo(rectangle_t frame);
 }
 
 #endif
