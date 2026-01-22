@@ -64,3 +64,4 @@ void vishnyakov::Triangle::scale(double coefficient) noexcept
   spot2_.y = center_.y + (spot2_.y - center_.y) * coefficient;
   spot3_.y = center_.y + (spot3_.y - center_.y) * coefficient;
 }
+

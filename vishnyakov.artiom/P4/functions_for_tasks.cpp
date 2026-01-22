@@ -22,3 +22,4 @@ size_t vishnyakov::amountOfLatLetters(char *str)
     }
   }
 }
+

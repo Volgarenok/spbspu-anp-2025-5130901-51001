@@ -60,3 +60,4 @@ int vishnyakov::biggiestDiagonal(const int *matrix, size_t row, size_t column)
   }
   return max_sum;
 }
+

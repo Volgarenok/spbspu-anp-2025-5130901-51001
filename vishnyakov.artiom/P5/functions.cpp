@@ -6,7 +6,7 @@ void vishnyakov::movePoint(point_t &pos, double dx, double dy)
   pos.y += dy;
 }
 
-vishnyakov::rectangle_t vishnyakov::getFullFrameRect(const Shape* const *shapes, size_t size)
+vishnyakov::rectangle_t vishnyakov::getFullFrameRect(const Shape *const *shapes, size_t size)
 {
   if (size == 0)
   {
@@ -35,7 +35,7 @@ vishnyakov::rectangle_t vishnyakov::getFullFrameRect(const Shape* const *shapes,
 
   point_t center = {(minx + maxx) / 2.0, (miny + maxy) / 2.0};
 
-  return rectangle_t {width, height, center};
+  return rectangle_t{width, height, center};
 }
 
 void vishnyakov::scaleAllShapes(Shape **shapes, size_t size, point_t point, double coefficient)
@@ -52,7 +52,7 @@ void vishnyakov::scaleAllShapes(Shape **shapes, size_t size, point_t point, doub
   }
 }
 
-void vishnyakov::outputInformation(const Shape* const* shapes, size_t size)
+void vishnyakov::outputInformation(const Shape *const *shapes, size_t size)
 {
   double total_Area = 0.0;
 
@@ -60,16 +60,18 @@ void vishnyakov::outputInformation(const Shape* const* shapes, size_t size)
   {
     std::cout << "Shape #" << (i+1) << ":\n";
     std::cout << "  Area = " << shapes[i]->getArea() << '\n';
-    rectangle_t frame = shapes[i]->getFrameRect();
-    std::cout << "  FrameRect: center = {" << frame.pos.x << ", " << frame.pos.y;
-    std::cout << "}; width = " << frame.width << "; height = " << frame.height << '\n';
-
+    outputFrameRectInfo(shapes[i]->getFrameRect());
     total_Area += shapes[i]->getArea();
   }
 
   std::cout << "\nTotal Area = " << total_Area << '\n';
 
-  rectangle_t total_FrameRect = getFullFrameRect(shapes, size);
-  std::cout << "\nTotal FrameRect: center = {" << total_FrameRect.pos.x << ", " << total_FrameRect.pos.y;
-  std::cout << "}; width = " << total_FrameRect.width << "; height = " << total_FrameRect.height << '\n';
+  outputFrameRectInfo(getFullFrameRect(shapes, size));
 }
+
+void vishnyakov::outputFrameRectInfo(const rectangle_t frame)
+{
+  std::cout << "  FrameRect: center = {" << frame.pos.x << ", " << frame.pos.y;
+  std::cout << "}; width = " << frame.width << "; height = " << frame.height << '\n';
+}
+

@@ -65,3 +65,4 @@ void vishnyakov::Concave::scale(double coefficient) noexcept
   spot3_.y = center_.y + (spot3_.y - center_.y) * coefficient;
   spot4_.y = center_.y + (spot4_.y - center_.y) * coefficient;
 }
+

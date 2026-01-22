@@ -34,3 +34,4 @@ bool vishnyakov::isIn(const size_t *array, size_t value, size_t size)
   }
   return false;
 }
+

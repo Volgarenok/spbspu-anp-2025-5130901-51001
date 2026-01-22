@@ -31,3 +31,4 @@ void vishnyakov::Rectangle::scale(double coefficient) noexcept
   width_ *= coefficient;
   height_ *= coefficient;
 }
+

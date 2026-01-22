@@ -8,3 +8,4 @@ void vishnyakov::Shape::checkedScale(double coefficient)
   }
   scale(coefficient);
 }
+

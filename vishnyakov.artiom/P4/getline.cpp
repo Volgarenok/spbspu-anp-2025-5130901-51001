@@ -163,3 +163,4 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   free(line);
   return words;
 }
+
