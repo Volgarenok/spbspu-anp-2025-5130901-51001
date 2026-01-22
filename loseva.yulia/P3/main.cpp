@@ -3,6 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <stdexcept>
+#include <cstdlib>
 
 namespace loseva {
   bool isLocalMaximum(size_t row, size_t col, size_t cols, const int* matrix) {
@@ -81,10 +82,9 @@ int main(int argc, char* argv[]) {
     return 1;
   }
 
-  long mode = 0;
-  try {
-    mode = std::stol(argv[1]);
-  } catch (...) {
+  char* end = nullptr;
+  long mode = std::strtol(argv[1], &end, 10);
+  if (end == argv[1] || *end != '\0') {
     std::cerr << "Error: Mode must be a number\n";
     return 1;
   }
