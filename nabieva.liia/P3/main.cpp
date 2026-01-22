@@ -157,7 +157,5 @@ namespace nabieva
    }
    outputFile << fixMatrix[rows * cols - 1] << "\n";
    if (needCleanup) delete[] matrix;
-   inputFile.close();
-   outputFile.close();
    return 0;
  }
