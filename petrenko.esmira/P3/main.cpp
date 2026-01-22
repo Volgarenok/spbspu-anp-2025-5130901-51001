@@ -3,7 +3,7 @@
 
 namespace petrenko
 {
-  bool checkTriangular(int *matrix, size_t row, size_t col)
+  bool checkTriangular(const int *matrix, size_t row, size_t col)
   {
     if (row == 0 || col == 0)
     {
@@ -29,7 +29,7 @@ namespace petrenko
     return (nice_row == row);
   }
 
-  size_t checkIdentic(int *matrix, size_t row, size_t col)
+  size_t checkIdentic(const int *matrix, size_t row, size_t col)
   {
     if (row == 0 || col == 0)
     {
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     std::cerr << "First argument is out of range\n";
     return 1;
   }
-  else if (isspace(*end) || end == argv[1] || *end != '\0')
+  else if (std::isspace(*end) || end == argv[1] || *end != '\0')
   {
     std::cerr << "First argument is not a number\n";
     return 1;
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
   }
   bool trian = petrenko::checkTriangular(matrix, row, col);
   size_t ident = petrenko::checkIdentic(matrix, row, col);
-  std::ofstream(name_output) << std::boolalpha << trian << ' ' << ident;
+  std::ofstream(name_output) << std::boolalpha << trian << ' ' << ident << '\n';
   petrenko::needRemove(matrix, first_parm);
   return 0;
 }
