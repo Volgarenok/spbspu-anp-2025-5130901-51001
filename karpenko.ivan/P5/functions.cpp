@@ -67,7 +67,7 @@ karpenko::rectangle_t karpenko::getOverallFrameRect(const Shape* const* shapes, 
   return {width, height, {centerX, centerY}};
 }
 
-void karpenko::printFrameRectInfo(const karpenko::rectangle_t& frame, const std::string& prefix)
+void karpenko::printFrameRectInfo(const karpenko::rectangle_t& frame, const& prefix)
 {
   std::cout << prefix << "Frame Rect:\n";
   std::cout << prefix << "  Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
@@ -75,7 +75,7 @@ void karpenko::printFrameRectInfo(const karpenko::rectangle_t& frame, const std:
   std::cout << prefix << "  Height: " << frame.height << "\n";
 }
 
-void karpenko::printAllInfo(const Shape* const* shapes, size_t count, const std::string& title)
+void karpenko::printAllInfo(const Shape* const* shapes, size_t count, const& title)
 {
   std::cout << "\n" << title << ":\n";
 
