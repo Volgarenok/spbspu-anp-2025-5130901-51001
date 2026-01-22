@@ -85,9 +85,9 @@ namespace shaykhraziev
   };
 
   void scaleRelative(Shape& shp, point_t pt, double coef);
-  rectangle_t getAllShapesFrameRect(Shape** shps, size_t size);
-  void removeArray(Shape** shps, size_t size);
-  void outputParams(std::ostream& out, Shape** shps, size_t size);
+  rectangle_t getAllShapesFrameRect(const Shape** shps, size_t size);
+  void removeArray(const Shape** shps, size_t size);
+  void outputParams(std::ostream& out, const Shape** shps, size_t size);
   double distToLine(point_t d1, point_t d2, point_t m);
   double euclidDist(point_t d1, point_t d2);
   double calcPolygonArea(const point_t* pts, size_t size);
@@ -167,7 +167,7 @@ void shaykhraziev::scaleRelative(Shape& shp, point_t pt, double coef)
   shp.move({x, y});
 }
 
-shaykhraziev::rectangle_t shaykhraziev::getAllShapesFrameRect(Shape** shps, size_t size)
+shaykhraziev::rectangle_t shaykhraziev::getAllShapesFrameRect(const Shape** shps, size_t size)
 {
   if (size == 0) {
     return {0, 0, {0, 0}};
@@ -194,14 +194,16 @@ shaykhraziev::rectangle_t shaykhraziev::getAllShapesFrameRect(Shape** shps, size
   return {width, height, c};
 }
 
-void shaykhraziev::removeArray(Shape** shps, size_t size)
+void shaykhraziev::removeArray(const Shape** shps, size_t size)
 {
   for (size_t i = 0; i < size; i++) {
     delete shps[i];
   }
+
+  delete [] shps;
 }
 
-void shaykhraziev::outputParams(std::ostream& out, Shape** shps, size_t size)
+void shaykhraziev::outputParams(std::ostream& out, const Shape** shps, size_t size)
 {
   double area = 0;
 
@@ -460,7 +462,7 @@ int main()
 
   int err = 0;
   size_t shp_cnt = 4;
-  Shape* shps[4] = {};
+  Shape** shps = new Shape*[shp_cnt];
 
   try {
     shps[0] = new Rectangle({0, 0}, {10, 10});
@@ -477,7 +479,7 @@ int main()
   }
 
   if (err == 0) {
-    outputParams(std::cout, shps, shp_cnt);
+    outputParams(std::cout, const_cast<const Shape**>(shps), shp_cnt);
 
     double x = 0;
     double y = 0;
@@ -487,14 +489,14 @@ int main()
       for (size_t i = 0; i < shp_cnt; i++) {
         scaleRelative(*shps[i], {x, y}, scale);
       }
-      outputParams(std::cout, shps, shp_cnt);
+      outputParams(std::cout, const_cast<const Shape**>(shps), shp_cnt);
     } else {
       std::cerr << "bad input" << "\n";
       err = 1;
     }
   }
 
-  removeArray(shps, shp_cnt);
+  removeArray(const_cast<const Shape**>(shps), shp_cnt);
 
   return err;
 }
