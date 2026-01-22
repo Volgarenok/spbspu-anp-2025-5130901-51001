@@ -7,8 +7,8 @@ namespace karpenko
 {
   void scaleShapes(Shape** shapes, size_t count, const point_t& point, double coefficient);
   rectangle_t getOverallFrameRect(const Shape* const* shapes, size_t count);
-  void printAllInfo(const Shape* const* shapes, size_t count, const& title);
-  void printFrameRectInfo(const karpenko::rectangle_t& frame, const& prefix = "");
+  void printAllInfo(const Shape* const* shapes, size_t count, const char* title);
+  void printFrameRectInfo(const karpenko::rectangle_t& frame, const char* prefix = "");
 }
 
 #endif
