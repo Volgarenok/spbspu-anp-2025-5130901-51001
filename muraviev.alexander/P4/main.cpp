@@ -122,9 +122,7 @@ char* muraviev::digitsAddedLine(char* result, const char* add_to, const char* ta
 int main()
 {
   size_t size_1 = 0;
-  char* line1 = nullptr;
-
-  line1 = muraviev::getline(std::cin, size_1);
+  char* line1 = muraviev::getline(std::cin, size_1);
 
   if (line1 == nullptr) {
     std::cerr << "Error when getting a line." << '\n';
