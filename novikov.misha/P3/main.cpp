@@ -4,13 +4,11 @@
 #include <iomanip>
 #include <cmath>
 
-using namespace std;
-
 const int MAX_ELEMENTS = 10000;
 const int MAX_ROWS = 100;
 const int MAX_COLS = 100;
 
-bool isNumber(const string& str) {
+bool isNumber(const std::string& str) {
     if (str.empty()) return false;
     
     for (size_t i = 0; i < str.length(); i++) {
@@ -26,7 +24,7 @@ bool isNumber(const string& str) {
 }
 
 double roundToTenth(double value) {
-    return round(value * 10.0) / 10.0;
+    return std::round(value * 10.0) / 10.0;
 }
 
 void smoothMatrix(double** matrix, int rows, int cols, double** result) {
@@ -59,38 +57,38 @@ void smoothMatrix(double** matrix, int rows, int cols, double** result) {
 
 int main(int argc, char* argv[]) {
     if (argc != 4) {
-        cerr << "Неверное количество аргументов" << endl;
+        std::cerr << "Неверное количество аргументов" << std::endl;
         return 1;
     }
     
-    string modeStr = argv[1];
+    std::string modeStr = argv[1];
     if (!isNumber(modeStr) || (modeStr != "1" && modeStr != "2")) {
-        cerr << "Первый параметр должен быть 1 или 2" << endl;
+        std::cerr << "Первый параметр должен быть 1 или 2" << std::endl;
         return 1;
     }
-    int mode = stoi(modeStr);
+    int mode = std::stoi(modeStr);
     
-    ifstream inputFile(argv[2]);
+    std::ifstream inputFile(argv[2]);
     if (!inputFile.is_open()) {
-        cerr << "Не удалось открыть входной файл" << endl;
+        std::cerr << "Не удалось открыть входной файл" << std::endl;
         return 2;
     }
     
     int rows, cols;
     if (!(inputFile >> rows >> cols)) {
-        cerr << "Не удалось прочитать размеры матрицы" << endl;
+        std::cerr << "Не удалось прочитать размеры матрицы" << std::endl;
         inputFile.close();
         return 2;
     }
     
     if (rows < 0 || cols < 0) {
-        cerr << "Размеры матрицы должны быть неотрицательными" << endl;
+        std::cerr << "Размеры матрицы должны быть неотрицательными" << std::endl;
         inputFile.close();
         return 2;
     }
     
     if (mode == 1 && rows * cols > MAX_ELEMENTS) {
-        cerr << "Матрица слишком большая для статического режима" << endl;
+        std::cerr << "Матрица слишком большая для статического режима" << std::endl;
         inputFile.close();
         return 2;
     }
@@ -98,9 +96,9 @@ int main(int argc, char* argv[]) {
     if (rows == 0 || cols == 0) {
         inputFile.close();
         
-        ofstream outputFile(argv[3]);
+        std::ofstream outputFile(argv[3]);
         if (!outputFile.is_open()) {
-            cerr << "Не удалось открыть выходной файл" << endl;
+            std::cerr << "Не удалось открыть выходной файл" << std::endl;
             return 2;
         }
         
@@ -114,7 +112,7 @@ int main(int argc, char* argv[]) {
     
     if (mode == 1) {
         if (rows > MAX_ROWS || cols > MAX_COLS) {
-            cerr << "Размеры матрицы превышают максимум для статического режима" << endl;
+            std::cerr << "Размеры матрицы превышают максимум для статического режима" << std::endl;
             inputFile.close();
             return 2;
         }
@@ -137,7 +135,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
             if (!(inputFile >> matrix[i][j])) {
-                cerr << "Не удалось прочитать элемент матрицы" << endl;
+                std::cerr << "Не удалось прочитать элемент матрицы" << std::endl;
                 
                 for (int k = 0; k < rows; k++) {
                     delete[] matrix[k];
@@ -154,7 +152,7 @@ int main(int argc, char* argv[]) {
     
     int extra;
     if (inputFile >> extra) {
-        cerr << "Лишние данные во входном файле" << endl;
+        std::cerr << "Лишние данные во входном файле" << std::endl;
         
         for (int i = 0; i < rows; i++) {
             delete[] matrix[i];
@@ -167,9 +165,9 @@ int main(int argc, char* argv[]) {
     
     smoothMatrix(matrix, rows, cols, smoothed);
     
-    ofstream outputFile(argv[3]);
+    std::ofstream outputFile(argv[3]);
     if (!outputFile.is_open()) {
-        cerr << "Не удалось открыть выходной файл" << endl;
+        std::cerr << "Не удалось открыть выходной файл" << std::endl;
         
         for (int i = 0; i < rows; i++) {
             delete[] matrix[i];
@@ -180,7 +178,7 @@ int main(int argc, char* argv[]) {
         return 2;
     }
     
-    outputFile << fixed << setprecision(1);
+    outputFile << std::fixed << std::setprecision(1);
     outputFile << rows << " " << cols;
     
     for (int i = 0; i < rows; i++) {
