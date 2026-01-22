@@ -237,9 +237,6 @@ shaykhraziev::Polygon::Polygon(const point_t* a, size_t size):
   for (size_t i = 0; i < size; ++i) {
     points[i] = a[i];
   }
-  //
-  // center = calcPolygonCentroid(points, size);
-  // area = calcPolygonArea(points, size);
 }
 
 double shaykhraziev::Polygon::getArea() const
