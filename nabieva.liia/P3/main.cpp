@@ -6,7 +6,7 @@
 namespace nabieva
 {
   bool readMatrix(std::ifstream& inputFile, int* matrix, size_t size) {
-    int num;
+    int num = 0;
     size_t c = 0;
     while (inputFile >> num) {
       matrix[c] = num;
@@ -105,8 +105,7 @@ namespace nabieva
    }
    try {
      size_t pos = 0;
-     int arg;
-     arg = std::stoi(argv[1], &pos);
+     int arg = std::stoi(argv[1], &pos);
      if (pos < strlen(argv[1])) {
        std::cerr << "First parameter is not a number\0";
        return 1;
