@@ -70,6 +70,9 @@ namespace hachaturyanov {
   double triangleArea(const point_t v1, const point_t v2, const point_t v3);
   double getSumArea(Shape** shs, size_t n);
   rectangle_t getFrame(Shape** shs, size_t n);
+
+  void giveInfo(Shape** shs);
+  void isoScale(Shape** shs, size_t n, double k);
 }
 
 int main()
@@ -106,11 +109,40 @@ int main()
     return 1;
   }
 
+  std::cout << "Существующие фигуры: Complexquad и Polygon\n";
+  hachaturyanov::giveInfo(shapes);
 
   delete shapes[0];
   delete[] polygon;
   delete shapes[1];
   return 0;
+}
+
+void hachaturyanov::giveInfo(Shape** shs)
+{
+  std::cout << "Площадь каждой фигуры:\n";
+  std::cout << "  площадь Complexquad: " << shs[0]->getArea() << "\n";
+  std::cout << "  площадь Polygon: " << shs[1]->getArea() << "\n";
+  std::cout << "Суммарная площадь: " << hachaturyanov::getSumArea(shs, 2) << "\n";
+  std::cout << "Фреймы каждой фигуры:\n";
+  std::cout << "  фрейм Complexquad:\n";
+  std::cout << "    ширина: " << shs[0]->getFrameRect().width << "\n";
+  std::cout << "    высота: " << shs[0]->getFrameRect().height << "\n";
+  std::cout << "    центр:\n";
+  std::cout << "      x: " << shs[0]->getFrameRect().pos.x << "\n";
+  std::cout << "      y: " << shs[0]->getFrameRect().pos.y << "\n";
+  std::cout << "  фрейм Polygon:\n";
+  std::cout << "    ширина: " << shs[1]->getFrameRect().width << "\n";
+  std::cout << "    высота: " << shs[1]->getFrameRect().height << "\n";
+  std::cout << "    центр:\n";
+  std::cout << "      x: " << shs[1]->getFrameRect().pos.x << "\n";
+  std::cout << "      y: " << shs[1]->getFrameRect().pos.y << "\n";
+  std::cout << "Общий фрейм:\n";
+  std::cout << "  ширина: " << hachaturyanov::getFrame(shs, 2).width << "\n";
+  std::cout << "  высота: " << hachaturyanov::getFrame(shs, 2).height << "\n";
+  std::cout << "  центр:\n";
+  std::cout << "    x: " << hachaturyanov::getFrame(shs, 2).pos.x << "\n";
+  std::cout << "    y: " << hachaturyanov::getFrame(shs, 2).pos.y << "\n";
 }
 
 double hachaturyanov::getSumArea(Shape** shs, size_t n)
