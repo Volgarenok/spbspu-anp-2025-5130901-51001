@@ -11,7 +11,7 @@ void spiral(int** m, int r, int c)
     int t = r * c;
     int top = 0, bot = r - 1, left = 0, right = c - 1;
     int cnt = 1;
-    
+
     while (cnt <= t)
     {
         for (int i = top; i <= bot && cnt <= t; ++i)
@@ -20,21 +20,21 @@ void spiral(int** m, int r, int c)
             ++cnt;
         }
         ++left;
-        
+
         for (int j = left; j <= right && cnt <= t; ++j)
         {
             m[bot][j] += cnt;
             ++cnt;
         }
         --bot;
-        
+
         for (int i = bot; i >= top && cnt <= t; --i)
         {
             m[i][right] += cnt;
             ++cnt;
         }
         --right;
-        
+
         for (int j = right; j >= left && cnt <= t; --j)
         {
             m[top][j] += cnt;
@@ -56,23 +56,23 @@ double** smooth(int** m, int r, int c)
             s[i][j] = 0.0;
         }
     }
-    
+
     for (int i = 0; i < r; ++i)
     {
         for (int j = 0; j < c; ++j)
         {
             double sum = 0.0;
             int cnt = 0;
-            
+
             for (int di = -1; di <= 1; ++di)
             {
                 for (int dj = -1; dj <= 1; ++dj)
                 {
                     if (di == 0 && dj == 0) continue;
-                    
+
                     int ni = i + di;
                     int nj = j + dj;
-                    
+
                     if (ni >= 0 && ni < r && nj >= 0 && nj < c)
                     {
                         sum += m[ni][nj];
@@ -80,14 +80,14 @@ double** smooth(int** m, int r, int c)
                     }
                 }
             }
-            
+
             if (cnt > 0)
             {
                 s[i][j] = sum / cnt;
             }
         }
     }
-    
+
     return s;
 }
 
@@ -95,13 +95,13 @@ double** smooth(int** m, int r, int c)
 bool read(ifstream& in, int**& m, int& r, int& c)
 {
     if (!(in >> r >> c)) return false;
-    
+
     if (r == 0 || c == 0)
     {
         m = nullptr;
         return true;
     }
-    
+
     m = new int*[r];
     for (int i = 0; i < r; ++i)
     {
@@ -111,7 +111,7 @@ bool read(ifstream& in, int**& m, int& r, int& c)
             if (!(in >> m[i][j])) return false;
         }
     }
-    
+
     return true;
 }
 
@@ -148,7 +148,7 @@ void write(ofstream& out, int** m, int r, int c)
         out << "0 0\n";
         return;
     }
-    
+
     out << r << ' ' << c << '\n';
     for (int i = 0; i < r; ++i)
     {
@@ -166,10 +166,10 @@ void writeSmooth(ofstream& out, double** m, int r, int c)
         out << "0 0\n";
         return;
     }
-    
+
     out << r << ' ' << c << '\n';
     out << fixed << setprecision(1);
-    
+
     for (int i = 0; i < r; ++i)
     {
         for (int j = 0; j < c; ++j)
@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
         cerr << "Usage: " << argv[0] << " <num> <input> <output>\n";
         return 1;
     }
-    
+
     int n = 0;
     try
     {
@@ -197,23 +197,23 @@ int main(int argc, char* argv[])
         cerr << "First parameter is not a number\n";
         return 1;
     }
-    
+
     if (n != 1 && n != 2)
     {
         cerr << "First parameter must be 1 or 2\n";
         return 1;
     }
-    
+
     ifstream in(argv[2]);
     if (!in)
     {
         cerr << "Cannot open input file\n";
         return 2;
     }
-    
+
     int** m = nullptr;
     int r = 0, c = 0;
-    
+
     if (!read(in, m, r, c))
     {
         cerr << "Cannot read matrix from file\n";
@@ -221,7 +221,7 @@ int main(int argc, char* argv[])
         return 2;
     }
     in.close();
-    
+
     ofstream out(argv[3]);
     if (!out)
     {
@@ -229,7 +229,7 @@ int main(int argc, char* argv[])
         if (m) del(m, r);
         return 2;
     }
-    
+
     if (n == 1)
     {
         if (r > 0 && c > 0 && m)
@@ -246,17 +246,17 @@ int main(int argc, char* argv[])
             sm = smooth(m, r, c);
         }
         writeSmooth(out, sm, r, c);
-        
+
         if (sm)
         {
             del(sm, r);
         }
     }
-    
+
     if (m)
     {
         del(m, r);
     }
-    
+
     return 0;
 }
