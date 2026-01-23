@@ -115,7 +115,11 @@ int main()
 
 double hachaturyanov::getSumArea(Shape** shs, size_t n)
 {
-
+  double result = 0.0;
+  for (size_t i = 0; i < n; i++) {
+    result += shs[i]->getArea();
+  }
+  return result;
 }
 
 hachaturyanov::rectangle_t hachaturyanov::getFrame(Shape** shs, size_t n)
