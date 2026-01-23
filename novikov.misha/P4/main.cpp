@@ -2,61 +2,70 @@
 
 using namespace std;
 
-bool hasChar(const char* str, char ch)
+// [UNC-SYM]
+void findUnique(const char* s1, const char* s2, char* out)
 {
-  for (int i = 0; str[i] != '\0'; ++i)
-  {
-    if (str[i] == ch)
+    int k = 0;
+    
+    for (int i = 0; s1[i]; ++i)
     {
-      return true;
+        char c = s1[i];
+        bool found = false;
+        
+        for (int j = 0; s2[j]; ++j)
+        {
+            if (s2[j] == c)
+            {
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found)
+        {
+            out[k] = c;
+            ++k;
+        }
     }
-  }
-  return false;
+    
+    for (int i = 0; s2[i]; ++i)
+    {
+        char c = s2[i];
+        bool found = false;
+        
+        for (int j = 0; s1[j]; ++j)
+        {
+            if (s1[j] == c)
+            {
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found)
+        {
+            out[k] = c;
+            ++k;
+        }
+    }
+    
+    out[k] = '\0';
 }
 
-void getUniqueSymbols(const char* str1, const char* str2, char* buffer, size_t bufSize)
+// [SEQ-SYM]
+int hasSequence(const char* s)
 {
-  int idx = 0;
-  
-  for (int i = 0; str1[i] != '\0' && idx < bufSize - 1; ++i)
-  {
-    char c = str1[i];
-    if (!hasChar(str2, c) && !hasChar(buffer, c))
+    for (int i = 0; s[i] && s[i+1]; ++i)
     {
-      buffer[idx] = c;
-      ++idx;
+        if (s[i] == s[i+1])
+        {
+            return 1;
+        }
     }
-  }
-  
-  for (int i = 0; str2[i] != '\0' && idx < bufSize - 1; ++i)
-  {
-    char c = str2[i];
-    if (!hasChar(str1, c) && !hasChar(buffer, c))
-    {
-      buffer[idx] = c;
-      ++idx;
-    }
-  }
-  
-  buffer[idx] = '\0';
+    return 0;
 }
 
 int main()
 {
-  const size_t BUFFER_SIZE = 256;
-  char buffer[BUFFER_SIZE];
-  char input[BUFFER_SIZE];
-  
-  const char* secondString = "abc_ef";
-  
-  if (!cin.getline(input, BUFFER_SIZE))
-  {
-    return 1;
-  }
-  
-  getUniqueSymbols(input, secondString, buffer, BUFFER_SIZE);
-  
-  cout << buffer << endl;
-  
-  return 0;
+    return 0;
 }
