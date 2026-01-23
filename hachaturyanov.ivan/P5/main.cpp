@@ -84,7 +84,7 @@ int main()
   try {
     shapes[0] = new Complexquad(4, 9, {0, 0});
 
-    point_t* polygon = new point_t[5];
+    polygon = new point_t[5];
     polygon[0] = { 10, 10 };
     polygon[1] = { 12, 8 };
     polygon[2] = { 12, 6 };
@@ -106,20 +106,10 @@ int main()
   double py = 0.0;
   double coef = 0.0;
 
-  std::cout << "Enter x coordinate of scale point: ";
-  std::cin >> px;
+  std::cout << "Enter x and y coordinates of scale point: ";
+  std::cin >> px >> py;
   if (std::cin.fail()) {
-    std::cerr << "Incorrect x coordinate\n";
-    delete shapes[0];
-    delete[] polygon;
-    delete shapes[1];
-    return 2;
-  }
-
-  std::cout << "Enter y coordinate of scale point: ";
-  std::cin >> py;
-  if (std::cin.fail()) {
-    std::cerr << "Incorrect y coordinate\n";
+    std::cerr << "Incorrect coordinates\n";
     delete shapes[0];
     delete[] polygon;
     delete shapes[1];
@@ -159,9 +149,15 @@ int main()
 
 void hachaturyanov::isoScale(Shape** shs, size_t n, point_t point, double k)
 {
+  if (k <= 0) {
+    throw std::logic_error("Error: scale coefficient must be positive");
+  }
+
   for (size_t i = 0; i < n; i++) {
     point_t center = shs[i]->getFrameRect().pos;
-    // point_t new_center =
+    point_t new_center = point + (center - point) * k;
+    shs[i]->move(new_center);
+    shs[i]->scale(k);
   }
 }
 
@@ -173,23 +169,26 @@ void hachaturyanov::giveInfo(Shape** shs)
   std::cout << "Total area: " << hachaturyanov::getSumArea(shs, 2) << "\n";
   std::cout << "The frame of each shape:\n";
   std::cout << "  Complexquad frame:\n";
-  std::cout << "    width: " << shs[0]->getFrameRect().width << "\n";
-  std::cout << "    height: " << shs[0]->getFrameRect().height << "\n";
+  rectangle_t firstframe = shs[0]->getFrameRect();
+  std::cout << "    width: " << firstframe.width << "\n";
+  std::cout << "    height: " << firstframe.height << "\n";
   std::cout << "    center:\n";
-  std::cout << "      x: " << shs[0]->getFrameRect().pos.x << "\n";
-  std::cout << "      y: " << shs[0]->getFrameRect().pos.y << "\n";
+  std::cout << "      x: " << firstframe.pos.x << "\n";
+  std::cout << "      y: " << firstframe.pos.y << "\n";
   std::cout << "  Polygon frame:\n";
-  std::cout << "    width: " << shs[1]->getFrameRect().width << "\n";
-  std::cout << "    height: " << shs[1]->getFrameRect().height << "\n";
+  rectangle_t secondframe = shs[1]->getFrameRect();
+  std::cout << "    width: " << secondframe.width << "\n";
+  std::cout << "    height: " << secondframe.height << "\n";
   std::cout << "    center:\n";
-  std::cout << "      x: " << shs[1]->getFrameRect().pos.x << "\n";
-  std::cout << "      y: " << shs[1]->getFrameRect().pos.y << "\n";
+  std::cout << "      x: " << secondframe.pos.x << "\n";
+  std::cout << "      y: " << secondframe.pos.y << "\n";
   std::cout << "Total frame:\n";
-  std::cout << "  width: " << hachaturyanov::getFrame(shs, 2).width << "\n";
-  std::cout << "  height: " << hachaturyanov::getFrame(shs, 2).height << "\n";
+  rectangle_t totalframe = hachaturyanov::getFrame(shs, 2);
+  std::cout << "  width: " << totalframe.width << "\n";
+  std::cout << "  height: " << totalframe.height << "\n";
   std::cout << "  center:\n";
-  std::cout << "    x: " << hachaturyanov::getFrame(shs, 2).pos.x << "\n";
-  std::cout << "    y: " << hachaturyanov::getFrame(shs, 2).pos.y << "\n";
+  std::cout << "    x: " << totalframe.pos.x << "\n";
+  std::cout << "    y: " << totalframe.pos.y << "\n";
 }
 
 double hachaturyanov::getSumArea(Shape** shs, size_t n)
@@ -215,8 +214,8 @@ hachaturyanov::rectangle_t hachaturyanov::getFrame(Shape** shs, size_t n)
 
     minx = std::min(minx, rect.pos.x - rect.width / 2);
     maxx = std::max(maxx, rect.pos.x + rect.width / 2);
-    miny = std::min(minx, rect.pos.y - rect.height / 2);
-    maxy = std::max(maxx, rect.pos.y + rect.height / 2);
+    miny = std::min(miny, rect.pos.y - rect.height / 2);
+    maxy = std::max(maxy, rect.pos.y + rect.height / 2);
   }
 
   return rectangle_t{ maxx - minx, maxy - miny, point_t{ (minx + maxx) / 2, (miny + maxy) / 2 } };
@@ -240,7 +239,7 @@ hachaturyanov::Polygon::Polygon(point_t* pts, size_t npts):
     point_t sumareasw = {};
     double sumareas = 0;
     for (size_t i = 1; i < npoints - 1; i++) {
-      double iarea = triangleArea(points[0], points[i], points[i + 1]);
+      double iarea = hachaturyanov::triangleArea(points[0], points[i], points[i + 1]);
       double icenterx = (points[0].x + points[i].x + points[i + 1].x) / 3;
       double icentery = (points[0].y + points[i].y + points[i + 1].y) / 3;
 
