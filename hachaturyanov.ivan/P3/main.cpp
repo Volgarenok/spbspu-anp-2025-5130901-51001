@@ -3,15 +3,15 @@
 #include <cstring>
 
 namespace hachaturyanov {
-  void lft_top_clk(int* matrix, size_t rows, size_t cols);
-  int min_sum_mdg(const int* matrix, size_t rows, size_t cols);
+  void lowerClock(int* matrix, size_t rows, size_t cols);
+  int minSumDiag(const int* matrix, size_t rows, size_t cols);
 }
 
-void hachaturyanov::lft_top_clk(int* matrix, size_t rows, size_t cols)
+void hachaturyanov::lowerClock(int* matrix, size_t rows, size_t cols)
 {
   int top = 0, left = 0, bottom = rows - 1, right = cols - 1;
   int d = 1;
-  while(top <= bottom && left <= right) {
+  while (top <= bottom && left <= right) {
     for (size_t i = top * cols + left; i <= top * cols + right; i++) {
       matrix[i] -= d;
       d++;
@@ -39,7 +39,7 @@ void hachaturyanov::lft_top_clk(int* matrix, size_t rows, size_t cols)
   }
 }
 
-int hachaturyanov::min_sum_mdg(const int* matrix, size_t rows, size_t cols)
+int hachaturyanov::minSumDiag(const int* matrix, size_t rows, size_t cols)
 {
   if (rows == 0 && cols == 0) {
     return 0;
@@ -111,8 +111,8 @@ int main(int argc, char** argv)
     }
   }
 
-  int res = hachaturyanov::min_sum_mdg(matrix, rows, cols);
-  hachaturyanov::lft_top_clk(matrix, rows, cols);
+  int res = hachaturyanov::minSumDiag(matrix, rows, cols);
+  hachaturyanov::lowerClock(matrix, rows, cols);
   std::ofstream output(argv[3]);
   if (!output.is_open()) {
     std::cerr << "Cannot open the output file\n";
