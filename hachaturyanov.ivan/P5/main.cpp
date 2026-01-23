@@ -229,7 +229,7 @@ void hachaturyanov::Polygon::scale(double k) {
 
 hachaturyanov::Complexquad::Complexquad(double d1, double d2, point_t p):
  Shape(),
- vertices({}),
+ vertices{},
  diag1(d1),
  diag2(d2),
  pos(p)
@@ -361,6 +361,7 @@ hachaturyanov::point_t hachaturyanov::operator+(point_t left, const point_t &rig
 hachaturyanov::point_t& hachaturyanov::operator-=(point_t &left, const point_t &right) {
   left.x -= right.x;
   left.y -= right.y;
+  return left;
 }
 
 hachaturyanov::point_t hachaturyanov::operator-(point_t left, const point_t &right) {
