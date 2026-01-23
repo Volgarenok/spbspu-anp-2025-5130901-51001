@@ -72,7 +72,7 @@ namespace hachaturyanov {
   rectangle_t getFrame(Shape** shs, size_t n);
 
   void giveInfo(Shape** shs);
-  void isoScale(Shape** shs, size_t n, double k);
+  void isoScale(Shape** shs, size_t n, point_t point, double k);
 }
 
 int main()
@@ -85,11 +85,11 @@ int main()
     shapes[0] = new Complexquad(4, 9, {0, 0});
 
     point_t* polygon = new point_t[5];
-    polygon[0] = {10, 10};
-    polygon[1] = {12, 8};
-    polygon[2] = {12, 6};
-    polygon[3] = {8, 4};
-    polygon[4] = {6, 8};
+    polygon[0] = { 10, 10 };
+    polygon[1] = { 12, 8 };
+    polygon[2] = { 12, 6 };
+    polygon[3] = { 8, 4 };
+    polygon[4] = { 6, 8 };
     shapes[1] = new Polygon(polygon, 5);
   } catch (...) {
     std::cerr << "Error: bad allocation\n";
@@ -101,10 +101,33 @@ int main()
 
   std::cout << "Existing shapes: Complexquad and Polygon\n\n";
   hachaturyanov::giveInfo(shapes);
-  std::cout << "Enter isotropic scale coefficient: ";
-  double coef = 0.0;
-  std::cin >> coef;
 
+  double px = 0.0;
+  double py = 0.0;
+  double coef = 0.0;
+
+  std::cout << "Enter x coordinate of scale point: ";
+  std::cin >> px;
+  if (std::cin.fail()) {
+    std::cerr << "Incorrect x coordinate\n";
+    delete shapes[0];
+    delete[] polygon;
+    delete shapes[1];
+    return 2;
+  }
+
+  std::cout << "Enter y coordinate of scale point: ";
+  std::cin >> py;
+  if (std::cin.fail()) {
+    std::cerr << "Incorrect y coordinate\n";
+    delete shapes[0];
+    delete[] polygon;
+    delete shapes[1];
+    return 2;
+  }
+
+  std::cout << "Enter isotropic scale coefficient: ";
+  std::cin >> coef;
   if (std::cin.fail()) {
     std::cerr << "Incorrect scale coefficient\n";
     delete shapes[0];
@@ -113,8 +136,10 @@ int main()
     return 2;
   }
 
+  point_t p = { px, py };
+
   try {
-    hachaturyanov::isoScale(shapes, 2, coef);
+    hachaturyanov::isoScale(shapes, 2, p, coef);
   } catch (std::logic_error &e) {
     std::cerr << e.what() << "\n";
     delete shapes[0];
@@ -132,10 +157,11 @@ int main()
   return 0;
 }
 
-void hachaturyanov::isoScale(Shape** shs, size_t n, double k)
+void hachaturyanov::isoScale(Shape** shs, size_t n, point_t point, double k)
 {
-  if (k <= 0) {
-    throw std::logic_error("Incorrect scale coefficient");
+  for (size_t i = 0; i < n; i++) {
+    point_t center = shs[i]->getFrameRect().pos;
+    // point_t new_center =
   }
 }
 
@@ -193,7 +219,7 @@ hachaturyanov::rectangle_t hachaturyanov::getFrame(Shape** shs, size_t n)
     maxy = std::max(maxx, rect.pos.y + rect.height / 2);
   }
 
-  return rectangle_t{maxx - minx, maxy - miny, point_t{(minx + maxx) / 2, (miny + maxy) / 2}};
+  return rectangle_t{ maxx - minx, maxy - miny, point_t{ (minx + maxx) / 2, (miny + maxy) / 2 } };
 }
 
 double hachaturyanov::triangleArea(const point_t v1, const point_t v2, const point_t v3)
@@ -218,7 +244,7 @@ hachaturyanov::Polygon::Polygon(point_t* pts, size_t npts):
       double icenterx = (points[0].x + points[i].x + points[i + 1].x) / 3;
       double icentery = (points[0].y + points[i].y + points[i + 1].y) / 3;
 
-      sumareasw += point_t{icenterx, icentery} * iarea;
+      sumareasw += point_t{ icenterx, icentery } * iarea;
       sumareas += iarea;
     }
     pos = sumareasw * (1.0 / sumareas);
@@ -254,11 +280,11 @@ hachaturyanov::rectangle_t hachaturyanov::Polygon::getFrameRect() const {
     miny = std::min(miny, points[i].y);
     maxy = std::max(maxy, points[i].y);
   }
-  return rectangle_t{maxx - minx, maxy - miny, point_t{(maxx + minx) / 2, (maxy + miny) / 2}};
+  return rectangle_t{ maxx - minx, maxy - miny, point_t{ (maxx + minx) / 2, (maxy + miny) / 2 } };
 }
 
 void hachaturyanov::Polygon::move(point_t pnt) {
-  point_t shift = point_t{pnt.x - pos.x, pnt.y - pos.y};
+  point_t shift = point_t{ pnt.x - pos.x, pnt.y - pos.y };
   for (size_t i = 0; i < npoints; i++) {
     points[i] += shift;
   }
@@ -266,7 +292,7 @@ void hachaturyanov::Polygon::move(point_t pnt) {
 }
 
 void hachaturyanov::Polygon::move(double xsh, double ysh) {
-  point_t shift = point_t{xsh, ysh};
+  point_t shift = point_t{ xsh, ysh };
   pos += shift;
   for (size_t i = 0; i < npoints; i++) {
     points[i] += shift;
@@ -292,10 +318,10 @@ hachaturyanov::Complexquad::Complexquad(double d1, double d2, point_t p):
  pos(p)
 {
   if (d1 > 0 && d2 > 0) {
-    vertices[0] = {p.x - d1 / 2, p.y};
-    vertices[1] = {p.x + d1 / 2, p.y};
-    vertices[2] = {p.x, p.y - d2 / 2};
-    vertices[3] = {p.x, p.y + d2 / 2};
+    vertices[0] = { p.x - d1 / 2, p.y };
+    vertices[1] = { p.x + d1 / 2, p.y };
+    vertices[2] = { p.x, p.y - d2 / 2 };
+    vertices[3] = { p.x, p.y + d2 / 2 };
   } else {
     throw std::logic_error("diagonals must be positive");
   }
@@ -312,11 +338,11 @@ hachaturyanov::rectangle_t hachaturyanov::Complexquad::getFrameRect() const {
   double maxx = std::max({vertices[0].x, vertices[1].x, vertices[2].x, vertices[3].x});
   double miny = std::min({vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y});
   double maxy = std::max({vertices[0].y, vertices[1].y, vertices[2].y, vertices[3].y});
-  return rectangle_t{maxx - minx, maxy - miny, point_t{(minx + maxx), (miny + maxy)} * 0.5};
+  return rectangle_t{ maxx - minx, maxy - miny, point_t{ (minx + maxx), (miny + maxy) } * 0.5 };
 }
 
 void hachaturyanov::Complexquad::move(point_t pnt) {
-  point_t shift = {pnt.x - pos.x, pnt.y - pos.y};
+  point_t shift = { pnt.x - pos.x, pnt.y - pos.y };
   for (size_t i = 0; i < 4; i++) {
     vertices[i] += shift;
   }
@@ -324,7 +350,7 @@ void hachaturyanov::Complexquad::move(point_t pnt) {
 }
 
 void hachaturyanov::Complexquad::move(double xsh, double ysh) {
-  point_t shift = {xsh, ysh};
+  point_t shift = { xsh, ysh };
   for (size_t i = 0; i < 4; i++) {
     vertices[i] += shift;
   }
@@ -360,7 +386,7 @@ double hachaturyanov::Rectangle::getArea() const {
 }
 
 hachaturyanov::rectangle_t hachaturyanov::Rectangle::getFrameRect() const {
-  return rectangle_t{width, height, pos};
+  return rectangle_t{ width, height, pos };
 }
 
 void hachaturyanov::Rectangle::move(point_t pnt) {
