@@ -88,48 +88,55 @@ int main()
     polygon[3] = {8, 4};
     polygon[4] = {6, 8};
     shapes[1] = new Polygon(polygon, 5);
-
-    try {
-      rectangle_t rect = getFrame(shapes, 2);
-    } catch (...) {
-      !!!!!
-    }
-
   } catch (...) {
     std::cerr << "Error: bad allocation\n";
-    delete[] shapes[0];
+    delete shapes[0];
     delete[] polygon;
-    delete[] shapes[1];
+    delete shapes[1];
     return 1;
   }
 
-  delete[] shapes[0];
+  try {
+    rectangle_t rect = getFrame(shapes, 2);
+  } catch (...) {
+    std::cerr << "Error: bad allocation\n";
+    delete shapes[0];
+    delete[] polygon;
+    delete shapes[1];
+    return 1;
+  }
+
+
+  delete shapes[0];
   delete[] polygon;
-  delete[] shapes[1];
+  delete shapes[1];
   return 0;
+}
+
+double hachaturyanov::getSumArea(Shape** shs, size_t n)
+{
+
 }
 
 hachaturyanov::rectangle_t hachaturyanov::getFrame(Shape** shs, size_t n)
 {
-  rectangle_t* rects = new rectangle_t[n];
-  rectangle_t min_rect = shs[0]->getFrameRect();
-  rectangle_t max_rect = shs[0]->getFrameRect();
+  rectangle_t first = shs[0]->getFrameRect();
 
-  for (size_t i = 0; i < n; i++) {
-    rectangle_t frame_rect = shs[i]->getFrameRect();
-    if (frame_rect.pos.x < min_rect.pos.x && frame_rect.pos.y < min_rect.pos.y) {
-      min_rect = frame_rect;
-    }
-    if (frame_rect.pos.x > max_rect.pos.x && frame_rect.pos.y > max_rect.pos.y) {
-      max_rect = frame_rect;
-    }
+  double minx = first.pos.x - first.width / 2;
+  double maxx = first.pos.x + first.width / 2;
+  double miny = first.pos.y - first.height / 2;
+  double maxy = first.pos.y + first.height / 2;
+
+  for (size_t i = 1; i < n; i++) {
+    rectangle_t rect = shs[i]->getFrameRect();
+
+    minx = std::min(minx, rect.pos.x - rect.width / 2);
+    maxx = std::max(maxx, rect.pos.x + rect.width / 2);
+    miny = std::min(minx, rect.pos.y - rect.height / 2);
+    maxy = std::max(maxx, rect.pos.y + rect.height / 2);
   }
-  rectangle_t res = {};
-  res.pos.x = (min_rect.pos.x + max_rect.pos.x) / 2;
-  res.pos.y = (min_rect.pos.y + max_rect.pos.y) / 2;
 
-
-  delete[] rects;
+  return rectangle_t{maxx - minx, maxy - miny, point_t{(minx + maxx) / 2, (miny + maxy) / 2}};
 }
 
 double hachaturyanov::triangleArea(const point_t v1, const point_t v2, const point_t v3)
