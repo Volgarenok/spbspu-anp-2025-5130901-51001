@@ -99,17 +99,31 @@ int main()
     return 1;
   }
 
-  try {
-    rectangle_t rect = getFrame(shapes, 2);
-  } catch (...) {
-    std::cerr << "Error: bad allocation\n";
+  std::cout << "Existing shapes: Complexquad and Polygon\n\n";
+  hachaturyanov::giveInfo(shapes);
+  std::cout << "Enter isotropic scale coefficient: ";
+  double coef = 0.0;
+  std::cin >> coef;
+
+  if (std::cin.fail()) {
+    std::cerr << "Incorrect scale coefficient\n";
     delete shapes[0];
     delete[] polygon;
     delete shapes[1];
-    return 1;
+    return 2;
   }
 
-  std::cout << "Существующие фигуры: Complexquad и Polygon\n";
+  try {
+    hachaturyanov::isoScale(shapes, 2, coef);
+  } catch (std::logic_error &e) {
+    std::cerr << e.what() << "\n";
+    delete shapes[0];
+    delete[] polygon;
+    delete shapes[1];
+    return 2;
+  }
+
+  std::cout << "Successfully scaled all shapes!\n\n";
   hachaturyanov::giveInfo(shapes);
 
   delete shapes[0];
@@ -118,29 +132,36 @@ int main()
   return 0;
 }
 
+void hachaturyanov::isoScale(Shape** shs, size_t n, double k)
+{
+  if (k <= 0) {
+    throw std::logic_error("Incorrect scale coefficient");
+  }
+}
+
 void hachaturyanov::giveInfo(Shape** shs)
 {
-  std::cout << "Площадь каждой фигуры:\n";
-  std::cout << "  площадь Complexquad: " << shs[0]->getArea() << "\n";
-  std::cout << "  площадь Polygon: " << shs[1]->getArea() << "\n";
-  std::cout << "Суммарная площадь: " << hachaturyanov::getSumArea(shs, 2) << "\n";
-  std::cout << "Фреймы каждой фигуры:\n";
-  std::cout << "  фрейм Complexquad:\n";
-  std::cout << "    ширина: " << shs[0]->getFrameRect().width << "\n";
-  std::cout << "    высота: " << shs[0]->getFrameRect().height << "\n";
-  std::cout << "    центр:\n";
+  std::cout << "The area of each shape:\n";
+  std::cout << "  Complexquad area: " << shs[0]->getArea() << "\n";
+  std::cout << "  Polygon area: " << shs[1]->getArea() << "\n";
+  std::cout << "Total area: " << hachaturyanov::getSumArea(shs, 2) << "\n";
+  std::cout << "The frame of each shape:\n";
+  std::cout << "  Complexquad frame:\n";
+  std::cout << "    width: " << shs[0]->getFrameRect().width << "\n";
+  std::cout << "    height: " << shs[0]->getFrameRect().height << "\n";
+  std::cout << "    center:\n";
   std::cout << "      x: " << shs[0]->getFrameRect().pos.x << "\n";
   std::cout << "      y: " << shs[0]->getFrameRect().pos.y << "\n";
-  std::cout << "  фрейм Polygon:\n";
-  std::cout << "    ширина: " << shs[1]->getFrameRect().width << "\n";
-  std::cout << "    высота: " << shs[1]->getFrameRect().height << "\n";
-  std::cout << "    центр:\n";
+  std::cout << "  Polygon frame:\n";
+  std::cout << "    width: " << shs[1]->getFrameRect().width << "\n";
+  std::cout << "    height: " << shs[1]->getFrameRect().height << "\n";
+  std::cout << "    center:\n";
   std::cout << "      x: " << shs[1]->getFrameRect().pos.x << "\n";
   std::cout << "      y: " << shs[1]->getFrameRect().pos.y << "\n";
-  std::cout << "Общий фрейм:\n";
-  std::cout << "  ширина: " << hachaturyanov::getFrame(shs, 2).width << "\n";
-  std::cout << "  высота: " << hachaturyanov::getFrame(shs, 2).height << "\n";
-  std::cout << "  центр:\n";
+  std::cout << "Total frame:\n";
+  std::cout << "  width: " << hachaturyanov::getFrame(shs, 2).width << "\n";
+  std::cout << "  height: " << hachaturyanov::getFrame(shs, 2).height << "\n";
+  std::cout << "  center:\n";
   std::cout << "    x: " << hachaturyanov::getFrame(shs, 2).pos.x << "\n";
   std::cout << "    y: " << hachaturyanov::getFrame(shs, 2).pos.y << "\n";
 }
