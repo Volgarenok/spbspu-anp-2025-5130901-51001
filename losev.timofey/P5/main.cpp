@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 namespace losev {
   float const Pi = 3.1415;
@@ -16,7 +17,14 @@ namespace losev {
     virtual rectangle_t getFrameRect() const noexcept = 0;
     virtual void move(const point_t& point) noexcept = 0;
     virtual void move(double dx, double dy) noexcept = 0;
-    virtual void scale(double coef) = 0;
+    void scale(double coef) {
+      if (coef <= 0) {
+        throw std::invalid_argument("Scale coefficient must be positive");
+      }
+      return doScale(coef);
+    }
+  protected:
+    virtual void doScale(double coef) = 0;
   };
   class Rectangle final: public Shape {
   public:
@@ -26,7 +34,8 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void scale(double coef) override;
+  protected:
+    void doScale(double coef) override;
   private:
     rectangle_t rect_;
   };
@@ -39,7 +48,8 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void scale(double coef) override;
+  protected:
+    void doScale(double coef) override;
   private:
     point_t center_;
     double radius_;
@@ -53,24 +63,28 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void scale(double coef) override;
+  protected:
+    void doScale(double coef) override;
   private:
     point_t center_;
     double outerRadius_;
     double innerRadius_;
   };
   void scaleFromPoint(Shape& shape, const point_t& point, double coef);
-  rectangle_t getOverallFrameRect(Shape* const* shapes, size_t count);
-  void printShapesInfo(Shape* const* shapes, size_t count);
+  rectangle_t getOverallFrameRect(const Shape* const* shapes, size_t count);
+  void printShapesInfo(const Shape* const* shapes, size_t count);
+  void printRectangleInfo(const rectangle_t& rect);
 }
 losev::Rectangle::Rectangle(double width, double height, const point_t& center):
- rect_{width, height, center} {
+  rect_{width, height, center}
+{
   if (width <= 0 || height <= 0) {
     throw std::invalid_argument("Width and height must be positive");
   }
 }
 losev::Rectangle::Rectangle(const rectangle_t& rect):
- rect_(rect) {
+  rect_(rect)
+{
   if (rect.width <= 0 || rect.height <= 0) {
     throw std::invalid_argument("Width and height must be positive");
   }
@@ -92,23 +106,22 @@ void losev::Rectangle::move(double dx, double dy) noexcept
   rect_.pos.x += dx;
   rect_.pos.y += dy;
 }
-void losev::Rectangle::scale(double coef)
+void losev::Rectangle::doScale(double coef)
 {
-  if (coef <= 0) {
-    throw std::invalid_argument("Scale coefficient must be positive");
-  }
   rect_.width *= coef;
   rect_.height *= coef;
 }
 losev::Circle::Circle(const point_t& center, double radius):
- center_(center), radius_(radius)
+  center_(center),
+  radius_(radius)
 {
   if (radius <= 0) {
     throw std::invalid_argument("Radius must be positive");
   }
 }
 losev::Circle::Circle(double x, double y, double radius):
- center_{x, y}, radius_(radius)
+  center_{x, y},
+  radius_(radius)
 {
   if (radius <= 0) {
     throw std::invalid_argument("Radius must be positive");
@@ -135,15 +148,14 @@ void losev::Circle::move(double dx, double dy) noexcept
   center_.x += dx;
   center_.y += dy;
 }
-void losev::Circle::scale(double coef)
+void losev::Circle::doScale(double coef)
 {
-  if (coef <= 0) {
-    throw std::invalid_argument("Scale coefficient must be positive");
-  }
   radius_ *= coef;
 }
 losev::Ring::Ring(const point_t& center, double outerR, double innerR):
- center_(center), outerRadius_(outerR), innerRadius_(innerR)
+  center_(center),
+  outerRadius_(outerR),
+  innerRadius_(innerR)
 {
   if (outerR <= 0 || innerR <= 0) {
     throw std::invalid_argument("Radii must be positive");
@@ -153,7 +165,9 @@ losev::Ring::Ring(const point_t& center, double outerR, double innerR):
   }
 }
 losev::Ring::Ring(double x, double y, double outerR, double innerR):
- center_{x, y}, outerRadius_(outerR), innerRadius_(innerR)
+  center_{x, y},
+  outerRadius_(outerR),
+  innerRadius_(innerR)
 {
   if (outerR <= 0 || innerR <= 0) {
     throw std::invalid_argument("Radii must be positive");
@@ -164,7 +178,7 @@ losev::Ring::Ring(double x, double y, double outerR, double innerR):
 }
 double losev::Ring::getArea() const noexcept
 {
-  return 3.1415 * (outerRadius_ * outerRadius_ - innerRadius_ * innerRadius_);
+  return losev::Pi * (outerRadius_ * outerRadius_ - innerRadius_ * innerRadius_);
 }
 losev::rectangle_t losev::Ring::getFrameRect() const noexcept
 {
@@ -183,11 +197,8 @@ void losev::Ring::move(double dx, double dy) noexcept
   center_.x += dx;
   center_.y += dy;
 }
-void losev::Ring::scale(double coef)
+void losev::Ring::doScale(double coef)
 {
-  if (coef <= 0) {
-    throw std::invalid_argument("Scale coefficient must be positive");
-  }
   outerRadius_ *= coef;
   innerRadius_ *= coef;
 }
@@ -195,8 +206,9 @@ void losev::Ring::scale(double coef)
 int main()
 {
   using namespace losev;
+  Shape** shapes = nullptr;
   try {
-    Shape** shapes = new Shape*[6];
+    shapes = new Shape*[6]();
     shapes[0] = new Rectangle(4.0, 3.0, {1.0, 2.0});
     shapes[1] = new Rectangle(rectangle_t{5.0, 2.0, {3.0, 4.0}});
     shapes[2] = new Circle({0.0, 0.0}, 2.0);
@@ -211,27 +223,33 @@ int main()
     std::cout << "Enter scaling point coordinates (x y): ";
     if (!(std::cin >> scalePoint.x >> scalePoint.y)) {
       std::cerr << "Error: invalid coordinate input!\n";
-      for (size_t i = 0; i < 6; ++i) {
-        delete shapes[i];
+      if (shapes != nullptr) {
+        for (size_t i = 0; i < 6; ++i) {
+          delete shapes[i];
+        }
+        delete[] shapes;
       }
-      delete[] shapes;
       return 1;
     }
     std::cout << "Enter scaling coefficient (positive number): ";
     if (!(std::cin >> scaleCoef)) {
       std::cerr << "Error: invalid coefficient input!\n";
-      for (size_t i = 0; i < 6; ++i) {
-        delete shapes[i];
+      if (shapes != nullptr) {
+        for (size_t i = 0; i < 6; ++i) {
+          delete shapes[i];
+        }
+        delete[] shapes;
       }
-      delete[] shapes;
       return 1;
     }
     if (scaleCoef <= 0) {
       std::cerr << "Error: scaling coefficient must be positive!" << "\n";
-      for (size_t i = 0; i < 6; ++i) {
-        delete shapes[i];
+      if (shapes != nullptr) {
+        for (size_t i = 0; i < 6; ++i) {
+          delete shapes[i];
+        }
+        delete[] shapes;
       }
-      delete[] shapes;
       return 1;
     }
     for (size_t i = 0; i < 6; ++i) {
@@ -248,22 +266,33 @@ int main()
     delete[] shapes;
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << "\n";
+    if (shapes != nullptr) {
+      for (size_t i = 0; i < 6; ++i) {
+        delete shapes[i];
+      }
+      delete[] shapes;
+    }
     return 1;
   }
   return 0;
 }
 
+void losev::printRectangleInfo(const rectangle_t& rect)
+{
+  std::cout << "  Center: (" << rect.pos.x << ", " << rect.pos.y << ")\n";
+  std::cout << "  Width: " << rect.width << ", Height: " << rect.height << "\n";
+}
 void losev::scaleFromPoint(Shape& shape, const point_t& point, double coef)
 {
-  losev::rectangle_t frame = shape.getFrameRect();
-  losev::point_t center = frame.pos;
+  rectangle_t frame = shape.getFrameRect();
+  point_t center = frame.pos;
   double dx = point.x - center.x;
   double dy = point.y - center.y;
   shape.move(point);
   shape.scale(coef);
   shape.move(-dx * coef, -dy * coef);
 }
-losev::rectangle_t losev::getOverallFrameRect(Shape* const* shapes, size_t count)
+losev::rectangle_t losev::getOverallFrameRect(const Shape* const* shapes, size_t count)
 {
   if (count == 0) {
     return {0, 0, {0, 0}};
@@ -284,29 +313,27 @@ losev::rectangle_t losev::getOverallFrameRect(Shape* const* shapes, size_t count
     minY = std::min(minY, bottom);
     maxY = std::max(maxY, top);
   }
-  losev::rectangle_t overall;
+  rectangle_t overall;
   overall.width = maxX - minX;
   overall.height = maxY - minY;
   overall.pos.x = (minX + maxX) / 2;
   overall.pos.y = (minY + maxY) / 2;
   return overall;
 }
-void losev::printShapesInfo(Shape* const* shapes, size_t count)
+void losev::printShapesInfo(const Shape* const* shapes, size_t count)
 {
   double totalArea = 0.0;
   for (size_t i = 0; i < count; ++i) {
     double area = shapes[i]->getArea();
-    losev::rectangle_t frame = shapes[i]->getFrameRect();
+    rectangle_t frame = shapes[i]->getFrameRect();
     std::cout << "Shape " << (i + 1) << ":\n";
     std::cout << "  Area: " << area << "\n";
     std::cout << "  Frame rectangle:\n";
-    std::cout << "    Center: (" << frame.pos.x << ", " << frame.pos.y << ")\n";
-    std::cout << "    Width: " << frame.width << ", Height: " << frame.height << "\n";
+    printRectangleInfo(frame);
     totalArea += area;
   }
   std::cout << "\nTotal area of all shapes: " << totalArea << "\n";
-  losev::rectangle_t overallFrame = losev::getOverallFrameRect(shapes, count);
+  rectangle_t overallFrame = getOverallFrameRect(shapes, count);
   std::cout << "\nOverall frame rectangle:" << "\n";
-  std::cout << "  Center: (" << overallFrame.pos.x << ", " << overallFrame.pos.y << ")" << "\n";
-  std::cout << "  Width: " << overallFrame.width << ", Height: " << overallFrame.height << "\n";
+  printRectangleInfo(overallFrame);
 }
