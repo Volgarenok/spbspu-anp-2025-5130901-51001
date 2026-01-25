@@ -5,6 +5,7 @@
 const int MAX_ELEMENTS = 10000;
 
 namespace yarmolinskaya {
+
     bool parseInt(const char* s, int& value) {
         if (s == nullptr || *s == '\0')
             return false;
@@ -19,7 +20,7 @@ namespace yarmolinskaya {
         return true;
     }
 
-    int countColumnsNoSameNeighbours(const int* matrix, int rows, int cols) {
+    int countColumns(const int* matrix, int rows, int cols) {
         int k = (rows < cols) ? rows : cols;
         int result = 0;
 
@@ -47,7 +48,7 @@ int main(int argc, char* argv[]) {
     }
 
     int num = 0;
-    if (!yarmolinskaya::parseInt(argv[1], num) || num != 1) {
+    if (!yarmolinskaya::parseInt(argv[1], num) || (num != 1 && num != 2)) {
         std::cerr << "Invalid task number\n";
         return 1;
     }
@@ -71,15 +72,24 @@ int main(int argc, char* argv[]) {
     }
 
     int total = rows * cols;
-    if (total > MAX_ELEMENTS) {
+    if (num == 1 && total > MAX_ELEMENTS) {
         std::cerr << "Matrix is too large\n";
         return 2;
     }
 
-    int matrix[MAX_ELEMENTS];
+    int* matrix = nullptr;
+    int fixed[MAX_ELEMENTS];
+
+    if (num == 1) {
+        matrix = fixed;
+    } else {
+        matrix = new int[total];
+    }
+
     for (int i = 0; i < total; ++i) {
         if (!(fin >> matrix[i])) {
             std::cerr << "Invalid matrix data\n";
+            if (num == 2) delete[] matrix;
             return 2;
         }
     }
@@ -87,12 +97,17 @@ int main(int argc, char* argv[]) {
     int extra;
     if (fin >> extra) {
         std::cerr << "Extra data in input file\n";
+        if (num == 2) delete[] matrix;
         return 2;
     }
 
-    int result = yarmolinskaya::countColumnsNoSameNeighbours(matrix, rows, cols);
+    int result = yarmolinskaya::countColumns(matrix, rows, cols);
 
     fout << result;
+
+    if (num == 2) {
+        delete[] matrix;
+    }
 
     return 0;
 }
