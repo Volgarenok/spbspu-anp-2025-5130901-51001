@@ -89,7 +89,7 @@ void hachaturyanov::excludeSymbols(const char * input, const char * second, size
   for (size_t i = 0; input[i] != '\0'; i++) {
     size_t count = 0;
     for (size_t j = 0; second[j] != '\0'; j++) {
-      if (input[i]==second[j]) {
+      if (input[i] == second[j]) {
         break;
       }
       count++;
@@ -137,7 +137,7 @@ int main()
     return 1;
   }
 
-  char * outline1 = reinterpret_cast< char* >(malloc(sizeof(char) * (strl+ 1)));
+  char * outline1 = reinterpret_cast< char* >(malloc(sizeof(char) * (strl + 1)));
   if (!outline1) {
     free(input);
     std::cerr << "Bad allocation\n";
