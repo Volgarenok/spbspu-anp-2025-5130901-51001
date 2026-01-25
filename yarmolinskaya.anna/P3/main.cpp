@@ -2,6 +2,8 @@
 #include <fstream>
 #include <cstdlib>
 
+const int MAX_ELEMENTS = 10000;
+
 bool parseInt(const char* s, int& value) {
     if (s == nullptr || *s == '\0')
         return false;
@@ -37,6 +39,22 @@ int main(int argc, char* argv[]) {
     std::ofstream fout(argv[3]);
     if (!fout) {
         std::cerr << "Cannot open output file\n";
+        return 2;
+    }
+
+    int rows = 0, cols = 0;
+    if (!(fin >> rows >> cols)) {
+        std::cerr << "Invalid matrix format\n";
+        return 2;
+    }
+
+    if (rows < 0 || cols < 0) {
+        std::cerr << "Invalid matrix dimensions\n";
+        return 2;
+    }
+
+    if (rows * cols > MAX_ELEMENTS) {
+        std::cerr << "Matrix is too large\n";
         return 2;
     }
 
