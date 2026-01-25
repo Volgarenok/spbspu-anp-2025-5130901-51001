@@ -29,7 +29,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
 
   size_t len = 0;
   char c = in.get();
-  if (c == EOF || c == '\n') {
+  if (in.eof() || c == '\n') {
     char * temp = reinterpret_cast< char* >(malloc(sizeof(char)));
     if (!temp) {
       free(input);
@@ -54,7 +54,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
   bool done = false;
   while (!done) {
     char c = in.get();
-    if (c == EOF || c == '\n') {
+    if (in.eof() || c == '\n') {
       break;
     }
 
