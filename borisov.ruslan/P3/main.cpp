@@ -85,56 +85,78 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  if (argv[1][0] != '1' && argv[1][0] != '2' || argv[1][1] != '\0') {
-    std::cerr << "First argument is out of range or not a number\n";
+  char* endptr;
+  long mode = strtol(argv[1], &endptr, 10);
+  
+  if (*endptr != '\0' || endptr == argv[1]) {
+    std::cerr << "First parameter is not a number\n";
+    return 1;
+  }
+  
+  if (mode != 1 && mode != 2) {
+    std::cerr << "First parameter is out of range\n";
     return 1;
   }
 
   std::ifstream input(argv[2]);
   if (!input.is_open()) {
-    std::cerr << "Read matrix failed";
+    std::cerr << "open input file failed\n";
     return 2;
   }
   
   size_t rows = 0, cols = 0;
-
-  if (!(input >> rows >> cols) || rows == 0 || cols == 0) {
-    std::cerr << "readMatrix failed";
+  if (!(input >> rows >> cols)) {
+    std::cerr << "read matrix failed\n";
     return 2;
   }
 
   if (rows == 0 || cols == 0) {
     std::ofstream output(argv[3]);
-    output << "0 0\n0\n";
+    output << "0\n0\n";
     return 0;
   }
 
-  if ((*argv[1] == '1')) {
-    int matrix[10000] = {};
-    for (size_t i = 0; i < rows * cols; ++i) {
-      if (!(input >> matrix[i])) {
-        std::cerr << "Error: invalid element\n";
-        return 2;
-      }
+  const size_t MAX_STATIC_ELEMENTS = 10000;
+  if (mode == 1 && rows > MAX_STATIC_ELEMENTS / cols) {
+    std::cerr << "Error: matrix too large for static array\n";
+    return 2;
+  }
+
+  int* matrix = nullptr;
+  
+  if (mode == 1) {
+    static int static_matrix[10000];
+    matrix = static_matrix;
+  } else {
+    try {
+      matrix = new int[rows * cols];
+    } catch (const std::bad_alloc& e) {
+      std::cerr << "memory allocation failed\n";
+      return 2;
     }
-    input.close();
-    std::ofstream output(argv[3]);
-    borisov::processOutput(output, rows, cols, matrix);
-    output.close();
-  } else if ((*argv[1] == '2')) {
-    int* matrix = new int[rows * cols];
-    for (size_t i = 0; i < rows * cols; ++i) {
-      if (!(input >> matrix[i]) || std::abs(matrix[i]) > 10000000) {
-        std::cerr << "Error: invalid element or out of range\n";
-        delete[] matrix;
-        return 2;
-      }
+  }
+
+  size_t total = rows * cols;
+  for (size_t i = 0; i < total; ++i) {
+    if (!(input >> matrix[i])) {
+      std::cerr << "read matrix failed\n";
+      if (mode == 2) delete[] matrix;
+      return 2;
     }
-    input.close();
-    std::ofstream output(argv[3]);
-    borisov::processOutput(output, rows, cols, matrix);
-    output.close();
+  }
+
+  std::ofstream output(argv[3]);
+  if (!output.is_open()) {
+    std::cerr << "open output file failed\n";
+    if (mode == 2) delete[] matrix;
+    return 2;
+  }
+
+  borisov::processOutput(output, rows, cols, matrix);
+
+  if (mode == 2) {
     delete[] matrix;
   }
+
   return 0;
 }
