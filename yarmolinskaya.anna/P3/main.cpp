@@ -43,18 +43,29 @@ int main(int argc, char* argv[]) {
     }
 
     int rows = 0, cols = 0;
-    if (!(fin >> rows >> cols)) {
+    if (!(fin >> rows >> cols) || rows < 0 || cols < 0) {
         std::cerr << "Invalid matrix format\n";
         return 2;
     }
 
-    if (rows < 0 || cols < 0) {
-        std::cerr << "Invalid matrix dimensions\n";
+    int total = rows * cols;
+    if (total > MAX_ELEMENTS) {
+        std::cerr << "Matrix is too large\n";
         return 2;
     }
 
-    if (rows * cols > MAX_ELEMENTS) {
-        std::cerr << "Matrix is too large\n";
+    int matrix[MAX_ELEMENTS];
+
+    for (int i = 0; i < total; ++i) {
+        if (!(fin >> matrix[i])) {
+            std::cerr << "Invalid matrix data\n";
+            return 2;
+        }
+    }
+
+    int extra;
+    if (fin >> extra) {
+        std::cerr << "Extra data in input file\n";
         return 2;
     }
 
