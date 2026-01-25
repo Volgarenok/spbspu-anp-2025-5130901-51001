@@ -7,8 +7,8 @@
 namespace hachaturyanov {
   char * readline(std::istream & in, size_t & strl);
   size_t digits(const char * input);
-  void excludeSymbols(const char * input, const char * second, const size_t second_len, char * output);
-  void addDigits(const char * input, const char * second, const size_t second_len, char * output);
+  void excludeSymbols(const char * input, const char * second, size_t second_len, char * output);
+  void addDigits(const char * input, const char * second, size_t second_len, char * output);
 }
 
 char * hachaturyanov::readline(std::istream & in, size_t & strl)
@@ -98,7 +98,7 @@ size_t hachaturyanov::digits(const char * input)
   return count;
 }
 
-void hachaturyanov::excludeSymbols(const char * input, const char * second, const size_t second_len, char * output)
+void hachaturyanov::excludeSymbols(const char * input, const char * second, size_t second_len, char * output)
 {
   size_t out_len = 0;
   for (size_t i = 0; input[i] != '\0'; i++) {
@@ -117,7 +117,7 @@ void hachaturyanov::excludeSymbols(const char * input, const char * second, cons
   output[out_len] = '\0';
 }
 
-void hachaturyanov::addDigits(const char * input, const char * second, const size_t second_len, char * output)
+void hachaturyanov::addDigits(const char * input, const char * second, size_t second_len, char * output)
 {
 
   for (size_t i = 0; input[i] != '\0'; i++) {
