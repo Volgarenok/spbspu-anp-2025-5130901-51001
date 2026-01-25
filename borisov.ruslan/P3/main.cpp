@@ -112,8 +112,8 @@ int main(int argc, char ** argv)
   if ((*argv[1] == '1')) {
     int matrix[10000] = {};
     for (size_t i = 0; i < rows * cols; ++i) {
-      if (!(input >> matrix[i]) || std::abs(matrix[i]) > 10000000) {
-        std::cerr << "Error: invalid element or out of range\n";
+      if (!(input >> matrix[i])) {
+        std::cerr << "Error: invalid element\n";
         return 2;
       }
     }
