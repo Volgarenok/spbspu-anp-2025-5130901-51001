@@ -131,7 +131,7 @@ int main()
   if (!input) {
     std::cerr << "Bad allocation\n";
     return 1;
-  } else if (!std::strlen(input)) {
+  } else if (!strl) {
     free(input);
     std::cerr << "Empty string\n";
     return 1;
@@ -145,7 +145,7 @@ int main()
   }
 
   size_t s_digits = hachaturyanov::digits(dgt_snd_second);
-  char * outline2 = reinterpret_cast< char* >(malloc(sizeof(char) * (std::strlen(input) + s_digits + 1)));
+  char * outline2 = reinterpret_cast< char* >(malloc(sizeof(char) * (strl + s_digits + 1)));
   if (!outline2) {
     free(input);
     free(outline1);
