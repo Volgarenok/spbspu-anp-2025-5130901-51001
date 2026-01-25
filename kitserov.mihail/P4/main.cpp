@@ -96,6 +96,14 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
   }
   char letter;
   in >> letter;
+  if (in.fail()) {
+    free(currentWord);
+    free(words);
+    if (isSkipws) {
+      in >> std::skipws;
+    }
+    return nullptr;
+  }
   while (!(in.fail())) {
     if (checkFunc(static_cast< unsigned char >(letter))) {
       if (wordSize > 0) {
@@ -184,7 +192,10 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
       break;
     }
   }
-
+  if (wordCount == 0) {
+    free(words);
+    words = nullptr;
+  }
   if (isSkipws) {
     in >> std::skipws;
   }
@@ -216,11 +227,6 @@ int main()
   char** words = kitserov::getline(std::cin, wordCount, kitserov::checkSpace);
   if (!words) {
     std::cerr << "Failed to read words or no valid words found\n";
-    return 1;
-  }
-  if (wordCount == 0) {
-    std::cerr << "No words found\n";
-    free(words);
     return 1;
   }
   const char* str2 = "abs";
