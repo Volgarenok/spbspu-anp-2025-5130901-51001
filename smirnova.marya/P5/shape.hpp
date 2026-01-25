@@ -12,7 +12,6 @@ namespace smirnova
     double width, height;
     point_t pos;
   };
-
   struct Shape
   {
     virtual ~Shape() = default;

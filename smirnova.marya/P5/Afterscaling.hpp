@@ -5,7 +5,7 @@
 
 namespace smirnova
 {
-  void getResult(Shape *shapes[], const char *names[3]);
+  void finalData(Shape *shapes[], const char *names[3]);
 }
 
 #endif

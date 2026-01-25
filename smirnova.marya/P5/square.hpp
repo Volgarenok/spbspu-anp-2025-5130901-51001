@@ -5,7 +5,7 @@
 
 namespace smirnova
 {
-  class Square final : public Shape
+  class Square final: public Shape
   {
   public:
     Square(double side, const point_t &center);

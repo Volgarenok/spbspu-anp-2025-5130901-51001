@@ -5,14 +5,6 @@
 
 namespace smirnova
 {
-  void moveCenter(point_t &center, double dx, double dy)
-  {
-    center.x += dx;
-    center.y += dy;
-  }
-
-  void moveToPoint(point_t &center, const point_t &p) { center = p; }
-
   rectangle_t makeFrameRect(double w, double h, const point_t &center) noexcept
   {
     return {w, h, center};

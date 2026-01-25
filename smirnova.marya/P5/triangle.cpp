@@ -7,12 +7,16 @@
 
 namespace smirnova
 {
-  Triangle::Triangle(point_t a, point_t b, point_t c) : a_(a), b_(b), c_(c)
+  Triangle::Triangle(point_t a,
+    point_t b,
+      point_t c):
+    a_(a),
+    b_(b),
+    c_(c)
   {
     if (getArea() <= 0.0)
     {
-      throw std::invalid_argument("Points do not form a valid "
-                                  "triangle");
+      throw std::invalid_argument("Points do not form a valid triangle");
     }
   }
 
@@ -44,9 +48,12 @@ namespace smirnova
 
   void Triangle::move(double dx, double dy) noexcept
   {
-    moveCenter(a_, dx, dy);
-    moveCenter(b_, dx, dy);
-    moveCenter(c_, dx, dy);
+    a_.x += dx;
+    a_.y += dy;
+    b_.x += dx;
+    b_.y += dy;
+    c_.x += dx;
+    c_.y += dy;
   }
 
   void Triangle::scale(double k) noexcept

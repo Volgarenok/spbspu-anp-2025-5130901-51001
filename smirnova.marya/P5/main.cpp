@@ -28,15 +28,13 @@ int main()
   std::cout << "\nEnter the zoom point (x y): ";
   if (!(std::cin >> scalePoint.x >> scalePoint.y))
   {
-    std::cerr << "Input error: Invalid "
-                 "scaling point\n";
+    std::cerr << "Input error: Invalid scaling point\n";
     return 1;
   }
   std::cout << "Enter the scaling factor: ";
   if (!(std::cin >> k) || k <= 0.0)
   {
-    std::cerr << "Input error: Invalid "
-                 "scaling factor\n";
+    std::cerr << "Input error: Invalid scaling factor\n";
     return 1;
   }
   for (size_t i = 0; i < 3; ++i)
@@ -49,7 +47,7 @@ int main()
     shapes[i]->move(-dx, -dy);
   }
   std::cout << "\nAfter scaling:\n";
-  getResult(shapes, names);
+  finalData(shapes, names);
   return 0;
 }
 
