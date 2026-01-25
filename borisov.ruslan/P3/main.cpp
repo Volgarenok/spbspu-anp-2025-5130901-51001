@@ -24,7 +24,7 @@ namespace borisov
             }
             size_t nghbr_i = start_i + di;
             size_t nghbr_j = start_j + dj;
-            size_t nghbr_idx = nghbr_i * cols + nghbr_j; 
+            size_t nghbr_idx = nghbr_i * cols + nghbr_j;
             if (current <= matrix[nghbr_idx]) {
               is_max = false;
             }
