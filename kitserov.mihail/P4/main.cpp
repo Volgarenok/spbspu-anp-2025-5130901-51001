@@ -81,7 +81,7 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
   size_t wordSize = 0;
   char** words = reinterpret_cast< char** >(malloc(wordsCapacity * sizeof(char*)));
   char* currentWord = reinterpret_cast< char* >(malloc(wordCapacity));
-  if (!words or !currentWord) {
+  if (!words || !currentWord) {
     if (isSkipws) {
       in >> std::skipws;
     }
@@ -119,7 +119,7 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
         if (!currentWord) {
           freeWords(words, wordCount);
           if (isSkipws) {
-          	in >> std::skipws;
+            in >> std::skipws;
           }
           return nullptr;
         }
@@ -147,7 +147,7 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
       wordSize++;
     }
     in >> letter;
-    if (in.fail() or letter == '\n') {
+    if (in.fail() || letter == '\n') {
       if (wordSize > 0) {
         currentWord[wordSize] = '\0';
         if (wordCount >= wordsCapacity) {
