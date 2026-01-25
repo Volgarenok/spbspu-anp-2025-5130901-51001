@@ -4,18 +4,40 @@
 
 const int MAX_ELEMENTS = 10000;
 
-bool parseInt(const char* s, int& value) {
-    if (s == nullptr || *s == '\0')
-        return false;
+namespace yarmolinskaya {
+    bool parseInt(const char* s, int& value) {
+        if (s == nullptr || *s == '\0')
+            return false;
 
-    char* end = nullptr;
-    long v = std::strtol(s, &end, 10);
+        char* end = nullptr;
+        long v = std::strtol(s, &end, 10);
 
-    if (*end != '\0')
-        return false;
+        if (*end != '\0')
+            return false;
 
-    value = static_cast<int>(v);
-    return true;
+        value = static_cast<int>(v);
+        return true;
+    }
+
+    int countColumnsNoSameNeighbours(const int* matrix, int rows, int cols) {
+        int k = (rows < cols) ? rows : cols;
+        int result = 0;
+
+        for (int j = 0; j < k; ++j) {
+            bool ok = true;
+            for (int i = 0; i + 1 < k; ++i) {
+                if (matrix[i * cols + j] == matrix[(i + 1) * cols + j]) {
+                    ok = false;
+                    break;
+                }
+            }
+            if (ok)
+                ++result;
+        }
+
+        return result;
+    }
+
 }
 
 int main(int argc, char* argv[]) {
@@ -25,7 +47,7 @@ int main(int argc, char* argv[]) {
     }
 
     int num = 0;
-    if (!parseInt(argv[1], num) || num != 1) {
+    if (!yarmolinskaya::parseInt(argv[1], num) || num != 1) {
         std::cerr << "Invalid task number\n";
         return 1;
     }
@@ -62,21 +84,15 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    int k = (rows < cols) ? rows : cols;
-    int result = 0;
-
-    for (int j = 0; j < k; ++j) {
-        bool ok = true;
-        for (int i = 0; i + 1 < k; ++i) {
-            if (matrix[i * cols + j] == matrix[(i + 1) * cols + j]) {
-                ok = false;
-                break;
-            }
-        }
-        if (ok)
-            ++result;
+    int extra;
+    if (fin >> extra) {
+        std::cerr << "Extra data in input file\n";
+        return 2;
     }
 
+    int result = yarmolinskaya::countColumnsNoSameNeighbours(matrix, rows, cols);
+
     fout << result;
+
     return 0;
 }
