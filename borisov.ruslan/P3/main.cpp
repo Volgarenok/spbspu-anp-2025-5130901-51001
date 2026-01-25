@@ -85,7 +85,7 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  if ((*argv[1] != '1') && (*argv[1] != '2')) {
+  if (argv[1][0] != '1' && argv[1][0] != '2' || argv[1][1] != '\0') {
     std::cerr << "First argument is out of range or not a number\n";
     return 1;
   }
