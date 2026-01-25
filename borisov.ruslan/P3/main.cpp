@@ -5,20 +5,24 @@ namespace borisov
 {
   size_t countLocalMaximum(const int* matrix, size_t rows, size_t cols)
   {
+    if (rows < 3 || cols < 3) {
+      return 0;
+    }
     size_t count = 0;
     for (size_t i = 1; i < rows - 1; i++) {
       for (size_t j = 1; j < cols - 1; j++) {
-        size_t idx = i * cols + j;
-        int current = matrix[idx];
+        int current = matrix[i * cols + j];
         bool is_max = true;
-        for (int di = -1; di <= 1 && is_max; di++) {
-          for (int dj = -1; dj <= 1 && is_max; dj++) {
-            if (di == 0 && dj == 0) {
+        size_t start_i = i - 1;
+        size_t start_j = j - 1;
+        for (size_t di = 0; di < 3 && is_max; di++) {
+          for (size_t dj = 0; dj < 3 && is_max; dj++) {
+            if (di == 1 && dj == 1) {
               continue;
             }
-            size_t nghbr_i = static_cast<size_t>(static_cast<int>(i) + di);
-            size_t nghbr_j = static_cast<size_t>(static_cast<int>(j) + dj);
-            size_t nghbr_idx = nghbr_i * cols + nghbr_j;
+            size_t nghbr_i = start_i + di;
+            size_t nghbr_j = start_j + dj;
+            size_t nghbr_idx = nghbr_i * cols + nghbr_j; 
             if (current <= matrix[nghbr_idx]) {
               is_max = false;
             }
