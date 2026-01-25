@@ -39,3 +39,4 @@ namespace smirnova
     side_ *= k;
   }
 }
+
