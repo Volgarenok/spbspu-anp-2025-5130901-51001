@@ -8,6 +8,7 @@ namespace kitserov
   void missLetters(const char* source, char* destination);
   int hasSameChars(const char* str1, const char* str2);
   void freeWords(char** words, size_t count);
+  int checkSpace(int c);
 
   constexpr size_t alphabetSize = 26;
   constexpr size_t initialCapacity = 8;
@@ -94,7 +95,7 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
         currentWord[wordSize] = '\0';
         if (wordCount >= wordsCapacity) {
           size_t newCapacity = static_cast< size_t >(wordsCapacity * expansion);
-          char** temp = reinterpret_cast< char** >(malloc(words, newCapacity * sizeof(char*)));
+          char** temp = reinterpret_cast< char** >(malloc(newCapacity * sizeof(char*)));
           if (!temp) {
             free(currentWord);
             freeWords(words, wordCount);
@@ -164,11 +165,16 @@ void kitserov::freeWords(char** words, size_t count)
   free(words);
 }
 
+int kitserov::checkSpace(int c)
+{
+  return c == ' ';
+}
+
 int main()
 {
   size_t wordCount = 0;
   std::cout << "Enter words: ";
-  char** words = kitserov::readWords(std::cin, wordCount, nullptr);
+  char** words = kitserov::getline(std::cin, wordCount, kitserov::checkSpace);
   if (!words) {
     std::cerr << "Failed to read words or no valid words found\n";
     return 1;
