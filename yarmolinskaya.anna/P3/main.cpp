@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  int task_num = 0:
+  int task_num = 0;
   if (!yarmolinskaya::parseInt(argv[1], task_num) || (task_num != 1 && task_num != 2))
   {
     std::cerr << "Invalid task number\n";
