@@ -5,8 +5,8 @@
 
 namespace smirnova
 {
-  Rectangle::Rectangle(double width, 
-    double height, 
+  Rectangle::Rectangle(double width,
+    double height,
       const point_t &center):
     width_(width),
     height_(height),
@@ -41,4 +41,3 @@ namespace smirnova
     height_ *= k;
   }
 }
-

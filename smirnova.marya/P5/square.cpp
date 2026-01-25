@@ -8,7 +8,7 @@ namespace smirnova
 {
   Square::Square(double side,
     const point_t &center):
-    side_(side), 
+    side_(side),
     center_(center)
   {
     if (side <= 0.0)
@@ -39,4 +39,3 @@ namespace smirnova
     side_ *= k;
   }
 }
-
