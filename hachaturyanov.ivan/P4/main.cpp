@@ -53,7 +53,8 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
 
   while (!in.eof() && (c = in.get()) != '\n') {
     if (len + 1 >= max_buffer_size) {
-      max_buffer_size *= 2;
+
+      size_t new_buffer_size = max_buffer_size * 2;
       char * temp = reinterpret_cast< char* >(malloc(sizeof(char) * max_buffer_size));
       if (!temp) {
         free(input);
@@ -62,6 +63,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
         }
         return nullptr;
       }
+      max_buffer_size = new_buffer_size;
       for (size_t i = 0; i < sizeof(char) * max_buffer_size; i++) {
         temp[i] = input[i];
       }
