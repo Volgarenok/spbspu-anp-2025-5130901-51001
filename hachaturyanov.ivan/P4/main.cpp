@@ -104,12 +104,11 @@ void hachaturyanov::excludeSymbols(const char * input, const char * second, size
 
 void hachaturyanov::addDigits(const char * input, const char * second, size_t second_len, char * output)
 {
-
-  for (size_t i = 0; input[i] != '\0'; i++) {
-    output[i] = input[i];
+  size_t count = 0;
+  for (; input[count] != '\0'; count++) {
+    output[count] = input[count];
   }
 
-  size_t count = std::strlen(input);
   for (size_t i = 0; i < second_len; i++) {
     if (std::isdigit(static_cast< unsigned char >(second[i]))) {
       output[count] = second[i];
