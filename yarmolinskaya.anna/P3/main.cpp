@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 
 bool parseInt(const char* s, int& value) {
@@ -25,6 +26,18 @@ int main(int argc, char* argv[]) {
     if (!parseInt(argv[1], num) || num != 1) {
         std::cerr << "Invalid task number\n";
         return 1;
+    }
+
+    std::ifstream fin(argv[2]);
+    if (!fin) {
+        std::cerr << "Cannot open input file\n";
+        return 2;
+    }
+
+    std::ofstream fout(argv[3]);
+    if (!fout) {
+        std::cerr << "Cannot open output file\n";
+        return 2;
     }
 
     return 0;
