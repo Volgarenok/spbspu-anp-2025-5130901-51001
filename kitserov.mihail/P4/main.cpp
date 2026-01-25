@@ -89,7 +89,7 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
   }
   char letter;
   in >> letter;
-  while (!(in.fail()) && letter != '\n') {
+  while (!(in.fail())) {
     if (checkFunc(static_cast< unsigned char >(letter))) {
       if (wordSize > 0) {
         currentWord[wordSize] = '\0';
@@ -115,7 +115,7 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
         wordCount++;
 
         wordSize = 0;
-        currentWord = reinterpret_cast< char* >(malloc(wordsCapacity));
+        currentWord = reinterpret_cast< char* >(malloc(wordCapacity));
         if (!currentWord) {
           freeWords(words, wordCount);
           if (isSkipws) {
@@ -147,7 +147,36 @@ char** kitserov::getline(std::istream& in, size_t& wordCount, int (*checkFunc)(i
       wordSize++;
     }
     in >> letter;
+    if (in.fail() or letter == '\n') {
+      if (wordSize > 0) {
+        currentWord[wordSize] = '\0';
+        if (wordCount >= wordsCapacity) {
+          size_t newCapacity = static_cast< size_t >(wordsCapacity * expansion);
+          char** temp = reinterpret_cast< char** >(malloc(newCapacity * sizeof(char*)));
+          if (!temp) {
+            free(currentWord);
+            freeWords(words, wordCount);
+            if (isSkipws) {
+              in >> std::skipws;
+            }
+            return nullptr;
+          }
+          for (size_t i = 0; i < wordCount; i++) {
+            temp[i] = words[i];
+          }
+          free(words);
+          words = temp;
+          wordsCapacity = newCapacity;
+        }
+        words[wordCount] = currentWord;
+        wordCount++;
+      } else {
+        free(currentWord);
+      }
+      break;
+    }
   }
+
   if (isSkipws) {
     in >> std::skipws;
   }
