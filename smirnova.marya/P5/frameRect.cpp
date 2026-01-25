@@ -5,7 +5,7 @@
 
 namespace smirnova
 {
-  rectangle_t getTotalFrameRect(Shape *shapes[], size_t count) noexcept
+  rectangle_t getTotalFrameRect(Shape * const shapes[], size_t count) noexcept
   {
     if (count <= 0)
     {
