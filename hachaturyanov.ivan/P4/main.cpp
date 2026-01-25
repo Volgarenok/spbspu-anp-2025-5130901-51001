@@ -8,7 +8,7 @@ namespace hachaturyanov {
   char * readline(std::istream & in, size_t & strl);
   size_t digits(const char * input);
   void excludeSymbols(const char * input, const char * second, size_t second_len, char * output);
-  void addDigits(const char * input, const char * second, size_t second_len, char * output);
+  void addDigits(const char * input, const char * second, char * output);
 }
 
 char * hachaturyanov::readline(std::istream & in, size_t & strl)
@@ -88,7 +88,7 @@ void hachaturyanov::excludeSymbols(const char * input, const char * second, size
   size_t out_len = 0;
   for (size_t i = 0; input[i] != '\0'; i++) {
     size_t count = 0;
-    for (size_t j = 0; j < second_len; j++) {
+    for (size_t j = 0; second[j] != '\0'; j++) {
       if (input[i]==second[j]) {
         break;
       }
@@ -102,14 +102,14 @@ void hachaturyanov::excludeSymbols(const char * input, const char * second, size
   output[out_len] = '\0';
 }
 
-void hachaturyanov::addDigits(const char * input, const char * second, size_t second_len, char * output)
+void hachaturyanov::addDigits(const char * input, const char * second, char * output)
 {
   size_t count = 0;
   for (; input[count] != '\0'; count++) {
     output[count] = input[count];
   }
 
-  for (size_t i = 0; i < second_len; i++) {
+  for (size_t i = 0; second[i] != '\0'; i++) {
     if (std::isdigit(static_cast< unsigned char >(second[i]))) {
       output[count] = second[i];
       count++;
@@ -125,7 +125,6 @@ int main()
   const char dgt_snd_second[] = "g1h2k";
 
   const size_t exc_snd_s_len = std::strlen(exc_snd_second);
-  const size_t dgt_snd_s_len = std::strlen(dgt_snd_second);
 
   size_t strl = 0;
   char * input = hachaturyanov::readline(std::cin, strl);
@@ -155,7 +154,7 @@ int main()
   }
 
   hachaturyanov::excludeSymbols(input, exc_snd_second, exc_snd_s_len, outline1);
-  hachaturyanov::addDigits(input, dgt_snd_second, dgt_snd_s_len, outline2);
+  hachaturyanov::addDigits(input, dgt_snd_second, outline2);
   std::cout << outline1 << "\n";
   std::cout << outline2 << "\n";
   free(input);
