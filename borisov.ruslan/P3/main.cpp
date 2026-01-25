@@ -1,5 +1,7 @@
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
+#include <cstring>
 
 namespace borisov
 {
@@ -87,12 +89,12 @@ int main(int argc, char ** argv)
 
   char* endptr;
   long mode = strtol(argv[1], &endptr, 10);
-  
+
   if (*endptr != '\0' || endptr == argv[1]) {
     std::cerr << "First parameter is not a number\n";
     return 1;
   }
-  
+
   if (mode != 1 && mode != 2) {
     std::cerr << "First parameter is out of range\n";
     return 1;
@@ -103,7 +105,7 @@ int main(int argc, char ** argv)
     std::cerr << "open input file failed\n";
     return 2;
   }
-  
+
   size_t rows = 0, cols = 0;
   if (!(input >> rows >> cols)) {
     std::cerr << "read matrix failed\n";
@@ -123,7 +125,7 @@ int main(int argc, char ** argv)
   }
 
   int* matrix = nullptr;
-  
+
   if (mode == 1) {
     static int static_matrix[10000];
     matrix = static_matrix;
