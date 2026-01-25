@@ -75,7 +75,7 @@ char * hachaturyanov::readline(std::istream & in, size_t & strl)
 size_t hachaturyanov::digits(const char * input)
 {
   size_t count = 0;
-  for (size_t i = 0; i < std::strlen(input); i++) {
+  for (size_t i = 0; input[i] != '\0'; i++) {
     if (std::isdigit(static_cast< unsigned char >(input[i]))) {
       count++;
     }
