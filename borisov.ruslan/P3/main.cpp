@@ -96,15 +96,12 @@ int main(int argc, char ** argv)
     return 2;
   }
   
-  int rows_input = 0, cols_input = 0;
+  size_t rows = 0, cols = 0;
 
-  if (!(input >> rows_input >> cols_input) || rows_input < 0 || cols_input < 0 || rows_input * cols_input > 10000) {
+  if (!(input >> rows >> cols) || rows == 0 || cols == 0) {
     std::cerr << "readMatrix failed";
     return 2;
   }
-
-  size_t rows = static_cast<size_t>(rows_input);
-  size_t cols = static_cast<size_t>(cols_input);
 
   if (rows == 0 || cols == 0) {
     std::ofstream output(argv[3]);
