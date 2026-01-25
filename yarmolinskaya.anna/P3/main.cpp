@@ -55,7 +55,6 @@ int main(int argc, char* argv[]) {
     }
 
     int matrix[MAX_ELEMENTS];
-
     for (int i = 0; i < total; ++i) {
         if (!(fin >> matrix[i])) {
             std::cerr << "Invalid matrix data\n";
@@ -63,11 +62,21 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    int extra;
-    if (fin >> extra) {
-        std::cerr << "Extra data in input file\n";
-        return 2;
+    int k = (rows < cols) ? rows : cols;
+    int result = 0;
+
+    for (int j = 0; j < k; ++j) {
+        bool ok = true;
+        for (int i = 0; i + 1 < k; ++i) {
+            if (matrix[i * cols + j] == matrix[(i + 1) * cols + j]) {
+                ok = false;
+                break;
+            }
+        }
+        if (ok)
+            ++result;
     }
 
+    fout << result;
     return 0;
 }
