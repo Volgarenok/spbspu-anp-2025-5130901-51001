@@ -3,8 +3,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "Afterscaling.hpp"
-#include "Beforescaling.hpp"
+#include "inputData.hpp"
 #include "frameRect.hpp"
 #include "rectangle.hpp"
 #include "shape.hpp"
@@ -19,12 +18,13 @@ int main()
   Rectangle rect(4.0, 2.0, {0.0, 0.0});
   Square sq(3.0, {5.0, 5.0});
   Triangle tri({0.0, 0.0}, {4.0, 0.0}, {2.0, 3.0});
-  Shape *shapes[3] = {&rect, &tri, &sq};
-  const char *names[3] = {"Rectangle", "Triangle", "Square"};
+  const size_t sizeShapes = 3;
+  Shape *shapes[sizeShapes] = {&rect, &tri, &sq};
+  const char *names[sizeShapes] = {"Rectangle", "Triangle", "Square"};
   std::cout << "Before scaling:\n";
-  initialData(shapes, names);
+  inputData(shapes, names, sizeShapes);
   point_t scalePoint;
-  double k;
+  double k = 0.0;
   std::cout << "\nEnter the zoom point (x y): ";
   if (!(std::cin >> scalePoint.x >> scalePoint.y))
   {
@@ -37,7 +37,7 @@ int main()
     std::cerr << "Input error: Invalid scaling factor\n";
     return 1;
   }
-  for (size_t i = 0; i < 3; ++i)
+  for (size_t i = 0; i < sizeShapes; ++i)
   {
     rectangle_t frame = shapes[i]->getFrameRect();
     double dx = scalePoint.x - frame.pos.x;
@@ -47,7 +47,7 @@ int main()
     shapes[i]->move(-dx, -dy);
   }
   std::cout << "\nAfter scaling:\n";
-  finalData(shapes, names);
+  inputData(shapes, names, sizeShapes);
   return 0;
 }
 
