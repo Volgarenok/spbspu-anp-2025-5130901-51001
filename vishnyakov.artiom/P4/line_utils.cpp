@@ -24,4 +24,3 @@ bool vishnyakov::isSpace(char letter)
 {
   return std::isspace(static_cast< unsigned char >(letter));
 }
-

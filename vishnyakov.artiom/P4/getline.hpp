@@ -5,7 +5,6 @@
 
 namespace vishnyakov
 {
-  char *getLine(std::istream &input, size_t &size);
   char **getWords(std::istream &input, size_t &size, bool (*isSpace)(char));
 }
 
