@@ -6,17 +6,16 @@ const size_t karpenko::ALPHABET_SIZE = 26;
 const size_t karpenko::ALPHABET_RESULT_SIZE = 27;
 
 void karpenko::uniTwo(const char* str1, size_t len1, const char* str2, size_t len2,
-  char* result, size_t resultSize)
+  char* result)
 {
-  if (result == nullptr || resultSize == 0)
+  if (result == nullptr)
   {
     return;
   }
 
-  const size_t maxLen = (len1 > len2) ? len1 : len2;
   size_t resultIndex = 0;
 
-  for (size_t i = 0; i < maxLen; ++i)
+  for (size_t i = 0; i < len1 || i < len2; ++i)
   {
     if (i < len1)
     {
@@ -28,10 +27,6 @@ void karpenko::uniTwo(const char* str1, size_t len1, const char* str2, size_t le
     }
   }
 
-  if (resultIndex >= resultSize)
-  {
-    resultIndex = resultSize - 1;
-  }
   result[resultIndex] = '\0';
 }
 

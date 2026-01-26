@@ -1,9 +1,9 @@
-#include "string_reader.hpp"
-#include "array_utils.hpp"
-#include "string_functions.hpp"
 #include <iostream>
 #include <cstring>
 #include <cstddef>
+#include "string_reader.hpp"
+#include "array_utils.hpp"
+#include "string_functions.hpp"
 
 int main()
 {
@@ -39,12 +39,11 @@ int main()
   try
   {
     result1 = new char[result1Size];
-    result1[0] = '\0';
+    result1[result1Size - 1] = '\0';
     result2 = new char[karpenko::ALPHABET_RESULT_SIZE];
-    result2[0] = '\0';
+    result2[karpenko::ALPHABET_RESULT_SIZE - 1] = '\0';
 
-    karpenko::uniTwo(line1, line1Length, line2, line2Length,
-      result1, result1Size);
+    karpenko::uniTwo(line1, line1Length, line2, line2Length, result1);
     std::cout << result1 << '\n';
 
     karpenko::shrSym(line1, result2);
@@ -56,11 +55,11 @@ int main()
 
     char** words = karpenko::readWords(std::cin, wordCount);
 
-    if (words != nullptr)
+    if (words != nullptr && wordCount > 0)
     {
       for (size_t i = 0; i < wordCount; ++i)
       {
-        karpenko::uniTwo(words[i], std::strlen(words[i]), line2, line2Length, result1, result1Size);
+        karpenko::uniTwo(words[i], std::strlen(words[i]), line2, line2Length, result1);
         std::cout << result1 << '\n';
 
         karpenko::shrSym(words[i], result2);
@@ -71,6 +70,10 @@ int main()
       {
         delete[] words[i];
       }
+      delete[] words;
+    }
+    else if (words != nullptr)
+    {
       delete[] words;
     }
 
