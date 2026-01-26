@@ -31,7 +31,7 @@ void vishnyakov::copy(const char *a, char *b, size_t l)
 
 bool vishnyakov::isSpace(char letter)
 {
-  return std::isspace(static_cast<unsigned char>(letter));
+  return std::isspace(static_cast< unsigned char >(letter));
 }
 
 char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(char))
@@ -41,7 +41,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   size_t capacity = 16;
   size_t len = 0;
 
-  char *line = reinterpret_cast<char *>(malloc(sizeof(char) * capacity));
+  char *line = reinterpret_cast< char * >(malloc(sizeof(char) * capacity));
 
   if (!line)
   {
@@ -49,7 +49,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   }
 
   size_t capacity_for_words = 10;
-  char **words = reinterpret_cast<char **>(malloc(sizeof(char *) * capacity_for_words));
+  char **words = reinterpret_cast< char ** >(malloc(sizeof(char *) * capacity_for_words));
 
   if (!words)
   {
@@ -69,7 +69,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
     if (len + 1 >= capacity)
     {
       size_t new_capacity = capacity * 2;
-      char *tmp_line = reinterpret_cast<char *>(malloc(sizeof(char) * new_capacity));
+      char *tmp_line = reinterpret_cast< char * >(malloc(sizeof(char) * new_capacity));
 
       if (!tmp_line)
       {
@@ -92,7 +92,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
 
     if (isSpace(sym) && len != 0)
     {
-      char *word = reinterpret_cast<char *>(malloc(len + 1));
+      char *word = reinterpret_cast< char * >(malloc(len + 1));
 
       if (!word)
       {
@@ -126,7 +126,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
       if (size == capacity_for_words)
       {
         size_t new_capacity_for_words = capacity_for_words * 2;
-        char **tmp_words = reinterpret_cast<char **>(malloc(new_capacity_for_words * sizeof(char *)));
+        char **tmp_words = reinterpret_cast< char ** >(malloc(new_capacity_for_words * sizeof(char *)));
 
         if (!tmp_words)
         {
