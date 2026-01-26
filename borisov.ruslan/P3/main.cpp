@@ -75,7 +75,7 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  char* endptr;
+  char* endptr = nullptr;
   long mode = strtol(argv[1], &endptr, 10);
 
   if (*endptr != '\0' || endptr == argv[1]) {
