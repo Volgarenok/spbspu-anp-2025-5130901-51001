@@ -4,9 +4,9 @@
 #include <cctype>
 
 namespace losev {
-  char* getline(std::istream & in, size_t & capacity, size_t & actual_size);
-  char* latRmv(const char * src, char * dest);
-  int hasRep(const char * src);
+  char* getline(std::istream& in, size_t& capacity, size_t& actual_size);
+  char* latRmv(const char* src, char* dest);
+  int hasRep(const char* src);
 }
 
 int main()
@@ -37,7 +37,7 @@ int main()
   return 0;
 }
 
-char * losev::getline(std::istream & in, size_t & capacity, size_t & actual_size)
+char * losev::getline(std::istream& in, size_t& capacity, size_t& actual_size)
 {
   capacity = 10;
   char * str = reinterpret_cast< char* >(malloc(capacity * sizeof(char)));
@@ -78,7 +78,7 @@ char * losev::getline(std::istream & in, size_t & capacity, size_t & actual_size
   return str;
 }
 
-char * losev::latRmv(const char * src, char * dest)
+char* losev::latRmv(const char* src, char* dest)
 {
   size_t j = 0;
   for (size_t i = 0; src[i] != '\0'; i++) {
@@ -90,7 +90,7 @@ char * losev::latRmv(const char * src, char * dest)
   return dest;
 }
 
-int losev::hasRep(const char * src)
+int losev::hasRep(const char* src)
 {
   const char * ptr = src + 1;
   for (; *src != '\0'; src++) {
