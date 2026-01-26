@@ -38,32 +38,33 @@ namespace borisov
     return count;
   }
 
-  int getMaxSumAntidiagonal(const int* matrix, size_t rows, size_t cols)
-  {
-    size_t n;
-    if (rows < cols) {
-      n = rows;
-    } else {
-      n = cols;
+int getMaxSumAntidiagonal(const int* matrix, size_t rows, size_t cols)
+{
+  size_t n;
+  if (rows < cols) {
+    n = rows;
+  } else {
+    n = cols;
+  }
+  int max_diagsum = 0;
+  for (size_t sum = 0; sum <= 2 * (n - 1); ++sum) {
+    if (sum == n - 1) {
+      continue;
     }
-    int max_diagsum = 0;
-    for (size_t sum = 0; sum <= 2 * (n - 1); ++sum) {
-      if (sum == n - 1) {
-        continue;
-      }
-      int diagsum = 0;
-      for (size_t i = 0; i < n; ++i) {
-        int j_signed = static_cast<int>(sum) - static_cast<int>(i);
-        if (j_signed >= 0 && static_cast<size_t>(j_signed) < n) {
-          size_t j = static_cast<size_t>(j_signed);
+    int diagsum = 0;
+    for (size_t i = 0; i < n; ++i) {
+      if (sum >= i) {
+        size_t j = sum - i;       
+        if (j < n) {
           diagsum += matrix[i * cols + j];
         }
       }
-      if (diagsum > max_diagsum) {
-        max_diagsum = diagsum;
-      }
     }
-    return max_diagsum;
+    if (diagsum > max_diagsum) {
+      max_diagsum = diagsum;
+    }
+  }
+  return max_diagsum;
   }
 
   void processOutput(std::ostream& output, size_t rows, size_t cols, const int* matrix)
