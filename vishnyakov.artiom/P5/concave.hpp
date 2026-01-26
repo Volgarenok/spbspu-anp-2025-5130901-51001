@@ -1,12 +1,12 @@
 #ifndef CONCAVE_HPP
 #define CONCAVE_HPP
+#include <algorithm>
 #include "shape.hpp"
 #include "functions.hpp"
-#include <algorithm>
 
 namespace vishnyakov
 {
-  struct Concave final : Shape {
+  struct Concave final: Shape {
     Concave(point_t a, point_t b, point_t c, point_t d) noexcept;
     rectangle_t getFrameRect() const noexcept override;
     double getArea() const noexcept override;

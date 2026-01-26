@@ -1,13 +1,13 @@
 #ifndef TRIANGLE_HPP
 #define TRIANGLE_HPP
-#include "shape.hpp"
-#include "functions.hpp"
 #include <algorithm>
 #include <cmath>
+#include "shape.hpp"
+#include "functions.hpp"
 
 namespace vishnyakov
 {
-  struct Triangle final : Shape {
+  struct Triangle final: Shape {
     Triangle(point_t a, point_t b, point_t c) noexcept;
     rectangle_t getFrameRect() const noexcept override;
     double getArea() const noexcept override;
