@@ -55,7 +55,7 @@ namespace borisov
       int diagsum = 0;
       for (size_t i = 0; i < n; ++i) {
         if (sum >= i) {
-          size_t j = sum - i;       
+          size_t j = sum - i;
           if (j < n) {
             diagsum += matrix[i * cols + j];
           }
