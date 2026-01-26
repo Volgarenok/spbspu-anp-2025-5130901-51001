@@ -4,7 +4,7 @@
 
 #include "shape.hpp"
 
-smirnova::rectangle_t smirnova::getTotalFrameRect(const Shape * const shapes[], size_t count) noexcept
+smirnova::rectangle_t smirnova::getTotalFrameRect(Shape * const shapes[], size_t count) noexcept
 {
   if (count <= 0)
   {
