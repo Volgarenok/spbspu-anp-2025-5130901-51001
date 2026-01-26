@@ -36,7 +36,7 @@ void smirnova::Triangle::move(const point_t &p) noexcept
   point_t centroid = getCentroid(a_, b_, c_);
   double dx = p.x - centroid.x;
   double dy = p.y - centroid.y;
-  move(dx, dy);
+  Triangle::move(dx, dy);
 }
 
 void smirnova::Triangle::move(double dx, double dy) noexcept

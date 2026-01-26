@@ -20,7 +20,7 @@ int main()
   Square sq(3.0, {5.0, 5.0});
   Triangle tri({0.0, 0.0}, {4.0, 0.0}, {2.0, 3.0});
   size_t sizeShapes = 3;
-  const Shape *shapes[sizeShapes] = {&rect, &tri, &sq};
+  Shape *shapes[sizeShapes] = {&rect, &tri, &sq};
   const char *names[sizeShapes] = {"Rectangle", "Triangle", "Square"};
   std::cout << "Before scaling:\n";
   inputData(shapes, names, sizeShapes);
