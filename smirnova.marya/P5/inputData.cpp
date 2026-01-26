@@ -5,7 +5,7 @@
 #include "frameRect.hpp"
 #include "shape.hpp"
 
-void smirnova::inputData(Shape * shapes[], const char * const names[], const size_t sizeShapes)
+void smirnova::inputData(Shape * const shapes[], const char * const names[], size_t sizeShapes)
 {
   double totalArea = 0.0;
   for (size_t i = 0; i < sizeShapes; ++i)

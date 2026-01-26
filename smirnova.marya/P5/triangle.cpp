@@ -5,7 +5,9 @@
 
 #include "utils.hpp"
 
-smirnova::Triangle::Triangle(point_t a, point_t b, point_t c): a_(a), b_(b), c_(c)
+smirnova::Triangle::Triangle(point_t a, point_t b, point_t c): a_(a),
+  b_(b),
+  c_(c)
 {
   if (getArea() <= 0.0)
   {

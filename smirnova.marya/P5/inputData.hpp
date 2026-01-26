@@ -6,7 +6,7 @@
 
 namespace smirnova
 {
-  void inputData(Shape *shapes[], const char * const names[], const size_t sizeShapes);
+  void inputData(Shape * const shapes[], const char * const names[], size_t sizeShapes);
 }
 
 #endif

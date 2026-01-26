@@ -3,7 +3,9 @@
 
 #include "utils.hpp"
 
-smirnova::Rectangle::Rectangle(double width, double height, const point_t &center): width_(width), height_(height), center_(center)
+smirnova::Rectangle::Rectangle(double width, double height, const point_t &center): width_(width),
+  height_(height),
+  center_(center)
 {
   if (width <= 0.0 || height <= 0.0)
   {
