@@ -114,10 +114,10 @@ int main(int argc, char ** argv)
   }
 
   int* matrix = nullptr;
+  int fixed_matrix[10000] = {};
 
   if (mode == 1) {
-    static int static_matrix[10000];
-    matrix = static_matrix;
+    matrix = fixed_matrix;
   } else {
     try {
       matrix = new int[rows * cols];
