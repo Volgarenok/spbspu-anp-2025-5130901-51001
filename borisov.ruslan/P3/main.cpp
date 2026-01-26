@@ -139,7 +139,9 @@ int main(int argc, char ** argv)
   std::ofstream output(argv[3]);
   if (!output.is_open()) {
     std::cerr << "open output file failed\n";
-    if (mode == 2) delete[] matrix;
+    if (mode == 2) {
+      delete[] matrix;
+    }
     return 2;
   }
 
