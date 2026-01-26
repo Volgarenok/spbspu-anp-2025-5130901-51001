@@ -1,6 +1,6 @@
 #include "triangle.hpp"
 
-vishnyakov::Triangle::Triangle(point_t a, point_t b, point_t c) noexcept : 
+vishnyakov::Triangle::Triangle(point_t a, point_t b, point_t c) noexcept:
   spot1_{a},
   spot2_{b},
   spot3_{c},

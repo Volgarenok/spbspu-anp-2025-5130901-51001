@@ -9,4 +9,3 @@ namespace vishnyakov
 }
 
 #endif
-
