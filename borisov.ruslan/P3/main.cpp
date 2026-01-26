@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstring>
+#include <memory>
 
 namespace borisov
 {
@@ -76,7 +77,7 @@ int main(int argc, char ** argv)
   }
 
   char* endptr = nullptr;
-  long mode = strtol(argv[1], &endptr, 10);
+  long mode = strtol(argv[1], std::addressof(endptr), 10);
 
   if (*endptr != '\0' || endptr == argv[1]) {
     std::cerr << "First parameter is not a number\n";
