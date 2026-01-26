@@ -3,6 +3,8 @@
 
 int main(int argc, char **argv)
 {
+  using namespace vishnyakov;
+
   if (argc < 4)
   {
     std::cerr << "Not enough arguments\n";
@@ -53,7 +55,7 @@ int main(int argc, char **argv)
     {
       dynamic_matrix = new int[row * column];
     }
-    catch (const std::bad_alloc&)
+    catch (const std::bad_alloc &)
     {
       std::cerr << "Error: Memory allocation failed.\n";
       return 2;
@@ -77,8 +79,8 @@ int main(int argc, char **argv)
     delete[] dynamic_matrix;
     return 2;
   }
-  int result = vishnyakov::biggiestDiagonal(matrix, row, column);
-  vishnyakov::spiralReduction(matrix, row, column);
+  int result = biggiestDiagonal(matrix, row, column);
+  spiralReduction(matrix, row, column);
   output << row << ' ' << column;
   for (size_t i = 0; i < row * column; ++i)
   {
@@ -88,4 +90,3 @@ int main(int argc, char **argv)
   delete[] dynamic_matrix;
   return 0;
 }
-

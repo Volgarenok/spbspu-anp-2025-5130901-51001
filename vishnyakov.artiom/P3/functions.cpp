@@ -6,19 +6,19 @@ size_t vishnyakov::move(size_t type, size_t column, size_t start)
   {
     return 1;
   }
-  switch (type%4)
+  switch (type % 4)
   {
   case 0:
-    return start-column;
+    return start - column;
     break;
   case 1:
-    return start+1;
+    return start + 1;
     break;
   case 2:
-    return start+column;
+    return start + column;
     break;
   case 3:
-    return start-1;
+    return start - 1;
     break;
   }
   return start;
@@ -34,4 +34,3 @@ bool vishnyakov::isIn(const size_t *array, size_t value, size_t size)
   }
   return false;
 }
-

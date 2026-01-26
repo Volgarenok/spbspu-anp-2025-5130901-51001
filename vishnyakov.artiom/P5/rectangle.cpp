@@ -1,6 +1,6 @@
 #include "rectangle.hpp"
 
-vishnyakov::Rectangle::Rectangle(double w, double h, point_t c) noexcept:
+vishnyakov::Rectangle::Rectangle(double w, double h, point_t c) noexcept : 
   width_{w},
   height_{h},
   center_{c}
@@ -31,4 +31,3 @@ void vishnyakov::Rectangle::scale(double coefficient) noexcept
   width_ *= coefficient;
   height_ *= coefficient;
 }
-

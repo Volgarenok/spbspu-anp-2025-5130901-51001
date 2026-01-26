@@ -1,10 +1,10 @@
 #include "triangle.hpp"
 
-vishnyakov::Triangle::Triangle(point_t a, point_t b, point_t c) noexcept:
+vishnyakov::Triangle::Triangle(point_t a, point_t b, point_t c) noexcept : 
   spot1_{a},
   spot2_{b},
   spot3_{c},
-  center_{point_t {(a.x + b.x + c.x) / 3.0, (a.y + b.y + c.y) / 3.0}}
+  center_{point_t{(a.x + b.x + c.x) / 3.0, (a.y + b.y + c.y) / 3.0}}
 {}
 
 vishnyakov::rectangle_t vishnyakov::Triangle::getFrameRect() const noexcept
@@ -24,7 +24,7 @@ vishnyakov::rectangle_t vishnyakov::Triangle::getFrameRect() const noexcept
 
 double vishnyakov::Triangle::getArea() const noexcept
 {
-  double side1 = 0, side2 = 0 , side3 = 0, p = 0, result = 0;
+  double side1 = 0, side2 = 0, side3 = 0, p = 0, result = 0;
 
   side1 = std::sqrt((spot1_.x - spot2_.x) * (spot1_.x - spot2_.x) + (spot1_.y - spot2_.y) * (spot1_.y - spot2_.y));
   side2 = std::sqrt((spot2_.x - spot3_.x) * (spot2_.x - spot3_.x) + (spot2_.y - spot3_.y) * (spot2_.y - spot3_.y));
@@ -64,4 +64,3 @@ void vishnyakov::Triangle::scale(double coefficient) noexcept
   spot2_.y = center_.y + (spot2_.y - center_.y) * coefficient;
   spot3_.y = center_.y + (spot3_.y - center_.y) * coefficient;
 }
-

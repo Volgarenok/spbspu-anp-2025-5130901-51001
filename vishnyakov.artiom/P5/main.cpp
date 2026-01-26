@@ -54,7 +54,7 @@ int main()
 
     outputInformation(Shapes, amount_of_shapes);
   }
-  catch (const std::bad_alloc&)
+  catch (const std::bad_alloc &)
   {
     std::cerr << "Memory allocation failed\n";
     for (size_t i = 0; i < amount_of_shapes; ++i)
@@ -71,4 +71,3 @@ int main()
 
   return 0;
 }
-

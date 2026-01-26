@@ -58,7 +58,7 @@ void vishnyakov::outputInformation(const Shape *const *shapes, size_t size)
 
   for (size_t i = 0; i < size; ++i)
   {
-    std::cout << "Shape #" << (i+1) << ":\n";
+    std::cout << "Shape #" << (i + 1) << ":\n";
     std::cout << "  Area = " << shapes[i]->getArea() << '\n';
     outputFrameRectInfo(shapes[i]->getFrameRect());
     total_Area += shapes[i]->getArea();
@@ -74,4 +74,3 @@ void vishnyakov::outputFrameRectInfo(rectangle_t frame)
   std::cout << "  FrameRect: center = {" << frame.pos.x << ", " << frame.pos.y;
   std::cout << "}; width = " << frame.width << "; height = " << frame.height << '\n';
 }
-

@@ -5,9 +5,8 @@
 
 namespace vishnyakov
 {
-  void vishnyakov::spiralReduction(int *matrix, size_t row, size_t column);
-  int vishnyakov::biggiestDiagonal(const int *matrix, size_t row, size_t column);
+  void spiralReduction(int *matrix, size_t row, size_t column);
+  int biggiestDiagonal(const int *matrix, size_t row, size_t column);
 }
 
 #endif
-
