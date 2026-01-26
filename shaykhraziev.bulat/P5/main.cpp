@@ -85,9 +85,9 @@ namespace shaykhraziev
   };
 
   void scaleRelative(Shape& shp, point_t pt, double coef);
-  rectangle_t getAllShapesFrameRect(Shape* const* shps, size_t size);
+  rectangle_t getAllShapesFrameRect(const Shape* const* shps, size_t size);
   void removeArray(Shape* const* shps, size_t size);
-  void outputParams(std::ostream& out, Shape* const* shps, size_t size);
+  void outputParams(std::ostream& out, const Shape* const* shps, size_t size);
   double distToLine(point_t d1, point_t d2, point_t m);
   double euclidDist(point_t d1, point_t d2);
   double calcPolygonArea(const point_t* pts, size_t size);
@@ -167,7 +167,7 @@ void shaykhraziev::scaleRelative(Shape& shp, point_t pt, double coef)
   shp.move({x, y});
 }
 
-shaykhraziev::rectangle_t shaykhraziev::getAllShapesFrameRect (Shape* const* shps, size_t size)
+shaykhraziev::rectangle_t shaykhraziev::getAllShapesFrameRect (const Shape* const* shps, size_t size)
 {
   if (size == 0) {
     return {0, 0, {0, 0}};
@@ -203,7 +203,7 @@ void shaykhraziev::removeArray(Shape* const * shps, size_t size)
   delete [] shps;
 }
 
-void shaykhraziev::outputParams(std::ostream& out, Shape* const* shps, size_t size)
+void shaykhraziev::outputParams(std::ostream& out, const Shape* const* shps, size_t size)
 {
   double area = 0;
 
