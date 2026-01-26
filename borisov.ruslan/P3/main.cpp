@@ -38,43 +38,33 @@ namespace borisov
     return count;
   }
 
-int getMaxSumAntidiagonal(const int* matrix, size_t rows, size_t cols)
-{
-  size_t n;
-  if (rows < cols) {
-    n = rows;
-  } else {
-    n = cols;
-  }
-  int max_diagsum = 0;
-  for (size_t sum = 0; sum <= 2 * (n - 1); ++sum) {
-    if (sum == n - 1) {
-      continue;
+  int getMaxSumAntidiagonal(const int* matrix, size_t rows, size_t cols)
+  {
+    size_t n;
+    if (rows < cols) {
+      n = rows;
+    } else {
+      n = cols;
     }
-    int diagsum = 0;
-    for (size_t i = 0; i < n; ++i) {
-      if (sum >= i) {
-        size_t j = sum - i;       
-        if (j < n) {
-          diagsum += matrix[i * cols + j];
+    int max_diagsum = 0;
+    for (size_t sum = 0; sum <= 2 * (n - 1); ++sum) {
+      if (sum == n - 1) {
+        continue;
+      }
+      int diagsum = 0;
+      for (size_t i = 0; i < n; ++i) {
+        if (sum >= i) {
+          size_t j = sum - i;       
+          if (j < n) {
+            diagsum += matrix[i * cols + j];
+          }
         }
       }
+      if (diagsum > max_diagsum) {
+        max_diagsum = diagsum;
+      }
     }
-    if (diagsum > max_diagsum) {
-      max_diagsum = diagsum;
-    }
-  }
-  return max_diagsum;
-  }
-
-  void processOutput(std::ostream& output, size_t rows, size_t cols, const int* matrix)
-  {
-    if (rows >= 3 && cols >= 3) {
-      output << borisov::countLocalMaximum(matrix, rows, cols) << "\n";
-    } else {
-      output << "0\n";
-    }
-    output << borisov::getMaxSumAntidiagonal(matrix, rows, cols) << "\n";
+    return max_diagsum;
   }
 }
 
@@ -155,7 +145,8 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  borisov::processOutput(output, rows, cols, matrix);
+  output << borisov::countLocalMaximum(matrix, rows, cols) << "\n";
+  output << borisov::getMaxSumAntidiagonal(matrix, rows, cols) << "\n";
 
   if (mode == 2) {
     delete[] matrix;
