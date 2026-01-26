@@ -14,7 +14,7 @@ int main()
     return 1;
   }
 
-  for(size_t i = 0; i < size; ++i)
+  for (size_t i = 0; i < size; ++i)
   {
     uppercaseToLowercase(words[i]);
     std::cout << words[i] << ' ';
