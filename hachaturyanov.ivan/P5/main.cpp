@@ -100,7 +100,7 @@ int main()
   }
 
   std::cout << "Existing shapes: Complexquad and Polygon\n\n";
-  hachaturyanov::giveInfo(shapes);
+  giveInfo(shapes);
 
   double px = 0.0;
   double py = 0.0;
@@ -129,7 +129,7 @@ int main()
   point_t p = {px, py};
 
   try {
-    hachaturyanov::isoScale(shapes, 2, p, coef);
+    isoScale(shapes, 2, p, coef);
   } catch (std::logic_error &e) {
     std::cerr << e.what() << "\n";
     delete shapes[0];
@@ -139,7 +139,7 @@ int main()
   }
 
   std::cout << "Successfully scaled all shapes!\n\n";
-  hachaturyanov::giveInfo(shapes);
+  giveInfo(shapes);
 
   delete shapes[0];
   delete[] polygon;
