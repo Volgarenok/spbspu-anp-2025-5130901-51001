@@ -156,7 +156,6 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
         free(words);
         words = tmp_words;
         capacity_for_words = new_capacity_for_words;
-        capacity = 8;
       }
 
       if (sym == '\n')
