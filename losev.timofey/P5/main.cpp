@@ -17,14 +17,8 @@ namespace losev {
     virtual rectangle_t getFrameRect() const noexcept = 0;
     virtual void move(const point_t& point) noexcept = 0;
     virtual void move(double dx, double dy) noexcept = 0;
-    void scale(double coef) {
-      if (coef <= 0) {
-        throw std::invalid_argument("Scale coefficient must be positive");
-      }
-      return doScale(coef);
-    }
-  protected:
-    virtual void doScale(double coef) = 0;
+    void scale(double coef);
+    virtual void unsafeScale(double coef) = 0;
   };
   class Rectangle final: public Shape {
   public:
@@ -34,13 +28,11 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-  protected:
-    void doScale(double coef) override;
+    void unsafeScale(double coef) override;
   private:
     rectangle_t rect_;
   };
-  class Circle final: public Shape
-  {
+  class Circle final: public Shape {
   public:
     Circle(const point_t& center, double radius);
     Circle(double x, double y, double radius);
@@ -48,14 +40,12 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-  protected:
-    void doScale(double coef) override;
+    void unsafeScale(double coef) override;
   private:
     point_t center_;
     double radius_;
   };
-  class Ring final: public Shape
-  {
+  class Ring final: public Shape {
   public:
     Ring(const point_t& center, double outerR, double innerR);
     Ring(double x, double y, double outerR, double innerR);
@@ -63,17 +53,23 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-  protected:
-    void doScale(double coef) override;
+    void unsafeScale(double coef) override;
   private:
     point_t center_;
     double outerRadius_;
     double innerRadius_;
   };
-  void scaleFromPoint(Shape& shape, const point_t& point, double coef);
+  void unsafeScaleFromPoint(Shape& shape, const point_t& point, double coef);
   rectangle_t getOverallFrameRect(const Shape* const* shapes, size_t count);
   void printShapesInfo(const Shape* const* shapes, size_t count);
   void printRectangleInfo(const rectangle_t& rect);
+}
+void losev::Shape::scale(double coef)
+{
+  if (coef <= 0) {
+    throw std::invalid_argument("Scale coefficient must be positive");
+  }
+  return unsafeScale(coef);
 }
 losev::Rectangle::Rectangle(double width, double height, const point_t& center):
   rect_{width, height, center}
@@ -106,7 +102,7 @@ void losev::Rectangle::move(double dx, double dy) noexcept
   rect_.pos.x += dx;
   rect_.pos.y += dy;
 }
-void losev::Rectangle::doScale(double coef)
+void losev::Rectangle::unsafeScale(double coef)
 {
   rect_.width *= coef;
   rect_.height *= coef;
@@ -148,7 +144,7 @@ void losev::Circle::move(double dx, double dy) noexcept
   center_.x += dx;
   center_.y += dy;
 }
-void losev::Circle::doScale(double coef)
+void losev::Circle::unsafeScale(double coef)
 {
   radius_ *= coef;
 }
@@ -197,7 +193,7 @@ void losev::Ring::move(double dx, double dy) noexcept
   center_.x += dx;
   center_.y += dy;
 }
-void losev::Ring::doScale(double coef)
+void losev::Ring::unsafeScale(double coef)
 {
   outerRadius_ *= coef;
   innerRadius_ *= coef;
@@ -253,7 +249,7 @@ int main()
       return 1;
     }
     for (size_t i = 0; i < 6; ++i) {
-      scaleFromPoint(*shapes[i], scalePoint, scaleCoef);
+      unsafeScaleFromPoint(*shapes[i], scalePoint, scaleCoef);
     }
     std::cout << "\n=== AFTER scaling ===" << "\n";
     printShapesInfo(shapes, 6);
@@ -282,16 +278,18 @@ void losev::printRectangleInfo(const rectangle_t& rect)
   std::cout << "  Center: (" << rect.pos.x << ", " << rect.pos.y << ")\n";
   std::cout << "  Width: " << rect.width << ", Height: " << rect.height << "\n";
 }
-void losev::scaleFromPoint(Shape& shape, const point_t& point, double coef)
+
+void losev::unsafeScaleFromPoint(Shape& shape, const point_t& point, double coef)
 {
   rectangle_t frame = shape.getFrameRect();
   point_t center = frame.pos;
   double dx = point.x - center.x;
   double dy = point.y - center.y;
   shape.move(point);
-  shape.scale(coef);
+  shape.unsafeScale(coef);
   shape.move(-dx * coef, -dy * coef);
 }
+
 losev::rectangle_t losev::getOverallFrameRect(const Shape* const* shapes, size_t count)
 {
   if (count == 0) {
