@@ -3,13 +3,13 @@ namespace vishnyakov
 {
   size_t amountOfLatLetters(char *str);
   void uppercaseToLowercase(char *str);
-  bool isIn(char *str, char letter);
+  bool isIn(const char *str, char letter);
   void copy(const char *a, char *b, size_t l);
   bool isSpace(char letter);
   char **getWords(std::istream &input, size_t &size, bool (*isSpace)(char));
 }
 
-bool vishnyakov::isIn(char *str, char letter)
+bool vishnyakov::isIn(const char *str, char letter)
 {
   for (size_t i = 0; str[i] != '\0'; ++i)
   {
