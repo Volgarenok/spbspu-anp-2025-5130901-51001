@@ -33,3 +33,4 @@ void smirnova::Square::scale(double k) noexcept
 {
   side_ *= k;
 }
+

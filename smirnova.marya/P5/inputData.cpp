@@ -1,5 +1,6 @@
 #include "inputData.hpp"
 #include <iostream>
+#include <cstddef>
 
 #include "frameRect.hpp"
 #include "shape.hpp"

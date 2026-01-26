@@ -2,6 +2,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdexcept>
+#include <cstddef>
 
 #include "inputData.hpp"
 #include "frameRect.hpp"
@@ -18,8 +19,8 @@ int main()
   Rectangle rect(4.0, 2.0, {0.0, 0.0});
   Square sq(3.0, {5.0, 5.0});
   Triangle tri({0.0, 0.0}, {4.0, 0.0}, {2.0, 3.0});
-  const size_t sizeShapes = 3;
-  Shape *shapes[sizeShapes] = {&rect, &tri, &sq};
+  size_t sizeShapes = 3;
+  const Shape *shapes[sizeShapes] = {&rect, &tri, &sq};
   const char *names[sizeShapes] = {"Rectangle", "Triangle", "Square"};
   std::cout << "Before scaling:\n";
   inputData(shapes, names, sizeShapes);

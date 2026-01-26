@@ -1,5 +1,6 @@
 #ifndef INPUTDATA_HPP
 #define INPUTDATA_HPP
+#include <cstddef>
 
 #include "shape.hpp"
 
@@ -9,3 +10,4 @@ namespace smirnova
 }
 
 #endif
+

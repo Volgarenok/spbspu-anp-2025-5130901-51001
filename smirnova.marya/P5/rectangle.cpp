@@ -33,3 +33,4 @@ void smirnova::Rectangle::scale(double k) noexcept
   width_ *= k;
   height_ *= k;
 }
+
