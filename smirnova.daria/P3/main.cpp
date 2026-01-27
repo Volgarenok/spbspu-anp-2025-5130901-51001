@@ -15,6 +15,8 @@ bool isLocalMinimum(size_t i, size_t j, size_t cols, int* matrix) {
 }
 
 size_t countLocalMin(size_t rows, size_t cols, int* matrix) {
+  if (rows < 3 || cols < 3) return 0;
+  
   size_t count = 0;
   for (size_t i = 1; i < rows - 1; i++) {
     for (size_t j = 1; j < cols - 1; j++) {
@@ -98,7 +100,6 @@ int main(int argc, char* argv[]) {
     return 0;
   }
   
-  // Добавленная проверка
   const size_t MAX_SIZE = 10000;
   if (num == 1 && rows * cols > MAX_SIZE) {
     std::cerr << "Matrix too large for fixed array\n";
