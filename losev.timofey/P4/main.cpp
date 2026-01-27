@@ -14,7 +14,7 @@ int main()
   namespace los = losev;
   size_t str_size = 10;
   size_t actual_len = 0;
-  char * str = los::getline(std::cin, str_size, actual_len);
+  char* str = los::getline(std::cin, str_size, actual_len);
   if (str == nullptr) {
     std::cerr << "Fail memory\n";
     return 1;
@@ -40,7 +40,7 @@ int main()
 char * losev::getline(std::istream& in, size_t& capacity, size_t& actual_size)
 {
   capacity = 10;
-  char * str = reinterpret_cast< char* >(malloc(capacity * sizeof(char)));
+  char* str = reinterpret_cast< char* >(malloc(capacity * sizeof(char)));
   if (!str) {
     return nullptr;
   }
