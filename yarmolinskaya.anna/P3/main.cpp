@@ -2,186 +2,152 @@
 #include <fstream>
 #include <cstdlib>
 #include <climits>
-#include <new>
+#include <memory>
 
-namespace yarmolinskaya
-{
-  constexpr std::size_t MAX_SIZE = 10000;
+namespace yarmolinskaya {
+  constexpr unsigned long MAX_SIZE = 10000;
 
   bool readInt(std::istream& in, int& value)
   {
-    long long temp;
-    if (!(in >> temp))
-    {
-      return false;
-    }
-    if (temp < INT_MIN || temp > INT_MAX)
-    {
+    long long temp = 0;
+    in >> temp;
+    if (!in || temp < INT_MIN || temp > INT_MAX) {
       return false;
     }
     value = static_cast<int>(temp);
     return true;
   }
 
-  bool readMatrix(std::istream& in, int*& data, std::size_t& rows, std::size_t& cols, bool dynamic)
+  bool readMatrix(std::istream& in, int* data, unsigned long rows, unsigned long cols)
   {
-    int r = 0, c = 0;
-    if (!readInt(in, r) || !readInt(in, c))
+    const unsigned long total = rows * cols;
+    for (unsigned long i = 0; i < total; ++i)
     {
-      return false;
-    }
-    if (r < 0 || c < 0)
-    {
-      return false;
-    }
-
-    rows = static_cast<std::size_t>(r);
-    cols = static_cast<std::size_t>(c);
-    std::size_t total = rows * cols;
-
-    if (!dynamic && total > MAX_SIZE)
-    {
-      return false;
-    }
-
-    if (dynamic)
-    {
-      data = new(std::nothrow) int[total];
-      if (!data)
-      {
+      if (!readInt(in, data[i])) {
         return false;
       }
     }
-
-    for (std::size_t i = 0; i < total; ++i)
-    {
-      if (!readInt(in, data[i]))
-      {
-        return false;
-      }
-    }
-
     return true;
   }
 
-  bool isLowerTriangular(const int* m, std::size_t rows, std::size_t cols)
+  bool isLowerTriangular(const int* m, unsigned long rows, unsigned long cols)
   {
-    if (rows == 0 || cols == 0)
-    {
+    if (rows == 0 || cols == 0) {
       return false;
     }
 
-    std::size_t n = (rows < cols) ? rows : cols;
-
-    for (std::size_t i = 0; i < n; ++i)
+    const unsigned long n = (rows < cols) ? rows : cols;
+    for (unsigned long i = 0; i < n; ++i)
     {
-      for (std::size_t j = i + 1; j < n; ++j)
+      for (unsigned long j = i + 1; j < n; ++j)
       {
-        if (m[i * cols + j] != 0)
-        {
+        if (m[i * cols + j] != 0) {
           return false;
         }
       }
     }
-
     return true;
   }
 
-  std::size_t countColumns(const int* m, std::size_t rows, std::size_t cols)
+  unsigned long countColumns(const int* m, unsigned long rows, unsigned long cols)
   {
-    if (rows == 0 || cols == 0)
-    {
+    if (rows == 0 || cols == 0) {
       return 0;
     }
 
-    std::size_t result = 0;
-
-    for (std::size_t c = 0; c < cols; ++c)
+    unsigned long result = 0;
+    for (unsigned long c = 0; c < cols; ++c)
     {
       bool ok = true;
-      for (std::size_t r = 1; r < rows; ++r)
+      for (unsigned long r = 1; r < rows; ++r)
       {
-        if (m[(r - 1) * cols + c] == m[r * cols + c])
-        {
+        if (m[(r - 1) * cols + c] == m[r * cols + c]) {
           ok = false;
           break;
         }
       }
-      if (ok)
-      {
+      if (ok) {
         ++result;
       }
     }
-
     return result;
   }
 }
 
 int main(int argc, char* argv[])
 {
-  if (argc != 4)
-  {
+  if (argc != 4) {
     std::cerr << "Error: Invalid number of arguments\n";
     return 1;
   }
 
   char* end = nullptr;
-  long num = std::strtol(argv[1], &end, 10);
-  if (*end != '\0' || (num != 1 && num != 2))
-  {
+  long mode = std::strtol(argv[1], std::addressof(end), 10);
+  if (*end != '\0' || (mode != 1 && mode != 2)) {
     std::cerr << "Error: Invalid first argument\n";
     return 1;
   }
 
   std::ifstream input(argv[2]);
-  if (!input)
-  {
+  if (!input) {
     std::cerr << "Error: Cannot open input file\n";
     return 2;
   }
 
-  std::size_t rows = 0, cols = 0;
-  int* matrix = nullptr;
-  int staticBuffer[yarmolinskaya::MAX_SIZE];
-  bool dynamic = (num == 2);
-
-  if (!dynamic)
-  {
-    matrix = staticBuffer;
+  unsigned long rows = 0;
+  unsigned long cols = 0;
+  input >> rows >> cols;
+  if (!input) {
+    std::cerr << "Error: Invalid matrix size\n";
+    return 2;
   }
 
-  if (!yarmolinskaya::readMatrix(input, matrix, rows, cols, dynamic))
-  {
-    std::cerr << "Error: Invalid matrix\n";
-    if (dynamic)
-    {
+  const unsigned long total = rows * cols;
+  if (mode == 1 && total > yarmolinskaya::MAX_SIZE) {
+    std::cerr << "Error: Matrix too large\n";
+    return 2;
+  }
+
+  int fixedBuffer[yarmolinskaya::MAX_SIZE];
+  int* matrix = nullptr;
+
+  try {
+    if (mode == 1) {
+      matrix = fixedBuffer;
+    } else {
+      matrix = new int[total];
+    }
+
+    if (!yarmolinskaya::readMatrix(input, matrix, rows, cols)) {
+      throw std::runtime_error("Invalid matrix data");
+    }
+  } catch (...) {
+    if (mode == 2) {
       delete[] matrix;
     }
+    std::cerr << "Error: Invalid matrix\n";
     return 2;
   }
 
   std::ofstream output(argv[3]);
-  if (!output)
-  {
-    std::cerr << "Error: Cannot open output file\n";
-    if (dynamic)
-    {
+  if (!output) {
+    if (mode == 2) {
       delete[] matrix;
     }
+    std::cerr << "Error: Cannot open output file\n";
     return 2;
   }
 
-  if (num == 1)
-  {
-    output << (yarmolinskaya::isLowerTriangular(matrix, rows, cols) ? "true" : "false") << '\n';
-  }
-  else
-  {
-    output << yarmolinskaya::countColumns(matrix, rows, cols) << '\n';
+  const bool lower = yarmolinskaya::isLowerTriangular(matrix, rows, cols);
+  const unsigned long count = yarmolinskaya::countColumns(matrix, rows, cols);
+
+  if (mode == 1) {
+    output << (lower ? "true" : "false") << '\n';
+  } else {
+    output << count << '\n';
   }
 
-  if (dynamic)
-  {
+  if (mode == 2) {
     delete[] matrix;
   }
 
