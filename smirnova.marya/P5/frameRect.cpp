@@ -1,12 +1,9 @@
 #include "frameRect.hpp"
 #include <algorithm>
-#include <cstddef>
 
-#include "shape.hpp"
-
-smirnova::rectangle_t smirnova::getTotalFrameRect(Shape * const shapes[], const size_t count) noexcept
+smirnova::rectangle_t smirnova::getTotalFrameRect(const Shape * const shapes[], size_t count) noexcept
 {
-  if (count <= 0)
+  if (count == 0)
   {
     return {0.0, 0.0, {0.0, 0.0}};
   }
