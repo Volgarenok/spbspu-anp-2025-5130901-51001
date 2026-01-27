@@ -77,7 +77,7 @@ int main(int argc, char ** argv)
   }
 
   char* endptr = nullptr;
-  long mode = strtol(argv[1], std::addressof(endptr), 10);
+  long mode = std::strtol(argv[1], std::addressof(endptr), 10);
 
   if (*endptr != '\0' || endptr == argv[1]) {
     std::cerr << "First parameter is not a number\n";
