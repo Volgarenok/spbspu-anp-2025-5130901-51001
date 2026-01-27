@@ -3,7 +3,8 @@
 
 #include "utils.hpp"
 
-smirnova::Rectangle::Rectangle(double width, double height, const point_t &center): width_(width),
+smirnova::Rectangle::Rectangle(double width, double height, const point_t &center):
+  width_(width),
   height_(height),
   center_(center)
 {

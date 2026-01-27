@@ -4,7 +4,8 @@
 #include "shape.hpp"
 #include "utils.hpp"
 
-smirnova::Square::Square(double side, const point_t &center): side_(side),
+smirnova::Square::Square(double side, const point_t &center):
+  side_(side),
   center_(center)
 {
   if (side <= 0.0)
