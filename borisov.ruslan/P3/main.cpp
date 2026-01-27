@@ -6,7 +6,7 @@
 
 namespace borisov
 {
-  size_t countLocalMaximum(const int* matrix, size_t rows, size_t cols)
+  size_t countLocalMaximum(const int * matrix, size_t rows, size_t cols)
   {
     if (rows < 3 || cols < 3) {
       return 0;
@@ -39,7 +39,7 @@ namespace borisov
     return count;
   }
 
-  int getMaxSumAntidiagonal(const int* matrix, size_t rows, size_t cols)
+  int getMaxSumAntidiagonal(const int * matrix, size_t rows, size_t cols)
   {
     size_t n;
     if (rows < cols) {
@@ -76,7 +76,7 @@ int main(int argc, char ** argv)
     return 1;
   }
 
-  char* endptr = nullptr;
+  char * endptr = nullptr;
   long mode = std::strtol(argv[1], std::addressof(endptr), 10);
 
   if (*endptr != '\0' || endptr == argv[1]) {
@@ -113,7 +113,7 @@ int main(int argc, char ** argv)
     return 2;
   }
 
-  int* matrix = nullptr;
+  int * matrix = nullptr;
   int fixed_matrix[10000] = {};
 
   if (mode == 1) {
