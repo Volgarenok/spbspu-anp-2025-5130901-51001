@@ -18,7 +18,7 @@ namespace losev {
     virtual void move(const point_t& point) noexcept = 0;
     virtual void move(double dx, double dy) noexcept = 0;
     void scale(double coef);
-    virtual void unsafeScale(double coef) = 0;
+    virtual void unsafeScale(double coef) noexcept = 0;
   };
   class Rectangle final: public Shape {
   public:
@@ -28,7 +28,7 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void unsafeScale(double coef) override;
+    void unsafeScale(double coef) noexcept override;
   private:
     rectangle_t rect_;
   };
@@ -40,7 +40,7 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void unsafeScale(double coef) override;
+    void unsafeScale(double coef) noexcept override;
   private:
     point_t center_;
     double radius_;
@@ -53,7 +53,7 @@ namespace losev {
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& point) noexcept override;
     void move(double dx, double dy) noexcept override;
-    void unsafeScale(double coef) override;
+    void unsafeScale(double coef) noexcept override;
   private:
     point_t center_;
     double outerRadius_;
@@ -102,7 +102,7 @@ void losev::Rectangle::move(double dx, double dy) noexcept
   rect_.pos.x += dx;
   rect_.pos.y += dy;
 }
-void losev::Rectangle::unsafeScale(double coef)
+void losev::Rectangle::unsafeScale(double coef) noexcept
 {
   rect_.width *= coef;
   rect_.height *= coef;
@@ -144,7 +144,7 @@ void losev::Circle::move(double dx, double dy) noexcept
   center_.x += dx;
   center_.y += dy;
 }
-void losev::Circle::unsafeScale(double coef)
+void losev::Circle::unsafeScale(double coef) noexcept
 {
   radius_ *= coef;
 }
@@ -193,7 +193,7 @@ void losev::Ring::move(double dx, double dy) noexcept
   center_.x += dx;
   center_.y += dy;
 }
-void losev::Ring::unsafeScale(double coef)
+void losev::Ring::unsafeScale(double coef) noexcept
 {
   outerRadius_ *= coef;
   innerRadius_ *= coef;
@@ -203,8 +203,9 @@ int main()
 {
   using namespace losev;
   Shape** shapes = nullptr;
+  size_t countShape = 6;
   try {
-    shapes = new Shape*[6]();
+    shapes = new Shape*[countShape]();
     shapes[0] = new Rectangle(4.0, 3.0, {1.0, 2.0});
     shapes[1] = new Rectangle(rectangle_t{5.0, 2.0, {3.0, 4.0}});
     shapes[2] = new Circle({0.0, 0.0}, 2.0);
