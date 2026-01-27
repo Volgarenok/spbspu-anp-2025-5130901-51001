@@ -37,7 +37,7 @@ int main()
   return 0;
 }
 
-char * losev::getline(std::istream& in, size_t& capacity, size_t& actual_size)
+char* losev::getline(std::istream& in, size_t& capacity, size_t& actual_size)
 {
   capacity = 10;
   char* str = reinterpret_cast< char* >(malloc(capacity * sizeof(char)));
@@ -53,7 +53,7 @@ char * losev::getline(std::istream& in, size_t& capacity, size_t& actual_size)
   while (in >> ch && ch != '\n') {
     if (actual_size >= (capacity - 1)) {
       size_t new_capacity = capacity + 10;
-      char * str_new = reinterpret_cast< char* >(malloc(new_capacity * sizeof(char)));
+      char* str_new = reinterpret_cast< char* >(malloc(new_capacity * sizeof(char)));
       if (!str_new) {
         if (is_skips) {
           in >> std::skipws;
@@ -92,7 +92,7 @@ char* losev::latRmv(const char* src, char* dest)
 
 int losev::hasRep(const char* src)
 {
-  const char * ptr = src + 1;
+  const char* ptr = src + 1;
   for (; *src != '\0'; src++) {
     ptr = src + 1;
     for (; *ptr != '\0'; ptr++) {
