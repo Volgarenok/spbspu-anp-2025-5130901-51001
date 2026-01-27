@@ -98,7 +98,13 @@ int main(int argc, char* argv[]) {
     return 0;
   }
   
+  // Добавленная проверка
   const size_t MAX_SIZE = 10000;
+  if (num == 1 && rows * cols > MAX_SIZE) {
+    std::cerr << "Matrix too large for fixed array\n";
+    return 2;
+  }
+  
   int* matrix = (num == 1) ? new int[MAX_SIZE] : new int[rows * cols];
   
   for (size_t i = 0; i < rows * cols; i++) {
