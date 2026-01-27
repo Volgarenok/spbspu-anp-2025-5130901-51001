@@ -131,7 +131,9 @@ int main(int argc, char ** argv)
   for (size_t i = 0; i < total; ++i) {
     if (!(input >> matrix[i])) {
       std::cerr << "read matrix failed\n";
-      if (mode == 2) delete[] matrix;
+      if (mode == 2) {
+        delete[] matrix;
+      }
       return 2;
     }
   }
