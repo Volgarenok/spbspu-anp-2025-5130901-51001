@@ -41,7 +41,7 @@ namespace borisov
 
   int getMaxSumAntidiagonal(const int * matrix, size_t rows, size_t cols)
   {
-    size_t n;
+    size_t n = 0;
     if (rows < cols) {
       n = rows;
     } else {
