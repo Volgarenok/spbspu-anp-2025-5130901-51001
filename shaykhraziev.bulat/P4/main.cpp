@@ -1,18 +1,19 @@
 #include <iostream>
 #include <istream>
+#include <cstring>
+#include <stdexcept>
 
 namespace shaykhraziev
 {
-  char* concat(char* a, char* b, size_t as, size_t bs);
+  char* concat(const char* a, const char* b, size_t as, size_t bs);
   char* getline(std::istream& in, size_t& size);
-  void uni_two(char* sum, char* a, char* b, size_t as, size_t bs);
-  int has_sam(char* a, char* b, size_t as, size_t bs);
-  void printarray(char* a, size_t s);
+  void combineStrings(char* sum, const char* a, const char* b, size_t as, size_t bs);
+  int hasSame(const char* a, const char* b);
 }
 
-char* shaykhraziev::concat(char* a, char* b, size_t as, size_t bs)
+char* shaykhraziev::concat(const char* a, const char* b, const size_t as, const size_t bs)
 {
-  size_t len = as + bs;
+  const size_t len = as + bs;
   char* result = new char[len];
 
   for (size_t i = 0; i < as; i++) {
@@ -28,54 +29,52 @@ char* shaykhraziev::concat(char* a, char* b, size_t as, size_t bs)
 
 char* shaykhraziev::getline(std::istream& in, size_t& size)
 {
-  size_t batchsize = 10;
+  const size_t batch_size = 10;
   char* result = nullptr;
   size = 0;
 
-  char* batch = new char[batchsize];
+  char* batch = new char[batch_size + 1];
 
   if (in.flags() & std::ios_base::skipws) {
     in >> std::noskipws;
   }
 
-  char val;
+  char ch = ' ';
   size_t i = 0;
 
-  while (!(in >> val).fail() && val != '\n') {
-    batch[i] = val;
+  while (!(in >> ch).fail() && ch != '\n') {
+    batch[i] = ch;
 
-    if (++i == batchsize) {
+    if (++i == batch_size) {
       i = 0;
-      char* t;
+      char* temp = nullptr;
 
       try {
-        t = concat(result, batch, size, batchsize);
-      } catch (...) {
-        size = 0;
+        temp = concat(result, batch, size, batch_size);
+      } catch (const std::bad_alloc& e) {
         delete[] result;
         delete[] batch;
         throw;
       }
 
       delete[] result;
-      size += batchsize;
-      result = t;
+      size += batch_size;
+      result = temp;
     }
   }
 
   if (in.fail()) {
     delete[] batch;
     delete[] result;
-    size = 0;
-    return nullptr;
+    throw std::logic_error("input failed");
   }
 
-  char* q;
+  char* temp = nullptr;
+  batch[i] = '\0';
 
   try {
-    q = concat(result, batch, size, i);
-  } catch (...) {
-    size = 0;
+    temp = concat(result, batch, size, i + 1);
+  } catch (const std::bad_alloc& e) {
     delete[] result;
     delete[] batch;
     throw;
@@ -83,48 +82,47 @@ char* shaykhraziev::getline(std::istream& in, size_t& size)
 
   delete[] result;
   size += i;
-  result = q;
-
   delete[] batch;
-  return result;
+
+  return temp;
 }
 
-void shaykhraziev::uni_two(char* sum, char* a, char* b, size_t as, size_t bs)
+void shaykhraziev::combineStrings(char* sum, const char* a, const char* b, size_t as, size_t bs)
 {
-  size_t cmn;
-  size_t odd;
-  char* t;
+  size_t common_length = 0;
+  size_t diff_length = 0;
+  const char* tail = nullptr;
 
   if (as >= bs) {
-    cmn = bs;
-    odd = as - bs;
-    t = a;
+    common_length = bs;
+    diff_length = as - bs;
+    tail = a;
   } else {
-    cmn = as;
-    odd = bs - as;
-    t = b;
+    common_length = as;
+    diff_length = bs - as;
+    tail = b;
   }
 
-  for (size_t i = 0; i < cmn; i++) {
+  for (size_t i = 0; i < common_length; i++) {
     sum[2 * i] = a[i];
     sum[2 * i + 1] = b[i];
   }
 
-  for (size_t i = 0; i < odd; i++) {
-    sum[2 * cmn + i] = t[cmn + i];
+  for (size_t i = 0; i < diff_length; i++) {
+    sum[2 * common_length + i] = tail[common_length + i];
   }
 }
 
-int shaykhraziev::has_sam(char* a, char* b, size_t as, size_t bs)
+int shaykhraziev::hasSame(const char* a, const char* b)
 {
   size_t freq[256] = {};
 
-  for (size_t i = 0; i < as; i++) {
-    freq[static_cast<unsigned char>(a[i])]++;
+  for (size_t i = 0; a[i] != '\0'; i++) {
+    freq[static_cast< unsigned char >(a[i])] += 1;
   }
 
-  for (size_t i = 0; i < bs; i++) {
-    if (freq[static_cast<unsigned char>(b[i])] > 0) {
+  for (size_t i = 0; b[i] != '\0'; i++) {
+    if (freq[static_cast< unsigned char >(b[i])] > 0) {
       return 1;
     }
   }
@@ -132,73 +130,49 @@ int shaykhraziev::has_sam(char* a, char* b, size_t as, size_t bs)
   return 0;
 }
 
-void shaykhraziev::printarray(char* a, size_t s)
-{
-  for (size_t i = 0; i < s; i++) {
-    std::cout << a[i];
-  }
-
-  std::cout << "\n";
-}
-
 int main()
 {
-  size_t s1;
-  size_t s2;
-
-  char* inp1;
-  char* inp2;
+  char* input1 = nullptr;
+  const char* input2 = "QWERTYUIOP\0";
+  size_t input1_length = 0;
 
   try {
-    inp1 = shaykhraziev::getline(std::cin, s1);
-  } catch (std::bad_alloc&) {
-    std::cerr << "bad alloc\n";
+    input1 = shaykhraziev::getline(std::cin, input1_length);
+  } catch (const std::bad_alloc& e) {
+    std::cerr << "bad alloc " << e.what() << "\n";
     return 1;
-  } catch (std::exception& e) {
+  } catch (const std::logic_error& e) {
     std::cerr << e.what() << "\n";
     return 1;
   }
 
-  try {
-    inp2 = shaykhraziev::getline(std::cin, s2);
-  } catch (std::bad_alloc&) {
-    std::cerr << "bad alloc\n";
-    delete[] inp1;
-    return 1;
-  } catch (std::exception& e) {
-    std::cerr << e.what() << "\n";
-    delete[] inp1;
-    return 1;
-  }
+  const size_t input2_length = std::strlen(input2);
+  const size_t total_size = input1_length + input2_length;
+  char* sum = nullptr;
 
-  size_t size = s1 + s2;
-  char* sum;
-
-  if (size == 0) {
+  if (total_size == 0) {
     std::cerr << "nothing working with\n";
-    delete[] inp1;
-    delete[] inp2;
+    delete[] input1;
     return 1;
   }
 
   try {
-    sum = new char[size];
-  } catch (std::bad_alloc&) {
-    std::cerr << "bad alloc\n";
-    delete[] inp1;
-    delete[] inp2;
+    sum = new char[total_size + 1];
+    sum[total_size] = '\0';
+  } catch (const std::bad_alloc& e) {
+    std::cerr << "bad alloc " << e.what() << "\n";
+    delete[] input1;
     return 1;
   }
 
-  shaykhraziev::uni_two(sum, inp1, inp2, s1, s2);
-  shaykhraziev::printarray(sum, size);
+  shaykhraziev::combineStrings(sum, input1, input2, input1_length, input2_length);
+  std::cout << sum << "\n";
+
+  int has_same = shaykhraziev::hasSame(input1, input2);
+  std::cout << has_same << "\n";
+
   delete[] sum;
-
-  int hasSam = shaykhraziev::has_sam(inp1, inp2, s1, s2);
-  std::cout << hasSam << "\n";
-
-  delete[] inp1;
-  delete[] inp2;
+  delete[] input1;
 
   return 0;
 }
