@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
   }
 
   char* end = nullptr;
-  long mode = std::strtol(argv[1],std::addressof(end), 10);
+  long mode = std::strtol(argv[1], std::addressof(end), 10);
   if (end == argv[1] || *end != '\0') {
     std::cerr << "Error: Mode must be a number\n";
     return 1;
