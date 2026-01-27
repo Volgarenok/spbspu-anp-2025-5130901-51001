@@ -1,7 +1,7 @@
 #include <iostream>
 namespace vishnyakov
 {
-  size_t amountOfLatLetters(char *str);
+  size_t amountOfLatLetters(const char *str);
   void uppercaseToLowercase(char *str);
   bool isIn(const char *str, char letter);
   void copy(const char *a, char *b, size_t l);
@@ -193,7 +193,7 @@ char **vishnyakov::getWords(std::istream &input, size_t &size, bool (*isSpace)(c
   return words;
 }
 
-size_t vishnyakov::amountOfLatLetters(char *str)
+size_t vishnyakov::amountOfLatLetters(const char *str)
 {
   size_t result = 0;
   const char *lowercase_lat_alphabet = "abcdefghijklmnopqrstuvwxyz";
