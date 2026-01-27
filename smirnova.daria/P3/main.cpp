@@ -33,8 +33,37 @@ void smirnova::task1(size_t rows, size_t cols, int* matrix, const char* outputFi
 }
 
 void smirnova::task2(size_t rows, size_t cols, int* matrix, const char* outputFile) {
+  if (rows == 0 || cols == 0) {
+    std::ofstream out(outputFile);
+    out << "0";
+    return;
+  }
+  
+  size_t maxRow = 0;
+  size_t maxLen = 0;
+  
+  for (size_t i = 0; i < rows; i++) {
+    size_t currLen = 1;
+    size_t rowMax = 1;
+    
+    for (size_t j = 1; j < cols; j++) {
+      if (matrix[i * cols + j] == matrix[i * cols + j - 1]) {
+        currLen++;
+      } else {
+        if (currLen > rowMax) rowMax = currLen;
+        currLen = 1;
+      }
+    }
+    if (currLen > rowMax) rowMax = currLen;
+    
+    if (rowMax > maxLen) {
+      maxLen = rowMax;
+      maxRow = i;
+    }
+  }
+  
   std::ofstream out(outputFile);
-  out << "0";
+  out << (maxRow + 1);
 }
 
 int main(int argc, char* argv[]) {
