@@ -5,7 +5,7 @@
 
 namespace smirnova
 {
-  char **getWords(std::istream &in, size_t &size,
+  char** getWords(std::istream& in, size_t& size,
   bool (*checkSpace)(char));
 }
 
