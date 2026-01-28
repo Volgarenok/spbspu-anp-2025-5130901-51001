@@ -3,7 +3,7 @@
 
 #include "utils.hpp"
 
-smirnova::Rectangle::Rectangle(double width, double height, const point_t &center):
+smirnova::Rectangle::Rectangle(double width, double height, const point_t& center):
   width_(width),
   height_(height),
   center_(center)
@@ -22,7 +22,7 @@ smirnova::rectangle_t smirnova::Rectangle::getFrameRect() const noexcept
 {
   return makeFrameRect(width_, height_, center_);
 }
-void smirnova::Rectangle::move(const point_t &p) noexcept
+void smirnova::Rectangle::move(const point_t& p) noexcept
 {
   center_ = p;
 }

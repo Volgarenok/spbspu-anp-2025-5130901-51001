@@ -34,7 +34,7 @@ smirnova::rectangle_t smirnova::Triangle::getFrameRect() const noexcept
   return makeFrameRect(maxX - minX, maxY - minY, {(minX + maxX) / 2.0, (minY + maxY) / 2.0});
 }
 
-void smirnova::Triangle::move(const point_t &p) noexcept
+void smirnova::Triangle::move(const point_t& p) noexcept
 {
   point_t centroid = getCentroid(a_, b_, c_);
   double dx = p.x - centroid.x;
