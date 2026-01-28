@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-
 namespace krivoshapov {
 
   int findColumnWithLongestSeries(const int* matrix, size_t rows, size_t columns)
