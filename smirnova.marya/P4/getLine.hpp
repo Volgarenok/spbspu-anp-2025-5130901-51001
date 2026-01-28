@@ -5,7 +5,7 @@
 
 namespace smirnova
 {
-  char *getLine(std::istream &in, size_t &size);
+  char* getLine(std::istream& in, size_t& size);
 }
 
 #endif

@@ -7,7 +7,7 @@
 
 namespace smirnova
 {
-  char *getLine(std::istream &in, size_t &size)
+  char* getLine(std::istream& in, size_t& size)
   {
     bool is_skipws = in.flags() & std::ios_base::skipws;
     if (is_skipws) {
@@ -16,7 +16,7 @@ namespace smirnova
     size_t capacity = 16;
     size_t length = 0;
 
-    char *str = reinterpret_cast< char* >(malloc(capacity));
+    char* str = reinterpret_cast< char* >(malloc(capacity));
     if (!str) {
       return nullptr;
     }
@@ -25,7 +25,7 @@ namespace smirnova
     while (in.get(ch) && ch != '\n') {
       if (length + 1 >= capacity) {
         size_t newCapacity = capacity * 2;
-        char *buffer = reinterpret_cast< char* >(malloc(newCapacity));
+        char* buffer = reinterpret_cast< char* >(malloc(newCapacity));
         if (!buffer) {
           free(str);
           return 0;
@@ -44,7 +44,7 @@ namespace smirnova
       in >> std::skipws;
     }
 
-    char *result = reinterpret_cast< char* >(malloc(length + 1));
+    char* result = reinterpret_cast< char* >(malloc(length + 1));
     if (!result) {
       free(str);
       return 0;
