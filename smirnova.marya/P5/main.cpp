@@ -21,7 +21,7 @@ int main()
   Triangle tri({0.0, 0.0}, {4.0, 0.0}, {2.0, 3.0});
   const size_t sizeShapes = 3;
   Shape* shapes[sizeShapes] = {&rect, &tri, &sq};
-  const char *names[sizeShapes] = {"Rectangle", "Triangle", "Square"};
+  const char* names[sizeShapes] = {"Rectangle", "Triangle", "Square"};
   std::cout << "Before scaling:\n";
   inputData(shapes, names, sizeShapes);
   point_t scalePoint;
