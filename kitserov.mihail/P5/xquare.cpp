@@ -27,7 +27,7 @@ void kitserov::Xquare::move(const point_t& p) noexcept
   centre_ = p;
 }
 
-void kitserov::Xquare::scale(float k) noexcept
+void kitserov::Xquare::doScale(float k)
 {
   side_ *= k;
 }

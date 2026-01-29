@@ -14,8 +14,8 @@ namespace kitserov
     rectangle_t getFrameRect() const noexcept override;
     void move(float dx, float dy) noexcept override;
     void move(const point_t& p) noexcept override;
-    void scale(float k) noexcept override;
   private:
+    void doScale(float k) override;
     point_t* vertices_;
     size_t vertexCount_;
     point_t center_;

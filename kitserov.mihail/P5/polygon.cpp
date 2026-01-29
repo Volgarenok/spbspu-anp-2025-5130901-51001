@@ -74,7 +74,7 @@ void kitserov::Polygon::move(const point_t& p) noexcept
   move(dx, dy);
 }
 
-void kitserov::Polygon::scale(float k) noexcept
+void kitserov::Polygon::doScale(float k)
 {
   for (size_t i = 0; i < vertexCount_; ++i) {
     vertices_[i].x = center_.x + (vertices_[i].x - center_.x) * k;

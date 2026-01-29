@@ -25,7 +25,7 @@ void kitserov::Rectangle::move(const point_t& p) noexcept
   rect_.pos = p;
 }
 
-void kitserov::Rectangle::scale(float k) noexcept
+void kitserov::Rectangle::doScale(float k)
 {
   rect_.width *= k;
   rect_.height *= k;
