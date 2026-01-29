@@ -56,9 +56,6 @@ void kitserov::shapeOutput(std::ostream& os, const Shape* sh, const char* name) 
 
 void kitserov::scalePoint(Shape* sh, const point_t& p, float k)
 {
-  if (k <= 0) {
-    throw std::logic_error("bad ratio");
-  }
   rectangle_t fr = sh->getFrameRect();
   float dx = p.x - fr.pos.x;
   float dy = p.y - fr.pos.y;
