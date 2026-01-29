@@ -1,6 +1,6 @@
 #include "polygon.hpp"
-#include "utils.hpp"
 #include <stdexcept>
+#include "utils.hpp"
 
 kitserov::Polygon::Polygon(point_t* vertices, size_t vertexCount):
   vertices_(new point_t[vertexCount]),
