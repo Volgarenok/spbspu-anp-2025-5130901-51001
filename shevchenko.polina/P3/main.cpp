@@ -209,38 +209,21 @@ int main(int argc, char * argv[])
     return 1;
   }
 
-  const char * arg1 = argv[1];
-  bool flag = false;
-  if (arg1[0] == '1' || arg1[0] == '2')
+  char * endptr = nullptr;
+  long num_long = std::strtol(arg1, &endptr, 10);
+
+  if (endptr == arg1 || *endptr != '\0')
   {
-    if (arg1[1] == '\0')
-    {
-      flag = true;
-    }
+    std::cerr << "First parametr is not a number\n";
+    return 1;
+  }
+  if (num_long != 1 && num_long != 2)
+  {
+    std::cerr << "First parametr is out of range\n";
+    return 1;
   }
 
-  if (!flag)
-  {
-    char * endptr = nullptr;
-    long num_long = std::strtol(arg1, &endptr, 10);
-
-    if (endptr == arg1 || *endptr != '\0')
-    {
-      std::cerr << "First parametr is not a number\n";
-      return 1;
-    }
-    if (num_long != 1 && num_long != 2)
-    {
-      std::cerr << "First parametr is out of range\n";
-      return 1;
-    }
-    while (*arg1 == ' ' || *arg1 == '\t')
-    {
-      arg1++;
-    }
-  }
-
-  int num = arg1[0] - '0';
+  int num = num_long;
 
   const char * inputFile = argv[2];
   const char * outputFile = argv[3];
@@ -316,7 +299,7 @@ int main(int argc, char * argv[])
   {
     dataCopy = new int[total];
   }
-  catch(...)
+  catch (...)
   {
     std::cerr << "Memory allocation failed\n";
     if (num == 2)
@@ -342,7 +325,7 @@ int main(int argc, char * argv[])
   {
     dataCopy2 = new int[total];
   }
-  catch(...)
+  catch (...)
   {
     std::cerr << "Memory allocation failed\n";
     if (num == 2)
@@ -362,7 +345,7 @@ int main(int argc, char * argv[])
   {
     smoothData = new double[total];
   }
-  catch(...)
+  catch (...)
   {
     std::cerr << "Memory allocation failed\n";
     delete[] dataCopy2;
