@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <stdexcept>
 
 namespace krivoshapov
 {
@@ -20,7 +21,9 @@ namespace krivoshapov
   class Shape
   {
   public:
-    virtual ~Shape() = default;
+    virtual ~Shape()
+    {
+    }
 
     virtual double getArea() const = 0;
     virtual rectangle_t getFrameRect() const = 0;
@@ -31,13 +34,12 @@ namespace krivoshapov
     {
       if (factor <= 0.0)
       {
-        throw "Scale factor must be positive";
+        throw std::invalid_argument("Scale factor must be positive");
       }
-      doScale(factor);
+      scaleWithoutCheck(factor);
     }
 
-  private:
-    virtual void doScale(double factor) = 0;
+    virtual void scaleWithoutCheck(double factor) = 0;
   };
 
   class Circle final : public Shape
@@ -46,14 +48,13 @@ namespace krivoshapov
     Circle(const point_t &center, double radius);
     ~Circle() override = default;
 
-    double getArea() const override;
-    rectangle_t getFrameRect() const override;
-    void move(double dx, double dy) override;
-    void move(const point_t &newPos) override;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void move(const point_t &newPos) noexcept override;
+    void scaleWithoutCheck(double factor) noexcept override;
 
   private:
-    void doScale(double factor) override;
-
     point_t center_;
     double radius_;
   };
@@ -64,14 +65,13 @@ namespace krivoshapov
     Rectangle(const point_t &center, double width, double height);
     ~Rectangle() override = default;
 
-    double getArea() const override;
-    rectangle_t getFrameRect() const override;
-    void move(double dx, double dy) override;
-    void move(const point_t &newPos) override;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void move(const point_t &newPos) noexcept override;
+    void scaleWithoutCheck(double factor) noexcept override;
 
   private:
-    void doScale(double factor) override;
-
     point_t center_;
     double width_;
     double height_;
@@ -83,14 +83,13 @@ namespace krivoshapov
     Rubber(const point_t &circleCenter, double radius, const point_t &shapeCenter);
     ~Rubber() override = default;
 
-    double getArea() const override;
-    rectangle_t getFrameRect() const override;
-    void move(double dx, double dy) override;
-    void move(const point_t &newPos) override;
+    double getArea() const noexcept override;
+    rectangle_t getFrameRect() const noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void move(const point_t &newPos) noexcept override;
+    void scaleWithoutCheck(double factor) noexcept override;
 
   private:
-    void doScale(double factor) override;
-
     point_t circleCenter_;
     double radius_;
     point_t shapeCenter_;
@@ -101,16 +100,16 @@ namespace krivoshapov
   {
     if (radius <= 0.0)
     {
-      throw "Circle radius must be positive";
+      throw std::invalid_argument("Circle radius must be positive");
     }
   }
 
-  double Circle::getArea() const
+  double Circle::getArea() const noexcept
   {
     return M_PI * radius_ * radius_;
   }
 
-  rectangle_t Circle::getFrameRect() const
+  rectangle_t Circle::getFrameRect() const noexcept
   {
     rectangle_t result;
     result.width = 2.0 * radius_;
@@ -119,18 +118,18 @@ namespace krivoshapov
     return result;
   }
 
-  void Circle::move(double dx, double dy)
+  void Circle::move(double dx, double dy) noexcept
   {
     center_.x += dx;
     center_.y += dy;
   }
 
-  void Circle::move(const point_t &newPos)
+  void Circle::move(const point_t &newPos) noexcept
   {
     center_ = newPos;
   }
 
-  void Circle::doScale(double factor)
+  void Circle::scaleWithoutCheck(double factor) noexcept
   {
     radius_ *= factor;
   }
@@ -141,16 +140,16 @@ namespace krivoshapov
   {
     if (width <= 0.0 || height <= 0.0)
     {
-      throw "Rectangle dimensions must be positive";
+      throw std::invalid_argument("Rectangle dimensions must be positive");
     }
   }
 
-  double Rectangle::getArea() const
+  double Rectangle::getArea() const noexcept
   {
     return width_ * height_;
   }
 
-  rectangle_t Rectangle::getFrameRect() const
+  rectangle_t Rectangle::getFrameRect() const noexcept
   {
     rectangle_t result;
     result.width = width_;
@@ -159,18 +158,18 @@ namespace krivoshapov
     return result;
   }
 
-  void Rectangle::move(double dx, double dy)
+  void Rectangle::move(double dx, double dy) noexcept
   {
     center_.x += dx;
     center_.y += dy;
   }
 
-  void Rectangle::move(const point_t &newPos)
+  void Rectangle::move(const point_t &newPos) noexcept
   {
     center_ = newPos;
   }
 
-  void Rectangle::doScale(double factor)
+  void Rectangle::scaleWithoutCheck(double factor) noexcept
   {
     width_ *= factor;
     height_ *= factor;
@@ -182,7 +181,7 @@ namespace krivoshapov
   {
     if (radius <= 0.0)
     {
-      throw "Rubber radius must be positive";
+      throw std::invalid_argument("Rubber radius must be positive");
     }
 
     double dx = shapeCenter.x - circleCenter.x;
@@ -191,16 +190,16 @@ namespace krivoshapov
 
     if (dist >= radius)
     {
-      throw "Shape center must be inside the circle";
+      throw std::invalid_argument("Shape center must be inside the circle");
     }
   }
 
-  double Rubber::getArea() const
+  double Rubber::getArea() const noexcept
   {
     return M_PI * radius_ * radius_;
   }
 
-  rectangle_t Rubber::getFrameRect() const
+  rectangle_t Rubber::getFrameRect() const noexcept
   {
     rectangle_t result;
     result.width = 2.0 * radius_;
@@ -209,7 +208,7 @@ namespace krivoshapov
     return result;
   }
 
-  void Rubber::move(double dx, double dy)
+  void Rubber::move(double dx, double dy) noexcept
   {
     circleCenter_.x += dx;
     circleCenter_.y += dy;
@@ -217,14 +216,14 @@ namespace krivoshapov
     shapeCenter_.y += dy;
   }
 
-  void Rubber::move(const point_t &newPos)
+  void Rubber::move(const point_t &newPos) noexcept
   {
     double dx = newPos.x - shapeCenter_.x;
     double dy = newPos.y - shapeCenter_.y;
     move(dx, dy);
   }
 
-  void Rubber::doScale(double factor)
+  void Rubber::scaleWithoutCheck(double factor) noexcept
   {
     radius_ *= factor;
     double dx = circleCenter_.x - shapeCenter_.x;
@@ -237,7 +236,7 @@ namespace krivoshapov
   {
     if (factor <= 0.0)
     {
-      throw "Scale factor must be positive";
+      throw std::invalid_argument("Scale factor must be positive");
     }
 
     for (size_t i = 0; i < count; ++i)
@@ -249,7 +248,7 @@ namespace krivoshapov
       double dy = shapeCenter.y - scaleCenter.y;
 
       shapes[i]->move(scaleCenter);
-      shapes[i]->scale(factor);
+      shapes[i]->scaleWithoutCheck(factor);
 
       point_t newCenter;
       newCenter.x = scaleCenter.x + dx * factor;
@@ -268,7 +267,17 @@ namespace krivoshapov
     std::cout << "width: " << frame.width << ", height: " << frame.height << "\n";
   }
 
-  rectangle_t getOverallFrameRect(Shape **shapes, size_t count)
+  double min(double a, double b)
+  {
+    return (a < b) ? a : b;
+  }
+
+  double max(double a, double b)
+  {
+    return (a > b) ? a : b;
+  }
+
+  rectangle_t getOverallFrameRect(const Shape *const *shapes, size_t count)
   {
     if (count == 0)
     {
@@ -291,14 +300,10 @@ namespace krivoshapov
       double bottom = frame.pos.y - frame.height / 2.0;
       double top = frame.pos.y + frame.height / 2.0;
 
-      if (left < minX)
-        minX = left;
-      if (right > maxX)
-        maxX = right;
-      if (bottom < minY)
-        minY = bottom;
-      if (top > maxY)
-        maxY = top;
+      minX = min(minX, left);
+      maxX = max(maxX, right);
+      minY = min(minY, bottom);
+      maxY = max(maxY, top);
     }
 
     rectangle_t result;
@@ -310,7 +315,7 @@ namespace krivoshapov
     return result;
   }
 
-  double getTotalArea(Shape **shapes, size_t count)
+  double getTotalArea(const Shape *const *shapes, size_t count)
   {
     double total = 0.0;
     for (size_t i = 0; i < count; ++i)
@@ -318,6 +323,22 @@ namespace krivoshapov
       total += shapes[i]->getArea();
     }
     return total;
+  }
+
+  void printAllShapesInfo(const Shape *const *shapes, size_t count)
+  {
+    for (size_t i = 0; i < count; ++i)
+    {
+      printShapeInfo(*shapes[i], i);
+    }
+
+    double totalArea = getTotalArea(shapes, count);
+    std::cout << "\nTotal area: " << totalArea << "\n";
+
+    rectangle_t overallFrame = getOverallFrameRect(shapes, count);
+    std::cout << "\nOverall frame rectangle: ";
+    std::cout << "center(" << overallFrame.pos.x << ", " << overallFrame.pos.y << "), ";
+    std::cout << "width: " << overallFrame.width << ", height: " << overallFrame.height << "\n";
   }
 
 }
@@ -328,7 +349,6 @@ int main()
 
   const size_t shapeCount = 3;
   Shape *shapes[shapeCount] = {nullptr, nullptr, nullptr};
-  bool success = false;
 
   try
   {
@@ -342,27 +362,13 @@ int main()
     point_t rubberShapeCenter = {14.5, 14.5};
     shapes[2] = new Rubber(rubberCircleCenter, 4.0, rubberShapeCenter);
 
-    success = true;
-
     std::cout << "=== Before scaling ===\n\n";
-
-    for (size_t i = 0; i < shapeCount; ++i)
-    {
-      printShapeInfo(*shapes[i], i);
-    }
-
-    double totalArea = getTotalArea(shapes, shapeCount);
-    std::cout << "\nTotal area: " << totalArea << "\n";
-
-    rectangle_t overallFrame = getOverallFrameRect(shapes, shapeCount);
-    std::cout << "\nOverall frame rectangle: ";
-    std::cout << "center(" << overallFrame.pos.x << ", " << overallFrame.pos.y << "), ";
-    std::cout << "width: " << overallFrame.width << ", height: " << overallFrame.height << "\n";
+    printAllShapesInfo(shapes, shapeCount);
 
     std::cout << "\n=== Scaling ===\n\n";
 
-    point_t scalePoint;
-    double scaleFactor;
+    point_t scalePoint = {0.0, 0.0};
+    double scaleFactor = 0.0;
 
     std::cout << "Enter scaling point (x y): ";
     std::cin >> scalePoint.x >> scalePoint.y;
@@ -370,6 +376,10 @@ int main()
     if (!std::cin)
     {
       std::cerr << "Error: invalid point input\n";
+      for (size_t i = 0; i < shapeCount; ++i)
+      {
+        delete shapes[i];
+      }
       return 1;
     }
 
@@ -379,30 +389,26 @@ int main()
     if (!std::cin)
     {
       std::cerr << "Error: invalid scale factor input\n";
+      for (size_t i = 0; i < shapeCount; ++i)
+      {
+        delete shapes[i];
+      }
       return 1;
     }
 
     scaleShapes(shapes, shapeCount, scalePoint, scaleFactor);
 
     std::cout << "\n=== After scaling ===\n\n";
-
+    printAllShapesInfo(shapes, shapeCount);
+  }
+  catch (const std::exception &error)
+  {
+    std::cerr << "Error: " << error.what() << "\n";
     for (size_t i = 0; i < shapeCount; ++i)
     {
-      printShapeInfo(*shapes[i], i);
+      delete shapes[i];
     }
-
-    totalArea = getTotalArea(shapes, shapeCount);
-    std::cout << "\nTotal area: " << totalArea << "\n";
-
-    rectangle_t newOverallFrame = getOverallFrameRect(shapes, shapeCount);
-    std::cout << "\nOverall frame rectangle: ";
-    std::cout << "center(" << newOverallFrame.pos.x << ", " << newOverallFrame.pos.y << "), ";
-    std::cout << "width: " << newOverallFrame.width << ", height: " << newOverallFrame.height << "\n";
-  }
-  catch (const char *error)
-  {
-    std::cerr << "Error: " << error << "\n";
-    success = false;
+    return 2;
   }
 
   for (size_t i = 0; i < shapeCount; ++i)
@@ -410,12 +416,5 @@ int main()
     delete shapes[i];
   }
 
-  if (success)
-  {
-    return 0;
-  }
-  else
-  {
-    return 2;
-  }
+  return 0;
 }
