@@ -10,6 +10,41 @@ namespace krivoshapov
     return std::isspace(static_cast<unsigned char>(c));
   }
 
+  bool isVowel(char c)
+  {
+    char lower = std::tolower(static_cast<unsigned char>(c));
+    return (lower == 'a' || lower == 'e' || lower == 'i' || lower == 'o' || lower == 'u');
+  }
+
+  size_t rmvVow(const char *src, char *dest, size_t bufSize)
+  {
+    if (src == nullptr || dest == nullptr || bufSize == 0)
+    {
+      return 0;
+    }
+
+    size_t destIdx = 0;
+    size_t srcLen = std::strlen(src);
+
+    for (size_t i = 0; i < srcLen && destIdx + 1 < bufSize; ++i)
+    {
+      if (std::isalpha(static_cast<unsigned char>(src[i])))
+      {
+        if (!isVowel(src[i]))
+        {
+          dest[destIdx++] = src[i];
+        }
+      }
+      else
+      {
+        dest[destIdx++] = src[i];
+      }
+    }
+
+    dest[destIdx] = '\0';
+    return destIdx;
+  }
+
   int seqSym(const char *str, size_t len)
   {
     if (str == nullptr || len < 2)
@@ -33,7 +68,7 @@ namespace krivoshapov
     size_t size = 0;
     char *buffer = new char[capacity];
 
-    char ch;
+    char ch = '\0';
     while (in.get(ch))
     {
       if (isDelim(ch))
@@ -50,11 +85,12 @@ namespace krivoshapov
 
       if (size + 1 >= capacity)
       {
-        capacity *= 2;
-        char *temp = new char[capacity];
+        size_t newCapacity = capacity * 2;
+        char *temp = new char[newCapacity];
         std::memcpy(temp, buffer, size);
         delete[] buffer;
         buffer = temp;
+        capacity = newCapacity;
       }
 
       buffer[size++] = ch;
@@ -86,14 +122,15 @@ namespace krivoshapov
 
       if (wordCount == capacity)
       {
-        capacity *= 2;
-        char **temp = new char *[capacity];
+        size_t newCapacity = capacity * 2;
+        char **temp = new char *[newCapacity];
         for (size_t i = 0; i < wordCount; ++i)
         {
           temp[i] = words[i];
         }
         delete[] words;
         words = temp;
+        capacity = newCapacity;
       }
 
       words[wordCount++] = word;
@@ -124,10 +161,7 @@ int main()
 
   try
   {
-    words = krivoshapov::readWords(
-        std::cin,
-        wordCount,
-        krivoshapov::isDelimiter);
+    words = krivoshapov::readWords(std::cin, wordCount, krivoshapov::isDelimiter);
   }
   catch (const std::bad_alloc &)
   {
@@ -139,18 +173,37 @@ int main()
   {
     krivoshapov::freeWords(words, wordCount);
     std::cerr << "Empty input\n";
-    return 2;
+    return 1;
   }
 
   for (size_t i = 0; i < wordCount; ++i)
   {
     size_t len = std::strlen(words[i]);
-    int res = krivoshapov::seqSym(words[i], len);
-    std::cout << res;
-    if (i + 1 < wordCount)
+    size_t bufferSize = len + 1;
+    char *buffer = nullptr;
+
+    try
     {
-      std::cout << " ";
+      buffer = new char[bufferSize];
     }
+    catch (const std::bad_alloc &)
+    {
+      krivoshapov::freeWords(words, wordCount);
+      std::cerr << "Memory allocation failed\n";
+      return 1;
+    }
+
+    krivoshapov::rmvVow(words[i], buffer, bufferSize);
+    std::cout << buffer << " ";
+    delete[] buffer;
+  }
+  std::cout << "\n";
+
+  for (size_t i = 0; i < wordCount; ++i)
+  {
+    size_t len = std::strlen(words[i]);
+    int res = krivoshapov::seqSym(words[i], len);
+    std::cout << res << " ";
   }
   std::cout << "\n";
 
