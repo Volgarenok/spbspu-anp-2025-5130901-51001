@@ -36,23 +36,22 @@ namespace krivoshapov
       {
         throw std::invalid_argument("Scale factor must be positive");
       }
-      scaleWithoutCheck(factor);
+      scaleImpl(factor);
     }
 
-    virtual void scaleWithoutCheck(double factor) = 0;
+    virtual void scaleImpl(double factor) = 0;
   };
 
   class Circle final : public Shape
   {
   public:
     Circle(const point_t &center, double radius);
-    ~Circle() override = default;
 
     double getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(double dx, double dy) noexcept override;
     void move(const point_t &newPos) noexcept override;
-    void scaleWithoutCheck(double factor) noexcept override;
+    void scaleImpl(double factor) noexcept override;
 
   private:
     point_t center_;
@@ -63,13 +62,12 @@ namespace krivoshapov
   {
   public:
     Rectangle(const point_t &center, double width, double height);
-    ~Rectangle() override = default;
 
     double getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(double dx, double dy) noexcept override;
     void move(const point_t &newPos) noexcept override;
-    void scaleWithoutCheck(double factor) noexcept override;
+    void scaleImpl(double factor) noexcept override;
 
   private:
     point_t center_;
@@ -81,13 +79,12 @@ namespace krivoshapov
   {
   public:
     Rubber(const point_t &circleCenter, double radius, const point_t &shapeCenter);
-    ~Rubber() override = default;
 
     double getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(double dx, double dy) noexcept override;
     void move(const point_t &newPos) noexcept override;
-    void scaleWithoutCheck(double factor) noexcept override;
+    void scaleImpl(double factor) noexcept override;
 
   private:
     point_t circleCenter_;
@@ -129,7 +126,7 @@ namespace krivoshapov
     center_ = newPos;
   }
 
-  void Circle::scaleWithoutCheck(double factor) noexcept
+  void Circle::scaleImpl(double factor) noexcept
   {
     radius_ *= factor;
   }
@@ -169,7 +166,7 @@ namespace krivoshapov
     center_ = newPos;
   }
 
-  void Rectangle::scaleWithoutCheck(double factor) noexcept
+  void Rectangle::scaleImpl(double factor) noexcept
   {
     width_ *= factor;
     height_ *= factor;
@@ -223,7 +220,7 @@ namespace krivoshapov
     move(dx, dy);
   }
 
-  void Rubber::scaleWithoutCheck(double factor) noexcept
+  void Rubber::scaleImpl(double factor) noexcept
   {
     radius_ *= factor;
     double dx = circleCenter_.x - shapeCenter_.x;
@@ -248,7 +245,7 @@ namespace krivoshapov
       double dy = shapeCenter.y - scaleCenter.y;
 
       shapes[i]->move(scaleCenter);
-      shapes[i]->scaleWithoutCheck(factor);
+      shapes[i]->scaleImpl(factor);
 
       point_t newCenter;
       newCenter.x = scaleCenter.x + dx * factor;
