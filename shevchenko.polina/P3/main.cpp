@@ -210,9 +210,9 @@ int main(int argc, char * argv[])
   }
 
   char * endptr = nullptr;
-  long num_long = std::strtol(arg1, &endptr, 10);
+  long num_long = std::strtol(argv[1], &endptr, 10);
 
-  if (endptr == arg1 || *endptr != '\0')
+  if (endptr == argv[1] || *endptr != '\0')
   {
     std::cerr << "First parametr is not a number\n";
     return 1;
