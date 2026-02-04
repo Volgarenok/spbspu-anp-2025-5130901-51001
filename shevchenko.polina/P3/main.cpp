@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <cstdlib>
 
 namespace shevchenko
 {
@@ -208,20 +209,38 @@ int main(int argc, char * argv[])
     return 1;
   }
 
-  std::string arg1(argv[1]);
-  if (arg1.length() != 1 || (arg1[0] != '1' && arg1[0] != '2'))
+  const char * arg1 = argv[1];
+  bool flag = false;
+  if (arg1[0] == '1' || arg1[0] == '2')
   {
-    std::cerr << "First parameter is out of range\n";
-    return 1;
+    if (arg1[1] == '\0')
+    {
+      flag = true;
+    }
   }
 
-  int num = 0;
-  try {
-      num = std::stoi(argv[1]);
-  } catch (...) {
-      std::cerr << "First parameter is not a number\n";
+  if (!flag)
+  {
+    char * endptr = nullptr;
+    long num_long = std::strtol(arg1, &endptr, 10);
+
+    if (endptr == arg1 || *endptr != '\0')
+    {
+      std::cerr << "First parametr is not a number\n";
       return 1;
+    }
+    if (num_long != 1 && num_long != 2)
+    {
+      std::cerr << "First parametr is out of range\n";
+      return 1;
+    }
+    while (*arg1 == ' ' || *arg1 == '\t')
+    {
+      arg1++;
+    }
   }
+
+  int num = arg1[0] - '0';
 
   const char * inputFile = argv[2];
   const char * outputFile = argv[3];
@@ -260,23 +279,25 @@ int main(int argc, char * argv[])
     return 2;
   }
 
+  const size_t max_size = 10000;
+  int fixedData[max_size];
   int * data = nullptr;
 
   if (num == 1)
   {
-    const size_t max_size = 10000;
-    static int staticData[max_size];
-    data = staticData;
+    data = fixedData;
   }
   else
   {
-    data = new int[total];
-  }
-
-  if (data == nullptr)
-  {
-    std::cerr << "Memory allocation failed\n";
-    return 2;
+    try
+    {
+      data = new int[total];
+    }
+    catch (...)
+    {
+      std::cerr << "Memory allocation failed\n";
+      return 2;
+    }
   }
 
   size_t read_cnt = shevchenko::readMatrix(fin, data, rows, cols);
@@ -290,7 +311,21 @@ int main(int argc, char * argv[])
     return 2;
   }
 
-  int * dataCopy = new int[total];
+  int * dataCopy = nullptr;
+  try
+  {
+    dataCopy = new int[total];
+  }
+  catch(...)
+  {
+    std::cerr << "Memory allocation failed\n";
+    if (num == 2)
+    {
+      delete[] data;
+    }
+    return 2;
+  }
+
   for (size_t i = 0; i < total; ++i)
   {
     dataCopy[i] = data[i];
@@ -302,13 +337,41 @@ int main(int argc, char * argv[])
 
   delete[] dataCopy;
 
-  int * dataCopy2 = new int[total];
+  int * dataCopy2 = nullptr;
+  try
+  {
+    dataCopy2 = new int[total];
+  }
+  catch(...)
+  {
+    std::cerr << "Memory allocation failed\n";
+    if (num == 2)
+    {
+      delete[] data;
+    }
+    return 2;
+  }
+
   for (size_t i = 0; i < total; ++i)
   {
     dataCopy2[i] = data[i];
   }
 
-  double * smoothData = new double[total];
+  double * smoothData = nullptr;
+  try
+  {
+    smoothData = new double[total];
+  }
+  catch(...)
+  {
+    std::cerr << "Memory allocation failed\n";
+    delete[] dataCopy2;
+    if (num == 2)
+    {
+      delete[] data;
+    }
+    return 2;
+  }
   shevchenko::averageNeighbors(dataCopy2, smoothData, rows, cols);
   shevchenko::writeSmoothMatrix(fout, smoothData, rows, cols);
   fout << "\n";
