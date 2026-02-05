@@ -22,7 +22,6 @@ namespace krivoshapov
   class Shape
   {
   public:
-    virtual ~Shape() = default;
 
     virtual double getArea() const noexcept = 0;
     virtual rectangle_t getFrameRect() const noexcept = 0;
@@ -33,7 +32,7 @@ namespace krivoshapov
     virtual void scaleUnchecked(double factor) noexcept = 0;
   };
 
-  class Circle final : public Shape
+  class Circle final: public Shape
   {
   public:
     Circle(const point_t& center, double radius);
@@ -49,7 +48,7 @@ namespace krivoshapov
     double radius_;
   };
 
-  class Rectangle final : public Shape
+  class Rectangle final: public Shape
   {
   public:
     Rectangle(const point_t& center, double width, double height);
@@ -66,7 +65,7 @@ namespace krivoshapov
     double height_;
   };
 
-  class Rubber final : public Shape
+  class Rubber final: public Shape
   {
   public:
     Rubber(const point_t& circleCenter, double radius, const point_t& shapeCenter);
@@ -92,7 +91,7 @@ namespace krivoshapov
     scaleUnchecked(factor);
   }
 
-  Circle::Circle(const point_t& center, double radius) :
+  Circle::Circle(const point_t& center, double radius):
     center_(center),
     radius_(radius)
   {
