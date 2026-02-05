@@ -7,12 +7,12 @@ namespace krivoshapov
 {
   bool isDelimiter(char c)
   {
-    return std::isspace(static_cast<unsigned char>(c));
+    return std::isspace(static_cast< unsigned char >(c));
   }
 
   bool isVowel(char c)
   {
-    char lower = std::tolower(static_cast<unsigned char>(c));
+    char lower = std::tolower(static_cast< unsigned char >(c));
     return (lower == 'a' || lower == 'e' || lower == 'i' || lower == 'o' || lower == 'u');
   }
 
@@ -24,11 +24,10 @@ namespace krivoshapov
     }
 
     size_t destIdx = 0;
-    size_t srcLen = std::strlen(src);
 
-    for (size_t i = 0; i < srcLen && destIdx + 1 < bufSize; ++i)
+    for (size_t i = 0; src[i] != '\0' && destIdx + 1 < bufSize; ++i)
     {
-      if (std::isalpha(static_cast<unsigned char>(src[i])))
+      if (std::isalpha(static_cast< unsigned char >(src[i])))
       {
         if (!isVowel(src[i]))
         {
