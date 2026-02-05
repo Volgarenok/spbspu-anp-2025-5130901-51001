@@ -207,5 +207,5 @@ int main()
   std::cout << "\n";
 
   krivoshapov::freeWords(words, wordCount);
-    return 0;
+  return 0;
 }
