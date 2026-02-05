@@ -1,6 +1,7 @@
 #include <iostream>
 #include <istream>
 #include <cstring>
+#include <cctype>
 
 namespace krivoshapov
 {
@@ -47,6 +48,12 @@ namespace krivoshapov
     return dst;
   }
 
+  int seqSym(const char *str, size_t len)
+  {
+    if (str == nullptr || len < 2)
+    {
+      return 0;
+    }
   int seqSym(const char *str, size_t len)
   {
     if (str == nullptr || len < 2)
