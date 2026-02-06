@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cmath>
 #include <cstdlib>
+#include <new>
 
 namespace shevchenko
 {
@@ -276,9 +277,9 @@ int main(int argc, char * argv[])
     {
       data = new int[total];
     }
-    catch (...)
+    catch (const std::bad_alloc& e)
     {
-      std::cerr << "Memory allocation failed\n";
+      std::cerr << "Memory allocation failed" << e.what() << "\n";
       return 2;
     }
   }
@@ -299,9 +300,9 @@ int main(int argc, char * argv[])
   {
     dataCopy = new int[total];
   }
-  catch (...)
+  catch (const std::bad_alloc& e)
   {
-    std::cerr << "Memory allocation failed\n";
+    std::cerr << "Memory allocation failed" << e.what() << "\n";
     if (num == 2)
     {
       delete[] data;
@@ -325,9 +326,9 @@ int main(int argc, char * argv[])
   {
     dataCopy2 = new int[total];
   }
-  catch (...)
+  catch (const std::bad_alloc& e)
   {
-    std::cerr << "Memory allocation failed\n";
+    std::cerr << "Memory allocation failed" << e.what() << "\n";
     if (num == 2)
     {
       delete[] data;
@@ -345,9 +346,9 @@ int main(int argc, char * argv[])
   {
     smoothData = new double[total];
   }
-  catch (...)
+  catch (const std::bad_alloc& e)
   {
-    std::cerr << "Memory allocation failed\n";
+    std::cerr << "Memory allocation failed" << e.what() << "\n";
     delete[] dataCopy2;
     if (num == 2)
     {
