@@ -9,17 +9,15 @@
 
 namespace smirnova
 {
-  char* getLine(std::istream& in, size_t& size);
-  char** getWords(std::istream& in, size_t& size, bool (*checkSpace)(char));
+  bool checkSpace(char ch);
   int compareStrings(const char* a, const char* b);
   void appendDigits(const char* a, const char* b, char* result);
 }
 
-bool checkSpace(char ch) {
+bool smirnova::checkSpace(char ch)
+{
   return std::isspace(static_cast< unsigned char >(ch));
 }
-
-
 
 int smirnova::compareStrings(const char* a, const char* b)
 {
@@ -61,7 +59,7 @@ int main()
   std::cout << "\nEnter the line:\n";
 
   size_t countWords = 0;
-  char** words = smirnova::getWords(std::cin, countWords, checkSpace);
+  char** words = smirnova::getWords(std::cin, countWords, smirnova::checkSpace);
 
   if (!words) {
     std::cerr << "Error: Failed to read words from input.\n";
@@ -80,7 +78,7 @@ int main()
     int result1 = smirnova::compareStrings(words[i], defaultStr);
     std::cout << "\nResult1: " << result1 << "\n";
 
-    size_t maxLen = strlen(words[i]) + strlen(defaultStr) + 1;
+    size_t maxLen = std::strlen(words[i]) + std::strlen(defaultStr) + 1;
     char* result2 = reinterpret_cast< char* >(malloc(maxLen + 1));
     if (!result2) {
       std::cerr << "Error: Failed to allocate memory for result.\n";

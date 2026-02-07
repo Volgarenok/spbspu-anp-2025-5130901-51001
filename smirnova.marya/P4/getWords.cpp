@@ -23,7 +23,7 @@ namespace smirnova
       return nullptr;
     }
     size_t cap = 10;
-    char** words = reinterpret_cast< char** >(malloc(cap  * sizeof(char*)));
+    char** words = reinterpret_cast< char** >(malloc(cap * sizeof(char*)));
     if (!words) {
       free(line);
       return nullptr;
@@ -60,10 +60,11 @@ namespace smirnova
         if (!newWords) {
           free(word);
           for (size_t k = 0; k < countWords; ++k) {
-            free(words);
-            free(line);
-            return nullptr;
+            free(words[k]);
           }
+          free(words);
+          free(line);
+          return nullptr;
         }
         std::memcpy(newWords, words, countWords * sizeof(char*));
         free(words);
