@@ -28,7 +28,7 @@ namespace smirnova
         char* buffer = reinterpret_cast< char* >(malloc(newCapacity));
         if (!buffer) {
           free(str);
-          return 0;
+          return nullptr;
         }
         for (size_t i = 0; i < length; i++) {
           buffer[i] = str[i];
@@ -47,7 +47,7 @@ namespace smirnova
     char* result = reinterpret_cast< char* >(malloc(length + 1));
     if (!result) {
       free(str);
-      return 0;
+      return nullptr;
     }
 
     for (size_t i = 0; i < length; i++) {
