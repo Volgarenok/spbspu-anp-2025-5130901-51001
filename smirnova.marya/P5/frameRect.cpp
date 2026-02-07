@@ -22,4 +22,3 @@ smirnova::rectangle_t smirnova::getTotalFrameRect(const Shape* const shapes[], s
   return total;
 }
 
-
