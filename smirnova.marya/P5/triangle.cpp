@@ -5,7 +5,7 @@
 
 #include "utils.hpp"
 
-smirnova::Triangle::Triangle(point_t a, point_t b, point_t c):
+smirnova::Triangle::Triangle(const point_t& a, const point_t& b, const point_t& c):
   a_(a),
   b_(b),
   c_(c)
@@ -31,7 +31,8 @@ smirnova::rectangle_t smirnova::Triangle::getFrameRect() const noexcept
   const double maxX = std::max({a_.x, b_.x, c_.x});
   const double minY = std::min({a_.y, b_.y, c_.y});
   const double maxY = std::max({a_.y, b_.y, c_.y});
-  return makeFrameRect(maxX - minX, maxY - minY, {(minX + maxX) / 2.0, (minY + maxY) / 2.0});
+  smirnova::point_t center{ (minX + maxX) / 2.0, (minY + maxY) / 2.0 };
+  return { maxX - minX, maxY - minY, center };
 }
 
 void smirnova::Triangle::move(const point_t& p) noexcept

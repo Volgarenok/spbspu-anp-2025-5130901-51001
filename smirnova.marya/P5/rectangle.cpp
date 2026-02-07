@@ -20,7 +20,7 @@ double smirnova::Rectangle::getArea() const noexcept
 }
 smirnova::rectangle_t smirnova::Rectangle::getFrameRect() const noexcept
 {
-  return makeFrameRect(width_, height_, center_);
+  return { width_, height_, center_ };
 }
 void smirnova::Rectangle::move(const point_t& p) noexcept
 {

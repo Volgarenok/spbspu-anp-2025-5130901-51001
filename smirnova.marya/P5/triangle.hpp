@@ -8,7 +8,7 @@ namespace smirnova
   class Triangle final: public Shape
   {
   public:
-    Triangle(point_t a, point_t b, point_t c);
+    Triangle(const point_t& a, const point_t& b, const point_t& c);
     double getArea() const noexcept override;
     rectangle_t getFrameRect() const noexcept override;
     void move(const point_t& p) noexcept override;
