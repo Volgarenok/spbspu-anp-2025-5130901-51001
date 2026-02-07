@@ -59,7 +59,7 @@ int main()
   std::cout << "\nEnter the line:\n";
 
   size_t countWords = 0;
-  char** words = smirnova::getWords(std::cin, countWords, checkSpace);
+  char** words = smirnova::getWords(std::cin, countWords, smirnova::checkSpace);
 
   if (!words) {
     std::cerr << "Error: Failed to read words from input.\n";
