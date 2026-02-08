@@ -213,7 +213,7 @@ int main()
     shapes[4] = new Ring({2.0, -1.0}, 3.0, 1.0);
     shapes[5] = new Ring(-2.0, -2.0, 2.5, 0.5);
     std::cout << "=== BEFORE scaling ===\n";
-    printShapesInfo(shapes, 6);
+    printShapesInfo(shapes, countShape);
     point_t scalePoint = {0.0, 0.0};;
     double scaleCoef = 1.0;
     std::cout << "\n=== Scaling parameters input ===\n";
@@ -221,7 +221,7 @@ int main()
     if (!(std::cin >> scalePoint.x >> scalePoint.y)) {
       std::cerr << "Error: invalid coordinate input!\n";
       if (shapes != nullptr) {
-        for (size_t i = 0; i < 6; ++i) {
+        for (size_t i = 0; i < countShape; ++i) {
           delete shapes[i];
         }
         delete[] shapes;
@@ -232,7 +232,7 @@ int main()
     if (!(std::cin >> scaleCoef)) {
       std::cerr << "Error: invalid coefficient input!\n";
       if (shapes != nullptr) {
-        for (size_t i = 0; i < 6; ++i) {
+        for (size_t i = 0; i < countShape; ++i) {
           delete shapes[i];
         }
         delete[] shapes;
@@ -242,14 +242,14 @@ int main()
     if (scaleCoef <= 0) {
       std::cerr << "Error: scaling coefficient must be positive!" << "\n";
       if (shapes != nullptr) {
-        for (size_t i = 0; i < 6; ++i) {
+        for (size_t i = 0; i < countShape; ++i) {
           delete shapes[i];
         }
         delete[] shapes;
       }
       return 1;
     }
-    for (size_t i = 0; i < 6; ++i) {
+    for (size_t i = 0; i < countShape; ++i) {
       unsafeScaleFromPoint(*shapes[i], scalePoint, scaleCoef);
     }
     std::cout << "\n=== AFTER scaling ===" << "\n";
@@ -257,14 +257,14 @@ int main()
     std::cout << "\nScaling performed relative to point ("
      << scalePoint.x << ", " << scalePoint.y << ") with coefficient "
      << scaleCoef << "\n";
-    for (size_t i = 0; i < 6; ++i) {
+    for (size_t i = 0; i < countShape; ++i) {
       delete shapes[i];
     }
     delete[] shapes;
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << "\n";
     if (shapes != nullptr) {
-      for (size_t i = 0; i < 6; ++i) {
+      for (size_t i = 0; i < countShape; ++i) {
         delete shapes[i];
       }
       delete[] shapes;
