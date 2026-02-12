@@ -13,9 +13,6 @@ namespace nabieva
       matrix[c] = num;
       c++;
     }
-    if (c > 0 && inputFile.fail() && !inputFile.eof()) {
-      throw std::runtime_error("Error input\n");
-    }
     return c;
   }
 
@@ -133,15 +130,7 @@ namespace nabieva
      matrix = new int[rows * cols];
      needCleanup = true;
    }
-   size_t inputSize = 0;
-   try {
-     inputSize = readMatrix(inputFile, matrix);
-   }
-   catch (const std::runtime_error& e) {
-     std::cerr << e.what();
-     if (needCleanup) delete[] matrix;
-     return 2;
-   }
+   size_t inputSize = readMatrix(inputFile, matrix);
    if (cols * rows != inputSize) {
      std::cerr << "Incorrect number of parameters\n";
      if (needCleanup) delete[] matrix;
