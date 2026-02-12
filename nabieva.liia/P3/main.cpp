@@ -54,14 +54,14 @@ namespace nabieva
         bottom--;
       }
       if (left <= right) {
-        for (size_t i = bottom; i != static_cast<size_t>(-1) && i >= top; i--) {
+        for (size_t i = bottom; i != static_cast<size_t> (-1) && i >= top; i--) {
           matrix[i * cols + right] += value;
           value++;
         }
         right--;
       }
       if (top <= bottom) {
-        for (size_t j = right; j != static_cast<size_t>(-1) && j >= left; j--) {
+        for (size_t j = right; j != static_cast<size_t> (-1) && j >= left; j--) {
           matrix[top * cols + j] += value;
           value++;
         }
@@ -133,13 +133,17 @@ namespace nabieva
    size_t inputSize = readMatrix(inputFile, matrix);
    if (cols * rows != inputSize) {
      std::cerr << "Incorrect number of parameters\n";
-     if (needCleanup) delete[] matrix;
+     if (needCleanup) {
+       delete[] matrix;
+     }
      return 2;
    }
    outputFile << findMinSumDiag(matrix, rows, cols) << "\n";
    if (rows == 0 || cols == 0) {
      outputFile << rows << " " << cols << "\n";
-     if (needCleanup) delete[] matrix;
+     if (needCleanup) {
+       delete[] matrix;
+     }
      return 0;
    }
    transformSpiralMatrix(matrix, rows, cols);
@@ -148,6 +152,8 @@ namespace nabieva
      outputFile << matrix[i] << " ";
    }
    outputFile << matrix[rows * cols - 1] << "\n";
-   if (needCleanup) delete[] matrix;
+   if (needCleanup) {
+     delete[] matrix;
+   }
    return 0;
  }
