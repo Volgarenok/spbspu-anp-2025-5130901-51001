@@ -8,7 +8,7 @@ namespace nabieva
 	{
 		unsigned char letters[26] = { 0 };
 		for (size_t i = 0; i < strlen(input); ++i) {
-			unsigned char c = static_cast<unsigned char>(input[i]);
+			unsigned char c = static_cast<unsigned char> (input[i]);
 			if (std::isalpha(c)) {
 				c = std::tolower(c);
 				if (c >= 'a' && c <= 'z') {
@@ -18,7 +18,7 @@ namespace nabieva
 		}
 		const char* secondString = "def ghk";
 		for (size_t i = 0; i < strlen(secondString); ++i) {
-			unsigned char c = static_cast<unsigned char>(secondString[i]);
+			unsigned char c = static_cast<unsigned char> (secondString[i]);
 			if (std::isalpha(c)) {
 				c = std::tolower(c);
 				if (c >= 'a' && c <= 'z') {
@@ -29,10 +29,7 @@ namespace nabieva
 		size_t pos = 0;
 		for (int i = 0; i < 26; ++i) {
 			if (letters[i]) {
-				if (pos >= maxResultSize) {
-					return -1;
-				}
-				result[pos++] = static_cast<char>('a' + i);
+				result[pos++] = static_cast<char> ('a' + i);
 			}
 		}
 		result[pos++] = '\0';
@@ -85,21 +82,13 @@ int main()
 		}
 	}
 	int resultSize = formAllLetterString(input, result, MAX_RESULT_SIZE);
-	if (resultSize != -1) {
-		for (size_t i = 0; i < static_cast<size_t>(resultSize); i++) {
-			std::cout << result[i];
-		}
-	}
-	else {
-		std::cerr << "too long string\n";
-		delete[] input;
-		delete[] result;
-		return 1;
+	for (size_t i = 0; i < static_cast<size_t> (resultSize); i++) {
+		std::cout << result[i];
 	}
 	std::cout << "\n";
 	resultSize = mergeString(input, result, MAX_RESULT_SIZE);
 	if (resultSize != -1) {
-		for (size_t i = 0; i < static_cast<size_t>(resultSize); i++) {
+		for (size_t i = 0; i < static_cast<size_t> (resultSize); i++) {
 			std::cout << result[i];
 		}
 	}
