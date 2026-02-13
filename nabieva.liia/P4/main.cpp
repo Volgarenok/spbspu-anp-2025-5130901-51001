@@ -4,7 +4,7 @@
 
 namespace nabieva 
 {
-	int formAllLetterString(char* input, char* result, size_t maxResultSize)
+	int formAllLetterString(char* input, char* result)
 	{
 		unsigned char letters[26] = { 0 };
 		for (size_t i = 0; i < strlen(input); ++i) {
@@ -19,8 +19,7 @@ namespace nabieva
 		const char* secondString = "def ghk";
 		for (size_t i = 0; i < strlen(secondString); ++i) {
 			unsigned char c = static_cast<unsigned char> (secondString[i]);
-				letters[c - 'a'] = 1;
-			}
+			letters[c - 'a'] = 1;
 		}
 		size_t pos = 0;
 		for (int i = 0; i < 26; ++i) {
@@ -77,7 +76,7 @@ int main()
 			return 1;
 		}
 	}
-	int resultSize = formAllLetterString(input, result, MAX_RESULT_SIZE);
+	int resultSize = formAllLetterString(input, result);
 	for (size_t i = 0; i < static_cast<size_t> (resultSize); i++) {
 		std::cout << result[i];
 	}
