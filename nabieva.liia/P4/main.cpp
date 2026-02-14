@@ -9,7 +9,7 @@ namespace nabieva
 	{
 		unsigned char letters[26] = { 0 };
 		for (size_t i = 0; i < std::strlen(input); ++i) {
-			unsigned char c = static_cast<unsigned char>(input[i]);
+			unsigned char c = static_cast<unsigned char> (input[i]);
 			if (std::isalpha(c)) {
 				c = std::tolower(c);
 				if (c >= 'a' && c <= 'z') {
@@ -19,7 +19,7 @@ namespace nabieva
 		}
 		const char* secondString = "def ghk";
 		for (size_t i = 0; i < std::strlen(secondString); ++i) {
-			unsigned char c = static_cast<unsigned char>(secondString[i]);
+			unsigned char c = static_cast<unsigned char> (secondString[i]);
 			letters[c - 'a'] = 1;
 		}
 		size_t pos = 0;
@@ -109,9 +109,7 @@ int main()
 		std::cerr << "can't give input memory\n";
 		return 1;
 	}
-	std::cout << "yes\n";
 	size_t resultSize = nabieva::formAllLetterString(input, &result);
-	std::cout << "yes\n";
 	for (size_t i = 0; i < resultSize; i++) {
 		std::cout << result[i];
 	}
