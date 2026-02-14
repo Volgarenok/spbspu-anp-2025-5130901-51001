@@ -94,17 +94,18 @@ int main()
 {
 	size_t inputSize = 0;
 	char* input = nabieva::getline(std::cin, inputSize);
+	char* result = nullptr;
 	if (!input) {
 		std::cerr << "can't give input memory\n";
 		return 1;
 	}
-	int resultSize = nabieva::formAllLetterString(input, result);
-	for (size_t i = 0; i < static_cast<size_t>(resultSize); i++) {
+	size_t resultSize = nabieva::formAllLetterString(input, result);
+	for (size_t i = 0; i < resultSize; i++) {
 		std::cout << result[i];
 	}
 	std::cout << "\n";
 	resultSize = nabieva::mergeString(input, result);
-	for (size_t i = 0; i < static_cast<size_t>(resultSize); i++) {
+	for (size_t i = 0; i < resultSize; i++) {
 		std::cout << result[i];
 	}
 	delete[] input;
