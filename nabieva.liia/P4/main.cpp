@@ -5,10 +5,10 @@
 
 namespace nabieva
 {
-	int formAllLetterString(char* input, char* result)
+	int formAllLetterString(char* input, char** result)
 	{
 		unsigned char letters[26] = { 0 };
-		for (size_t i = 0; i < strlen(input); ++i) {
+		for (size_t i = 0; i < std::strlen(input); ++i) {
 			unsigned char c = static_cast<unsigned char>(input[i]);
 			if (std::isalpha(c)) {
 				c = std::tolower(c);
@@ -18,34 +18,41 @@ namespace nabieva
 			}
 		}
 		const char* secondString = "def ghk";
-		for (size_t i = 0; i < strlen(secondString); ++i) {
+		for (size_t i = 0; i < std::strlen(secondString); ++i) {
 			unsigned char c = static_cast<unsigned char>(secondString[i]);
 			letters[c - 'a'] = 1;
 		}
 		size_t pos = 0;
 		for (int i = 0; i < 26; ++i) {
 			if (letters[i]) {
-				result[pos++] = static_cast<char>('a' + i);
+				pos++;
 			}
 		}
-		result[pos++] = '\0';
+		*result = new char[pos + 1];
+		pos = 0;
+		for (int i = 0; i < 26; ++i) {
+			if (letters[i]) {
+				(*result)[pos++] = static_cast<char> ('a' + i);;
+			}
+		}
+		(*result)[pos] = '\0';
 		return pos;
 	}
 
-	int mergeString(char* input, char* result)
+	int mergeString(char* input, char** result)
 	{
 		const char* secondString = "def ";
 		size_t pos = 0;
-		for (size_t i = 0; i < strlen(input) + strlen(secondString); ++i) {
-			if (i < strlen(input)) {
-				result[pos] = input[i];
-				pos++;
+		*result = new char[std::max(std::strlen(input), std::strlen(secondString)) + 1];
+		for (size_t i = 0; i < std::strlen(input) || i < std::strlen(secondString); i++) {
+			if (i < std::strlen(input)) {
+				(*result)[pos++] = input[i];
 			}
-			if (i < strlen(secondString)) {
-				result[pos++] = secondString[i];
+			if (i < std::strlen(secondString)) {
+				(*result)[pos++] = secondString[i];
 			}
 		}
-		result[pos++] = '\0';
+		*result[pos] = '\0';
 		return pos;
 	}
 
@@ -62,6 +69,9 @@ namespace nabieva
 			return nullptr;
 		}
 		while (in >> buffer[length]) {
+			if (buffer[length] == '\n') {
+				break;
+			}
 			if (length + 1 >= capacity) {
 				size_t newCapacity = capacity * 2;
 				char* newBuffer = new char[newCapacity];
@@ -99,12 +109,14 @@ int main()
 		std::cerr << "can't give input memory\n";
 		return 1;
 	}
-	size_t resultSize = nabieva::formAllLetterString(input, result);
+	std::cout << "yes\n";
+	size_t resultSize = nabieva::formAllLetterString(input, &result);
+	std::cout << "yes\n";
 	for (size_t i = 0; i < resultSize; i++) {
 		std::cout << result[i];
 	}
 	std::cout << "\n";
-	resultSize = nabieva::mergeString(input, result);
+	resultSize = nabieva::mergeString(input, &result);
 	for (size_t i = 0; i < resultSize; i++) {
 		std::cout << result[i];
 	}
