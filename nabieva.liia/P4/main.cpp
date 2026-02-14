@@ -1,14 +1,15 @@
 #include <iostream>
 #include <cstring>
 #include <cctype>
+#include <iomanip>
 
-namespace nabieva 
+namespace nabieva
 {
 	int formAllLetterString(char* input, char* result)
 	{
 		unsigned char letters[26] = { 0 };
 		for (size_t i = 0; i < strlen(input); ++i) {
-			unsigned char c = static_cast<unsigned char> (input[i]);
+			unsigned char c = static_cast<unsigned char>(input[i]);
 			if (std::isalpha(c)) {
 				c = std::tolower(c);
 				if (c >= 'a' && c <= 'z') {
@@ -18,25 +19,22 @@ namespace nabieva
 		}
 		const char* secondString = "def ghk";
 		for (size_t i = 0; i < strlen(secondString); ++i) {
-			unsigned char c = static_cast<unsigned char> (secondString[i]);
+			unsigned char c = static_cast<unsigned char>(secondString[i]);
 			letters[c - 'a'] = 1;
 		}
 		size_t pos = 0;
 		for (int i = 0; i < 26; ++i) {
 			if (letters[i]) {
-				result[pos++] = static_cast<char> ('a' + i);
+				result[pos++] = static_cast<char>('a' + i);
 			}
 		}
 		result[pos++] = '\0';
 		return pos;
 	}
 
-	int mergeString(char* input, char* result, size_t maxResultSize)
+	int mergeString(char* input, char* result)
 	{
 		const char* secondString = "def ";
-		if (strlen(input) + strlen(secondString) > maxResultSize) {
-			return -1;
-		}
 		size_t pos = 0;
 		for (size_t i = 0; i < strlen(input) + strlen(secondString); ++i) {
 			if (i < strlen(input)) {
@@ -50,48 +48,64 @@ namespace nabieva
 		result[pos++] = '\0';
 		return pos;
 	}
+
+	char* getline(std::istream& in, size_t& length)
+	{
+		bool is_skipws = in.flags() & std::ios_base::skipws;
+		if (is_skipws) {
+			in >> std::noskipws;
+		}
+		length = 0;
+		size_t capacity = 16;
+		char* buffer = new char[capacity];
+		if (!buffer) {
+			return nullptr;
+		}
+		while (in >> buffer[length]) {
+			if (length + 1 >= capacity) {
+				size_t newCapacity = capacity * 2;
+				char* newBuffer = new char[newCapacity];
+				if (!newBuffer) {
+					delete[] buffer;
+					return nullptr;
+				}
+				for (size_t i = 0; i < length; i++) {
+					newBuffer[i] = buffer[i];
+				}
+				delete[] buffer;
+				buffer = newBuffer;
+				capacity = newCapacity;
+			}
+			length++;
+		}
+		if (in.fail()) {
+			delete[] buffer;
+			return nullptr;
+		}
+		buffer[length] = '\0';
+		if (is_skipws) {
+			in >> std::skipws;
+		}
+		return buffer;
+	}
 }
 
 int main()
 {
-	using namespace nabieva;
-	size_t MAX_INPUT_SIZE = 1024;
-	size_t MAX_RESULT_SIZE = 2048;
-	char* input = new char[MAX_INPUT_SIZE];
+	size_t inputSize = 0;
+	char* input = nabieva::getline(std::cin, inputSize);
 	if (!input) {
 		std::cerr << "can't give input memory\n";
 		return 1;
 	}
-	char* result = new char[MAX_RESULT_SIZE];
-	if (!result) {
-		std::cerr << "can't give result memory\n";
-		delete[] input;
-		return 1;
-	}
-	if (!std::cin.getline(input, MAX_INPUT_SIZE)) {
-		if (std::cin.fail()) {
-			std::cerr << "input error or too long string\n";
-			delete[] input;
-			delete[] result;
-			return 1;
-		}
-	}
-	int resultSize = formAllLetterString(input, result);
-	for (size_t i = 0; i < static_cast<size_t> (resultSize); i++) {
+	int resultSize = nabieva::formAllLetterString(input, result);
+	for (size_t i = 0; i < static_cast<size_t>(resultSize); i++) {
 		std::cout << result[i];
 	}
 	std::cout << "\n";
-	resultSize = mergeString(input, result, MAX_RESULT_SIZE);
-	if (resultSize != -1) {
-		for (size_t i = 0; i < static_cast<size_t> (resultSize); i++) {
-			std::cout << result[i];
-		}
-	}
-	else {
-		std::cerr << "too long string\n";
-		delete[] input;
-		delete[] result;
-		return 1;
+	resultSize = nabieva::mergeString(input, result);
+	for (size_t i = 0; i < static_cast<size_t>(resultSize); i++) {
+		std::cout << result[i];
 	}
 	delete[] input;
 	delete[] result;
