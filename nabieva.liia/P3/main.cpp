@@ -54,14 +54,14 @@ namespace nabieva
         bottom--;
       }
       if (left <= right) {
-        for (size_t i = bottom; i != static_cast<size_t> (-1) && i >= top; i--) {
+        for (size_t i = bottom; i + 1 > top; i--) {
           matrix[i * cols + right] += value;
           value++;
         }
         right--;
       }
       if (top <= bottom) {
-        for (size_t j = right; j != static_cast<size_t> (-1) && j >= left; j--) {
+        for (size_t j = right; j + 1 > left; j--) {
           matrix[top * cols + j] += value;
           value++;
         }
