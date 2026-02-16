@@ -125,8 +125,7 @@ namespace nabieva
    bool needCleanup = false;
    if (arg == 1) {
      matrix = fixMatrix;
-   }
-   else {
+   } else {
      matrix = new int[rows * cols];
      needCleanup = true;
    }
