@@ -1,262 +1,202 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include <string>
+#include <cstring>
 
-using namespace std;
+namespace novikov {
 
-// Изменение матрицы по спирали
-void spiral(int** m, int r, int c)
-{
-    int t = r * c;
-    int top = 0, bot = r - 1, left = 0, right = c - 1;
-    int cnt = 1;
+  void lftTopCnt(int * matrix, int rows, int cols)
+  {
+    int step = 1;
+    int top = 0;
+    int bottom = rows - 1;
+    int left = 0;
+    int right = cols - 1;
 
-    while (cnt <= t)
-    {
-        for (int i = top; i <= bot && cnt <= t; ++i)
-        {
-            m[i][left] += cnt;
-            ++cnt;
-        }
-        ++left;
+    while (top <= bottom && left <= right) {
+      for (int r = top; r <= bottom; ++r) {
+        matrix[r * cols + left] += step++;
+      }
+      ++left;
 
-        for (int j = left; j <= right && cnt <= t; ++j)
-        {
-            m[bot][j] += cnt;
-            ++cnt;
-        }
-        --bot;
+      if (left > right) {
+        break;
+      }
 
-        for (int i = bot; i >= top && cnt <= t; --i)
-        {
-            m[i][right] += cnt;
-            ++cnt;
-        }
-        --right;
+      for (int c = left; c <= right; ++c) {
+        matrix[bottom * cols + c] += step++;
+      }
 
-        for (int j = right; j >= left && cnt <= t; --j)
-        {
-            m[top][j] += cnt;
-            ++cnt;
-        }
-        ++top;
+      if (top == bottom) {
+        break;
+      }
+      --bottom;
+
+      for (int r = bottom; r >= top; --r) {
+        matrix[r * cols + right] += step++;
+      }
+      --right;
+
+      for (int c = right; c >= left; --c) {
+        matrix[top * cols + c] += step++;
+      }
+      ++top;
     }
+  }
+
+  void buildSmoothed(const int * src, double * dst, int rows, int cols)
+  {
+    const int dr[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    const int dc[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+    for (int r = 0; r < rows; ++r) {
+      for (int c = 0; c < cols; ++c) {
+        double sum = 0.0;
+        int count = 0;
+        for (int k = 0; k < 8; ++k) {
+          const int nr = r + dr[k];
+          const int nc = c + dc[k];
+          if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
+            sum += src[nr * cols + nc];
+            ++count;
+          }
+        }
+        dst[r * cols + c] = (count > 0) ? sum / count : 0.0;
+      }
+    }
+  }
+
+  size_t fillMatrix(std::istream & in, int * matrix, size_t n)
+  {
+    size_t i = 0;
+    for (; i < n; ++i) {
+      if (!(in >> matrix[i])) {
+        break;
+      }
+    }
+    return i;
+  }
+
+  void writeMatrix(std::ostream & out, const int * matrix, size_t rows, size_t cols)
+  {
+    out << rows << ' ' << cols;
+    for (size_t i = 0; i < rows * cols; ++i) {
+      out << ' ' << matrix[i];
+    }
+    out << '\n';
+  }
+
+  void writeSmoothed(std::ostream & out, const double * data, size_t rows, size_t cols)
+  {
+    out << rows << ' ' << cols << std::fixed << std::setprecision(1);
+    for (size_t i = 0; i < rows * cols; ++i) {
+      out << ' ' << data[i];
+    }
+    out << '\n';
+  }
+
 }
 
-// Создание сглаженной матрицы
-double** smooth(int** m, int r, int c)
+int main(int argc, char ** argv)
 {
-    double** s = new double*[r];
-    for (int i = 0; i < r; ++i)
-    {
-        s[i] = new double[c];
-        for (int j = 0; j < c; ++j)
-        {
-            s[i][j] = 0.0;
-        }
+  if (argc != 4) {
+    std::cerr << "Wrong number of arguments\n";
+    return 1;
+  }
+
+  char * endptr = nullptr;
+  const long num = std::strtol(argv[1], &endptr, 10);
+
+  if (*endptr != '\0') {
+    std::cerr << "First parameter is not a number\n";
+    return 1;
+  }
+
+  if (num != 1 && num != 2) {
+    std::cerr << "First parameter is out of range\n";
+    return 1;
+  }
+
+  std::ifstream fin(argv[2]);
+  if (!fin) {
+    std::cerr << "Failed to open input file\n";
+    return 2;
+  }
+
+  size_t rows = 0;
+  size_t cols = 0;
+
+  if (!(fin >> rows >> cols)) {
+    std::cerr << "Failed to read matrix dimensions\n";
+    return 2;
+  }
+
+  const size_t n = rows * cols;
+
+  int * matrix = nullptr;
+  int * orig = nullptr;
+  double * smooth = nullptr;
+
+  int fixed_matrix[10000];
+  int fixed_orig[10000];
+  double fixed_smooth[10000];
+
+  if (num == 1) {
+    if (n > 10000) {
+      std::cerr << "Matrix is too large for static storage\n";
+      return 2;
     }
-
-    for (int i = 0; i < r; ++i)
-    {
-        for (int j = 0; j < c; ++j)
-        {
-            double sum = 0.0;
-            int cnt = 0;
-
-            for (int di = -1; di <= 1; ++di)
-            {
-                for (int dj = -1; dj <= 1; ++dj)
-                {
-                    if (di == 0 && dj == 0) continue;
-
-                    int ni = i + di;
-                    int nj = j + dj;
-
-                    if (ni >= 0 && ni < r && nj >= 0 && nj < c)
-                    {
-                        sum += m[ni][nj];
-                        ++cnt;
-                    }
-                }
-            }
-
-            if (cnt > 0)
-            {
-                s[i][j] = sum / cnt;
-            }
-        }
+    matrix = fixed_matrix;
+    orig = fixed_orig;
+    smooth = fixed_smooth;
+  } else {
+    matrix = new (std::nothrow) int[n];
+    orig = new (std::nothrow) int[n];
+    smooth = new (std::nothrow) double[n];
+    if (!matrix || !orig || !smooth) {
+      std::cerr << "Memory allocation failed\n";
+      delete[] matrix;
+      delete[] orig;
+      delete[] smooth;
+      return 2;
     }
+  }
 
-    return s;
-}
-
-// Чтение матрицы
-bool read(ifstream& in, int**& m, int& r, int& c)
-{
-    if (!(in >> r >> c)) return false;
-
-    if (r == 0 || c == 0)
-    {
-        m = nullptr;
-        return true;
+  if (n > 0 && novikov::fillMatrix(fin, matrix, n) != n) {
+    std::cerr << "Not all matrix elements could be read\n";
+    if (num == 2) {
+      delete[] matrix;
+      delete[] orig;
+      delete[] smooth;
     }
+    return 2;
+  }
 
-    m = new int*[r];
-    for (int i = 0; i < r; ++i)
-    {
-        m[i] = new int[c];
-        for (int j = 0; j < c; ++j)
-        {
-            if (!(in >> m[i][j])) return false;
-        }
+  std::ofstream fout(argv[3]);
+  if (!fout) {
+    std::cerr << "Failed to open output file\n";
+    if (num == 2) {
+      delete[] matrix;
+      delete[] orig;
+      delete[] smooth;
     }
+    return 2;
+  }
 
-    return true;
-}
+  if (n > 0) {
+    std::memcpy(orig, matrix, n * sizeof(int));
+    novikov::lftTopCnt(matrix, static_cast< int >(rows), static_cast< int >(cols));
+    novikov::buildSmoothed(orig, smooth, static_cast< int >(rows), static_cast< int >(cols));
+  }
 
-// Удаление матрицы
-void del(int** m, int r)
-{
-    if (m)
-    {
-        for (int i = 0; i < r; ++i)
-        {
-            delete[] m[i];
-        }
-        delete[] m;
-    }
-}
+  novikov::writeMatrix(fout, matrix, rows, cols);
+  novikov::writeSmoothed(fout, smooth, rows, cols);
 
-void del(double** m, int r)
-{
-    if (m)
-    {
-        for (int i = 0; i < r; ++i)
-        {
-            delete[] m[i];
-        }
-        delete[] m;
-    }
-}
+  if (num == 2) {
+    delete[] matrix;
+    delete[] orig;
+    delete[] smooth;
+  }
 
-// Запись матрицы
-void write(ofstream& out, int** m, int r, int c)
-{
-    if (r == 0 || c == 0 || !m)
-    {
-        out << "0 0\n";
-        return;
-    }
-
-    out << r << ' ' << c << '\n';
-    for (int i = 0; i < r; ++i)
-    {
-        for (int j = 0; j < c; ++j)
-        {
-            out << m[i][j] << (j == c - 1 ? '\n' : ' ');
-        }
-    }
-}
-
-void writeSmooth(ofstream& out, double** m, int r, int c)
-{
-    if (r == 0 || c == 0 || !m)
-    {
-        out << "0 0\n";
-        return;
-    }
-
-    out << r << ' ' << c << '\n';
-    out << fixed << setprecision(1);
-
-    for (int i = 0; i < r; ++i)
-    {
-        for (int j = 0; j < c; ++j)
-        {
-            out << m[i][j] << (j == c - 1 ? '\n' : ' ');
-        }
-    }
-}
-
-int main(int argc, char* argv[])
-{
-    if (argc != 4)
-    {
-        cerr << "Usage: " << argv[0] << " <num> <input> <output>\n";
-        return 1;
-    }
-
-    int n = 0;
-    try
-    {
-        n = stoi(argv[1]);
-    }
-    catch (...)
-    {
-        cerr << "First parameter is not a number\n";
-        return 1;
-    }
-
-    if (n != 1 && n != 2)
-    {
-        cerr << "First parameter must be 1 or 2\n";
-        return 1;
-    }
-
-    ifstream in(argv[2]);
-    if (!in)
-    {
-        cerr << "Cannot open input file\n";
-        return 2;
-    }
-
-    int** m = nullptr;
-    int r = 0, c = 0;
-
-    if (!read(in, m, r, c))
-    {
-        cerr << "Cannot read matrix from file\n";
-        if (m) del(m, r);
-        return 2;
-    }
-    in.close();
-
-    ofstream out(argv[3]);
-    if (!out)
-    {
-        cerr << "Cannot open output file\n";
-        if (m) del(m, r);
-        return 2;
-    }
-
-    if (n == 1)
-    {
-        if (r > 0 && c > 0 && m)
-        {
-            spiral(m, r, c);
-        }
-        write(out, m, r, c);
-    }
-    else if (n == 2)
-    {
-        double** sm = nullptr;
-        if (r > 0 && c > 0 && m)
-        {
-            sm = smooth(m, r, c);
-        }
-        writeSmooth(out, sm, r, c);
-
-        if (sm)
-        {
-            del(sm, r);
-        }
-    }
-
-    if (m)
-    {
-        del(m, r);
-    }
-
-    return 0;
+  return 0;
 }
