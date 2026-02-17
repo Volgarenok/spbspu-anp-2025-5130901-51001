@@ -67,32 +67,40 @@ namespace krivoshapov
     size_t size = 0;
     char *buffer = new char[capacity];
 
-    char ch = '\0';
-    while (in.get(ch))
+    try
     {
-      if (isDelim(ch))
+      char ch = '\0';
+      while (in.get(ch))
       {
-        if (size > 0)
+        if (isDelim(ch))
         {
-          break;
+          if (size > 0)
+          {
+            break;
+          }
+          else
+          {
+            continue;
+          }
         }
-        else
+
+        if (size + 1 >= capacity)
         {
-          continue;
+          size_t newCapacity = capacity * 2;
+          char *temp = new char[newCapacity];
+          std::memcpy(temp, buffer, size);
+          delete[] buffer;
+          buffer = temp;
+          capacity = newCapacity;
         }
-      }
 
-      if (size + 1 >= capacity)
-      {
-        size_t newCapacity = capacity * 2;
-        char *temp = new char[newCapacity];
-        std::memcpy(temp, buffer, size);
-        delete[] buffer;
-        buffer = temp;
-        capacity = newCapacity;
+        buffer[size++] = ch;
       }
-
-      buffer[size++] = ch;
+    }
+    catch (...)
+    {
+      delete[] buffer;
+      throw;
     }
 
     if (size == 0)
@@ -111,28 +119,49 @@ namespace krivoshapov
     wordCount = 0;
     char **words = new char *[capacity];
 
-    while (true)
+    try
     {
-      char *word = readToken(in, isDelim);
-      if (word == nullptr)
+      while (true)
       {
-        break;
-      }
-
-      if (wordCount == capacity)
-      {
-        size_t newCapacity = capacity * 2;
-        char **temp = new char *[newCapacity];
-        for (size_t i = 0; i < wordCount; ++i)
+        char *word = readToken(in, isDelim);
+        if (word == nullptr)
         {
-          temp[i] = words[i];
+          break;
         }
-        delete[] words;
-        words = temp;
-        capacity = newCapacity;
-      }
 
-      words[wordCount++] = word;
+        if (wordCount == capacity)
+        {
+          size_t newCapacity = capacity * 2;
+          char **temp = nullptr;
+          try
+          {
+            temp = new char *[newCapacity];
+          }
+          catch (...)
+          {
+            delete[] word;
+            throw;
+          }
+          for (size_t i = 0; i < wordCount; ++i)
+          {
+            temp[i] = words[i];
+          }
+          delete[] words;
+          words = temp;
+          capacity = newCapacity;
+        }
+
+        words[wordCount++] = word;
+      }
+    }
+    catch (...)
+    {
+      for (size_t i = 0; i < wordCount; ++i)
+      {
+        delete[] words[i];
+      }
+      delete[] words;
+      throw;
     }
 
     return words;
