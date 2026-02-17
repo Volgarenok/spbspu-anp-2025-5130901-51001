@@ -1,0 +1,23 @@
+#ifndef TRIANGLE_HPP
+#define TRIANGLE_HPP
+#include <algorithm>
+#include <cmath>
+#include "shape.hpp"
+#include "functions.hpp"
+
+namespace vishnyakov
+{
+  struct Triangle final: Shape {
+    Triangle(point_t a, point_t b, point_t c) noexcept;
+    rectangle_t getFrameRect() const noexcept override;
+    double getArea() const noexcept override;
+    void move(double dx, double dy) noexcept override;
+    void move(point_t newPos) noexcept override;
+    void scale(double coefficient) noexcept override;
+
+  private:
+    point_t spot1_, spot2_, spot3_, center_;
+  };
+}
+
+#endif
